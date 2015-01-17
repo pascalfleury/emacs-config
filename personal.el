@@ -13,27 +13,29 @@
 (require 'uniquify)   ;; make buffer names more unique
 ;;(require 'icicles)    ;; enhanced minibuffer completion
 
-
-; Configure the shortcuts for multiple cursors
-(require 'multiple-cursors)
-(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
-(global-set-key (kbd "C->") 'mc/mark-next-like-this)
-(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-(global-set-key (kbd "C-c C->") 'mc/mark-all-like-this)
-
 ;; Load my org stuff
-(add-to-list 'load-path "~/Apps/OrgMode/latest/lisp")
-(add-to-list 'load-path "~/Apps/OrgMode/latest/contrib/lisp" t)
-;;(load-file "~/Emacs/org-export-diag.el")
 (load-file "~/Emacs/org-mode-hacks.el")
 (load-file "~/Emacs/my-org-mode-config.el")
 
 (load-file "~/Emacs/color_cursors.el")
 (load-file "~/Emacs/selective_display.el")
 
-;; ===== Use auto-revert
-(load-file "~/Emacs/autorevert.el")
+;; ===== Use auto-revert, which reloads a file if it's updated on disk
+;;       and not modified in the buffer.
+;;(load-file "~/Emacs/autorevert.el")
 (global-auto-revert-mode 1)
+
+; ===== Configure the shortcuts for multiple cursors
+(require 'multiple-cursors)
+(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+(global-set-key (kbd "C->") 'mc/mark-next-like-this)
+(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+(global-set-key (kbd "C-c C->") 'mc/mark-all-like-this)
+
+;; ==== Let's one jump around text
+(require 'ace-jump-mode)
+(define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
+(define-key global-map (kbd "C-c DEL") 'ace-jump-mode-pop-mark)
 
 ; By the way, the following bindings are often very useful in
 ; compilation/grep/lint mode:

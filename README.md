@@ -9,4 +9,11 @@ consisting of ths single line:
 
   (load-file "~/Emacs/personal.el")
 
+EXPECTED PACKAGES
 
+I usually install thesethrough ELPA
+ ledger-mode
+ org
+ org-plus-contrib
+ ac-jump-mode
+ multiple-cursors
