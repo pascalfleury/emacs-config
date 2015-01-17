@@ -25,6 +25,13 @@
 (setq org-mobile-directory "~/OrgFiles/Mobile")
 (setq org-mobile-inbox-for-pull (concat org-directory "/mobileorg.org"))
 
+;; F12 open the first agenda file
+(defun org-get-first-agenda-file ()
+  (interactive)
+  (find-file (elt org-agenda-files 0)))
+(global-set-key [f12] 'org-get-first-agenda-file)
+(global-set-key [C-f12] 'org-get-first-agenda-file)
+
 ;; Don't ask before executing
 (setq org-confirm-babel-evaluate 'nil)
 

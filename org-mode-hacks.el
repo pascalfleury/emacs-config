@@ -1,14 +1,6 @@
 (require 'org-install)
 (require 'org-secretary)
 
-;; F12 open the first agenda file
-(defun org-get-first-agenda-file ()
-  (interactive)
-  (set-face-attribute 'default nil :height 80)
-  (find-file (elt org-agenda-files 0)))
-(global-set-key [f12] 'org-get-first-agenda-file)
-
-
 ;; Make sure archiving preserves the same tree structure, including when
 ;; archiving subtrees.
 (defun my-org-inherited-no-file-tags ()
