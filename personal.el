@@ -37,6 +37,11 @@
 (define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
 (define-key global-map (kbd "C-c DEL") 'ace-jump-mode-pop-mark)
 
+;; ==== switch from header to implementation file quickly
+(add-hook 'c-mode-common-hook
+  (lambda() 
+    (local-set-key  (kbd "C-c o") 'ff-find-other-file)))
+
 ; By the way, the following bindings are often very useful in
 ; compilation/grep/lint mode:
 (global-set-key [M-down]    'next-error)
