@@ -7,6 +7,6 @@ INSTALL
 Usually, I sync this in /home/$USER/Emacs and then have ~/.emacs
 consisting of ths single line:
 
-  (load-file "/Users/fleury/Emacs/personal.el")
+  (load-file "~/Emacs/personal.el")
 
 

@@ -12,13 +12,18 @@
 
 ;; some config for display
 (setq org-hide-leading-stars 't)
-(setq org-startup-folded 't)
 (setq org-log-done 't)
-(setq org-startup-folded 'f)
+(setq org-startup-folded 't)
+(setq org-startup-indented 't)
 
 (setq org-ellipsis "...")
 
 (setq org-babel-sh-command "bash")
+
+;; config for org-mobile-*
+(setq org-directory "~/OrgFiles")
+(setq org-mobile-directory "~/OrgFiles/Mobile")
+(setq org-mobile-inbox-for-pull (concat org-directory "/mobileorg.org"))
 
 ;; Don't ask before executing
 (setq org-confirm-babel-evaluate 'nil)
@@ -93,3 +98,6 @@
    (sh . t)
   )) ; this line activates dot
 
+; Add the ODT as an export format
+(eval-after-load "org"
+  '(require 'ox-odt nil t))
