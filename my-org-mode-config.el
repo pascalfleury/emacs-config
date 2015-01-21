@@ -18,7 +18,7 @@
 (setq org-log-done 't)
 (setq org-startup-folded 't)
 (setq org-startup-indented 't)
-(setq org-startup-folded 'f)
+(setq org-startup-folded 't)
 
 (setq org-ellipsis "...")
 
