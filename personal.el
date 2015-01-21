@@ -18,33 +18,20 @@
 (require 'uniquify)   ;; make buffer names more unique
 ;;(require 'icicles)    ;; enhanced minibuffer completion
 
-; Help cleanup the includes and using stuff
-; found on http://www.emacswiki.org/emacs/DuplicateLines
-(defun uniquify-region-lines (beg end)
-  "Remove duplicate adjacent lines in region."
-  (interactive "*r")
-  (save-excursion
-    (goto-char beg)
-    (while (re-search-forward "^\\(.*\n\\)\\1+" end t)
-      (replace-match "\\1"))))
-
-(defun fleury/cleanup-section ()
-  "Remove duplicates and sort lines in region."
-  (interactive)
-  (sort-lines nil (region-beginning) (region-end))
-  (uniquify-region-lines (region-beginning) (region-end)))
-(global-set-key [M-f5] 'fleury/cleanup-section)
 ;; Load my org stuff
 (load-file "~/Emacs/org-mode-hacks.el")
 (load-file "~/Emacs/my-org-mode-config.el")
 
 (load-file "~/Emacs/color_cursors.el")
 (load-file "~/Emacs/selective_display.el")
+(load-file "~/Emacs/code-hacks.el")
 
 ;; ===== Use auto-revert, which reloads a file if it's updated on disk
 ;;       and not modified in the buffer.
-(load-file "~/Emacs/autorevert.el")
 (global-auto-revert-mode 1)
+
+;; Simple cleanup of #include/typedef/using blocks.
+(global-set-key [M-f5] 'fleury/sort-and-uniquify-region)
 
 ; ===== Configure the shortcuts for multiple cursors
 (require 'multiple-cursors)
@@ -87,7 +74,7 @@
 (global-font-lock-mode t)
 
 ;; enable visual feedback on selections
-;(setq-default transient-mark-mode t)
+(setq-default transient-mark-mode t)
 
 ;; goto line function C-c C-g
 (global-set-key [ (control c) (control g) ] 'goto-line)

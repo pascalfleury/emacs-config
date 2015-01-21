@@ -1,24 +1,6 @@
-(require 'org-install)
-(require 'org-secretary)
-
-(defun org-get-first-agenda-file ()
-  (interactive)
-  (set-face-attribute 'default nil :height 80)
-  (find-file (elt org-agenda-files 0)))
-(global-set-key [f12] 'org-get-first-agenda-file)
-
-;; This will start serving the org files through the emacs-based webbrowser
-;; when pressing M-f12 (localhost:555555)
-(setq org-ehtml-docroot (expand-file-name "~/OrgFiles"))
-(setq org-ehtml-everything-editable t)
-(setq org-ehtml-allow-agenda t)
-(require 'org-ehtml)
-
-(defun fleury/start-web-server ()
-  (interactive)
-  (ws-start org-ehtml-handler 55555))
-(global-set-key (kbd "<M-f12>") 'fleury/start-web-server)
-
+;; This file should contain mostly code gleaned from around the internets.
+;; It should not contain proper configuration, like keyboard bindings etc.
+;; ======================================================================
 
 ;; Make sure archiving preserves the same tree structure, including when
 ;; archiving subtrees.
