@@ -1,6 +1,25 @@
 (require 'org-install)
 (require 'org-secretary)
 
+(defun org-get-first-agenda-file ()
+  (interactive)
+  (set-face-attribute 'default nil :height 80)
+  (find-file (elt org-agenda-files 0)))
+(global-set-key [f12] 'org-get-first-agenda-file)
+
+;; This will start serving the org files through the emacs-based webbrowser
+;; when pressing M-f12 (localhost:555555)
+(setq org-ehtml-docroot (expand-file-name "~/OrgFiles"))
+(setq org-ehtml-everything-editable t)
+(setq org-ehtml-allow-agenda t)
+(require 'org-ehtml)
+
+(defun fleury/start-web-server ()
+  (interactive)
+  (ws-start org-ehtml-handler 55555))
+(global-set-key (kbd "<M-f12>") 'fleury/start-web-server)
+
+
 ;; Make sure archiving preserves the same tree structure, including when
 ;; archiving subtrees.
 (defun my-org-inherited-no-file-tags ()
@@ -117,3 +136,33 @@
 (defun dmg-org-mode-init ()
   (add-hook 'after-save-hook 'kiwon/org-agenda-redo-in-other-window t t))
 ;;  (add-hook 'after-save-hook 'dmg-org-update-agenda-file t t))
+
+;; ========== Show the agenda when left idle
+;; http://orgmode.org/worg/org-hacks.html#unnumbered-79
+(defun jump-to-org-agenda ()
+  (interactive)
+  (let ((buf (get-buffer "*Org Agenda*"))
+        wind)
+    (if buf
+        (if (setq wind (get-buffer-window buf))
+            (select-window wind)
+          (if (called-interactively-p)
+              (progn
+                (select-window (display-buffer buf t t))
+                (org-fit-window-to-buffer)
+                ;; (org-agenda-redo)
+                )
+            (with-selected-window (display-buffer buf)
+              (org-fit-window-to-buffer)
+              ;; (org-agenda-redo)
+              )))
+      (call-interactively 'org-agenda-list)))
+  ;;(let ((buf (get-buffer "*Calendar*")))
+  ;;  (unless (get-buffer-window buf)
+  ;;    (org-agenda-goto-calendar)))
+  )
+
+;; Make this happen only if we open an org file.
+(add-hook 'org-mode-hook
+          (lambda ()
+            (run-with-idle-timer 300 t 'jump-to-org-agenda)))

@@ -1,8 +1,13 @@
+(defvar locate-dominating-stop-dir-regexp
+        "\\`\\(?:[\\/][\\/][^\\/]+\\|/\\(?:net\\|afs\\|\\.\\.\\.\\)/\\)\\'")
+
+;; Setup MELPA
 (when (>= emacs-major-version 24)
   (require 'package)
   (package-initialize)
+  (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
   (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
-  (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
   (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
 )
 
@@ -13,6 +18,22 @@
 (require 'uniquify)   ;; make buffer names more unique
 ;;(require 'icicles)    ;; enhanced minibuffer completion
 
+; Help cleanup the includes and using stuff
+; found on http://www.emacswiki.org/emacs/DuplicateLines
+(defun uniquify-region-lines (beg end)
+  "Remove duplicate adjacent lines in region."
+  (interactive "*r")
+  (save-excursion
+    (goto-char beg)
+    (while (re-search-forward "^\\(.*\n\\)\\1+" end t)
+      (replace-match "\\1"))))
+
+(defun fleury/cleanup-section ()
+  "Remove duplicates and sort lines in region."
+  (interactive)
+  (sort-lines nil (region-beginning) (region-end))
+  (uniquify-region-lines (region-beginning) (region-end)))
+(global-set-key [M-f5] 'fleury/cleanup-section)
 ;; Load my org stuff
 (load-file "~/Emacs/org-mode-hacks.el")
 (load-file "~/Emacs/my-org-mode-config.el")
@@ -22,7 +43,7 @@
 
 ;; ===== Use auto-revert, which reloads a file if it's updated on disk
 ;;       and not modified in the buffer.
-;;(load-file "~/Emacs/autorevert.el")
+(load-file "~/Emacs/autorevert.el")
 (global-auto-revert-mode 1)
 
 ; ===== Configure the shortcuts for multiple cursors
