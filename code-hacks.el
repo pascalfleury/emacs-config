@@ -16,3 +16,13 @@
   (interactive)
   (sort-lines nil (region-beginning) (region-end))
   (uniquify-region-lines (region-beginning) (region-end)))
+
+;; Temporarily maximisze a buffer
+;; https://gist.github.com/mads379/3402786
+(defun toggle-maximize-buffer () "Maximize buffer"
+  (interactive)
+  (if (= 1 (length (window-list)))
+      (jump-to-register '_)
+    (progn
+      (window-configuration-to-register '_)
+      (delete-other-windows))))

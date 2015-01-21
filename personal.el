@@ -33,6 +33,9 @@
 ;; Simple cleanup of #include/typedef/using blocks.
 (global-set-key [M-f5] 'fleury/sort-and-uniquify-region)
 
+;; Toggle temporary buffer maximization
+(global-set-key [M-f8] 'toggle-maximize-buffer)
+
 ; ===== Configure the shortcuts for multiple cursors
 (require 'multiple-cursors)
 (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)

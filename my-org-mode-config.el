@@ -62,7 +62,7 @@
 (setq org-tag-alist '(("PRJ" . ?p) ("DESK" . ?d) ("HOME" . ?h) ("VC" . ?v)))
 
 (setq org-todo-keywords
-      '((sequence "TODO(t!)" "NEXT(n!)" "STARTED(s!)" "WAITING(w!)" "|" "DONE(d!)" "CANCELLED(c@)" "DEFERRED(f@)" "SOMEDAY(S!)" "FAILED(F!)")
+      '((sequence "TODO(t!)" "NEXT(n!)" "STARTED(s!)" "WAITING(w!)" "|" "DONE(d!)" "CANCELLED(c@)" "DEFERRED(f@)" "SOMEDAY(S!)" "FAILED(F!)" "REFILED")
         (sequence "TASK(m!)" "|" "DONE(d!)" "CANCELLED(c@)" )))
 
 (setq org-tags-exclude-from-inheritance '("PRJ")
@@ -103,6 +103,7 @@
         ("RUNNING" . (:foreground "orange" :weight bold))
         ("WORKED" . (:foreground "green" :weight bold))
         ("FAILED" . (:foreground "red" :weight bold))
+        ("REFILED" . (:foreground "gray"))
        ))
 
 ;; What kind of code block languages do I need
