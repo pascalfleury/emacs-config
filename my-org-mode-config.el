@@ -102,7 +102,8 @@
    (dot . t)
    (gnuplot . t)
    (python . t)
-   (sh . t)
+   (sh . t)  ;; the old form
+   ;(shell . t)  ;; the new form
   )) ; this line activates dot
 
 ; Add the ODT as an export format
