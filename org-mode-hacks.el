@@ -1,5 +1,6 @@
-(require 'org-install)
-(require 'org-secretary)
+;; This file should contain mostly code gleaned from around the internets.
+;; It should not contain proper configuration, like keyboard bindings etc.
+;; ======================================================================
 
 ;; Make sure archiving preserves the same tree structure, including when
 ;; archiving subtrees.
@@ -117,3 +118,33 @@
 (defun dmg-org-mode-init ()
   (add-hook 'after-save-hook 'kiwon/org-agenda-redo-in-other-window t t))
 ;;  (add-hook 'after-save-hook 'dmg-org-update-agenda-file t t))
+
+;; ========== Show the agenda when left idle
+;; http://orgmode.org/worg/org-hacks.html#unnumbered-79
+(defun jump-to-org-agenda ()
+  (interactive)
+  (let ((buf (get-buffer "*Org Agenda*"))
+        wind)
+    (if buf
+        (if (setq wind (get-buffer-window buf))
+            (select-window wind)
+          (if (called-interactively-p)
+              (progn
+                (select-window (display-buffer buf t t))
+                (org-fit-window-to-buffer)
+                ;; (org-agenda-redo)
+                )
+            (with-selected-window (display-buffer buf)
+              (org-fit-window-to-buffer)
+              ;; (org-agenda-redo)
+              )))
+      (call-interactively 'org-agenda-list)))
+  ;;(let ((buf (get-buffer "*Calendar*")))
+  ;;  (unless (get-buffer-window buf)
+  ;;    (org-agenda-goto-calendar)))
+  )
+
+;; Make this happen only if we open an org file.
+(add-hook 'org-mode-hook
+          (lambda ()
+            (run-with-idle-timer 300 t 'jump-to-org-agenda)))

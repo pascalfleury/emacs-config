@@ -16,5 +16,6 @@ I usually install thesethrough ELPA
  org
  org-plus-contrib
  org-bullets
+ org-ehtml
  ac-jump-mode
  multiple-cursors

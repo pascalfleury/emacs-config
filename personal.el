@@ -1,8 +1,13 @@
+(defvar locate-dominating-stop-dir-regexp
+        "\\`\\(?:[\\/][\\/][^\\/]+\\|/\\(?:net\\|afs\\|\\.\\.\\.\\)/\\)\\'")
+
+;; Setup MELPA
 (when (>= emacs-major-version 24)
   (require 'package)
   (package-initialize)
+  (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
   (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
-  (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
   (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
 )
 
@@ -19,11 +24,17 @@
 
 (load-file "~/Emacs/color_cursors.el")
 (load-file "~/Emacs/selective_display.el")
+(load-file "~/Emacs/code-hacks.el")
 
 ;; ===== Use auto-revert, which reloads a file if it's updated on disk
 ;;       and not modified in the buffer.
-;;(load-file "~/Emacs/autorevert.el")
 (global-auto-revert-mode 1)
+
+;; Simple cleanup of #include/typedef/using blocks.
+(global-set-key [M-f5] 'fleury/sort-and-uniquify-region)
+
+;; Toggle temporary buffer maximization
+(global-set-key [M-f8] 'toggle-maximize-buffer)
 
 ; ===== Configure the shortcuts for multiple cursors
 (require 'multiple-cursors)
@@ -66,7 +77,7 @@
 (global-font-lock-mode t)
 
 ;; enable visual feedback on selections
-;(setq-default transient-mark-mode t)
+(setq-default transient-mark-mode t)
 
 ;; goto line function C-c C-g
 (global-set-key [ (control c) (control g) ] 'goto-line)

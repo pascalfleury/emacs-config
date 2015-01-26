@@ -1,4 +1,7 @@
+;; This file contains mostly org-config specific to me, myself and I.
+;; ==================================================================
 (require 'org)
+(require 'org-secretary)
 
 ;;(org-remember-insinuate)
 
@@ -15,6 +18,7 @@
 (setq org-log-done 't)
 (setq org-startup-folded 't)
 (setq org-startup-indented 't)
+(setq org-startup-folded 't)
 
 (setq org-ellipsis "...")
 (require 'org-bullets)
@@ -26,6 +30,11 @@
 ;(load "org-beautify-theme")
 
 (setq org-babel-sh-command "bash")
+
+;; clock stuff into a drawer
+(setq org-clock-into-drawer t)
+(setq org-log-into-drawer t)
+(setq org-clock-int-drawer "CLOCK")
 
 ;; config for org-mobile-*
 (setq org-directory "~/OrgFiles")
@@ -39,13 +48,17 @@
 (global-set-key [f12] 'org-get-first-agenda-file)
 (global-set-key [C-f12] 'org-get-first-agenda-file)
 
-;; Don't ask before executing
-(setq org-confirm-babel-evaluate 'nil)
+;; This will start serving the org files through the emacs-based webbrowser
+;; when pressing M-f12 (localhost:555555)
+(setq org-ehtml-docroot (expand-file-name "~/OrgFiles"))
+(setq org-ehtml-everything-editable t)
+(setq org-ehtml-allow-agenda t)
+(require 'org-ehtml)
 
-;; clock stuff into a drawer
-(setq org-clock-into-drawer t)
-(setq org-log-into-drawer t)
-(setq org-clock-int-drawer "CLOCK")
+(defun fleury/start-web-server ()
+  (interactive)
+  (ws-start org-ehtml-handler 55555))
+(global-set-key (kbd "<M-f12>") 'fleury/start-web-server)
 
 (setq org-link-abbrev-alist
       '(("b" . "http://b/")
@@ -55,11 +68,8 @@
 
 (setq org-tag-alist '(("PRJ" . ?p) ("DESK" . ?d) ("HOME" . ?h) ("VC" . ?v)))
 
-;;(setq org-todo-keywords
-;;      '((types "TODO(t!)" "TASK(m!)" "NEXT(n!)" "STARTED(s!)" "WAITING(w!)" "|" "DONE(d!)" "CANCELLED(c@)" "DEFERRED(f@)" "SOMEDAY(S!)" "FAILED(F!)")))
-
 (setq org-todo-keywords
-      '((sequence "TODO(t!)" "NEXT(n!)" "STARTED(s!)" "WAITING(w!)" "|" "DONE(d!)" "CANCELLED(c@)" "DEFERRED(f@)" "SOMEDAY(S!)" "FAILED(F!)")
+      '((sequence "TODO(t!)" "NEXT(n!)" "STARTED(s!)" "WAITING(w!)" "|" "DONE(d!)" "CANCELLED(c@)" "DEFERRED(f@)" "SOMEDAY(S!)" "FAILED(F!)" "REFILED")
         (sequence "TASK(m!)" "|" "DONE(d!)" "CANCELLED(c@)" )))
 
 (setq org-tags-exclude-from-inheritance '("PRJ")
@@ -100,8 +110,10 @@
         ("RUNNING" . (:foreground "orange" :weight bold))
         ("WORKED" . (:foreground "green" :weight bold))
         ("FAILED" . (:foreground "red" :weight bold))
+        ("REFILED" . (:foreground "gray"))
        ))
 
+;; What kind of code block languages do I need
 (org-babel-do-load-languages
  'org-babel-load-languages
  '(
@@ -111,7 +123,11 @@
    (python . t)
    (ledger . t)
    (sh . t)
-  )) ; this line activates dot
+   ;;(shell . t)
+  ))
+
+;; Don't ask before executing
+(setq org-confirm-babel-evaluate 'nil)
 
 ; Add the ODT as an export format
 (eval-after-load "org"
