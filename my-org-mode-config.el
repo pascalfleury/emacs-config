@@ -21,6 +21,13 @@
 (setq org-startup-folded 't)
 
 (setq org-ellipsis "...")
+(require 'org-bullets)
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+
+;(require 'color-theme)
+;(setq color-theme-is-global t)
+;(color-theme-initialize)
+;(load "org-beautify-theme")
 
 (setq org-babel-sh-command "bash")
 
@@ -114,6 +121,7 @@
    (dot . t)
    (gnuplot . t)
    (python . t)
+   (ledger . t)
    (sh . t)
    ;;(shell . t)
   ))

@@ -15,6 +15,7 @@ I usually install thesethrough ELPA
  ledger-mode
  org
  org-plus-contrib
+ org-bullets
  org-ehtml
  ac-jump-mode
  multiple-cursors
