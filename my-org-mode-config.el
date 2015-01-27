@@ -58,7 +58,6 @@
         ("cl" . "http://cr/")))
 
 (setq org-sec-me "paf")
-
 (setq org-tag-alist '(("PRJ" . ?p) ("DESK" . ?d) ("HOME" . ?h) ("VC" . ?v)))
 
 (setq org-todo-keywords
@@ -66,6 +65,7 @@
         (sequence "TASK(m!)" "|" "DONE(d!)" "CANCELLED(c@)" )))
 
 (setq org-tags-exclude-from-inheritance '("PRJ")
+      org-use-property-inheritance '("PRIORITY")
       org-stuck-projects '("+PRJ/-DONE-CANCELLED"
                            ("TODO" "NEXT" "STARTED" "TASK") ()))
 
