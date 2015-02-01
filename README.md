@@ -19,3 +19,4 @@ I usually install thesethrough ELPA
  org-ehtml
  ac-jump-mode
  multiple-cursors
+ icicles
