@@ -21,6 +21,13 @@
 (setq org-startup-folded 't)
 
 (setq org-ellipsis "...")
+(require 'org-bullets)
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+
+;(require 'color-theme)
+;(setq color-theme-is-global t)
+;(color-theme-initialize)
+;(load "org-beautify-theme")
 
 (setq org-babel-sh-command "bash")
 
@@ -58,7 +65,6 @@
         ("cl" . "http://cr/")))
 
 (setq org-sec-me "paf")
-
 (setq org-tag-alist '(("PRJ" . ?p) ("DESK" . ?d) ("HOME" . ?h) ("VC" . ?v)))
 
 (setq org-todo-keywords
@@ -66,6 +72,7 @@
         (sequence "TASK(m!)" "|" "DONE(d!)" "CANCELLED(c@)" )))
 
 (setq org-tags-exclude-from-inheritance '("PRJ")
+      org-use-property-inheritance '("PRIORITY")
       org-stuck-projects '("+PRJ/-DONE-CANCELLED"
                            ("TODO" "NEXT" "STARTED" "TASK") ()))
 
@@ -114,9 +121,10 @@
    (dot . t)
    (gnuplot . t)
    (python . t)
-   (sh . t)  ;; the old form
-   ;(shell . t)  ;; the new form
-  )) ; this line activates dot
+   (ledger . t)
+   (sh . t)
+   ;;(shell . t)
+  ))
 
 ;; Don't ask before executing
 (setq org-confirm-babel-evaluate 'nil)

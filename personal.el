@@ -17,7 +17,7 @@
 
 ;; ================ My own stuff
 (require 'uniquify)   ;; make buffer names more unique
-;;(require 'icicles)    ;; enhanced minibuffer completion
+(require 'icicles)    ;; enhanced minibuffer completion
 
 ;; Load my org stuff
 (load-file "~/Emacs/org-mode-hacks.el")
@@ -43,6 +43,17 @@
 (global-set-key (kbd "C->") 'mc/mark-next-like-this)
 (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
 (global-set-key (kbd "C-c C->") 'mc/mark-all-like-this)
+
+(require 'wgrep)
+(global-set-key (kbd "C-M-i") 'iedit-mode)
+
+;; ==== Configure my ledger mode
+(require 'ledger-mode)
+(add-to-list 'auto-mode-alist '("\\.ledger$" . ledger-mode))
+(define-key ledger-mode-map (kbd "<f6>") 'ledger-sort-buffer)
+(define-key ledger-mode-map (kbd "<f7>") 'ledger-mode-clean-buffer)
+
+(setq ledger-reconcile-default-commodity "CHF")
 
 ;; ==== Let's one jump around text
 (require 'ace-jump-mode)
