@@ -49,8 +49,24 @@
 ;; ==== Configure my ledger mode
 (require 'ledger-mode)
 (add-to-list 'auto-mode-alist '("\\.ledger$" . ledger-mode))
-(define-key ledger-mode-map (kbd "<f6>") 'ledger-sort-buffer)
-(define-key ledger-mode-map (kbd "<f7>") 'ledger-mode-clean-buffer)
+
+(defun single-lines-only ()
+  "replace multiple blank lines with a single one"
+  (interactive)
+  (goto-char (point-min))
+  (while (re-search-forward "\\(^\\s-*$\\)\n" nil t)
+    (replace-match "\n")
+    (forward-char 1)))
+
+(defun paf/cleanup-ledger-buffer ()
+  "Cleanup the ledger file"
+  (interactive)
+  (delete-trailing-whitespace)
+  (single-lines-only)
+  (ledger-mode-clean-buffer)
+  (ledger-sort-buffer))
+
+(define-key ledger-mode-map (kbd "<f6>") 'paf/cleanup-ledger-buffer)
 
 (setq ledger-reconcile-default-commodity "CHF")
 
