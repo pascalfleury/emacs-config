@@ -3,11 +3,6 @@
 (require 'org)
 (require 'org-secretary)
 
-;;(org-remember-insinuate)
-
-;;(add-hook 'org-mode-hook
-;;          (lambda ()
-;;            (set-background-color "black")))
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-cc" 'org-capture)
 (global-set-key "\C-ca" 'org-agenda)
@@ -64,8 +59,8 @@
 (setq org-tag-alist '(("PRJ" . ?p) ("Milestone" . ?m) ("DESK" . ?d) ("HOME" . ?h) ("VC" . ?v)))
 
 (setq org-todo-keywords
-      '((sequence "TODO(t!)" "NEXT(n!)" "STARTED(s!)" "WAITING(w!)" "|" "DONE(d!)" "CANCELLED(c@)" "DEFERRED(f@)" "SOMEDAY(S!)" "FAILED(F!)" "REFILED")
-        (sequence "TASK(m!)" "|" "DONE(d!)" "CANCELLED(c@)" )))
+      '((sequence "TODO(t!)" "NEXT(n!)" "STARTED(s!)" "WAITING(w!)" "|" "DONE(d!)" "CANCELLED(C@)" "DEFERRED(D@)" "SOMEDAY(S!)" "FAILED(F!)" "REFILED(R!)")
+        (sequence "TASK(m!)" "|" "DONE(d!)" "CANCELLED(C@)" )))
 
 (setq org-tags-exclude-from-inheritance '("PRJ")
       org-use-property-inheritance '("PRIORITY")
@@ -114,6 +109,18 @@
         ("FAILED" . (:foreground "red" :weight bold))
         ("REFILED" . (:foreground "gray"))
        ))
+
+;; capture and refile stuff
+; show upto 2 levels for refile targets, in all agenda files
+(setq org-refile-targets '((org-agenda-files . (:maxlevel . 2))))
+(setq org-default-notes-file "~/OrgFiles/refile.org")
+
+; from: http://doc.norang.ca/org-mode.html
+; Exclude DONE state tasks from refile targets
+(defun bh/verify-refile-target ()
+  "Exclude todo keywords with a done state from refile targets"
+  (not (member (nth 2 (org-heading-components)) org-done-keywords)))
+(setq org-refile-target-verify-function 'bh/verify-refile-target)
 
 ;; What kind of code block languages do I need
 (org-babel-do-load-languages
