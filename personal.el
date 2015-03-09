@@ -30,6 +30,7 @@
 ;; ===== Use auto-revert, which reloads a file if it's updated on disk
 ;;       and not modified in the buffer.
 (global-auto-revert-mode 1)
+(put 'upcase-region 'disabled nil)
 
 ;; Simple cleanup of #include/typedef/using blocks.
 (global-set-key [M-f5] 'fleury/sort-and-uniquify-region)
@@ -101,8 +102,22 @@
 (global-set-key [delete] 'delete-char)
 (global-set-key [kp-delete] 'delete-char)
 
-;; turn on font-lock mode
+;; modify some of the looks
 (global-font-lock-mode t)
+(setq frame-title-format "emacs - %b")
+(when (display-graphic-p) ;; used when in konsole mode
+  (set-background-color "#ffffff")
+  (set-foreground-color "#141312"))
+
+;; key stroke to change color theme
+;(require 'color-theme)
+;(color-theme-initialize)
+;(setq color-theme-is-global t)
+;
+;(defun fleury/set-my-color-theme ()
+;  (interactive)
+;  '(load-theme 'hc-zenburn))
+;(global-set-key (kbd "S-<f11>") 'fleury/set-my-color-theme)
 
 ;; enable visual feedback on selections
 (setq-default transient-mark-mode t)

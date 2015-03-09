@@ -16,13 +16,9 @@
 (setq org-startup-folded 't)
 
 (setq org-ellipsis "...")
-(require 'org-bullets)
-(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-
-;(require 'color-theme)
-;(setq color-theme-is-global t)
-;(color-theme-initialize)
-;(load "org-beautify-theme")
+; Don't rally like the new bullets...cc
+;;(require 'org-bullets)
+;;(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 
 (setq org-babel-sh-command "bash")
 
@@ -60,7 +56,7 @@
         ("cl" . "http://cr/")))
 
 (setq org-sec-me "paf")
-(setq org-tag-alist '(("PRJ" . ?p) ("DESK" . ?d) ("HOME" . ?h) ("VC" . ?v)))
+(setq org-tag-alist '(("PRJ" . ?p) ("Milestone" . ?m) ("DESK" . ?d) ("HOME" . ?h) ("VC" . ?v)))
 
 (setq org-todo-keywords
       '((sequence "TODO(t!)" "NEXT(n!)" "STARTED(s!)" "WAITING(w!)" "|" "DONE(d!)" "CANCELLED(C@)" "DEFERRED(D@)" "SOMEDAY(S!)" "FAILED(F!)" "REFILED(R!)")
@@ -90,6 +86,12 @@
            (todo "STARTED")))
          ("J" "Interactive TODO dowith and TASK with"
           ((org-sec-who-view "TODO dowith")))))
+
+;; Make the clendar day info a bit more visible.
+;; Move this into the custom-set-faces in ~/.emacs
+;; '(org-agenda-date ((t (:inherit org-agenda-structure :background "pale green" :foreground "black" :weight bold))) t)
+;; '(org-agenda-date-weekend ((t (:inherit org-agenda-date :background "light blue" :weight bold))) t)
+
 
 (setq org-todo-keyword-faces '(
         ("TODO" . (:foreground "purple" :weight bold))
@@ -130,6 +132,7 @@
    (python . t)
    (ledger . t)
    (sh . t)
+   (latex . t)
    ;;(shell . t)
   ))
 
