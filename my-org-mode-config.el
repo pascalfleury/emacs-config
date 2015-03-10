@@ -1,5 +1,12 @@
 ;; This file contains mostly org-config specific to me, myself and I.
 ;; ==================================================================
+
+;; Make the calendar day info a bit more visible.
+;; Move this into the custom-set-faces in ~/.emacs
+;; '(org-agenda-date ((t (:inherit org-agenda-structure :background "pale green" :foreground "black" :weight bold))) t)
+;; '(org-agenda-date-weekend ((t (:inherit org-agenda-date :background "light blue" :weight bold))) t)
+
+
 (require 'org)
 (require 'org-secretary)
 
@@ -37,10 +44,11 @@
   (interactive)
   (find-file (elt org-agenda-files 0)))
 (global-set-key [f12] 'org-get-first-agenda-file)
+; F12 on Mac OSX displays the dashboard....
 (global-set-key [C-f12] 'org-get-first-agenda-file)
 
 ;; This will start serving the org files through the emacs-based webbrowser
-;; when pressing M-f12 (localhost:555555)
+;; when pressing M-f12 (on localhost:55555)
 (setq org-ehtml-docroot (expand-file-name "~/OrgFiles"))
 (setq org-ehtml-everything-editable t)
 (setq org-ehtml-allow-agenda t)
@@ -87,12 +95,6 @@
          ("J" "Interactive TODO dowith and TASK with"
           ((org-sec-who-view "TODO dowith")))))
 
-;; Make the clendar day info a bit more visible.
-;; Move this into the custom-set-faces in ~/.emacs
-;; '(org-agenda-date ((t (:inherit org-agenda-structure :background "pale green" :foreground "black" :weight bold))) t)
-;; '(org-agenda-date-weekend ((t (:inherit org-agenda-date :background "light blue" :weight bold))) t)
-
-
 (setq org-todo-keyword-faces '(
         ("TODO" . (:foreground "purple" :weight bold))
         ("TASK" . (:foreground "steelblue" :weight bold))
@@ -111,9 +113,18 @@
        ))
 
 ;; capture and refile stuff
-; show upto 2 levels for refile targets, in all agenda files
+; show up to 2 levels for refile targets, in all agenda files
 (setq org-refile-targets '((org-agenda-files . (:maxlevel . 2))))
 (setq org-default-notes-file "~/OrgFiles/refile.org")
+
+;; some templates that I think are useful
+(setq org-capture-templates
+      '(("t" "Todo" entry (file+headline "~/OrgFiles/refile.org" "Tasks")
+             "* TODO %?\n  %U")
+        ("m" "Meeting" entry (file+headline "~/OrgFiles/refile.org" "Meetings")
+             "* %U  :MTG:\n %^{with}p\n %?")
+        ("j" "Journal" entry (file+datetree "~/OrgFiles/journal.org")
+             "* %?\n  %U")))
 
 ; from: http://doc.norang.ca/org-mode.html
 ; Exclude DONE state tasks from refile targets
@@ -121,6 +132,7 @@
   "Exclude todo keywords with a done state from refile targets"
   (not (member (nth 2 (org-heading-components)) org-done-keywords)))
 (setq org-refile-target-verify-function 'bh/verify-refile-target)
+
 
 ;; What kind of code block languages do I need
 (org-babel-do-load-languages
