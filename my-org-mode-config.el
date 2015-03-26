@@ -145,8 +145,12 @@
    (ledger . t)
    (sh . t)
    (latex . t)
+   (plantuml . t)
    ;;(shell . t)
   ))
+
+;; Tell where PlantUML is to be found
+(setq org-plantuml-jar-path (expand-file-name "~/Apps/plantuml.jar"))
 
 ;; Don't ask before executing
 (setq org-confirm-babel-evaluate 'nil)
@@ -154,3 +158,22 @@
 ; Add the ODT as an export format
 (eval-after-load "org"
   '(require 'ox-odt nil t))
+
+;; Make the display of images a simple key-stroke away.
+(require 'iimage)
+(add-to-list 'iimage-mode-image-regex-alist
+             (cons (concat "\\[\\[file:\\(~?" iimage-mode-image-filename-regex
+                           "\\)\\]")  1))
+
+(defun org-toggle-iimage-in-org ()
+  "display images in your org file"
+  (interactive)
+  (if (face-underline-p 'org-link)
+      (set-face-underline-p 'org-link nil)
+    (set-face-underline-p 'org-link t))
+  (iimage-mode 'toggle))
+
+(add-hook 'org-mode-hook (lambda ()
+                           ;; display images
+                           (local-set-key "\M-I" 'org-toggle-iimage-in-org)
+                          ))
