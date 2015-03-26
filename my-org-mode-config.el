@@ -86,12 +86,11 @@
           "-personal+doat={.+}|dowith={.+}/!-TASK"
           ((org-agenda-todo-ignore-scheduled nil)))
          ("j" "TODO dowith and TASK with"
-         ((org-sec-with-view "STARTED dowith")
-           (org-sec-with-view "TODO dowith")
-           (org-sec-where-view "TODO doat")
-           (org-sec-assigned-with-view "TASK with")
-           (org-sec-stuck-with-view "STUCK with")
-           (todo "STARTED")))
+         ((org-sec-with-view "TODO dowith")
+          (org-sec-where-view "TODO doat")
+          (org-sec-assigned-with-view "TASK with")
+          (org-sec-stuck-with-view "STUCK with")
+          (todo "STARTED")))
          ("J" "Interactive TODO dowith and TASK with"
           ((org-sec-who-view "TODO dowith")))))
 
@@ -122,7 +121,9 @@
       '(("t" "Todo" entry (file+headline "~/OrgFiles/refile.org" "Tasks")
              "* TODO %?\n  %U")
         ("m" "Meeting" entry (file+headline "~/OrgFiles/refile.org" "Meetings")
-             "* %U  :MTG:\n %^{with}p\n %?")
+             "* %U  :MTG:\n %^{with}p\n%?")
+        ("n" "Note" entry (file+headline "~/OrgFiles/refile.org" "Notes")
+             "* %?\n%U")
         ("j" "Journal" entry (file+datetree "~/OrgFiles/journal.org")
              "* %?\n  %U")))
 
