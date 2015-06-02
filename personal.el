@@ -17,7 +17,10 @@
 
 ;; ================ My own stuff
 (require 'uniquify)   ;; make buffer names more unique
-(require 'icicles)    ;; enhanced minibuffer completion
+
+;; enhanced minibuffer completion
+(require 'icicles)    
+(icy-mode 1)
 
 ;; Load my org stuff
 (load-file "~/Emacs/org-mode-hacks.el")
@@ -34,7 +37,7 @@
 (put 'upcase-region 'disabled nil)
 
 ;; Simple cleanup of #include/typedef/using blocks.
-(global-set-key (kbd "M-<f5>") 'fleury/sort-and-uniquify-region)
+(global-set-key (kbd "C-p s") 'fleury/sort-and-uniquify-region)
 
 ;; Toggle temporary buffer maximization
 (global-set-key [M-f8] 'toggle-maximize-buffer)
