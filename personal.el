@@ -37,6 +37,7 @@
 (put 'upcase-region 'disabled nil)
 
 ;; Simple cleanup of #include/typedef/using blocks.
+(global-set-key (kbd "C-p") nil) ;; was 'previous-line'
 (global-set-key (kbd "C-p s") 'fleury/sort-and-uniquify-region)
 
 ;; Toggle temporary buffer maximization
