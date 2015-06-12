@@ -66,6 +66,10 @@
 (setq org-sec-me "paf")
 (setq org-tag-alist '(("PRJ" . ?p) ("Milestone" . ?m) ("DESK" . ?d) ("HOME" . ?h) ("VC" . ?v)))
 
+;; track task dependencies, and dim them in in the agenda.
+(setq org-enforce-todo-dependencies t)
+(setq org-agenda-dim-blocked-tasks 'invisible)
+
 (setq org-todo-keywords
       '((sequence "TODO(t!)" "NEXT(n!)" "STARTED(s!)" "WAITING(w!)" "|" "DONE(d!)" "CANCELLED(C@)" "DEFERRED(D@)" "SOMEDAY(S!)" "FAILED(F!)" "REFILED(R!)")
         (sequence "TASK(m!)" "|" "DONE(d!)" "CANCELLED(C@)" )))

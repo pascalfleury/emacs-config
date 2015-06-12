@@ -147,4 +147,4 @@
 ;; Make this happen only if we open an org file.
 (add-hook 'org-mode-hook
           (lambda ()
-            (run-with-idle-timer 300 t 'jump-to-org-agenda)))
+            (run-with-idle-timer 600 t 'jump-to-org-agenda)))
