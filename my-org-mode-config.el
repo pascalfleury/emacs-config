@@ -71,7 +71,7 @@
 (setq org-agenda-dim-blocked-tasks 'invisible)
 
 (setq org-todo-keywords
-      '((sequence "TODO(t!)" "NEXT(n!)" "STARTED(s!)" "WAITING(w!)" "|" "DONE(d!)" "CANCELLED(C@)" "DEFERRED(D@)" "SOMEDAY(S!)" "FAILED(F!)" "REFILED(R!)")
+      '((sequence "TODO(t!)" "NEXT(n!)" "STARTED(s!)" "WAITING(w!)" "AI(a!)" "|" "DONE(d!)" "CANCELLED(C@)" "DEFERRED(D@)" "SOMEDAY(S!)" "FAILED(F!)" "REFILED(R!)")
         (sequence "TASK(m!)" "|" "DONE(d!)" "CANCELLED(C@)" )))
 
 (setq org-tags-exclude-from-inheritance '("PRJ")
