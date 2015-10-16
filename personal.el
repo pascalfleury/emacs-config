@@ -23,8 +23,8 @@
 (icy-mode 1)
 
 ;; Load my org stuff
-(load-file "~/Emacs/org-mode-hacks.el")
 (load-file "~/Emacs/my-org-mode-config.el")
+(load-file "~/Emacs/org-mode-hacks.el")
 (load-file "~/Emacs/org-collector.el")
 
 (load-file "~/Emacs/color_cursors.el")
