@@ -64,7 +64,7 @@
         ("cl" . "http://cr/")))
 
 (setq org-sec-me "paf")
-(setq org-tag-alist '(("PRJ" . ?p) ("Milestone" . ?m) ("DESK" . ?d) ("HOME" . ?h) ("VC" . ?v)))
+(setq org-tag-alist '(("PRJ" . ?p) ("DESIGNDOC" . ?D) ("Milestone" . ?m) ("DESK" . ?d) ("HOME" . ?h) ("VC" . ?v)))
 
 ;; track task dependencies, and dim them in in the agenda.
 (setq org-enforce-todo-dependencies t)
