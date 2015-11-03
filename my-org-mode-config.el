@@ -120,9 +120,6 @@
 (setq org-refile-targets '((org-agenda-files . (:maxlevel . 2))))
 (setq org-default-notes-file "~/OrgFiles/refile.org")
 
-;; hack to get capture working again
-(defun outline-hide-sublevels ())
-
 ;; some templates that I think are useful
 (setq org-capture-templates
       '(("t" "Todo" entry (file+headline "~/OrgFiles/refile.org" "Tasks")

@@ -19,6 +19,7 @@ I usually install these through ELPA
  ace-jump-mode
  multiple-cursors
  icicles
+ wgrep
 
 USEFUL PACKAGES
   hc-zenburn-theme
