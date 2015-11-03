@@ -11,7 +11,7 @@ consisting of ths single line:
 
 EXPECTED PACKAGES
 
-I usually install thesethrough ELPA
+I usually install these through ELPA
  ledger-mode
  org
  org-plus-contrib
@@ -19,3 +19,6 @@ I usually install thesethrough ELPA
  ace-jump-mode
  multiple-cursors
  icicles
+
+USEFUL PACKAGES
+  
