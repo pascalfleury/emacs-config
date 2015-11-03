@@ -16,7 +16,7 @@ I usually install these through ELPA
  org
  org-plus-contrib
  org-ehtml
- ac-jump-mode
+ ace-jump-mode
  multiple-cursors
  icicles
 
