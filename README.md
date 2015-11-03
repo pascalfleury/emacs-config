@@ -21,4 +21,4 @@ I usually install these through ELPA
  icicles
 
 USEFUL PACKAGES
-  
+  hc-zenburn-theme
