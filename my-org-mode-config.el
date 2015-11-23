@@ -9,6 +9,7 @@
 
 (require 'org)
 (require 'org-secretary)
+(require 'org-habit)
 
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-cc" 'org-capture)
@@ -21,6 +22,11 @@
 (setq org-startup-folded 't)
 (setq org-startup-indented 't)
 (setq org-startup-folded 't)
+
+(setq org-habit-graph-column 45)
+(setq org-habit-preceding-days 90)
+(setq org-habit-following-days 30)
+(setq org-habit-show-habits-only-for-today nil)
 
 (setq org-ellipsis "...")
 ; Don't rally like the new bullets...cc
@@ -61,6 +67,7 @@
 
 (setq org-link-abbrev-alist
       '(("b" . "http://b/")
+        ("go" . "http://go/")
         ("cl" . "http://cr/")))
 
 (setq org-sec-me "paf")
@@ -77,10 +84,15 @@
 (setq org-tags-exclude-from-inheritance '("PRJ")
       org-use-property-inheritance '("PRIORITY")
       org-stuck-projects '("+PRJ/-DONE-CANCELLED"
-                           ("TODO" "NEXT" "STARTED" "TASK") ()))
+			   ; it is considered stuck if there is no next action
+                           (;"TODO"
+			    "NEXT" "STARTED" "TASK") ()))
 
  (setq org-agenda-custom-commands
        '(("n" "Agenda and all TODO's" ((agenda "") (alltodo "")))
+         ("N" "Next actions" tags-todo
+          "-personal-doat={.+}-dowith={.+}/!-TASK-TODO"
+          ((org-agenda-todo-ignore-scheduled t)))
          ("h" "Work todos" tags-todo
           "-personal-doat={.+}-dowith={.+}/!-TASK"
           ((org-agenda-todo-ignore-scheduled t)))
@@ -102,12 +114,12 @@
         ("TODO" . (:foreground "purple" :weight bold))
         ("TASK" . (:foreground "steelblue" :weight bold))
         ("NEXT" . (:foreground "red" :weight bold))
-        ("STARTED" . (:foreground "orange" :weight bold))
+        ("STARTED" . (:foreground "darkgreen" :weight bold))
         ("WAITING" . (:foreground "orange" :weight bold))
         ("FLAG_GATED" . (:foreground "orange" :weight bold))
         ("SOMEDAY" . (:foreground "steelblue" :weight bold))
         ("MAYBE" . (:foreground "steelblue" :weight bold))
-        ("AI" . (:foreground "black" :weight bold))
+        ("AI" . (:foreground "red" :weight bold))
         ("NEW" . (:foreground "orange" :weight bold))
         ("RUNNING" . (:foreground "orange" :weight bold))
         ("WORKED" . (:foreground "green" :weight bold))
