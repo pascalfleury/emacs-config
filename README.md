@@ -20,6 +20,7 @@ I usually install these through ELPA
  multiple-cursors
  icicles
  wgrep
+ column-marker
 
 USEFUL PACKAGES
   hc-zenburn-theme

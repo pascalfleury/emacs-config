@@ -29,6 +29,12 @@
 ;; Toggle temporary buffer maximization
 (global-set-key [M-f8] 'toggle-maximize-buffer)
 
+;; Mark the 80 col boundary
+(require 'column-marker)
+(add-hook 'foo-mode-hook (lambda () (interactive) (column-marker-1 80)))
+;; Use `C-c m' interactively to highlight with face `column-marker-1'.
+(global-set-key [?\C-c ?m] 'column-marker-1)
+
 ; ===== Configure the shortcuts for multiple cursors
 (require 'multiple-cursors)
 (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
