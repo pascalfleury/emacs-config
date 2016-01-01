@@ -24,3 +24,5 @@ I usually install these through ELPA
 
 USEFUL PACKAGES
   hc-zenburn-theme
+  plantuml-mode
+
