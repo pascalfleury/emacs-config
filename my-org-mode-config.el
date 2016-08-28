@@ -160,10 +160,10 @@
    (gnuplot . t)
    (python . t)
    (ledger . t)
-   (sh . t)
+   ;;(sh . t)
    (latex . t)
    (plantuml . t)
-   ;;(shell . t)
+   (shell . t)
   ))
 
 ;; Tell where PlantUML is to be found
