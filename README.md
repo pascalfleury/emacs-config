@@ -21,8 +21,8 @@ I usually install these through ELPA
  icicles
  wgrep
  column-marker
+ unicode-escape
 
 USEFUL PACKAGES
   hc-zenburn-theme
   plantuml-mode
-
