@@ -131,6 +131,7 @@
 ; show up to 2 levels for refile targets, in all agenda files
 (setq org-refile-targets '((org-agenda-files . (:maxlevel . 2))))
 (setq org-default-notes-file "~/OrgFiles/refile.org")
+(setq org-log-refile t)  ;; will add timestamp when refiled.
 
 ;; some templates that I think are useful
 (setq org-capture-templates
