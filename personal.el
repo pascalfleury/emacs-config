@@ -3,6 +3,7 @@
 
 ;; ================ My own stuff
 (require 'uniquify)   ;; make buffer names more unique
+(setq uniquify-buffer-name-style 'post-forward-angle-brackets)
 
 ;; enhanced minibuffer completion
 (require 'icicles)    
