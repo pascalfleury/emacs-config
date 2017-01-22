@@ -1,13 +1,22 @@
 (defvar locate-dominating-stop-dir-regexp
         "\\`\\(?:[\\/][\\/][^\\/]+\\|/\\(?:net\\|afs\\|\\.\\.\\.\\)/\\)\\'")
 
+
+;; Make EMacs request UTF-8 first when pasting stuff.
+(setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
+
 ;; ================ My own stuff
 (require 'uniquify)   ;; make buffer names more unique
 (setq uniquify-buffer-name-style 'post-forward-angle-brackets)
+(require 'unicode-escape)
 
 ;; enhanced minibuffer completion
 (require 'icicles)    
 (icy-mode 1)
+
+;; Enable winner-mode
+;; Navigate buffer-window configs with C-c left and C-c right.
+(when (fboundp 'winner-mode) (winner-mode 1))
 
 ;; Load my org stuff
 (load-file "~/Emacs/my-org-mode-config.el")
