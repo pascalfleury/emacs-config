@@ -8,7 +8,7 @@
 
 
 (require 'org)
-(require 'org-secretary)
+;;(require 'org-secretary)
 (require 'org-habit)
 
 (global-set-key "\C-cl" 'org-store-link)
@@ -151,7 +151,6 @@
   (not (member (nth 2 (org-heading-components)) org-done-keywords)))
 (setq org-refile-target-verify-function 'bh/verify-refile-target)
 
-
 ;; What kind of code block languages do I need
 (org-babel-do-load-languages
  'org-babel-load-languages
@@ -176,7 +175,7 @@
 ; Add the ODT as an export format
 (eval-after-load "org"
   '(require 'ox-odt nil t))
-(require 'ox-taskjuggler)
+;(require 'ox-taskjuggler)
 
 ;; Make the display of images a simple key-stroke away.
 (require 'iimage)
