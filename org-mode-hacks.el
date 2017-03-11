@@ -132,11 +132,11 @@
               (progn
                 (select-window (display-buffer buf t t))
                 (org-fit-window-to-buffer)
-                ;; (org-agenda-redo)
+                (org-agenda-redo)
                 )
             (with-selected-window (display-buffer buf)
               (org-fit-window-to-buffer)
-              ;; (org-agenda-redo)
+              (org-agenda-redo)
               )))
       (call-interactively 'org-agenda-list)))
   ;;(let ((buf (get-buffer "*Calendar*")))
@@ -144,7 +144,15 @@
   ;;    (org-agenda-goto-calendar)))
   )
 
+(defun update-agenda-if-visible ()
+  (interactive)
+  (let ((buf (get-buffer "*Org Agenda*"))
+        wind)
+    (if buf
+        (org-agenda-redo))))
+
 ;; Make this happen only if we open an org file.
 (add-hook 'org-mode-hook
           (lambda ()
-            (run-with-idle-timer 600 t 'jump-to-org-agenda)))
+            ((run-with-idle-timer 600 t 'jump-to-org-agenda)
+             (run-at-time '10 min' 600 'update-agenda-if-visible))))

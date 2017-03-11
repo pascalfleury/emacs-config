@@ -5,6 +5,7 @@
 ;; Move this into the custom-set-faces in ~/.emacs
 ;; '(org-agenda-date ((t (:inherit org-agenda-structure :background "pale green" :foreground "black" :weight bold))) t)
 ;; '(org-agenda-date-weekend ((t (:inherit org-agenda-date :background "light blue" :weight bold))) t)
+;; '(org-agenda-current-time ((t (:inherit org-time-grid :foreground "yellow" :weight bold))))
 
 
 (require 'org)
@@ -32,6 +33,9 @@
 ; Don't rally like the new bullets...cc
 ;;(require 'org-bullets)
 ;;(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+
+;; A more visible current-time marker in the agenda
+(setq org-agenda-current-time-string ">>>>>>>>>> NOW <<<<<<<<<<")
 
 (setq org-babel-sh-command "bash")
 
@@ -89,7 +93,9 @@
 			    "NEXT" "STARTED" "TASK") ()))
 
  (setq org-agenda-custom-commands
-       '(("n" "Agenda and all TODO's" ((agenda "") (alltodo "")))
+       '(("t" "Hot Today" ((agenda "" ((org-agenda-span 'day)))
+                           (tags-todo "/NEXT")))
+         ("n" "Agenda and all TODO's" ((agenda "") (alltodo "")))
          ("N" "Next actions" tags-todo
           "-personal-doat={.+}-dowith={.+}/!-TASK-TODO"
           ((org-agenda-todo-ignore-scheduled t)))

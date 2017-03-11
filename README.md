@@ -15,7 +15,8 @@ I usually install these through ELPA
 
  - ledger-mode
  - org
- - org-plus-contrib
+ - org-gcal
+ - org-plus-contrib [deprecated?]
  - org-ehtml
  - ace-jump-mode
  - multiple-cursors
