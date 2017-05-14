@@ -18,6 +18,11 @@
 ;; Navigate buffer-window configs with C-c left and C-c right.
 (when (fboundp 'winner-mode) (winner-mode 1))
 
+(global-set-key (kbd "C-c <C-left>")  'windmove-left)
+(global-set-key (kbd "C-c <C-right>") 'windmove-right)
+(global-set-key (kbd "C-c <C-up>")    'windmove-up)
+(global-set-key (kbd "C-c <C-down>")  'windmove-down)
+
 ;; Load my org stuff
 (load-file "~/Emacs/my-org-mode-config.el")
 (load-file "~/Emacs/org-mode-hacks.el")
