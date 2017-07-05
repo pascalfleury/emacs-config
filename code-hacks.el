@@ -1,6 +1,17 @@
 ;; Some functions that are useful when dealing with code.
 ;; ===========================================================
 
+;; Use instead of add-hook to run it a single time.
+;; found on https://emacs.stackexchange.com/questions/3323/is-there-any-way-to-run-a-hook-function-only-once
+(defmacro add-hook-run-once (hook function &optional append local)
+  "Like add-hook, but remove the hook after it is called"
+  (let ((sym (make-symbol "#once")))
+    `(progn
+       (defun ,sym ()
+         (remove-hook ,hook ',sym ,local)
+         (funcall ,function))
+       (add-hook ,hook ',sym ,append ,local))))
+
 ; Help cleanup the includes and using stuff
 ; found on http://www.emacswiki.org/emacs/DuplicateLines
 (defun uniquify-region-lines (beg end)

@@ -201,3 +201,7 @@
                            ;; display images
                            (local-set-key "\M-I" 'org-toggle-iimage-in-org)
                           ))
+
+;; Make this happen only if we open an org file.
+;;(add-hook 'org-mode-hook (lambda () (run-with-idle-timer 600 t 'jump-to-org-agenda)))
+;;(add-hook 'org-mode-hook (lambda () (run-at-time "10 min" 300 'update-agenda-if-visible)))

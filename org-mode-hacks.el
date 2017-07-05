@@ -94,7 +94,7 @@
   (let ((agenda-window (get-buffer-window org-agenda-buffer-name t)))
     (when agenda-window
       (with-selected-window agenda-window (org-agenda-redo)))))
-;;(run-at-time nil 300 'kiwon/org-agenda-redo-in-other-window)
+(run-at-time nil 180 'kiwon/org-agenda-redo-in-other-window)
 
 
 ;; that's the export function to update the agenda view
@@ -136,7 +136,7 @@
                 )
             (with-selected-window (display-buffer buf)
               (org-fit-window-to-buffer)
-              (org-agenda-redo)
+              ;;(org-agenda-redo)
               )))
       (call-interactively 'org-agenda-list)))
   ;;(let ((buf (get-buffer "*Calendar*")))
@@ -150,7 +150,3 @@
         wind)
     (if buf
         (org-agenda-redo))))
-
-;; Make this happen only if we open an org file.
-(add-hook 'org-mode-hook (lambda () (run-with-idle-timer 600 t 'jump-to-org-agenda)))
-(add-hook 'org-mode-hook (lambda () (run-at-time "10 min" 300 'update-agenda-if-visible)))
