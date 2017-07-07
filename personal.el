@@ -41,6 +41,9 @@
 (global-set-key (kbd "C-p") nil) ;; was 'previous-line'
 (global-set-key (kbd "C-p s") 'fleury/sort-and-uniquify-region)
 
+(require 'writeroom-mode)
+(global-set-key (kbd "C-p w") 'writeroom-mode)
+
 ;; Toggle temporary buffer maximization
 (global-set-key [M-f8] 'toggle-maximize-buffer)
 

@@ -24,6 +24,7 @@ I usually install these through ELPA
  - wgrep
  - column-marker
  - unicode-escape
+ - writeroom-mode
 
 ### USEFUL PACKAGES
 
