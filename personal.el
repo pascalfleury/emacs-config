@@ -49,7 +49,7 @@
 
 ;; Mark the 80 col boundary
 (require 'column-marker)
-(add-hook 'foo-mode-hook (lambda () (interactive) (column-marker-1 80)))
+(add-hook 'c-mode-common-hook (lambda () (interactive) (column-marker-1 80)))
 ;; Use `C-c m' interactively to highlight with face `column-marker-1'.
 (global-set-key [?\C-c ?m] 'column-marker-1)
 

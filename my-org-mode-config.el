@@ -83,6 +83,7 @@
 
 (setq org-todo-keywords
       '((sequence "TODO(t!)" "NEXT(n!)" "STARTED(s!)" "WAITING(w!)" "AI(a!)" "|" "DONE(d!)" "CANCELLED(C@)" "DEFERRED(D@)" "SOMEDAY(S!)" "FAILED(F!)" "REFILED(R!)")
+        (sequence "APPLIED(A!)" "WAITING(w!)" "ACCEPTED" "|" "REJECTED" "PUBLISHED")
         (sequence "TASK(m!)" "|" "DONE(d!)" "CANCELLED(C@)" )))
 
 (setq org-tags-exclude-from-inheritance '("PRJ")
@@ -131,9 +132,14 @@
         ("WORKED" . (:foreground "green" :weight bold))
         ("FAILED" . (:foreground "red" :weight bold))
         ("REFILED" . (:foreground "gray"))
-       ))
+        ; For publications
+        ("APPLIED" . (:foreground "orange" :weight bold))
+        ("ACCEPTED" . (:foreground "orange" :weight bold))
+        ("REJECTED" . (:foreground "red" :weight bold))
+        ("PUBLISHED" . (:foreground "green" :weight bold))
+        ))
 
-;; capture and refile stuff
+;; Capture and refile stuff
 ; show up to 2 levels for refile targets, in all agenda files
 (setq org-refile-targets '((org-agenda-files . (:maxlevel . 2))))
 (setq org-default-notes-file "~/OrgFiles/refile.org")
