@@ -75,6 +75,7 @@
           'ba/org-adjust-tags-column-maybe)
 (add-hook 'before-save-hook 'ba/org-adjust-tags-column-before-save)
 (add-hook 'after-save-hook 'ba/org-adjust-tags-column-after-save)
+
 (add-hook 'org-agenda-mode-hook '(lambda ()
                                   (setq org-agenda-tags-column (- (window-width)))))
 

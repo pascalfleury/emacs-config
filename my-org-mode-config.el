@@ -12,10 +12,10 @@
 ;;(require 'org-secretary)
 (require 'org-habit)
 
-(global-set-key "\C-cl" 'org-store-link)
-(global-set-key "\C-cc" 'org-capture)
-(global-set-key "\C-ca" 'org-agenda)
-(global-set-key "\C-cb" 'org-iswitchb)
+(global-set-key (kbd "C-c l") 'org-store-link)
+(global-set-key (kbd "C-c c") 'org-capture)
+(global-set-key (kbd "C-c a") 'org-agenda)
+(global-set-key (kbd "C-c b") 'org-iswitchb)
 
 ;; some config for display
 (setq org-hide-leading-stars 't)
@@ -30,7 +30,7 @@
 (setq org-habit-show-habits-only-for-today nil)
 
 (setq org-ellipsis "...")
-; Don't rally like the new bullets...cc
+; Don't really like the new bullets...cc
 ;;(require 'org-bullets)
 ;;(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 

@@ -1,14 +1,19 @@
 (defvar locate-dominating-stop-dir-regexp
         "\\`\\(?:[\\/][\\/][^\\/]+\\|/\\(?:net\\|afs\\|\\.\\.\\.\\)/\\)\\'")
 
-
-;; Make EMacs request UTF-8 first when pasting stuff.
-(setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
+;; ================ Testing ground
+(add-hook 'org-mode-hook 
+          (lambda ()
+            (local-set-key (kbd "C-<up>") 'org-move-subtree-up)
+            (local-set-key (kbd "C-<down>") 'org-move-subtree-down)))
 
 ;; ================ My own stuff
 (require 'uniquify)   ;; make buffer names more unique
 (setq uniquify-buffer-name-style 'post-forward-angle-brackets)
-(require 'unicode-escape)
+
+;; Make Emacs request UTF-8 first when pasting stuff.
+(setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
+(require 'unicode-escape) ;; does this interfere with pasting ?
 
 ;; enhanced minibuffer completion
 (require 'icicles)    
@@ -99,8 +104,8 @@
 
 ; By the way, the following bindings are often very useful in
 ; compilation/grep/lint mode:
-(global-set-key [M-down]    'next-error)
-(global-set-key [M-up]      '(lambda () (interactive) (next-error -1)))
+;(global-set-key [M-down]    'next-error)
+;(global-set-key [M-up]      '(lambda () (interactive) (next-error -1)))
 
 ; play with macros
 (global-set-key [f3] 'start-kbd-macro)
@@ -138,7 +143,7 @@
 (setq-default transient-mark-mode t)
 
 ;; goto line function C-c C-g
-(global-set-key [ (control c) (control g) ] 'goto-line)
+(global-set-key (kbd "C-c C-g") 'goto-line)
 
 ;; always end a file with a newline
 (setq require-final-newline t)
@@ -161,8 +166,8 @@
 ;; Clean scrolling (aaaaaah)
 (setq scroll-step 1)
 ;; (keyboard-translate ?\C-m ?\C-l)
-(global-set-key "\C-m" 'newline-and-indent)
-(global-set-key "\C-j" 'newline)
+(global-set-key (kbd "C-m") 'newline-and-indent)
+(global-set-key (kbd "C-j") 'newline)
 (global-set-key (quote [f9]) (quote compile))
 (display-time)
 
@@ -170,7 +175,7 @@
 
 ;; easy commenting out of lines
 (autoload 'comment-out-region "comment" nil t)
-(global-set-key "\C-cq" 'comment-out-region)
+(global-set-key (kbd "C-c q") 'comment-out-region)
 
 ;; Show column number at bottom of screen
 (column-number-mode 1)
