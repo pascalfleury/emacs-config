@@ -93,9 +93,10 @@
                            (;"TODO"
 			    "NEXT" "STARTED" "TASK") ()))
 
- (setq org-agenda-custom-commands
+(setq org-agenda-custom-commands
        '(("t" "Hot Today" ((agenda "" ((org-agenda-span 'day)))
-                           (tags-todo "/NEXT")))
+                           (tags-todo "/NEXT")
+                           (tags-todo "-dowith={.+}/STARTED")))
          ("n" "Agenda and all TODO's" ((agenda "") (alltodo "")))
          ("N" "Next actions" tags-todo
           "-personal-doat={.+}-dowith={.+}/!-TASK-TODO"
