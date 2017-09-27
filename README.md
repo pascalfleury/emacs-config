@@ -25,6 +25,7 @@ I usually install these through ELPA
  - column-marker
  - unicode-escape
  - writeroom-mode
+ - web-mode
 
 ### USEFUL PACKAGES
 

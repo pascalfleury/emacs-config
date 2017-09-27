@@ -19,6 +19,11 @@
 (require 'icicles)    
 (icy-mode 1)
 
+;; web-mode for Polymer editing
+(require 'web-mode)
+(add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
+(setq web-mode-markup-indent-offset 2)
+
 ;; Enable winner-mode
 ;; Navigate buffer-window configs with C-c left and C-c right.
 (when (fboundp 'winner-mode) (winner-mode 1))
