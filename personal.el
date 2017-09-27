@@ -22,7 +22,12 @@
 ;; web-mode for Polymer editing
 (require 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
-(setq web-mode-markup-indent-offset 2)
+(defun my-web-mode-hook ()
+  "Hooks for Web mode."
+  (setq web-mode-markup-indent-offset 2)
+)
+(add-hook 'web-mode-hook  'my-web-mode-hook)
+
 
 ;; Enable winner-mode
 ;; Navigate buffer-window configs with C-c left and C-c right.
