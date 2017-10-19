@@ -27,6 +27,9 @@ I usually install these through ELPA
  - writeroom-mode
  - web-mode
 
+### UNDER REVIEW
+ - ox-reveal  (and installation, see https://github.com/yjwen/org-reveal#set-the-location-of-revealjs)
+
 ### USEFUL PACKAGES
 
   - hc-zenburn-theme
