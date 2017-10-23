@@ -186,6 +186,11 @@
 ;; Don't ask before executing
 (setq org-confirm-babel-evaluate 'nil)
 
+(setq org-global-properties
+      '(("Effort_ALL". "0 0:10 0:30 1:00 2:00 4:00 8:00 16:00")))
+(setq org-columns-default-format
+      "%TODO %30ITEM %3PRIORITY %6Effort{:} %10DEADLINE")
+
 ; Add the ODT as an export format
 (eval-after-load "org"
   '(require 'ox-odt nil t))
