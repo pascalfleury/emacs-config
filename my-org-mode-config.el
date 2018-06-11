@@ -158,6 +158,18 @@
         ("j" "Journal" entry (file+datetree "~/OrgFiles/journal.org")
              "* %?\n  %U")))
 
+(eval-after-load "org-duration"
+  '(progn
+     (setq org-duration-units
+	   `(("min" . 1)
+	     ("h" . 60)
+	     ("d" . ,(* 60 8))
+	     ("w" . ,(* 60 8 5))
+	     ("m" . ,(* 60 8 5 4))
+	     ("y" . ,(* 60 8 5 4 10)))
+	    )
+     (org-duration-set-regexps)))
+
 ; from: http://doc.norang.ca/org-mode.html
 ; Exclude DONE state tasks from refile targets
 (defun bh/verify-refile-target ()
@@ -195,7 +207,7 @@
 (eval-after-load "org"
   '(require 'ox-odt nil t))
 (require 'ox-reveal) ; under review
-;(require 'ox-taskjuggler)
+(require 'ox-taskjuggler)
 
 ;; Make the display of images a simple key-stroke away.
 (require 'iimage)

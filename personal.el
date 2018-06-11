@@ -29,6 +29,7 @@
   (setq web-mode-code-indent-offset 2))
 (add-hook 'web-mode-hook 'my-web-mode-hook)
 
+(when (require 'tj3-mode nil 'noerror))
 
 ;; Enable winner-mode
 ;; Navigate buffer-window configs with C-c left and C-c right.
