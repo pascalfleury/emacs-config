@@ -8,8 +8,8 @@
 ;; '(org-agenda-current-time ((t (:inherit org-time-grid :foreground "yellow" :weight bold))))
 
 
+(require 'org-secretary)
 (require 'org)
-;;(require 'org-secretary)
 (require 'org-habit)
 
 (global-set-key (kbd "C-c l") 'org-store-link)

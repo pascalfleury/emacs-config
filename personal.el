@@ -19,6 +19,10 @@
 (require 'icicles)    
 (icy-mode 1)
 
+;; no tabs, ever. No traling spaces either.
+(setq-default indent-tabs-mode nil)
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
 ;; web-mode for Polymer editing
 (require 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))

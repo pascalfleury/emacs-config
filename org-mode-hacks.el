@@ -71,13 +71,13 @@
   (set-buffer-modified-p nil))
 
 ; automatically align tags on right-hand side
-(add-hook 'window-configuration-change-hook
-          'ba/org-adjust-tags-column-maybe)
-(add-hook 'before-save-hook 'ba/org-adjust-tags-column-before-save)
-(add-hook 'after-save-hook 'ba/org-adjust-tags-column-after-save)
-
-(add-hook 'org-agenda-mode-hook '(lambda ()
-                                  (setq org-agenda-tags-column (- (window-width)))))
+; TODO(fleury): Does not seem to work as of 2017/12/18
+;;;(add-hook 'window-configuration-change-hook
+;;;          'ba/org-adjust-tags-column-maybe)
+;;;(add-hook 'before-save-hook 'ba/org-adjust-tags-column-before-save)
+;;;(add-hook 'after-save-hook 'ba/org-adjust-tags-column-after-save)
+;;;(add-hook 'org-agenda-mode-hook (lambda ()
+;;;                                 (setq org-agenda-tags-column (- (window-width)))))
 
 ; between invoking org-refile and displaying the prompt (which
 ; triggers window-configuration-change-hook) tags might adjust,
