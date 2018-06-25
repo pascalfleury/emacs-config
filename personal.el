@@ -1,5 +1,5 @@
 (defvar locate-dominating-stop-dir-regexp
-        "\\`\\(?:[\\/][\\/][^\\/]+\\|/\\(?:net\\|afs\\|\\.\\.\\.\\)/\\)\\'")
+  "\\`\\(?:[\\/][\\/][^\\/]+\\|/\\(?:net\\|afs\\|\\.\\.\\.\\)/\\)\\'")
 
 (require 'dropbox)
 
@@ -17,9 +17,9 @@
 (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
 (require 'unicode-escape) ;; does this interfere with pasting ?
 
-;; enhanced minibuffer completion
-(require 'icicles)
-(icy-mode 1)
+;; enhanced minibuffer completion if we have icicles
+(when (require 'icicles nil 'noerror)
+  (icy-mode 1))
 
 ;; no tabs, ever. No traling spaces either.
 (setq-default indent-tabs-mode nil)
@@ -71,10 +71,10 @@
 (global-set-key [M-f8] 'toggle-maximize-buffer)
 
 ;; Mark the 80 col boundary
-(require 'column-marker)
-(add-hook 'c-mode-common-hook (lambda () (interactive) (column-marker-1 80)))
-;; Use `C-c m' interactively to highlight with face `column-marker-1'.
-(global-set-key [?\C-c ?m] 'column-marker-1)
+(when (require 'column-marker nil 'noerror)
+  (add-hook 'c-mode-common-hook (lambda () (interactive) (column-marker-1 80)))
+  ;; Use `C-c m' interactively to highlight with face `column-marker-1'.
+  (global-set-key [?\C-c ?m] 'column-marker-1))
 
 ; ===== Configure the shortcuts for multiple cursors
 (require 'multiple-cursors)
@@ -87,9 +87,6 @@
 (global-set-key (kbd "C-M-i") 'iedit-mode)
 
 ;; ==== Configure my ledger mode
-(require 'ledger-mode)
-(add-to-list 'auto-mode-alist '("\\.ledger$" . ledger-mode))
-
 (defun single-lines-only ()
   "replace multiple blank lines with a single one"
   (interactive)
@@ -106,19 +103,20 @@
   (ledger-mode-clean-buffer)
   (ledger-sort-buffer))
 
-(define-key ledger-mode-map (kbd "<f6>") 'paf/cleanup-ledger-buffer)
-
-(setq ledger-reconcile-default-commodity "CHF")
+(when (require 'ledger-mode nil 'noerror)
+  (add-to-list 'auto-mode-alist '("\\.ledger$" . ledger-mode))
+  (define-key ledger-mode-map (kbd "<f6>") 'paf/cleanup-ledger-buffer)
+  (setq ledger-reconcile-default-commodity "CHF"))
 
 ;; ==== Let's one jump around text
-(require 'ace-jump-mode)
-(define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
-(define-key global-map (kbd "C-c DEL") 'ace-jump-mode-pop-mark)
+(when (require 'ace-jump-mode)
+  (define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
+  (define-key global-map (kbd "C-c DEL") 'ace-jump-mode-pop-mark))
 
 ;; ==== switch from header to implementation file quickly
 (add-hook 'c-mode-common-hook
-  (lambda()
-    (local-set-key  (kbd "C-c o") 'ff-find-other-file)))
+          (lambda ()
+            (local-set-key  (kbd "C-c o") 'ff-find-other-file)))
 
 ; By the way, the following bindings are often very useful in
 ; compilation/grep/lint mode:
