@@ -1,8 +1,6 @@
 (defvar locate-dominating-stop-dir-regexp
   "\\`\\(?:[\\/][\\/][^\\/]+\\|/\\(?:net\\|afs\\|\\.\\.\\.\\)/\\)\\'")
 
-(require 'dropbox)
-
 ;; ================ Testing ground
 (add-hook 'org-mode-hook
           (lambda ()
