@@ -206,6 +206,7 @@
 ; Add the ODT as an export format
 (eval-after-load "org"
   '(require 'ox-odt nil t))
+
 (require 'ox-reveal nil 'noerror) ; under review
 (require 'ox-taskjuggler)
 
