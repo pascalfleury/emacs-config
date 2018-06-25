@@ -7,6 +7,7 @@ tools.
 Usually, I sync this in /home/$USER/Emacs and then have ~/.emacs
 consisting of ths single line:
 
+  (load-file "~/Emacs/melpa.el")
   (load-file "~/Emacs/personal.el")
 
 ### EXPECTED PACKAGES
