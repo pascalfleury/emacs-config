@@ -1,8 +1,10 @@
 (defvar locate-dominating-stop-dir-regexp
         "\\`\\(?:[\\/][\\/][^\\/]+\\|/\\(?:net\\|afs\\|\\.\\.\\.\\)/\\)\\'")
 
+(require 'dropbox)
+
 ;; ================ Testing ground
-(add-hook 'org-mode-hook 
+(add-hook 'org-mode-hook
           (lambda ()
             (local-set-key (kbd "C-<up>") 'org-move-subtree-up)
             (local-set-key (kbd "C-<down>") 'org-move-subtree-down)))
@@ -16,7 +18,7 @@
 (require 'unicode-escape) ;; does this interfere with pasting ?
 
 ;; enhanced minibuffer completion
-(require 'icicles)    
+(require 'icicles)
 (icy-mode 1)
 
 ;; no tabs, ever. No traling spaces either.
@@ -115,7 +117,7 @@
 
 ;; ==== switch from header to implementation file quickly
 (add-hook 'c-mode-common-hook
-  (lambda() 
+  (lambda()
     (local-set-key  (kbd "C-c o") 'ff-find-other-file)))
 
 ; By the way, the following bindings are often very useful in
