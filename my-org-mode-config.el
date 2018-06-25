@@ -8,8 +8,8 @@
 ;; '(org-agenda-current-time ((t (:inherit org-time-grid :foreground "yellow" :weight bold))))
 
 
+(require 'org-secretary)
 (require 'org)
-;;(require 'org-secretary)
 (require 'org-habit)
 
 (global-set-key (kbd "C-c l") 'org-store-link)
@@ -158,6 +158,18 @@
         ("j" "Journal" entry (file+datetree "~/OrgFiles/journal.org")
              "* %?\n  %U")))
 
+(eval-after-load "org-duration"
+  '(progn
+     (setq org-duration-units
+	   `(("min" . 1)
+	     ("h" . 60)
+	     ("d" . ,(* 60 8))
+	     ("w" . ,(* 60 8 5))
+	     ("m" . ,(* 60 8 5 4))
+	     ("y" . ,(* 60 8 5 4 10)))
+	    )
+     (org-duration-set-regexps)))
+
 ; from: http://doc.norang.ca/org-mode.html
 ; Exclude DONE state tasks from refile targets
 (defun bh/verify-refile-target ()
@@ -194,8 +206,13 @@
 ; Add the ODT as an export format
 (eval-after-load "org"
   '(require 'ox-odt nil t))
+<<<<<<< HEAD
 (require 'ox-reveal nil 'noerror) ; under review
 ;(require 'ox-taskjuggler)
+=======
+(require 'ox-reveal) ; under review
+(require 'ox-taskjuggler)
+>>>>>>> f3104621f0f6716f1bd34411f72ad1a0b7180f18
 
 ;; Make the display of images a simple key-stroke away.
 (require 'iimage)

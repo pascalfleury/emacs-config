@@ -19,6 +19,10 @@
 (when (require 'icicles nil 'noerror)
   (icy-mode 1))
 
+;; no tabs, ever. No traling spaces either.
+(setq-default indent-tabs-mode nil)
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
 ;; web-mode for Polymer editing
 (require 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
@@ -29,6 +33,7 @@
   (setq web-mode-code-indent-offset 2))
 (add-hook 'web-mode-hook 'my-web-mode-hook)
 
+(when (require 'tj3-mode nil 'noerror))
 
 ;; Enable winner-mode
 ;; Navigate buffer-window configs with C-c left and C-c right.
