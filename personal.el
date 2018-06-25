@@ -2,7 +2,7 @@
         "\\`\\(?:[\\/][\\/][^\\/]+\\|/\\(?:net\\|afs\\|\\.\\.\\.\\)/\\)\\'")
 
 ;; ================ Testing ground
-(add-hook 'org-mode-hook 
+(add-hook 'org-mode-hook
           (lambda ()
             (local-set-key (kbd "C-<up>") 'org-move-subtree-up)
             (local-set-key (kbd "C-<down>") 'org-move-subtree-down)))
@@ -109,11 +109,11 @@
 ;; ==== Let's one jump around text
 (when (require 'ace-jump-mode)
 (define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
-(define-key global-map (kbd "C-c DEL") 'ace-jump-mode-pop-mark)
+(define-key global-map (kbd "C-c DEL") 'ace-jump-mode-pop-mark))
 
 ;; ==== switch from header to implementation file quickly
 (add-hook 'c-mode-common-hook
-  (lambda() 
+  (lambda()
     (local-set-key  (kbd "C-c o") 'ff-find-other-file)))
 
 ; By the way, the following bindings are often very useful in
