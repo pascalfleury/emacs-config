@@ -5,8 +5,9 @@ tools.
 ## INSTALL
 
 Usually, I sync this in /home/$USER/Emacs and then have ~/.emacs
-consisting of ths single line:
+consisting of these two lines:
 
+  (load-file "~/Emaces/melpa.el")
   (load-file "~/Emacs/personal.el")
 
 ### EXPECTED PACKAGES

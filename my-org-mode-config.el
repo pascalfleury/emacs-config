@@ -59,10 +59,10 @@
 
 ;; This will start serving the org files through the emacs-based webbrowser
 ;; when pressing M-f12 (on localhost:55555)
-(setq org-ehtml-docroot (expand-file-name "~/OrgFiles"))
-(setq org-ehtml-everything-editable t)
-(setq org-ehtml-allow-agenda t)
-(require 'org-ehtml)
+(when (require 'org-ehtml nil 'noerror)
+  (setq org-ehtml-docroot (expand-file-name "~/OrgFiles"))
+  (setq org-ehtml-everything-editable t)
+  (setq org-ehtml-allow-agenda t))
 
 (defun fleury/start-web-server ()
   (interactive)
@@ -194,7 +194,7 @@
 ; Add the ODT as an export format
 (eval-after-load "org"
   '(require 'ox-odt nil t))
-(require 'ox-reveal) ; under review
+(require 'ox-reveal nil 'noerror) ; under review
 ;(require 'ox-taskjuggler)
 
 ;; Make the display of images a simple key-stroke away.
