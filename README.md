@@ -19,9 +19,7 @@ I usually install these through ELPA
  - org-gcal
  - org-plus-contrib [deprecated?]
  - org-ehtml
- - ace-jump-mode
  - multiple-cursors
- - icicles
  - wgrep
  - column-marker
  - unicode-escape
@@ -33,5 +31,9 @@ I usually install these through ELPA
 
 ### USEFUL PACKAGES
 
+  - icicles
+  - tj3-mode
+  - ace-jump-mode
+  - ledger-mode
   - hc-zenburn-theme
   - plantuml-mode

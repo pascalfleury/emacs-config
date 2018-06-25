@@ -206,13 +206,8 @@
 ; Add the ODT as an export format
 (eval-after-load "org"
   '(require 'ox-odt nil t))
-<<<<<<< HEAD
 (require 'ox-reveal nil 'noerror) ; under review
-;(require 'ox-taskjuggler)
-=======
-(require 'ox-reveal) ; under review
 (require 'ox-taskjuggler)
->>>>>>> f3104621f0f6716f1bd34411f72ad1a0b7180f18
 
 ;; Make the display of images a simple key-stroke away.
 (require 'iimage)
