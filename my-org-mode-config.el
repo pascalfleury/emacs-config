@@ -13,6 +13,8 @@
 (require 'org-habit)
 
 ;; If variable not set yet, map it to my home's files.
+;; You may set this in the ~/.emacs to another value, e.g.
+;; (setq org-directory "/ssh:fleury@bernina.c.googlers.com:OrgFiles")
 (if (not (boundp 'org-directory))
     (setq org-directory "~/OrgFiles"))
 
