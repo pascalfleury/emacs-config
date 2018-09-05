@@ -12,6 +12,14 @@
 (require 'org)
 (require 'org-habit)
 
+;; If variable not set yet, map it to my home's files.
+(if (not (boundp 'org-directory))
+    (setq org-directory "~/OrgFiles"))
+
+(defun org-relative-file (filename)
+  "Compute an expanded absolute file path for org files"
+  (expand-file-name filename org-directory))
+
 (global-set-key (kbd "C-c l") 'org-store-link)
 (global-set-key (kbd "C-c c") 'org-capture)
 (global-set-key (kbd "C-c a") 'org-agenda)
@@ -45,9 +53,8 @@
 (setq org-clock-int-drawer "CLOCK")
 
 ;; config for org-mobile-*
-(setq org-directory "~/OrgFiles")
-(setq org-mobile-directory "~/OrgFiles/Mobile")
-(setq org-mobile-inbox-for-pull (concat org-directory "/mobileorg.org"))
+(setq org-mobile-directory (org-relative-file "Mobile"))
+(setq org-mobile-inbox-for-pull (org-relative-file "mobileorg.org"))
 
 ;; F12 open the first agenda file
 (defun org-get-first-agenda-file ()
@@ -60,7 +67,7 @@
 ;; This will start serving the org files through the emacs-based webbrowser
 ;; when pressing M-f12 (on localhost:55555)
 (when (require 'org-ehtml nil 'noerror)
-  (setq org-ehtml-docroot (expand-file-name "~/OrgFiles"))
+  (setq org-ehtml-docroot (expand-file-name org-directory))
   (setq org-ehtml-everything-editable t)
   (setq org-ehtml-allow-agenda t))
 
@@ -144,18 +151,18 @@
 ;; Capture and refile stuff
 ; show up to 2 levels for refile targets, in all agenda files
 (setq org-refile-targets '((org-agenda-files . (:maxlevel . 2))))
-(setq org-default-notes-file "~/OrgFiles/refile.org")
+(setq org-default-notes-file (org-relative-file "refile.org"))
 (setq org-log-refile t)  ;; will add timestamp when refiled.
 
 ;; some templates that I think are useful
 (setq org-capture-templates
-      '(("t" "Todo" entry (file+headline "~/OrgFiles/refile.org" "Tasks")
-             "* TODO %?\n  %U")
-        ("m" "Meeting" entry (file+headline "~/OrgFiles/refile.org" "Meetings")
+      `(("a" "Action Item" entry (file+headline ,(org-relative-file "refile.org") "Tasks")
+             "* AI %?\n  %U")
+        ("m" "Meeting" entry (file+headline ,(org-relative-file "refile.org") "Meetings")
              "* %U  :MTG:\n %^{with}p\n%?")
-        ("n" "Note" entry (file+headline "~/OrgFiles/refile.org" "Notes")
+        ("n" "Note" entry (file+headline ,(org-relative-file "refile.org") "Notes")
              "* %?\n%U")
-        ("j" "Journal" entry (file+datetree "~/OrgFiles/journal.org")
+        ("j" "Journal" entry (file+datetree ,(org-relative-file "journal.org"))
              "* %?\n  %U")))
 
 (eval-after-load "org-duration"

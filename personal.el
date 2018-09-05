@@ -24,14 +24,14 @@
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 ;; web-mode for Polymer editing
-(require 'web-mode)
-(add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
-(defun my-web-mode-hook ()
-  "Hooks for Web mode."
-  (setq web-mode-markup-indent-offset 2)
-  (setq web-mode-css-indent-offset 2)
-  (setq web-mode-code-indent-offset 2))
-(add-hook 'web-mode-hook 'my-web-mode-hook)
+(when (require 'web-mode nil 'noerror)
+  (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
+  (defun my-web-mode-hook ()
+    "Hooks for Web mode."
+    (setq web-mode-markup-indent-offset 2)
+    (setq web-mode-css-indent-offset 2)
+    (setq web-mode-code-indent-offset 2))
+  (add-hook 'web-mode-hook 'my-web-mode-hook))
 
 (when (require 'tj3-mode nil 'noerror))
 
@@ -62,8 +62,8 @@
 (global-set-key (kbd "C-p") nil) ;; was 'previous-line'
 (global-set-key (kbd "C-p s") 'fleury/sort-and-uniquify-region)
 
-(require 'writeroom-mode)
-(global-set-key (kbd "C-p w") 'writeroom-mode)
+(when (require 'writeroom-mode nil 'noerror)
+  (global-set-key (kbd "C-p w") 'writeroom-mode))
 
 ;; Toggle temporary buffer maximization
 (global-set-key [M-f8] 'toggle-maximize-buffer)
