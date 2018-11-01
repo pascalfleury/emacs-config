@@ -39,9 +39,9 @@
   (ba/org-adjust-tags-column-maybe)
   (set-buffer-modified-p nil))
 
-; between invoking org-refile and displaying the prompt (which
-; triggers window-configuration-change-hook) tags might adjust,
-; which invalidates the org-refile cache
+;; between invoking org-refile and displaying the prompt (which
+;; triggers window-configuration-change-hook) tags might adjust,
+;; which invalidates the org-refile cache
 (defadvice org-refile (around org-refile-disable-adjust-tags)
   "Disable dynamically adjusting tags"
   (let ((ba/org-adjust-tags-column nil))
