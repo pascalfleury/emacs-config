@@ -1,5 +1,6 @@
 ;; ========== Show the agenda when left idle
-;; http://orgmode.org/worg/org-hacks.html#unnumbered-79
+;; https://orgmode.org/worg/org-hacks.html#orgaea636d
+
 (defun jump-to-org-agenda ()
   (interactive)
   (let ((buf (get-buffer "*Org Agenda*"))

@@ -1,5 +1,6 @@
 ;; Make sure archiving preserves the same tree structure, including when
 ;; archiving subtrees.
+;; https://orgmode.org/worg/org-hacks.html#org4265b4c
 (defun my-org-inherited-no-file-tags ()
   (let ((tags (org-entry-get nil "ALLTAGS" 'selective))
         (ltags (org-entry-get nil "TAGS")))
@@ -9,7 +10,8 @@
           (append org-file-tags (when ltags (split-string ltags ":" t))))
     (if (string= ":" tags) nil tags)))
 
-(defadvice org-archive-subtree (around my-org-archive-subtree-low-level activate)
+(defadvice org-archive-subtree
+    (around my-org-archive-subtree-low-level activate)
   (let ((tags (my-org-inherited-no-file-tags))
         (org-archive-location
          (if (save-excursion (org-back-to-heading)

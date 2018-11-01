@@ -1,4 +1,5 @@
 ;; Dynamically adjust tag position
+;; https://orgmode.org/worg/org-hacks.html#org0560357
 
 (defun ba/org-adjust-tags-column-reset-tags ()
   "In org-mode buffers it will reset tag position according to

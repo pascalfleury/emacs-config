@@ -151,6 +151,16 @@
 
   (load-file "~/Emacs/org-collector.el"))
 
+(use-package yasnippet
+  :ensure t)
+
+(use-package yankpad
+  :ensure t
+  :init
+  (setq yankpad-file "~/OrgFiles/yankpad.org")
+  :config
+  (bind-key "<f7>" 'yankpad-map))
+
 ;; some additional tooling
 (load-file "~/Emacs/color_cursors.el")
 (load-file "~/Emacs/selective_display.el")
