@@ -50,11 +50,12 @@
 
 ;; Now set it up
 (setq ba/org-adjust-tags-column t)
-; automatically align tags on right-hand side
-; TODO(fleury): Does not seem to work as of 2017/12/18
-;;;(add-hook 'window-configuration-change-hook
-;;;          'ba/org-adjust-tags-column-maybe)
-;;;(add-hook 'before-save-hook 'ba/org-adjust-tags-column-before-save)
-;;;(add-hook 'after-save-hook 'ba/org-adjust-tags-column-after-save)
-;;;(add-hook 'org-agenda-mode-hook (lambda ()
-;;;                                 (setq org-agenda-tags-column (- (window-width)))))
+;; automatically align tags on right-hand side
+;; TODO(fleury): Does not seem to work as of 2017/12/18
+;; Seems to work again 2018/11/01
+(add-hook 'window-configuration-change-hook
+          'ba/org-adjust-tags-column-maybe)
+(add-hook 'before-save-hook 'ba/org-adjust-tags-column-before-save)
+(add-hook 'after-save-hook 'ba/org-adjust-tags-column-after-save)
+(add-hook 'org-agenda-mode-hook (lambda ()
+                                  (setq org-agenda-tags-column (- (window-width)))))
