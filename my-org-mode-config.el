@@ -7,11 +7,6 @@
 ;; '(org-agenda-date-weekend ((t (:inherit org-agenda-date :background "light blue" :weight bold))) t)
 ;; '(org-agenda-current-time ((t (:inherit org-time-grid :foreground "yellow" :weight bold))))
 
-
-(require 'org-secretary)
-(require 'org)
-(require 'org-habit)
-
 ;; If variable not set yet, map it to my home's files.
 ;; You may set this in the ~/.emacs to another value, e.g.
 ;; (setq org-directory "/ssh:fleury@bernina.c.googlers.com:OrgFiles")
@@ -68,7 +63,8 @@
 
 ;; This will start serving the org files through the emacs-based webbrowser
 ;; when pressing M-f12 (on localhost:55555)
-(when (require 'org-ehtml nil 'noerror)
+(use-package org-ehtml
+  :config
   (setq org-ehtml-docroot (expand-file-name org-directory))
   (setq org-ehtml-everything-editable t)
   (setq org-ehtml-allow-agenda t))
@@ -84,7 +80,12 @@
         ("cl" . "http://cr/")))
 
 (setq org-sec-me "paf")
-(setq org-tag-alist '(("PRJ" . ?p) ("DESIGNDOC" . ?D) ("Milestone" . ?m) ("DESK" . ?d) ("HOME" . ?h) ("VC" . ?v)))
+(setq org-tag-alist '(("PRJ" . ?p)
+                      ("DESIGNDOC" . ?D)
+                      ("Milestone" . ?m)
+                      ("DESK" . ?d)
+                      ("HOME" . ?h)
+                      ("VC" . ?v)))
 
 ;; track task dependencies, and dim them in in the agenda.
 (setq org-enforce-todo-dependencies t)
@@ -213,17 +214,16 @@
       "%TODO %30ITEM %3PRIORITY %6Effort{:} %10DEADLINE")
 
 ; Add the ODT as an export format
-(eval-after-load "org"
-  '(require 'ox-odt nil t))
-
-(require 'ox-reveal nil 'noerror) ; under review
-(require 'ox-taskjuggler)
+(use-package ox-odt)
+(use-package ox-reveal) ; under review
+(use-package ox-taskjuggler)
 
 ;; Make the display of images a simple key-stroke away.
-(require 'iimage)
-(add-to-list 'iimage-mode-image-regex-alist
-             (cons (concat "\\[\\[file:\\(~?" iimage-mode-image-filename-regex
-                           "\\)\\]")  1))
+(use-package iimage
+  :config
+  (add-to-list 'iimage-mode-image-regex-alist
+               (cons (concat "\\[\\[file:\\(~?" iimage-mode-image-filename-regex
+                             "\\)\\]")  1)))
 
 (defun org-toggle-iimage-in-org ()
   "display images in your org file"
@@ -237,7 +237,3 @@
                            ;; display images
                            (local-set-key "\M-I" 'org-toggle-iimage-in-org)
                           ))
-
-;; Make this happen only if we open an org file.
-;;(add-hook 'org-mode-hook (lambda () (run-with-idle-timer 600 t 'jump-to-org-agenda)))
-;;(add-hook 'org-mode-hook (lambda () (run-at-time "10 min" 300 'update-agenda-if-visible)))

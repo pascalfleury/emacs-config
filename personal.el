@@ -1,3 +1,6 @@
+;; This is only needed once, near the top of the file
+(eval-when-compile (require 'use-package))
+
 (defvar locate-dominating-stop-dir-regexp
   "\\`\\(?:[\\/][\\/][^\\/]+\\|/\\(?:net\\|afs\\|\\.\\.\\.\\)/\\)\\'")
 
@@ -7,82 +10,154 @@
             (local-set-key (kbd "C-<up>") 'org-move-subtree-up)
             (local-set-key (kbd "C-<down>") 'org-move-subtree-down)))
 
-;; ================ My own stuff
-(require 'uniquify)   ;; make buffer names more unique
-(setq uniquify-buffer-name-style 'post-forward-angle-brackets)
+;; ================ Stock Emacs config
 
-;; Make Emacs request UTF-8 first when pasting stuff.
-(setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
-(require 'unicode-escape) ;; does this interfere with pasting ?
-
-;; enhanced minibuffer completion if we have icicles
-(when (require 'icicles nil 'noerror)
-  (icy-mode 1))
+;; Remove C-p that I want to use for *me* personally as a prefix.
+(global-set-key (kbd "C-p") nil) ;; was 'previous-line'
 
 ;; no tabs, ever. No traling spaces either.
 (setq-default indent-tabs-mode nil)
+(setq require-final-newline t)
+(setq next-line-add-newlines nil)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
-
-;; web-mode for Polymer editing
-(when (require 'web-mode nil 'noerror)
-  (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
-  (defun my-web-mode-hook ()
-    "Hooks for Web mode."
-    (setq web-mode-markup-indent-offset 2)
-    (setq web-mode-css-indent-offset 2)
-    (setq web-mode-code-indent-offset 2))
-  (add-hook 'web-mode-hook 'my-web-mode-hook))
-
-(when (require 'tj3-mode nil 'noerror))
+(column-number-mode 1)
+(setq visible-bell t)
+(setq scroll-step 1)
+(setq-default transient-mark-mode t)  ;; highlight selection
 
 ;; Enable winner-mode
 ;; Navigate buffer-window configs with C-c left and C-c right.
-(when (fboundp 'winner-mode) (winner-mode 1))
+(winner-mode 1)
+(global-font-lock-mode t)
+(setq frame-title-format "emacs - %b")
+(when (display-graphic-p) ;; used when in konsole mode
+  (set-background-color "#ffffff")
+  (set-foreground-color "#141312"))
+(when window-system
+  (mwheel-install)  ;; enable wheelmouse support by default
+  (set-selection-coding-system 'compound-text-with-extensions))
 
-(global-set-key (kbd "C-c <C-left>")  'windmove-left)
-(global-set-key (kbd "C-c <C-right>") 'windmove-right)
-(global-set-key (kbd "C-c <C-up>")    'windmove-up)
-(global-set-key (kbd "C-c <C-down>")  'windmove-down)
-
-;; Load my org stuff
-(load-file "~/Emacs/my-org-mode-config.el")
-(load-file "~/Emacs/org-mode-hacks.el")
-(load-file "~/Emacs/org-collector.el")
-
-(load-file "~/Emacs/color_cursors.el")
-(load-file "~/Emacs/selective_display.el")
-(load-file "~/Emacs/code-hacks.el")
+(setq browse-url-generic-program (executable-find "google-chrome")
+      browse-url-browser-function 'browse-url-generic)
 
 ;; ===== Use auto-revert, which reloads a file if it's updated on disk
 ;;       and not modified in the buffer.
 (global-auto-revert-mode 1)
 (put 'upcase-region 'disabled nil)
+(put 'narrow-to-region 'disabled nil)
 
-;; Simple cleanup of #include/typedef/using blocks.
-(global-set-key (kbd "C-p") nil) ;; was 'previous-line'
-(global-set-key (kbd "C-p s") 'fleury/sort-and-uniquify-region)
+; navigation
+(global-set-key (kbd "C-c <C-left>")  'windmove-left)
+(global-set-key (kbd "C-c <C-right>") 'windmove-right)
+(global-set-key (kbd "C-c <C-up>")    'windmove-up)
+(global-set-key (kbd "C-c <C-down>")  'windmove-down)
+(global-set-key (kbd "C-c C-g") 'goto-line)
+(global-set-key (kbd "C-m") 'newline-and-indent)
+(global-set-key (kbd "C-j") 'newline)
 
-(when (require 'writeroom-mode nil 'noerror)
+(global-set-key [M-f8] 'toggle-maximize-buffer)
+(global-set-key (kbd "C-M-i") 'iedit-mode)
+(global-set-key [delete] 'delete-char)
+(global-set-key [kp-delete] 'delete-char)
+; play with macros
+(global-set-key [f3] 'start-kbd-macro)
+(global-set-key [f4] 'end-kbd-macro)
+(global-set-key [f5] 'call-last-kbd-macro)
+;; Increase/decrease text size
+(define-key global-map (kbd "C-+") 'text-scale-increase)
+(define-key global-map (kbd "C--") 'text-scale-decrease)
+
+;; ==== switch from header to implementation file quickly
+(add-hook 'c-mode-common-hook
+          (lambda ()
+            (local-set-key  (kbd "C-c o") 'ff-find-other-file)))
+
+;; easy commenting out of lines
+(autoload 'comment-out-region "comment" nil t)
+(global-set-key (kbd "C-c q") 'comment-out-region)
+
+;; ================ My own stuff
+(use-package uniquify
+  :init
+  (setq uniquify-buffer-name-style 'post-forward-angle-brackets))
+
+;; Make Emacs request UTF-8 first when pasting stuff.
+(use-package unicode-escape
+  :ensure t
+  :init
+  (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
+
+;; enhanced minibuffer completion if we have icicles
+(use-package icicles
+  :ensure t
+  :config
+  (icy-mode 1))
+
+;; web-mode for Polymer editing
+(use-package web-mode
+  :ensure t
+  :mode "\\.html\\'"
+  :config
+  (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-css-indent-offset 2)
+  (setq web-mode-code-indent-offset 2))
+
+(use-package tj3-mode) ;; TaskJuggler mode
+
+(use-package writeroom-mode
+  :init
   (global-set-key (kbd "C-p w") 'writeroom-mode))
 
-;; Toggle temporary buffer maximization
-(global-set-key [M-f8] 'toggle-maximize-buffer)
-
 ;; Mark the 80 col boundary
-(when (require 'column-marker nil 'noerror)
+(use-package column-marker
+  :config
   (add-hook 'c-mode-common-hook (lambda () (interactive) (column-marker-1 80)))
-  ;; Use `C-c m' interactively to highlight with face `column-marker-1'.
-  (global-set-key [?\C-c ?m] 'column-marker-1))
+  :bind ("C-c m" . 'column-marker-1))
 
 ; ===== Configure the shortcuts for multiple cursors
-(require 'multiple-cursors)
-(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
-(global-set-key (kbd "C->") 'mc/mark-next-like-this)
-(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-(global-set-key (kbd "C-c C->") 'mc/mark-all-like-this)
+(use-package multiple-cursors
+  :ensure t
+  :bind (("C-S-c C-S-c" . 'mc/edit-lines)
+         ("C->" . 'mc/mark-next-like-this)
+         ("C-<" . 'mc/mark-previous-like-this)
+         ("C-c C->" . 'mc/mark-all-like-this)))
 
-(require 'wgrep)
-(global-set-key (kbd "C-M-i") 'iedit-mode)
+(use-package wgrep
+  :ensure t)
+
+;; ==== Let's one jump around text
+(use-package ace-jump-mode
+  :bind (("C-c SPC" . 'ace-jump-mode)
+         ("C-c DEL" . 'ace-jump-mode-pop-mark)))
+
+;; Load my org stuff
+(use-package org
+  :config
+  (require 'org-secretary)
+  (require 'org-habit)
+
+  (load-file "~/Emacs/my-org-mode-config.el")
+  (load-file "~/Emacs/org-preserve-structure-in-archive.el")
+  (load-file "~/Emacs/org-adjust-tags-on-right.el")
+
+  (load-file "~/Emacs/org-refresh-agenda-view.el")
+  ;; will refresh it only if already visible
+  (run-at-time nil 180 'kiwon/org-agenda-redo-in-other-window)
+
+  (load-file "~/Emacs/org-display-agenda-when-idle.el")
+  ;; Make this happen only if we open an org file.
+  (add-hook 'org-mode-hook
+            (lambda () (run-with-idle-timer 600 t 'jump-to-org-agenda)))
+
+  (load-file "~/Emacs/org-collector.el"))
+
+;; some additional tooling
+(load-file "~/Emacs/color_cursors.el")
+(load-file "~/Emacs/selective_display.el")
+
+;; Simple cleanup of #include/typedef/using blocks.
+(load-file "~/Emacs/code-hacks.el")
+(global-set-key (kbd "C-p s") 'fleury/sort-and-uniquify-region)
 
 ;; ==== Configure my ledger mode
 (defun single-lines-only ()
@@ -101,95 +176,9 @@
   (ledger-mode-clean-buffer)
   (ledger-sort-buffer))
 
-(when (require 'ledger-mode nil 'noerror)
-  (add-to-list 'auto-mode-alist '("\\.ledger$" . ledger-mode))
-  (define-key ledger-mode-map (kbd "<f6>") 'paf/cleanup-ledger-buffer)
+(use-package ledger-mode
+  :ensure t
+  :mode "\\.ledger\\'"
+  :bind ("<f6>" . 'paf/cleanup-ledger-buffer)
+  :config
   (setq ledger-reconcile-default-commodity "CHF"))
-
-;; ==== Let's one jump around text
-(when (require 'ace-jump-mode)
-  (define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
-  (define-key global-map (kbd "C-c DEL") 'ace-jump-mode-pop-mark))
-
-;; ==== switch from header to implementation file quickly
-(add-hook 'c-mode-common-hook
-          (lambda ()
-            (local-set-key  (kbd "C-c o") 'ff-find-other-file)))
-
-; By the way, the following bindings are often very useful in
-; compilation/grep/lint mode:
-;(global-set-key [M-down]    'next-error)
-;(global-set-key [M-up]      '(lambda () (interactive) (next-error -1)))
-
-; play with macros
-(global-set-key [f3] 'start-kbd-macro)
-(global-set-key [f4] 'end-kbd-macro)
-(global-set-key [f5] 'call-last-kbd-macro)
-
-;; Increase/decrease text size
-(define-key global-map (kbd "C-+") 'text-scale-increase)
-(define-key global-map (kbd "C--") 'text-scale-decrease)
-
-;; Set up the keyboard so the delete key on both the regular keyboard
-;; and the keypad delete the character under the cursor and to the right
-;; under X, instead of the default, backspace behavior.
-(global-set-key [delete] 'delete-char)
-(global-set-key [kp-delete] 'delete-char)
-
-;; modify some of the looks
-(global-font-lock-mode t)
-(setq frame-title-format "emacs - %b")
-(when (display-graphic-p) ;; used when in konsole mode
-  (set-background-color "#ffffff")
-  (set-foreground-color "#141312"))
-
-;; key stroke to change color theme
-;(require 'color-theme)
-;(color-theme-initialize)
-;(setq color-theme-is-global t)
-;
-;(defun fleury/set-my-color-theme ()
-;  (interactive)
-;  '(load-theme 'hc-zenburn))
-;(global-set-key (kbd "S-<f11>") 'fleury/set-my-color-theme)
-
-;; enable visual feedback on selections
-(setq-default transient-mark-mode t)
-
-;; goto line function C-c C-g
-(global-set-key (kbd "C-c C-g") 'goto-line)
-
-;; always end a file with a newline
-(setq require-final-newline t)
-
-;; stop at the end of the file, not just add lines
-(setq next-line-add-newlines nil)
-
-(when window-system
-  ;; enable wheelmouse support by default
-  (mwheel-install)
-  ;; use extended compound-text coding for X clipboard
-  (set-selection-coding-system 'compound-text-with-extensions))
-
-(setq browse-url-generic-program (executable-find "google-chrome")
-      browse-url-browser-function 'browse-url-generic)
-
-;; suppress sound bell
-(setq visible-bell t)
-
-;; Clean scrolling (aaaaaah)
-(setq scroll-step 1)
-;; (keyboard-translate ?\C-m ?\C-l)
-(global-set-key (kbd "C-m") 'newline-and-indent)
-(global-set-key (kbd "C-j") 'newline)
-(global-set-key (quote [f9]) (quote compile))
-(display-time)
-
-(put 'narrow-to-region 'disabled nil)
-
-;; easy commenting out of lines
-(autoload 'comment-out-region "comment" nil t)
-(global-set-key (kbd "C-c q") 'comment-out-region)
-
-;; Show column number at bottom of screen
-(column-number-mode 1)

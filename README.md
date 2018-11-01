@@ -12,6 +12,8 @@ consisting of these two lines:
 
 ### EXPECTED PACKAGES
 
+Absolutely needed is the 'use-package' package.
+
 I usually install these through ELPA
 
  - ledger-mode
@@ -28,6 +30,7 @@ I usually install these through ELPA
 
 ### UNDER REVIEW
  - ox-reveal  (and installation, see https://github.com/yjwen/org-reveal#set-the-location-of-revealjs)
+  - yankpad + yasnippet
 
 ### USEFUL PACKAGES
 
