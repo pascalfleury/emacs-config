@@ -87,6 +87,21 @@
   :init
   (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
 
+;; file-annotations store externally.
+;; Seems to fail with args-out-of-range and then Emacs is confused.
+(use-package annotate
+  :ensure t
+  :config
+  (define-globalized-minor-mode global-annotate-mode annotate-mode
+    (lambda () (annotate-mode 1)))
+  (global-annotate-mode 1))
+
+;; Add the powerful Magit
+(use-package magit
+  :ensure t
+  :config
+  (global-set-key (kbd "C-x g") 'magit-status))
+
 ;; enhanced minibuffer completion if we have icicles
 (use-package icicles
   :ensure t
