@@ -28,6 +28,7 @@
 ;; Enable winner-mode
 ;; Navigate buffer-window configs with C-c left and C-c right.
 (winner-mode 1)
+
 (global-font-lock-mode t)
 (setq frame-title-format "emacs - %b")
 (when (display-graphic-p) ;; used when in konsole mode
@@ -80,6 +81,10 @@
 (use-package uniquify
   :init
   (setq uniquify-buffer-name-style 'post-forward-angle-brackets))
+
+;; This is supposed to be a better window manager
+(use-package eyebrowse
+  :ensure t)
 
 ;; Make Emacs request UTF-8 first when pasting stuff.
 (use-package unicode-escape
