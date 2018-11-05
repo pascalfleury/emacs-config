@@ -92,9 +92,18 @@
 (use-package annotate
   :ensure t
   :config
-  (define-globalized-minor-mode global-annotate-mode annotate-mode
-    (lambda () (annotate-mode 1)))
-  (global-annotate-mode 1))
+  (add-hook 'org-mode 'annotate-mode)
+  (add-hook 'csv-mode 'annotate-mode)
+  (add-hook 'c-mode 'annotate-mode)
+  (add-hook 'c++-mode 'annotate-mode)
+  (add-hook 'sh-mode 'annotate-mode)
+;;;  (define-globalized-minor-mode global-annotate-mode annotate-mode
+;;;    (lambda () (annotate-mode 1)))
+;;;  (global-annotate-mode 1)
+;;;  ; Remove it from some view, it interferes with the colors
+;;;  (add-hook 'org-agenda-mode-hook (lambda () (annotate-mode 0)))
+;;;  (add-hook 'magit-status-mode-hook (lambda () (annotate-mode 0)))
+  )
 
 ;; Add the powerful Magit
 (use-package magit
