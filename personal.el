@@ -96,12 +96,14 @@
 ;; Seems to fail with args-out-of-range and then Emacs is confused.
 (use-package annotate
   :ensure t
+  :bind ("C-c C-A" . 'annotate-annotate)  ;; for ledger-mode
   :config
   (add-hook 'org-mode 'annotate-mode)
   (add-hook 'csv-mode 'annotate-mode)
   (add-hook 'c-mode 'annotate-mode)
   (add-hook 'c++-mode 'annotate-mode)
   (add-hook 'sh-mode 'annotate-mode)
+  (add-hook 'ledger-mode 'annotate-mode)
 ;;;  (define-globalized-minor-mode global-annotate-mode annotate-mode
 ;;;    (lambda () (annotate-mode 1)))
 ;;;  (global-annotate-mode 1)
@@ -116,7 +118,7 @@
   :config
   (global-set-key (kbd "C-x g") 'magit-status))
 
-;; enhanced minibuffer completion if we have icicles
+;; Enhanced minibuffer completion if we have icicles
 (use-package icicles
   :ensure t
   :config
@@ -221,3 +223,6 @@
   :bind ("<f6>" . 'paf/cleanup-ledger-buffer)
   :config
   (setq ledger-reconcile-default-commodity "CHF"))
+
+(use-package nyan-mode
+  :bind ("C-p n" . 'nyan-mode))
