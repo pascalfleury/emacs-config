@@ -806,6 +806,24 @@ A more visible current-time marker in the agenda
   (add-hook 'org-mode-hook
             (lambda () (run-with-idle-timer 600 t 'jump-to-org-agenda)))
 #+END_SRC
+**** export
+That's the export function to update the agenda view.
+#+BEGIN_SRC emacs-lisp :tangle no
+(setq org-agenda-exporter-settings
+      '((ps-number-of-columns 2)
+        (ps-portrait-mode t)
+        (org-agenda-add-entry-text-maxlines 5)
+        (htmlize-output-type 'font)))
+
+(defun dmg-org-update-agenda-file (&optional force)
+  (interactive)
+  (save-excursion
+    (save-window-excursion
+      (let ((file "~/www/agenda/agenda.html"))
+        (org-agenda-list)
+        (org-agenda-write file)))))
+#+END_SRC
+
 *** org-duration
 #+BEGIN_SRC emacs-lisp
 (use-package org-duration
