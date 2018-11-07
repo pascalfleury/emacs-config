@@ -24,4 +24,4 @@
   ;;    (org-agenda-goto-calendar)))
   )
 
-(run-with-idle-timer 300 t 'jump-to-org-agenda)
+;;(run-with-idle-timer 300 t 'jump-to-org-agenda)
