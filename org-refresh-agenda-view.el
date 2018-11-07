@@ -7,3 +7,10 @@
   (let ((agenda-window (get-buffer-window org-agenda-buffer-name t)))
     (when agenda-window
       (with-selected-window agenda-window (org-agenda-redo)))))
+
+(defun update-agenda-if-visible ()
+  (interactive)
+  (let ((buf (get-buffer "*Org Agenda*"))
+        wind)
+    (if buf
+        (org-agenda-redo))))
