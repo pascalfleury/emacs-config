@@ -9,6 +9,17 @@ then gets loaded by Emacs: =C-c C-v t= [org-babel-tangle]
 Extensive documentation about how to do this can be found [[https://github.com/larstvei/dot-emacs][here]].
 
 * Initialize
+** bootstrap
+#+BEGIN_SRC emacs-lisp :tangle no
+;; This file replaces itself with the actual configuration at first run.
+
+(require 'org) ; We can't tangle without org!
+
+(find-file "~/Emacs/emacs_setup.org") ; Open the configuration
+(org-babel-tangle)                    ; tangle it
+(load-file "~/Emacs/emacs_setup.el")  ; load it
+(byte-compile-file "emacs_setup.el")  ; finally byte-compile it
+#+END_SRC
 ** melpa
 #+BEGIN_SRC emacs-lisp
 (require 'package)
