@@ -179,8 +179,8 @@
 
   (load-file "~/Emacs/org-display-agenda-when-idle.el")
   ;; Make this happen only if we open an org file.
-  ;;(add-hook 'org-mode-hook
-  ;;          (lambda () (run-with-idle-timer 600 t 'jump-to-org-agenda)))
+  (add-hook 'org-mode-hook
+            (lambda () (run-with-idle-timer 600 t 'jump-to-org-agenda)))
 
   (load-file "~/Emacs/org-collector.el"))
 
