@@ -669,7 +669,7 @@ F12 open the first agenda file
 ; F12 on Mac OSX displays the dashboard....
 (global-set-key [C-f12] 'org-get-first-agenda-file)
 #+END_SRC
-*** org-ehtml [localhost:555555]
+*** org-ehtml [localhost:55555]
 This will start serving the org files through the emacs-based webbrowser
 when pressing M-f12 (on localhost:55555)
 #+BEGIN_SRC emacs-lisp
