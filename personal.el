@@ -173,7 +173,9 @@
 
   (load-file "~/Emacs/org-refresh-agenda-view.el")
   ;; will refresh it only if already visible
-  (run-at-time nil 180 'update-agenda-if-visible)
+  ;;(run-at-time nil 180 'update-agenda-if-visible)
+  (add-hook 'org-mode-hook
+            (lambda () (run-at-time nil 180 'kiwon/org-agenda-redo-in-other-window)))
 
   (load-file "~/Emacs/org-display-agenda-when-idle.el")
   ;; Make this happen only if we open an org file.
