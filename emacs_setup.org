@@ -156,7 +156,7 @@ This gets the font coloring switched on for all buffers.
 #+END_SRC
 ** In X11 mode: mouse and window title
 #+BEGIN_SRC emacs-lisp
-(setq frame-title-format "emacs - %b")
+(setq frame-title-format "emacs @ %b - %f")
 (when window-system
   (mwheel-install)  ;; enable wheelmouse support by default
   (set-selection-coding-system 'compound-text-with-extensions))
