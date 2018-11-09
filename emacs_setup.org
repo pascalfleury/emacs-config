@@ -387,7 +387,16 @@ web-mode with config for Polymer editing
   (setq web-mode-css-indent-offset 2)
   (setq web-mode-code-indent-offset 2))
 #+END_SRC
-
+** emmet-mode
+#+BEGIN_SRC emacs-lisp
+(use-package emmet-mode
+:ensure t)
+#+END_SRC
+** rainbow-mode
+#+BEGIN_SRC emacs-lisp
+(use-package rainbow-mode
+:ensure t)
+#+END_SRC
 ** taskjuggler-mode (tj3-mode)
 #+BEGIN_SRC emacs-lisp
 (use-package tj3-mode)
