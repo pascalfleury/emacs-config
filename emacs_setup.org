@@ -334,6 +334,16 @@ keys are pressed.
 
 (global-set-key "\C-x$" 'set-selective-display-dlw)
 #+END_SRC
+** Info in the gutter
+*** Line numbers
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-c C-n") 'linum-mode)
+#+END_SRC
+*** git informations
+#+BEGIN_SRC emacs-lisp
+(use-package git-gutter-fringe+
+:bind ("C-c g" . 'git-gutter+-mode))
+#+END_SRC
 * Cool Packages
 ** magit
 Add the powerful Magit
