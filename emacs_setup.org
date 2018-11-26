@@ -819,6 +819,12 @@ A more visible current-time marker in the agenda
   (add-hook 'org-mode-hook
             (lambda () (run-with-idle-timer 600 t 'jump-to-org-agenda)))
 #+END_SRC
+**** auto-save org files when idle
+This will save them regularly when the idle for more than a minute.
+#+BEGIN_SRC emacs-lisp
+(add-hook 'org-mode-hook
+    (lambda () (run-with-idle-timer 60 t 'org-save-all-org-buffers)))
+#+END_SRC
 **** export
 That's the export function to update the agenda view.
 #+BEGIN_SRC emacs-lisp :tangle no
