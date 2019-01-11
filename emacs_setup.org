@@ -507,7 +507,7 @@ archiving subtrees.
     (with-current-buffer (find-file-noselect (org-extract-archive-file))
       (save-excursion
         (while (org-up-heading-safe))
-        (org-set-tags-to tags)))))
+        (org-set-tags tags)))))
 #+END_SRC
 *** Adjust tags on the right
 Dynamically adjust tag position
