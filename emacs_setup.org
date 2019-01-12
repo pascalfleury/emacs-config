@@ -49,19 +49,19 @@ to add it.
 #+END_SRC
 
 * Plans
-I regularly try out new packags, and here is the current list of things I am
-trying out.  They usually live temporarily in my =~/.emacs= untilI am happy, in
+I regularly try out new packages, this is my current list of things being evaluated.
+They usually live temporarily in my =~/.emacs= until I am happy, in
 which case I move their config into this file so that it gets replicated on all
-machines I work with emacs.
+machines I work on with Emacs.
 
 ** Currently under review
-  - org-gcal
-  - plantuml-mode
-  - ox-reveal (see [[https://github.com/yjwen/org-reveal#set-the-location-of-revealjs][installation]])
-  - yankpad + yasnippet
+  - [[https://github.com/myuhe/org-gcal.el][org-gcal]]
+  - [[https://github.com/skuro/plantuml-mode][plantuml-mode]]
+  - [[https://github.com/yjwen/org-reveal][ox-reveal]] (see [[https://github.com/yjwen/org-reveal#set-the-location-of-revealjs][installation]])
+  - [[https://github.com/Kungsgeten/yankpad][yankpad]] + [[https://github.com/joaotavora/yasnippet][yasnippet]]
 
 ** Installed, but need no or external config
-- hc-zenburn-theme
+- [[https://github.com/edran/hc-zenburn-emacs][hc-zenburn-theme]]
 
 * Initialize
 ** melpa
@@ -575,7 +575,7 @@ Dynamically adjust tag position
             (goto-char (point-min))
             (command-execute 'outline-next-visible-heading)
             ;; disable (message) that org-set-tags generates
-            (flet ((message (&rest ignored) nil))
+            (cl-letf (((symbol-function 'message) #'format))
               (org-set-tags 1 t))
             (set-buffer-modified-p b-m-p))
         (error nil)))))
@@ -623,12 +623,20 @@ Dynamically adjust tag position
 (add-hook 'org-agenda-mode-hook (lambda ()
                                   (setq org-agenda-tags-column (- (window-width)))))
 #+END_SRC
-**** TODO Update =flet= and =org-set-tags=
+**** TODO Update =org-set-tags-to=
 :LOGBOOK:
 - State "TODO"       from              [2019-01-12 Sat 12:08]
 :END:
-=flet= as well as =org-set-tags= with > 1 args are deprecated.
+= [[https://orgmode.org/worg/doc.html#org-set-tags-to][org-set-tags-to]] = is gone, and =org-set-tags= with > 1 args is mpt working.
 Not sure what to replace it with though...
+**** DONE Update =flet=
+CLOSED: [2019-01-12 Sat 12:56]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2019-01-12 Sat 12:56]
+- State "TODO"       from              [2019-01-12 Sat 12:56]
+:END:
+=flt= is deprecated and should be upgraded.
+Found the solution [[http://endlessparentheses.com/understanding-letf-and-how-it-replaces-flet.html][here].
 
 *** Auto-Refresh Agenda
 Refresh org-mode agenda regularly.
