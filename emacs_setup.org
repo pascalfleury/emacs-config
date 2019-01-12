@@ -10,22 +10,32 @@ Below, I also explain how this tangling is automated.
 Extensive documentation about how to do this can be found [[https://github.com/larstvei/dot-emacs][here]].
 
 * Setup
-I have my configs in directory =~/Emacs= which is where I clone this repository.
-The config setup is maintained purely in the =~/Emacs/emacs_setup.org=.
+I have my config in directory =~/Emacs= which is where I clone this repository.
+The config setup is maintained purely in the =~/Emacs/emacs_setup.org= file.
 
-In your =~/.emacs= file, all you need then is
+In your =~/.emacs= file, all you need to add is
 
 #+BEGIN_SRC emacs-lisp :tangle no
 (load-file "~/Emacs/emacs_setup.el")
 #+END_SRC
 
 ** bootstrap
-Initially, you have the =emacs_setup.org= file, that contains you specific
-setup, a bootstrap content for the init that will tangle and compile the org
-file, /and replace itself/.
+Initially when cloning this repository, you have the =emacs_setup.org= file,
+that contains you adapt to your specific setup, and an =emacs_setup.el= with a
+bootstrap content that will tangle and compile the org file, /and replace
+itself/.
 
-After that, the config itself has the hook to re-tangle and re-compile the setup
-at each save.
+After that, the config itself should have the hook to re-tangle and re-compile
+the setup at each save.
+
+Therefore, my setup is very easy to install, goes in these step:
+
+1. clone this repo into =~/Emacs=
+2. add the one line in you =~/.emacs=
+3. make sure Emacs re-interprets its init (you could restart it)
+
+It may be that =[[https://github.com/jwiegley/use-package][use-package]] = is not installed oon your setup, so you will have
+to add it.
 
 #+BEGIN_SRC emacs-lisp :tangle no
 ;; This file replaces itself with the actual configuration at first run.
