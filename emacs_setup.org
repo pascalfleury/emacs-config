@@ -4,12 +4,29 @@
 #+PROPERTY: header-args :tangle yes
 
 This is my Emacs config. You need to tangle this into a file that
-then gets loaded by Emacs: =C-c C-v t= [org-babel-tangle]
+then gets loaded by Emacs: =C-c C-v t= [org-babel-tangle].
+Below, I also explain how this tangling is automated.
 
 Extensive documentation about how to do this can be found [[https://github.com/larstvei/dot-emacs][here]].
 
-* Initialize
+* Setup
+I have my configs in directory =~/Emacs= which is where I clone this repository.
+The config setup is maintained purely in the =~/Emacs/emacs_setup.org=.
+
+In your =~/.emacs= file, all you need then is
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(load-file "~/Emacs/emacs_setup.el")
+#+END_SRC
+
 ** bootstrap
+Initially, you have the =emacs_setup.org= file, that contains you specific
+setup, a bootstrap content for the init that will tangle and compile the org
+file, /and replace itself/.
+
+After that, the config itself has the hook to re-tangle and re-compile the setup
+at each save.
+
 #+BEGIN_SRC emacs-lisp :tangle no
 ;; This file replaces itself with the actual configuration at first run.
 
@@ -20,13 +37,31 @@ Extensive documentation about how to do this can be found [[https://github.com/l
 (load-file "~/Emacs/emacs_setup.el")  ; load it
 (byte-compile-file "emacs_setup.el")  ; finally byte-compile it
 #+END_SRC
+
+* Plans
+I regularly try out new packags, and here is the current list of things I am
+trying out.  They usually live temporarily in my =~/.emacs= untilI am happy, in
+which case I move their config into this file so that it gets replicated on all
+machines I work with emacs.
+
+** Currently under review
+  - org-gcal
+  - plantuml-mode
+  - ox-reveal (see [[https://github.com/yjwen/org-reveal#set-the-location-of-revealjs][installation]])
+  - yankpad + yasnippet
+
+** Installed, but need no or external config
+- hc-zenburn-theme
+
+* Initialize
 ** melpa
+Make sure we have the package system initialized before we load anything.
 #+BEGIN_SRC emacs-lisp
 (require 'package)
 (package-initialize)
 #+END_SRC
 
-Adding my own packages.
+Adding my own packages repositories.
 #+BEGIN_SRC emacs-lisp
 (setq package-archives '(("org" . "http://orgmode.org/elpa/")
                          ("melpa" . "http://melpa.org/packages/")
@@ -35,7 +70,10 @@ Adding my own packages.
                         ))
 #+END_SRC
 ** use-package
-I use =use-package= for most configuration, and that needs to be at the top of the file.
+I use =use-package= for most configuration, and that needs to be at the top of
+the file.  +use-package= ensures the package is installed, if not installs it,
+and has very convenient sections for configs of variables, key bindings
+etc. that happen only if the package is actually loaded.
 #+BEGIN_SRC emacs-lisp
 (eval-when-compile (require 'use-package))
 #+END_SRC
@@ -53,6 +91,7 @@ Use instead of add-hook to run it a single time.
        (add-hook ,hook ',sym ,append ,local))))
 #+END_SRC
 ** tangle-this-config
+I set this up to tangle the init org-mode file into the actual Emacs init file as soon as I save it.
 #+BEGIN_SRC emacs-lisp
 (defun tangle-init ()
   "If the current buffer is 'init.org' the code-blocks are
@@ -512,6 +551,7 @@ archiving subtrees.
 *** Adjust tags on the right
 Dynamically adjust tag position
 [[https://orgmode.org/worg/org-hacks.html#org0560357][source on worg]]
+
 #+BEGIN_SRC emacs-lisp
 (defun ba/org-adjust-tags-column-reset-tags ()
   "In org-mode buffers it will reset tag position according to
@@ -573,6 +613,13 @@ Dynamically adjust tag position
 (add-hook 'org-agenda-mode-hook (lambda ()
                                   (setq org-agenda-tags-column (- (window-width)))))
 #+END_SRC
+**** TODO Update =flet= and =org-set-tags=
+:LOGBOOK:
+- State "TODO"       from              [2019-01-12 Sat 12:08]
+:END:
+=flet= as well as =org-set-tags= with > 1 args are deprecated.
+Not sure what to replace it with though...
+
 *** Auto-Refresh Agenda
 Refresh org-mode agenda regularly.
 [[https://orgmode.org/worg/org-hacks.html#orgab827a7][source on worg]]
