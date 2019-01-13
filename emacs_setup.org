@@ -304,14 +304,14 @@ Let's one jump around text
          ("C-c DEL" . 'ace-jump-mode-pop-mark)))
 #+END_SRC
 * Editing Style
-** No tabs, ever. No traling spaces either.
+** No tabs, ever. No trailing spaces either.
 #+BEGIN_SRC emacs-lisp
 (setq-default indent-tabs-mode nil)
 (setq require-final-newline t)
 (setq next-line-add-newlines nil)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 #+END_SRC
-** Mark the 80 col boundary
+** Mark the 80 cols boundary
 #+BEGIN_SRC emacs-lisp
 (use-package column-marker
   :config
@@ -327,7 +327,7 @@ Switch from header to implementation file quickly.
             (local-set-key  (kbd "C-c o") 'ff-find-other-file)))
 #+END_SRC
 ** commenting out
-Easy commenting out of lines
+Easy commenting out of lines.
 #+BEGIN_SRC emacs-lisp
 (autoload 'comment-out-region "comment" nil t)
 (global-set-key (kbd "C-c q") 'comment-out-region)
@@ -352,7 +352,7 @@ Help cleanup the includes and using lists.
   (uniquify-region-lines (region-beginning) (region-end)))
 #+END_SRC
 
-Simplify cleanup of #include/typedef/using blocks.
+Simplify cleanup of =#include= / =typedef= / =using= blocks.
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-p s") 'fleury/sort-and-uniquify-region)
 #+END_SRC
@@ -385,6 +385,7 @@ keys are pressed.
 #+END_SRC
 ** Info in the gutter
 *** Line numbers
+This is bound to change in Emacs 26, as it has built-in support for this and is more efficient.
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-c C-n") 'linum-mode)
 #+END_SRC
@@ -411,15 +412,17 @@ Add the powerful Magit
 #+END_SRC
 
 ** annotate-mode
-file-annotations store externally.
-Seems to fail with args-out-of-range and then Emacs is confused.
+The file-annotations are store externally.
+Seems to fail with =args-out-of-range= and then Emacs is confused.
 (filed issue for this)
 
-Also, it seems to interfere with colorful modes like magit or org-agenda-mode
+Also, it seems to interfere with colorful modes like =magit= or =org-agenda-mode=
+so that I went with a whitelist instead of the wish of a blacklist of modes.
+
 #+BEGIN_SRC emacs-lisp
 (use-package annotate
   :ensure t
-  :bind ("C-c C-A" . 'annotate-annotate)  ;; for ledger-mode
+  :bind ("C-c C-A" . 'annotate-annotate)  ;; for ledger-mode, as 'C-c C-a' is taken there.
   :config
   (add-hook 'org-mode 'annotate-mode)
   (add-hook 'csv-mode 'annotate-mode)
@@ -433,15 +436,6 @@ Also, it seems to interfere with colorful modes like magit or org-agenda-mode
   )
 #+END_SRC
 
-** icicles (list completion)
-Enhanced minibuffer completion if we have icicles
-#+BEGIN_SRC emacs-lisp
-(use-package icicles
-  :ensure t
-  :config
-  (icy-mode 1))
-#+END_SRC
-
 ** web-mode
 web-mode with config for Polymer editing
 #+BEGIN_SRC emacs-lisp
@@ -453,12 +447,34 @@ web-mode with config for Polymer editing
   (setq web-mode-css-indent-offset 2)
   (setq web-mode-code-indent-offset 2))
 #+END_SRC
-** emmet-mode
+** icicles (list completion)
+Enhanced minibuffer completion if we have icicles.
+
+There is a conflict with icicle for the =C-c '= key. I tried to figure out
+how to fix it given [[https://www.emacswiki.org/emacs/Icicles_-_Key_Binding_Discussion][this information]], but it seems very involved. So I used
+the hack proposed there of removing the mapping to icicle-occur.
+
+#+BEGIN_SRC emacs-lisp
+(use-package icicles
+  :ensure t
+  :config
+  ;; This is to remove the mapping of C-c ' to icicle-occur that clashes with org-mode.
+  (setq my-icicle-top-level-key-bindings
+        (mapcar (lambda (lst)
+                        (unless (string= "icicle-occur" (nth 1 lst)) lst))
+                           icicle-top-level-key-bindings))
+  (setq icicle-top-level-key-bindings my-icicle-top-level-key-bindings)
+  (icy-mode 1))
+#+END_SRC
+
+** [[https://github.com/smihica/emmet-mode][emmet-mode]]
+Useful abbreviations when codng in HTML.
 #+BEGIN_SRC emacs-lisp
 (use-package emmet-mode
 :ensure t)
 #+END_SRC
 ** rainbow-mode
+Colorize color names and codes in the correct color.
 #+BEGIN_SRC emacs-lisp
 (use-package rainbow-mode
 :ensure t)
@@ -513,8 +529,8 @@ web-mode with config for Polymer editing
 * OrgMode
 Load all my org stuff, but first org-mode itself.
 ** Init
-If variable `org-directory` not set yet, map it to my home's files.
-You may set this in the ~/.emacs to another value, e.g.
+If variable =org-directory= not set yet, map it to my home's files.
+You may set this in the =~/.emacs= to another value, e.g.
 =(setq org-directory "/ssh:fleury@bernina.c.googlers.com:OrgFiles")=
 #+BEGIN_SRC emacs-lisp
 (require 'org)
@@ -623,6 +639,7 @@ Dynamically adjust tag position
 (add-hook 'org-agenda-mode-hook (lambda ()
                                   (setq org-agenda-tags-column (- (window-width)))))
 #+END_SRC
+
 **** TODO Update =org-set-tags-to=
 :LOGBOOK:
 - State "TODO"       from              [2019-01-12 Sat 12:08]
@@ -690,6 +707,7 @@ See documentation in the file.
 #+BEGIN_SRC emacs-lisp
 (load-file "~/Emacs/org-collector.el")
 #+END_SRC
+
 ** My Setup
 These are mostly org-config specific to me, myself and I.
 *** Key mappings
@@ -954,6 +972,19 @@ Capture and refile stuff, with some templates that I think are useful.
   (not (member (nth 2 (org-heading-components)) org-done-keywords)))
 (setq org-refile-target-verify-function 'bh/verify-refile-target)
 #+END_SRC
+*** org-reveal
+This presentation generator is still under review (by me).
+
+#+BEGIN_SRC emacs-lisp
+;;(add-to-list 'org-structure-template-alist
+;;             (list "n" . "#+BEGIN_NOTES\n\?\n#+END_NOTES"))
+;; disable the addition in the lib that does not do it rigt for Org 9.2
+(setq org-reveal-note-key-char nil)
+
+;; import as usual.
+(use-package ox-reveal)
+#+END_SRC
+
 *** org-babel
 What kind of code block languages do I need
 #+BEGIN_SRC emacs-lisp
@@ -975,17 +1006,40 @@ What kind of code block languages do I need
   ))
 #+END_SRC
 *** org-export
-Add the ODT as an export format
+Add a few formats to the export functionality of org-mode.
+
 #+BEGIN_SRC emacs-lisp
 (use-package ox-odt)
-(use-package ox-reveal) ; under review
 (use-package ox-taskjuggler)
 #+END_SRC
 *** plant-uml
-Tell where PlantUML is to be found
-#+BEGIN_SRC emacs-lisp
-(setq org-plantuml-jar-path (expand-file-name "~/Apps/plantuml.jar"))
+Tell where PlantUML is to be found. This needs to be downloaded and installed
+separately, see the [[http://plantuml.com/][PlantUML website]].
+
+You could install the PlantUML JAR file with this snippet:
+#+BEGIN_SRC bash :tangle no :results output
+URL='http://sourceforge.net/projects/plantuml/files/plantuml.jar/download'
+DIR="${HOME}/Apps"
+[[ -d "${DIR}" ]] || mkdir -p "${DIR}"
+(cd "${DIR}" && wget -O plantuml.jar -o /tmp/plantuml.log "${URL}")
+ls -l "${DIR}/plantuml.jar"
 #+END_SRC
+
+#+RESULTS:
+: -rw-rw-r-- 1 fleury users 7394314 Dec 21 18:12 /home/fleury/Apps/plantuml.jar
+
+#+BEGIN_SRC emacs-lisp
+(use-package plantuml-mode
+ :ensure t
+ :config
+  (setq plantuml-jar-path "~/Apps/plantuml.jar")
+  (setq org-plantuml-jar-path "~/Apps/plantuml.jar")
+  ;; Let us edit PlantUML snippets in plantuml-mode within orgmode
+  (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
+  ;; Enable plantuml-mode for PlantUML files
+  (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode)))
+#+END_SRC
+
 *** iimage (M-I)
 Make the display of images a simple key-stroke away.
 #+BEGIN_SRC emacs-lisp
