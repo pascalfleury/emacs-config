@@ -34,7 +34,7 @@ Therefore, my setup is very easy to install, goes in these step:
 2. add the one line in you =~/.emacs=
 3. make sure Emacs re-interprets its init (you could restart it)
 
-It may be that =[[https://github.com/jwiegley/use-package][use-package]] = is not installed oon your setup, so you will have
+It may be that [[https://github.com/jwiegley/use-package][use-package]] is not installed on your setup, so you will have
 to add it.
 
 #+BEGIN_SRC emacs-lisp :tangle no
@@ -56,7 +56,6 @@ machines I work on with Emacs.
 
 ** Currently under review
   - [[https://github.com/myuhe/org-gcal.el][org-gcal]]
-  - [[https://github.com/skuro/plantuml-mode][plantuml-mode]]
   - [[https://github.com/yjwen/org-reveal][ox-reveal]] (see [[https://github.com/yjwen/org-reveal#set-the-location-of-revealjs][installation]])
   - [[https://github.com/Kungsgeten/yankpad][yankpad]] + [[https://github.com/joaotavora/yasnippet][yasnippet]]
 
@@ -81,9 +80,9 @@ Adding my own packages repositories.
 #+END_SRC
 ** use-package
 I use =use-package= for most configuration, and that needs to be at the top of
-the file.  +use-package= ensures the package is installed, if not installs it,
-and has very convenient sections for configs of variables, key bindings
-etc. that happen only if the package is actually loaded.
+the file.  =use-package= ensures requested the package is installed, if not it
+installs it, and has very convenient sections for configs of variables, key
+bindings etc. that happen only if the package is actually loaded.
 #+BEGIN_SRC emacs-lisp
 (eval-when-compile (require 'use-package))
 #+END_SRC
@@ -115,8 +114,8 @@ tangled, and the tangled file is compiled."
 
 (add-hook 'after-save-hook 'tangle-init)
 #+END_SRC
-** Clear C-p so I can use it as a prefix
-Remove C-p that I want to use for *me* personally as a prefix.
+** Clear =C-p= so I can use it as a prefix
+Remove =C-p= that I want to use for *me* personally as a prefix.
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-p") nil) ;; was 'previous-line'
 #+END_SRC
@@ -147,7 +146,7 @@ interpreted as hostnames.
 #+END_SRC
 
 * Buffer behavior
-Use auto-revert, which reloads a file if it's updated on disk
+Use =auto-revert=, which reloads a file if it's updated on disk
 and not modified in the buffer.
 #+BEGIN_SRC emacs-lisp
 (global-auto-revert-mode 1)
@@ -157,8 +156,8 @@ and not modified in the buffer.
 
 * Managing Buffers
 ** winner-mode (layout managing)
-Enable winner-mode
-Navigate buffer-window configs with C-c left and C-c right.
+Enables =winner-mode=.
+Navigate buffer-window configs with =C-c left= and =C-c right=.
 #+BEGIN_SRC emacs-lisp
 (winner-mode 1)
 #+END_SRC
