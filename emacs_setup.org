@@ -4,12 +4,39 @@
 #+PROPERTY: header-args :tangle yes
 
 This is my Emacs config. You need to tangle this into a file that
-then gets loaded by Emacs: =C-c C-v t= [org-babel-tangle]
+then gets loaded by Emacs: =C-c C-v t= [org-babel-tangle].
+Below, I also explain how this tangling is automated.
 
 Extensive documentation about how to do this can be found [[https://github.com/larstvei/dot-emacs][here]].
 
-* Initialize
+* Setup
+I have my config in directory =~/Emacs= which is where I clone this repository.
+The config setup is maintained purely in the =~/Emacs/emacs_setup.org= file.
+
+In your =~/.emacs= file, all you need to add is
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(load-file "~/Emacs/emacs_setup.el")
+#+END_SRC
+
 ** bootstrap
+Initially when cloning this repository, you have the =emacs_setup.org= file,
+that contains you adapt to your specific setup, and an =emacs_setup.el= with a
+bootstrap content that will tangle and compile the org file, /and replace
+itself/.
+
+After that, the config itself should have the hook to re-tangle and re-compile
+the setup at each save.
+
+Therefore, my setup is very easy to install, goes in these step:
+
+1. clone this repo into =~/Emacs=
+2. add the one line in you =~/.emacs=
+3. make sure Emacs re-interprets its init (you could restart it)
+
+It may be that [[https://github.com/jwiegley/use-package][use-package]] is not installed on your setup, so you will have
+to add it.
+
 #+BEGIN_SRC emacs-lisp :tangle no
 ;; This file replaces itself with the actual configuration at first run.
 
@@ -20,13 +47,30 @@ Extensive documentation about how to do this can be found [[https://github.com/l
 (load-file "~/Emacs/emacs_setup.el")  ; load it
 (byte-compile-file "emacs_setup.el")  ; finally byte-compile it
 #+END_SRC
+
+* Plans
+I regularly try out new packages, this is my current list of things being evaluated.
+They usually live temporarily in my =~/.emacs= until I am happy, in
+which case I move their config into this file so that it gets replicated on all
+machines I work on with Emacs.
+
+** Currently under review
+  - [[https://github.com/myuhe/org-gcal.el][org-gcal]]
+  - [[https://github.com/yjwen/org-reveal][ox-reveal]] (see [[https://github.com/yjwen/org-reveal#set-the-location-of-revealjs][installation]])
+  - [[https://github.com/Kungsgeten/yankpad][yankpad]] + [[https://github.com/joaotavora/yasnippet][yasnippet]]
+
+** Installed, but need no or external config
+- [[https://github.com/edran/hc-zenburn-emacs][hc-zenburn-theme]]
+
+* Initialize
 ** melpa
+Make sure we have the package system initialized before we load anything.
 #+BEGIN_SRC emacs-lisp
 (require 'package)
 (package-initialize)
 #+END_SRC
 
-Adding my own packages.
+Adding my own packages repositories.
 #+BEGIN_SRC emacs-lisp
 (setq package-archives '(("org" . "http://orgmode.org/elpa/")
                          ("melpa" . "http://melpa.org/packages/")
@@ -35,7 +79,10 @@ Adding my own packages.
                         ))
 #+END_SRC
 ** use-package
-I use =use-package= for most configuration, and that needs to be at the top of the file.
+I use =use-package= for most configuration, and that needs to be at the top of
+the file.  =use-package= ensures requested the package is installed, if not it
+installs it, and has very convenient sections for configs of variables, key
+bindings etc. that happen only if the package is actually loaded.
 #+BEGIN_SRC emacs-lisp
 (eval-when-compile (require 'use-package))
 #+END_SRC
@@ -53,6 +100,7 @@ Use instead of add-hook to run it a single time.
        (add-hook ,hook ',sym ,append ,local))))
 #+END_SRC
 ** tangle-this-config
+I set this up to tangle the init org-mode file into the actual Emacs init file as soon as I save it.
 #+BEGIN_SRC emacs-lisp
 (defun tangle-init ()
   "If the current buffer is 'init.org' the code-blocks are
@@ -66,8 +114,8 @@ tangled, and the tangled file is compiled."
 
 (add-hook 'after-save-hook 'tangle-init)
 #+END_SRC
-** Clear C-p so I can use it as a prefix
-Remove C-p that I want to use for *me* personally as a prefix.
+** Clear =C-p= so I can use it as a prefix
+Remove =C-p= that I want to use for *me* personally as a prefix.
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-p") nil) ;; was 'previous-line'
 #+END_SRC
@@ -98,7 +146,7 @@ interpreted as hostnames.
 #+END_SRC
 
 * Buffer behavior
-Use auto-revert, which reloads a file if it's updated on disk
+Use =auto-revert=, which reloads a file if it's updated on disk
 and not modified in the buffer.
 #+BEGIN_SRC emacs-lisp
 (global-auto-revert-mode 1)
@@ -108,8 +156,8 @@ and not modified in the buffer.
 
 * Managing Buffers
 ** winner-mode (layout managing)
-Enable winner-mode
-Navigate buffer-window configs with C-c left and C-c right.
+Enables =winner-mode=.
+Navigate buffer-window configs with =C-c left= and =C-c right=.
 #+BEGIN_SRC emacs-lisp
 (winner-mode 1)
 #+END_SRC
@@ -255,14 +303,14 @@ Let's one jump around text
          ("C-c DEL" . 'ace-jump-mode-pop-mark)))
 #+END_SRC
 * Editing Style
-** No tabs, ever. No traling spaces either.
+** No tabs, ever. No trailing spaces either.
 #+BEGIN_SRC emacs-lisp
 (setq-default indent-tabs-mode nil)
 (setq require-final-newline t)
 (setq next-line-add-newlines nil)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 #+END_SRC
-** Mark the 80 col boundary
+** Mark the 80 cols boundary
 #+BEGIN_SRC emacs-lisp
 (use-package column-marker
   :config
@@ -278,7 +326,7 @@ Switch from header to implementation file quickly.
             (local-set-key  (kbd "C-c o") 'ff-find-other-file)))
 #+END_SRC
 ** commenting out
-Easy commenting out of lines
+Easy commenting out of lines.
 #+BEGIN_SRC emacs-lisp
 (autoload 'comment-out-region "comment" nil t)
 (global-set-key (kbd "C-c q") 'comment-out-region)
@@ -303,7 +351,7 @@ Help cleanup the includes and using lists.
   (uniquify-region-lines (region-beginning) (region-end)))
 #+END_SRC
 
-Simplify cleanup of #include/typedef/using blocks.
+Simplify cleanup of =#include= / =typedef= / =using= blocks.
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-p s") 'fleury/sort-and-uniquify-region)
 #+END_SRC
@@ -336,6 +384,7 @@ keys are pressed.
 #+END_SRC
 ** Info in the gutter
 *** Line numbers
+This is bound to change in Emacs 26, as it has built-in support for this and is more efficient.
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-c C-n") 'linum-mode)
 #+END_SRC
@@ -362,15 +411,17 @@ Add the powerful Magit
 #+END_SRC
 
 ** annotate-mode
-file-annotations store externally.
-Seems to fail with args-out-of-range and then Emacs is confused.
+The file-annotations are store externally.
+Seems to fail with =args-out-of-range= and then Emacs is confused.
 (filed issue for this)
 
-Also, it seems to interfere with colorful modes like magit or org-agenda-mode
+Also, it seems to interfere with colorful modes like =magit= or =org-agenda-mode=
+so that I went with a whitelist instead of the wish of a blacklist of modes.
+
 #+BEGIN_SRC emacs-lisp
 (use-package annotate
   :ensure t
-  :bind ("C-c C-A" . 'annotate-annotate)  ;; for ledger-mode
+  :bind ("C-c C-A" . 'annotate-annotate)  ;; for ledger-mode, as 'C-c C-a' is taken there.
   :config
   (add-hook 'org-mode 'annotate-mode)
   (add-hook 'csv-mode 'annotate-mode)
@@ -384,15 +435,6 @@ Also, it seems to interfere with colorful modes like magit or org-agenda-mode
   )
 #+END_SRC
 
-** icicles (list completion)
-Enhanced minibuffer completion if we have icicles
-#+BEGIN_SRC emacs-lisp
-(use-package icicles
-  :ensure t
-  :config
-  (icy-mode 1))
-#+END_SRC
-
 ** web-mode
 web-mode with config for Polymer editing
 #+BEGIN_SRC emacs-lisp
@@ -404,12 +446,34 @@ web-mode with config for Polymer editing
   (setq web-mode-css-indent-offset 2)
   (setq web-mode-code-indent-offset 2))
 #+END_SRC
-** emmet-mode
+** icicles (list completion)
+Enhanced minibuffer completion if we have icicles.
+
+There is a conflict with icicle for the =C-c '= key. I tried to figure out
+how to fix it given [[https://www.emacswiki.org/emacs/Icicles_-_Key_Binding_Discussion][this information]], but it seems very involved. So I used
+the hack proposed there of removing the mapping to icicle-occur.
+
+#+BEGIN_SRC emacs-lisp
+(use-package icicles
+  :ensure t
+  :config
+  ;; This is to remove the mapping of C-c ' to icicle-occur that clashes with org-mode.
+  (setq my-icicle-top-level-key-bindings
+        (mapcar (lambda (lst)
+                        (unless (string= "icicle-occur" (nth 1 lst)) lst))
+                           icicle-top-level-key-bindings))
+  (setq icicle-top-level-key-bindings my-icicle-top-level-key-bindings)
+  (icy-mode 1))
+#+END_SRC
+
+** [[https://github.com/smihica/emmet-mode][emmet-mode]]
+Useful abbreviations when codng in HTML.
 #+BEGIN_SRC emacs-lisp
 (use-package emmet-mode
 :ensure t)
 #+END_SRC
 ** rainbow-mode
+Colorize color names and codes in the correct color.
 #+BEGIN_SRC emacs-lisp
 (use-package rainbow-mode
 :ensure t)
@@ -464,8 +528,8 @@ web-mode with config for Polymer editing
 * OrgMode
 Load all my org stuff, but first org-mode itself.
 ** Init
-If variable `org-directory` not set yet, map it to my home's files.
-You may set this in the ~/.emacs to another value, e.g.
+If variable =org-directory= not set yet, map it to my home's files.
+You may set this in the =~/.emacs= to another value, e.g.
 =(setq org-directory "/ssh:fleury@bernina.c.googlers.com:OrgFiles")=
 #+BEGIN_SRC emacs-lisp
 (require 'org)
@@ -512,6 +576,7 @@ archiving subtrees.
 *** Adjust tags on the right
 Dynamically adjust tag position
 [[https://orgmode.org/worg/org-hacks.html#org0560357][source on worg]]
+
 #+BEGIN_SRC emacs-lisp
 (defun ba/org-adjust-tags-column-reset-tags ()
   "In org-mode buffers it will reset tag position according to
@@ -525,7 +590,7 @@ Dynamically adjust tag position
             (goto-char (point-min))
             (command-execute 'outline-next-visible-heading)
             ;; disable (message) that org-set-tags generates
-            (flet ((message (&rest ignored) nil))
+            (cl-letf (((symbol-function 'message) #'format))
               (org-set-tags 1 t))
             (set-buffer-modified-p b-m-p))
         (error nil)))))
@@ -573,6 +638,22 @@ Dynamically adjust tag position
 (add-hook 'org-agenda-mode-hook (lambda ()
                                   (setq org-agenda-tags-column (- (window-width)))))
 #+END_SRC
+
+**** TODO Update =org-set-tags-to=
+:LOGBOOK:
+- State "TODO"       from              [2019-01-12 Sat 12:08]
+:END:
+= [[https://orgmode.org/worg/doc.html#org-set-tags-to][org-set-tags-to]] = is gone, and =org-set-tags= with > 1 args is mpt working.
+Not sure what to replace it with though...
+**** DONE Update =flet=
+CLOSED: [2019-01-12 Sat 12:56]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2019-01-12 Sat 12:56]
+- State "TODO"       from              [2019-01-12 Sat 12:56]
+:END:
+=flt= is deprecated and should be upgraded.
+Found the solution [[http://endlessparentheses.com/understanding-letf-and-how-it-replaces-flet.html][here].
+
 *** Auto-Refresh Agenda
 Refresh org-mode agenda regularly.
 [[https://orgmode.org/worg/org-hacks.html#orgab827a7][source on worg]]
@@ -625,6 +706,7 @@ See documentation in the file.
 #+BEGIN_SRC emacs-lisp
 (load-file "~/Emacs/org-collector.el")
 #+END_SRC
+
 ** My Setup
 These are mostly org-config specific to me, myself and I.
 *** Key mappings
@@ -889,6 +971,19 @@ Capture and refile stuff, with some templates that I think are useful.
   (not (member (nth 2 (org-heading-components)) org-done-keywords)))
 (setq org-refile-target-verify-function 'bh/verify-refile-target)
 #+END_SRC
+*** org-reveal
+This presentation generator is still under review (by me).
+
+#+BEGIN_SRC emacs-lisp
+;;(add-to-list 'org-structure-template-alist
+;;             (list "n" . "#+BEGIN_NOTES\n\?\n#+END_NOTES"))
+;; disable the addition in the lib that does not do it rigt for Org 9.2
+(setq org-reveal-note-key-char nil)
+
+;; import as usual.
+(use-package ox-reveal)
+#+END_SRC
+
 *** org-babel
 What kind of code block languages do I need
 #+BEGIN_SRC emacs-lisp
@@ -910,17 +1005,40 @@ What kind of code block languages do I need
   ))
 #+END_SRC
 *** org-export
-Add the ODT as an export format
+Add a few formats to the export functionality of org-mode.
+
 #+BEGIN_SRC emacs-lisp
 (use-package ox-odt)
-(use-package ox-reveal) ; under review
 (use-package ox-taskjuggler)
 #+END_SRC
 *** plant-uml
-Tell where PlantUML is to be found
-#+BEGIN_SRC emacs-lisp
-(setq org-plantuml-jar-path (expand-file-name "~/Apps/plantuml.jar"))
+Tell where PlantUML is to be found. This needs to be downloaded and installed
+separately, see the [[http://plantuml.com/][PlantUML website]].
+
+You could install the PlantUML JAR file with this snippet:
+#+BEGIN_SRC bash :tangle no :results output
+URL='http://sourceforge.net/projects/plantuml/files/plantuml.jar/download'
+DIR="${HOME}/Apps"
+[[ -d "${DIR}" ]] || mkdir -p "${DIR}"
+(cd "${DIR}" && wget -O plantuml.jar -o /tmp/plantuml.log "${URL}")
+ls -l "${DIR}/plantuml.jar"
 #+END_SRC
+
+#+RESULTS:
+: -rw-rw-r-- 1 fleury users 7394314 Dec 21 18:12 /home/fleury/Apps/plantuml.jar
+
+#+BEGIN_SRC emacs-lisp
+(use-package plantuml-mode
+ :ensure t
+ :config
+  (setq plantuml-jar-path "~/Apps/plantuml.jar")
+  (setq org-plantuml-jar-path "~/Apps/plantuml.jar")
+  ;; Let us edit PlantUML snippets in plantuml-mode within orgmode
+  (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
+  ;; Enable plantuml-mode for PlantUML files
+  (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode)))
+#+END_SRC
+
 *** iimage (M-I)
 Make the display of images a simple key-stroke away.
 #+BEGIN_SRC emacs-lisp
