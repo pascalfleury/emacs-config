@@ -70,7 +70,7 @@ Make sure we have the package system initialized before we load anything.
 (package-initialize)
 #+END_SRC
 
-Adding my own packages repositories.
+Adding my choice of packages repositories.
 #+BEGIN_SRC emacs-lisp
 (setq package-archives '(("org" . "http://orgmode.org/elpa/")
                          ("melpa" . "http://melpa.org/packages/")
@@ -700,6 +700,22 @@ Show the agenda when emacs left idle.
   ;;    (org-agenda-goto-calendar)))
   )
 #+END_SRC
+*** org-gtasks
+Should follow this git repo: [[https://github.com/JulienMasson/org-gtasks][org-gtasks]]
+I have copied a version of the file here, it's not yet available
+on MELPA.
+I have this currently in my `~/.emacs`:
+#+begin_src emacs-lisp :tangle no
+(load-file "~/Emacs/org-gtasks.el")
+(use-package org-gtasks
+  :init
+  (org-gtasks-register-account
+     :name "pascal"
+     :directory "~/OrgFiles/GTasks/"
+     :client-id "XXX"
+     :client-secret "XXX"))
+#+end_src
+
 *** Properties collector
 Collect properties into tables.
 See documentation in the file.
