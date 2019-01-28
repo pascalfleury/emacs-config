@@ -144,7 +144,12 @@ interpreted as hostnames.
   (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
 (set-language-environment "UTF-8")
 #+END_SRC
-
+** Theme
+I really like the high-contract Zenburn theme.
+#+BEGIN_SRC emacs-lisp
+(use-package hc-zenburn-theme
+ :ensure t)
+#+END_SRC
 * Buffer behavior
 Use =auto-revert=, which reloads a file if it's updated on disk
 and not modified in the buffer.
@@ -313,6 +318,7 @@ Let's one jump around text
 ** Mark the 80 cols boundary
 #+BEGIN_SRC emacs-lisp
 (use-package column-marker
+  :load-path "~/Emacs/"
   :config
   (add-hook 'c-mode-common-hook (lambda () (interactive) (column-marker-1 80)))
   :bind ("C-c m" . 'column-marker-1))
@@ -447,13 +453,16 @@ web-mode with config for Polymer editing
   (setq web-mode-code-indent-offset 2))
 #+END_SRC
 ** icicles (list completion)
+
+*trying without*
+
 Enhanced minibuffer completion if we have icicles.
 
 There is a conflict with icicle for the =C-c '= key. I tried to figure out
 how to fix it given [[https://www.emacswiki.org/emacs/Icicles_-_Key_Binding_Discussion][this information]], but it seems very involved. So I used
 the hack proposed there of removing the mapping to icicle-occur.
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp  :tangle no
 (use-package icicles
   :ensure t
   :config
@@ -487,6 +496,7 @@ Colorize color names and codes in the correct color.
 ** writeroom-mode
 #+BEGIN_SRC emacs-lisp
 (use-package writeroom-mode
+  :ensure t
   :init
   (global-set-key (kbd "C-p w") 'writeroom-mode))
 #+END_SRC
@@ -793,6 +803,7 @@ This will start serving the org files through the emacs-based webbrowser
 when pressing M-f12 (on localhost:55555)
 #+BEGIN_SRC emacs-lisp
 (use-package org-ehtml
+  :ensure t
   :config
   (setq org-ehtml-docroot (expand-file-name org-directory))
   (setq org-ehtml-everything-editable t)
@@ -813,7 +824,8 @@ This lets one write links as e.g. [ [b:123457] ]
 #+END_SRC
 *** org-secretary
 #+BEGIN_SRC emacs-lisp
-(use-package org-secretary
+(use-package  org-secretary
+:ensure org-plus-contrib
 :config
 (setq org-sec-me "paf")
 (setq org-tag-alist '(("PRJ" . ?p)
@@ -993,11 +1005,12 @@ This presentation generator is still under review (by me).
 #+BEGIN_SRC emacs-lisp
 ;;(add-to-list 'org-structure-template-alist
 ;;             (list "n" . "#+BEGIN_NOTES\n\?\n#+END_NOTES"))
-;; disable the addition in the lib that does not do it rigt for Org 9.2
+;; disable the addition in the lib that does not do it right for Org 9.2
 (setq org-reveal-note-key-char nil)
 
 ;; import as usual.
-(use-package ox-reveal)
+(use-package ox-reveal
+ :ensure t)
 #+END_SRC
 
 *** org-babel
