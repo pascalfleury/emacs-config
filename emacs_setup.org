@@ -791,9 +791,9 @@ Some config for display.
 #+BEGIN_SRC emacs-lisp
 (use-package org-habit
   :config
-  (setq org-habit-graph-column 45)
-  (setq org-habit-preceding-days 90)
-  (setq org-habit-following-days 30)
+  (setq org-habit-graph-column 28)
+  (setq org-habit-preceding-days 35)
+  (setq org-habit-following-days 10)
   (setq org-habit-show-habits-only-for-today nil))
 #+END_SRC
 *** bash command
