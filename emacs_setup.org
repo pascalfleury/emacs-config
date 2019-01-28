@@ -453,7 +453,7 @@ web-mode with config for Polymer editing
   (setq web-mode-code-indent-offset 2))
 #+END_SRC
 ** Helm (list completion)
-Trying out Helm, as it is available on ELPA.
+Trying out Helm instead of icicles, as it is available on ELPA.
 
 I just took over the config described in this [[https://tuhdo.github.io/helm-intro.html][helm intro]].
 
@@ -573,7 +573,7 @@ Load all my org stuff, but first org-mode itself.
 ** Init
 If variable =org-directory= not set yet, map it to my home's files.
 You may set this in the =~/.emacs= to another value, e.g.
-=(setq org-directory "/ssh:fleury@bernina.c.googlers.com:OrgFiles")=
+=(setq org-directory "/ssh:fleury@machine.site.com:OrgFiles")=
 #+BEGIN_SRC emacs-lisp
 (require 'org)
 (if (not (boundp 'org-directory))
