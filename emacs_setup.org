@@ -452,31 +452,10 @@ web-mode with config for Polymer editing
   (setq web-mode-css-indent-offset 2)
   (setq web-mode-code-indent-offset 2))
 #+END_SRC
-** icicles (list completion)
-
-*trying without*. Note the =:tangle no= stanza below.
-
-Enhanced minibuffer completion if we have icicles.
-
-There is a conflict with icicle for the =C-c '= key. I tried to figure out
-how to fix it given [[https://www.emacswiki.org/emacs/Icicles_-_Key_Binding_Discussion][this information]], but it seems very involved. So I used
-the hack proposed there of removing the mapping to icicle-occur.
-
-#+BEGIN_SRC emacs-lisp  :tangle no
-(use-package icicles
-  :ensure t
-  :config
-  ;; This is to remove the mapping of C-c ' to icicle-occur that clashes with org-mode.
-  (setq my-icicle-top-level-key-bindings
-        (mapcar (lambda (lst)
-                        (unless (string= "icicle-occur" (nth 1 lst)) lst))
-                           icicle-top-level-key-bindings))
-  (setq icicle-top-level-key-bindings my-icicle-top-level-key-bindings)
-  (icy-mode 1))
-#+END_SRC
-
 ** Helm (list completion)
 Trying out Helm, as it is available on ELPA.
+
+I just took over the config described in this [[https://tuhdo.github.io/helm-intro.html][helm intro]].
 
 #+begin_src emacs-lisp
 (use-package helm
