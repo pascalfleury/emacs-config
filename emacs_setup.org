@@ -686,16 +686,8 @@ Dynamically adjust tag position
 :LOGBOOK:
 - State "TODO"       from              [2019-01-12 Sat 12:08]
 :END:
-= [[https://orgmode.org/worg/doc.html#org-set-tags-to][org-set-tags-to]] = is gone, and =org-set-tags= with > 1 args is mpt working.
+[[https://orgmode.org/worg/doc.html#org-set-tags-to][=org-set-tags-to=]] is gone, and =org-set-tags= with > 1 args is not working.
 Not sure what to replace it with though...
-**** DONE Update =flet=
-CLOSED: [2019-01-12 Sat 12:56]
-:LOGBOOK:
-- State "DONE"       from "TODO"       [2019-01-12 Sat 12:56]
-- State "TODO"       from              [2019-01-12 Sat 12:56]
-:END:
-=flt= is deprecated and should be upgraded.
-Found the solution [[http://endlessparentheses.com/understanding-letf-and-how-it-replaces-flet.html][here].
 
 *** Auto-Refresh Agenda
 Refresh org-mode agenda regularly.
