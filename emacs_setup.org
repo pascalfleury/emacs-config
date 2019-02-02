@@ -83,6 +83,14 @@ I use =use-package= for most configuration, and that needs to be at the top of
 the file.  =use-package= ensures requested the package is installed, if not it
 installs it, and has very convenient sections for configs of variables, key
 bindings etc. that happen only if the package is actually loaded.
+
+First, make sure it gets installed if it is not there yet.
+#+begin_src emacs-lisp
+(unless (package-installed-p 'use-package)
+        (package-refresh-contents)
+        (package-install 'use-package))
+#+end_src
+
 #+BEGIN_SRC emacs-lisp
 (eval-when-compile (require 'use-package))
 #+END_SRC
@@ -568,6 +576,16 @@ Colorize color names and codes in the correct color.
   :config
   (setq ledger-reconcile-default-commodity "CHF"))
 #+END_SRC
+** hyperbole
+Let's try this too, even though I sis not quite get the point of this
+whole package yet.
+
+#+begin_src elacs-lisp
+(use-package hyperbole
+ :ensure t
+ :config
+   (require 'hyperbole))
+#+end_src
 * OrgMode
 Load all my org stuff, but first org-mode itself.
 ** Init
@@ -739,9 +757,13 @@ Show the agenda when emacs left idle.
 Should follow this git repo: [[https://github.com/JulienMasson/org-gtasks][org-gtasks]]
 I have copied a version of the file here, it's not yet available
 on MELPA.
+
+#+begin_src emacs-lisp
+(load-file "~/Emacs/org-gtasks.el")
+#+end_src
+
 I have this currently in my `~/.emacs`:
 #+begin_src emacs-lisp :tangle no
-(load-file "~/Emacs/org-gtasks.el")
 (use-package org-gtasks
   :init
   (org-gtasks-register-account
