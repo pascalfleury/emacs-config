@@ -547,7 +547,7 @@ Colorize color names and codes in the correct color.
   :ensure t)
 #+END_SRC
 
-** ledger-mode
+** [[https://github.com/ledger/ledger-mode][ledger-mode]]
 *** Cleanup ledger file
 #+BEGIN_SRC emacs-lisp
 (defun single-lines-only ()
@@ -575,7 +575,7 @@ Colorize color names and codes in the correct color.
   :config
   (setq ledger-reconcile-default-commodity "CHF"))
 #+END_SRC
-** hyperbole
+** [[http://www.gnu.org/software/hyperbole/][hyperbole]]
 Let's try this too, even though I sis not quite get the point of this
 whole package yet.
 
