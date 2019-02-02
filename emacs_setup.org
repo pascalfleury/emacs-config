@@ -515,7 +515,6 @@ I just took over the config described in this [[https://tuhdo.github.io/helm-int
           'spacemacs//helm-hide-minibuffer-maybe)
 #+end_src
 
-
 ** [[https://github.com/smihica/emmet-mode][emmet-mode]]
 Useful abbreviations when codng in HTML.
 #+BEGIN_SRC emacs-lisp
@@ -580,7 +579,7 @@ Colorize color names and codes in the correct color.
 Let's try this too, even though I sis not quite get the point of this
 whole package yet.
 
-#+begin_src elacs-lisp
+#+begin_src emacs-lisp
 (use-package hyperbole
  :ensure t
  :config
