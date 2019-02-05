@@ -143,6 +143,11 @@ interpreted as hostnames.
 (setq browse-url-generic-program (executable-find "google-chrome")
   browse-url-browser-function 'browse-url-generic)
 #+END_SRC
+** Setup server
+Start the background server, so we can use emacsclient.
+#+begin_src emacs-lisp :tangle no
+(server-start)
+#+end_src
 ** UTF-8
  Make Emacs request UTF-8 first when pasting stuff.
 #+BEGIN_SRC emacs-lisp
@@ -597,6 +602,11 @@ You may set this in the =~/.emacs= to another value, e.g.
     (setq org-directory "~/OrgFiles"))
 #+END_SRC
 ** Helper Functions / Tools found on the web / worg
+*** org-protocol
+Let other tools use emacs client to interact
+#+begin_src emacs-lisp
+(require 'org-protocol)
+#+end_src
 *** Org-relative file function
 #+BEGIN_SRC emacs-lisp
 (defun org-relative-file (filename)
