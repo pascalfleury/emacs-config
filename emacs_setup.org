@@ -157,6 +157,17 @@ Start the background server, so we can use emacsclient.
   (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
 (set-language-environment "UTF-8")
 #+END_SRC
+** Newline (only Unix wanted)
+This should autmoatically convert any files with dos or Mac line endings into Unix style ones.
+Code found [[https://www.emacswiki.org/emacs/EndOfLineTips][here]].
+#+begin_src emacs-lisp
+  (defun no-junk-please-we-are-unixish ()
+    (let ((coding-str (symbol-name buffer-file-coding-system)))
+      (when (string-match "-\\(?:dos\\|mac\\)$" coding-str)
+        (set-buffer-file-coding-system 'unix))))
+
+  (add-hook 'find-file-hooks 'no-junk-please-we-are-unixish)
+#+end_src
 ** Theme
 I really like the high-contract Zenburn theme.
 #+BEGIN_SRC emacs-lisp
