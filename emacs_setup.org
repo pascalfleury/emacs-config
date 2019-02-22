@@ -83,6 +83,14 @@ I use =use-package= for most configuration, and that needs to be at the top of
 the file.  =use-package= ensures requested the package is installed, if not it
 installs it, and has very convenient sections for configs of variables, key
 bindings etc. that happen only if the package is actually loaded.
+
+First, make sure it gets installed if it is not there yet.
+#+begin_src emacs-lisp
+(unless (package-installed-p 'use-package)
+        (package-refresh-contents)
+        (package-install 'use-package))
+#+end_src
+
 #+BEGIN_SRC emacs-lisp
 (eval-when-compile (require 'use-package))
 #+END_SRC
@@ -146,6 +154,11 @@ this in my =.emacs= as it is host- and user-specific.
 (setq browse-url-generic-program (executable-find "google-chrome")
   browse-url-browser-function 'browse-url-generic)
 #+END_SRC
+** Setup server
+Start the background server, so we can use emacsclient.
+#+begin_src emacs-lisp :tangle no
+(server-start)
+#+end_src
 ** UTF-8
  Make Emacs request UTF-8 first when pasting stuff.
 #+BEGIN_SRC emacs-lisp
@@ -155,6 +168,17 @@ this in my =.emacs= as it is host- and user-specific.
   (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
 (set-language-environment "UTF-8")
 #+END_SRC
+** Newline (only Unix wanted)
+This should autmoatically convert any files with dos or Mac line endings into Unix style ones.
+Code found [[https://www.emacswiki.org/emacs/EndOfLineTips][here]].
+#+begin_src emacs-lisp
+  (defun no-junk-please-we-are-unixish ()
+    (let ((coding-str (symbol-name buffer-file-coding-system)))
+      (when (string-match "-\\(?:dos\\|mac\\)$" coding-str)
+        (set-buffer-file-coding-system 'unix))))
+
+  (add-hook 'find-file-hooks 'no-junk-please-we-are-unixish)
+#+end_src
 ** Theme
 I really like the high-contract Zenburn theme.
 #+BEGIN_SRC emacs-lisp
@@ -518,7 +542,6 @@ I just took over the config described in this [[https://tuhdo.github.io/helm-int
           'spacemacs//helm-hide-minibuffer-maybe)
 #+end_src
 
-
 ** [[https://github.com/smihica/emmet-mode][emmet-mode]]
 Useful abbreviations when codng in HTML.
 #+BEGIN_SRC emacs-lisp
@@ -551,7 +574,7 @@ Colorize color names and codes in the correct color.
   :ensure t)
 #+END_SRC
 
-** ledger-mode
+** [[https://github.com/ledger/ledger-mode][ledger-mode]]
 *** Cleanup ledger file
 #+BEGIN_SRC emacs-lisp
 (defun single-lines-only ()
@@ -579,6 +602,16 @@ Colorize color names and codes in the correct color.
   :config
   (setq ledger-reconcile-default-commodity "CHF"))
 #+END_SRC
+** [[http://www.gnu.org/software/hyperbole/][hyperbole]]
+Let's try this too, even though I sis not quite get the point of this
+whole package yet.
+
+#+begin_src emacs-lisp
+(use-package hyperbole
+ :ensure t
+ :config
+   (require 'hyperbole))
+#+end_src
 * OrgMode
 Load all my org stuff, but first org-mode itself.
 ** Init
@@ -591,6 +624,11 @@ You may set this in the =~/.emacs= to another value, e.g.
     (setq org-directory "~/OrgFiles"))
 #+END_SRC
 ** Helper Functions / Tools found on the web / worg
+*** org-protocol
+Let other tools use emacs client to interact
+#+begin_src emacs-lisp
+(require 'org-protocol)
+#+end_src
 *** Org-relative file function
 #+BEGIN_SRC emacs-lisp
 (defun org-relative-file (filename)
@@ -750,9 +788,13 @@ Show the agenda when emacs left idle.
 Should follow this git repo: [[https://github.com/JulienMasson/org-gtasks][org-gtasks]]
 I have copied a version of the file here, it's not yet available
 on MELPA.
+
+#+begin_src emacs-lisp
+(load-file "~/Emacs/org-gtasks.el")
+#+end_src
+
 I have this currently in my `~/.emacs`:
 #+begin_src emacs-lisp :tangle no
-(load-file "~/Emacs/org-gtasks.el")
 (use-package org-gtasks
   :init
   (org-gtasks-register-account
