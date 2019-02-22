@@ -129,6 +129,17 @@ interpreted as hostnames.
 (defvar locate-dominating-stop-dir-regexp
   "\\`\\(?:[\\/][\\/][^\\/]+\\|/\\(?:net\\|afs\\|\\.\\.\\.\\)/\\)\\'")
 #+END_SRC
+** Access my remote Org files directory
+Let's bind this to a key, so I can open remote dirs. I suually put
+this in my =.emacs= as it is host- and user-specific.
+#+begin_src emacs-lisp :tangle no
+(defun paf/open-remote-org-dir ()
+  (interactive)
+  (dired "/ssh:remote.host.com:OrgFiles"))
+
+(global-set-key (kbd "C-p r o") 'paf/open-remote-org-dir)
+#+end_src
+
 * Environment
 ** Browser default
 #+BEGIN_SRC emacs-lisp
