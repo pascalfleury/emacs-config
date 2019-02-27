@@ -639,13 +639,14 @@ In your =.emacs= just add this to configure the location:
 Then you can use the keyboard shortcut to open that dir.
 
 #+begin_src emacs-lisp
-(defcustom remote-org-directory "~/OrgFiles"
-"Location of remove OrgFile directory, should you have one.")
-(defun fleury/open-remote-org-directory ()
-  (interactive)
-  (find-file remote-org-directory))
+  (defcustom remote-org-directory "~/OrgFiles"
+    "Location of remove OrgFile directory, should you have one."
+    :group 'paf)
+  (defun fleury/open-remote-org-directory ()
+    (interactive)
+    (find-file remote-org-directory))
 
-(global-set-key (kbd "C-p r o") 'fleury/open-remote-org-directory)
+  (global-set-key (kbd "C-p r o") 'fleury/open-remote-org-directory)
 #+end_src
 
 *** org-protocol
