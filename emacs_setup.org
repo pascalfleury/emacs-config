@@ -790,6 +790,8 @@ I have copied a version of the file here, it's not yet available
 on MELPA.
 
 #+begin_src emacs-lisp
+(use-package request
+  :ensure t)
 (load-file "~/Emacs/org-gtasks.el")
 #+end_src
 
