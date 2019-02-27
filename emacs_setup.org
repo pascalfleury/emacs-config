@@ -1111,7 +1111,7 @@ Capture and refile stuff, with some templates that I think are useful.
 *** org-reveal
 This presentation generator is still under review (by me).
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 ;;(add-to-list 'org-structure-template-alist
 ;;             (list "n" . "#+BEGIN_NOTES\n\?\n#+END_NOTES"))
 ;; disable the addition in the lib that does not do it right for Org 9.2
