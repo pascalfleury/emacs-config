@@ -44,7 +44,9 @@ The original content of the =emacs_setup.el= is as follows:
 
 (require 'org) ; We can't tangle without org!
 
-(setq config_base (expand-file-name "emacs_setup"))
+(setq config_base (expand-file-name "emacs_setup"
+				    (file-name-directory
+				     (or load-file-name buffer-file-name))))
 (find-file (concat config_base ".org"))        ; Open the configuration
 (org-babel-tangle)                             ; tangle it
 (load-file (concat config_base ".el"))         ; load it
