@@ -1010,7 +1010,11 @@ A more visible current-time marker in the agenda
   ;;(run-at-time nil 180 'update-agenda-if-visible)
   (add-hook 'org-mode-hook
             (lambda () (run-at-time nil 180 'kiwon/org-agenda-redo-in-other-window)))
+#+END_SRC
 
+This would open the agenda if any org file was opened. In the end, I don't like this feature,
+so it is disabled by not tangling it.
+#+BEGIN_SRC emacs-lisp :tangle no
   ;; Make this happen only if we open an org file.
   (add-hook 'org-mode-hook
             (lambda () (run-with-idle-timer 600 t 'jump-to-org-agenda)))
@@ -1019,7 +1023,7 @@ A more visible current-time marker in the agenda
 This will save them regularly when the idle for more than a minute.
 #+BEGIN_SRC emacs-lisp
 (add-hook 'org-mode-hook
-    (lambda () (run-with-idle-timer 60 t 'org-save-all-org-buffers)))
+    (lambda () (run-with-idle-timer 180 t 'org-save-all-org-buffers)))
 #+END_SRC
 **** export
 That's the export function to update the agenda view.
