@@ -624,6 +624,24 @@ You may set this in the =~/.emacs= to another value, e.g.
     (setq org-directory "~/OrgFiles"))
 #+END_SRC
 ** Helper Functions / Tools found on the web / worg
+*** Open remote org dir
+In your =.emacs= just add this to configure the location:
+
+#+begin_src emacs-lisp :tangle no
+(setq remote-org-directory "/ssh:fleury@my.hostname.com:OrgFiles")
+#+end_src
+
+Then you can use the keyboard shortcut to open that dir.
+
+#+begin_src emacs-lisp
+(defun fleury/open-remote-org-directory ()
+  (interactive)
+  (find-file remote-org-directory))
+
+(global-set-key (kbd "C-p r o") 'fleury/open-remote-org-directory)
+#+end_src
+
+
 *** org-protocol
 Let other tools use emacs client to interact
 #+begin_src emacs-lisp
