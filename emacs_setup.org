@@ -344,8 +344,8 @@ Let's one jump around text
 #+BEGIN_SRC emacs-lisp
 (use-package ace-jump-mode
   :ensure t
-  :bind (("C-c SPC" . 'ace-jump-mode)
-         ("C-c DEL" . 'ace-jump-mode-pop-mark)))
+  :bind (("C-c C-SPC" . 'ace-jump-mode)
+         ("C-c C-DEL" . 'ace-jump-mode-pop-mark)))
 #+END_SRC
 * Editing Style
 ** No tabs, ever. No trailing spaces either.
