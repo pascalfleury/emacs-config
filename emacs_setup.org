@@ -19,11 +19,11 @@ In your =~/.emacs= file, all you need to add is
 (load-file "~/Emacs/emacs_setup.el")
 #+END_SRC
 
-** bootstrap
+** Bootstrap
 Initially when cloning this repository, you have the =emacs_setup.org= file,
-that contains you adapt to your specific setup, and an =emacs_setup.el= with a
-bootstrap content that will tangle and compile the org file, /and replace
-itself/.
+that contains the config that you adapt to your specific setup, and an
+=emacs_setup.el= with a bootstrap content that will tangle and compile the org
+file, /and replace itself/. This is useful the very first time.
 
 After that, the config itself should have the hook to re-tangle and re-compile
 the setup at each save.
@@ -34,18 +34,21 @@ Therefore, my setup is very easy to install, goes in these step:
 2. add the one line in you =~/.emacs=
 3. make sure Emacs re-interprets its init (you could restart it)
 
-It may be that [[https://github.com/jwiegley/use-package][use-package]] is not installed on your setup, so you will have
-to add it.
+It may be that [[https://github.com/jwiegley/use-package][use-package]] is not installed on your setup, so it will first try
+to install that. After that step, it will also start installing any package that
+is marked as neede din this config automatically.
 
+The original content of the =emacs_setup.el= is as follows:
 #+BEGIN_SRC emacs-lisp :tangle no
 ;; This file replaces itself with the actual configuration at first run.
 
 (require 'org) ; We can't tangle without org!
 
-(find-file "~/Emacs/emacs_setup.org") ; Open the configuration
-(org-babel-tangle)                    ; tangle it
-(load-file "~/Emacs/emacs_setup.el")  ; load it
-(byte-compile-file "emacs_setup.el")  ; finally byte-compile it
+(setq config_base (expand-file-name "emacs_setup"))
+(find-file (concat config_base ".org"))        ; Open the configuration
+(org-babel-tangle)                             ; tangle it
+(load-file (concat config_base ".el"))         ; load it
+(byte-compile-file (concat config_base ".el")) ; finally byte-compile it
 #+END_SRC
 
 * Plans
