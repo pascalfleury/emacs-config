@@ -390,7 +390,7 @@ Help cleanup the includes and using lists.
     (while (re-search-forward "^\\(.*\n\\)\\1+" end t)
       (replace-match "\\1"))))
 
-(defun fleury/sort-and-uniquify-region ()
+(defun paf/sort-and-uniquify-region ()
   "Remove duplicates and sort lines in region."
   (interactive)
   (sort-lines nil (region-beginning) (region-end))
@@ -399,7 +399,7 @@ Help cleanup the includes and using lists.
 
 Simplify cleanup of =#include= / =typedef= / =using= blocks.
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-p s") 'fleury/sort-and-uniquify-region)
+(global-set-key (kbd "C-p s") 'paf/sort-and-uniquify-region)
 #+END_SRC
 
 ** yankpad / yasnippet
@@ -643,11 +643,11 @@ Then you can use the keyboard shortcut to open that dir.
       "Location of remove OrgFile directory, should you have one."
       :type 'string
       :group 'paf)
-    (defun fleury/open-remote-org-directory ()
+    (defun paf/open-remote-org-directory ()
       (interactive)
       (find-file remote-org-directory))
 
-    (global-set-key (kbd "C-p r o") 'fleury/open-remote-org-directory)
+    (global-set-key (kbd "C-p r o") 'paf/open-remote-org-directory)
 #+end_src
 
 *** org-protocol
@@ -915,10 +915,10 @@ when pressing M-f12 (on localhost:55555)
   (setq org-ehtml-everything-editable t)
   (setq org-ehtml-allow-agenda t))
 
-(defun fleury/start-web-server ()
+(defun paf/start-web-server ()
   (interactive)
   (ws-start org-ehtml-handler 55555))
-(global-set-key (kbd "<M-f12>") 'fleury/start-web-server)
+(global-set-key (kbd "<M-f12>") 'paf/start-web-server)
 #+END_SRC
 *** org-link-abbrev
 This lets one write links as e.g. [ [b:123457] ]
@@ -1164,9 +1164,6 @@ DIR="${HOME}/Apps"
 (cd "${DIR}" && wget -O plantuml.jar -o /tmp/plantuml.log "${URL}")
 ls -l "${DIR}/plantuml.jar"
 #+END_SRC
-
-#+RESULTS:
-: -rw-rw-r-- 1 fleury users 7394314 Dec 21 18:12 /home/fleury/Apps/plantuml.jar
 
 #+BEGIN_SRC emacs-lisp
 (use-package plantuml-mode
