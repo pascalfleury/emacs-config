@@ -61,8 +61,8 @@ machines I work on with Emacs.
 
 ** Currently under review
   - [[https://github.com/myuhe/org-gcal.el][org-gcal]]
-  - [[https://github.com/yjwen/org-reveal][ox-reveal]] (see [[https://github.com/yjwen/org-reveal#set-the-location-of-revealjs][installation]])
   - [[https://github.com/Kungsgeten/yankpad][yankpad]] + [[https://github.com/joaotavora/yasnippet][yasnippet]]
+  - [[https://github.com/yjwen/org-reveal][ox-reveal]] (see [[https://github.com/yjwen/org-reveal#set-the-location-of-revealjs][installation]])
 
 ** Installed, but need no or external config
 - [[https://github.com/edran/hc-zenburn-emacs][hc-zenburn-theme]]
@@ -639,14 +639,15 @@ In your =.emacs= just add this to configure the location:
 Then you can use the keyboard shortcut to open that dir.
 
 #+begin_src emacs-lisp
-  (defcustom remote-org-directory "~/OrgFiles"
-    "Location of remove OrgFile directory, should you have one."
-    :group 'paf)
-  (defun fleury/open-remote-org-directory ()
-    (interactive)
-    (find-file remote-org-directory))
+    (defcustom remote-org-directory "~/OrgFiles"
+      "Location of remove OrgFile directory, should you have one."
+      :type 'string
+      :group 'paf)
+    (defun fleury/open-remote-org-directory ()
+      (interactive)
+      (find-file remote-org-directory))
 
-  (global-set-key (kbd "C-p r o") 'fleury/open-remote-org-directory)
+    (global-set-key (kbd "C-p r o") 'fleury/open-remote-org-directory)
 #+end_src
 
 *** org-protocol
@@ -1111,6 +1112,8 @@ Capture and refile stuff, with some templates that I think are useful.
 *** org-reveal
 This presentation generator is still under review (by me).
 
+*NOTE* Currently problematic as it depends on org-20190225 which does not display
+       the calendar right.
 #+BEGIN_SRC emacs-lisp :tangle no
 ;;(add-to-list 'org-structure-template-alist
 ;;             (list "n" . "#+BEGIN_NOTES\n\?\n#+END_NOTES"))
