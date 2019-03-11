@@ -2,7 +2,10 @@
 
 (require 'org) ; We can't tangle without org!
 
-(find-file "~/Emacs/emacs_setup.org") ; Open the configuration
-(org-babel-tangle)                    ; tangle it
-(load-file "~/Emacs/emacs_setup.el")  ; load it
-(byte-compile-file "emacs_setup.el")  ; finally byte-compile it
+(setq config_base (expand-file-name "emacs_setup"
+				    (file-name-directory
+				     (or load-file-name buffer-file-name))))
+(find-file (concat config_base ".org"))        ; Open the configuration
+(org-babel-tangle)                             ; tangle it
+(load-file (concat config_base ".el"))         ; load it
+(byte-compile-file (concat config_base ".el")) ; finally byte-compile it

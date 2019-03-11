@@ -19,11 +19,11 @@ In your =~/.emacs= file, all you need to add is
 (load-file "~/Emacs/emacs_setup.el")
 #+END_SRC
 
-** bootstrap
+** Bootstrap
 Initially when cloning this repository, you have the =emacs_setup.org= file,
-that contains you adapt to your specific setup, and an =emacs_setup.el= with a
-bootstrap content that will tangle and compile the org file, /and replace
-itself/.
+that contains the config that you adapt to your specific setup, and an
+=emacs_setup.el= with a bootstrap content that will tangle and compile the org
+file, /and replace itself/. This is useful the very first time.
 
 After that, the config itself should have the hook to re-tangle and re-compile
 the setup at each save.
@@ -34,18 +34,23 @@ Therefore, my setup is very easy to install, goes in these step:
 2. add the one line in you =~/.emacs=
 3. make sure Emacs re-interprets its init (you could restart it)
 
-It may be that [[https://github.com/jwiegley/use-package][use-package]] is not installed on your setup, so you will have
-to add it.
+It may be that [[https://github.com/jwiegley/use-package][use-package]] is not installed on your setup, so it will first try
+to install that. After that step, it will also start installing any package that
+is marked as neede din this config automatically.
 
+The original content of the =emacs_setup.el= is as follows:
 #+BEGIN_SRC emacs-lisp :tangle no
 ;; This file replaces itself with the actual configuration at first run.
 
 (require 'org) ; We can't tangle without org!
 
-(find-file "~/Emacs/emacs_setup.org") ; Open the configuration
-(org-babel-tangle)                    ; tangle it
-(load-file "~/Emacs/emacs_setup.el")  ; load it
-(byte-compile-file "emacs_setup.el")  ; finally byte-compile it
+(setq config_base (expand-file-name "emacs_setup"
+				    (file-name-directory
+				     (or load-file-name buffer-file-name))))
+(find-file (concat config_base ".org"))        ; Open the configuration
+(org-babel-tangle)                             ; tangle it
+(load-file (concat config_base ".el"))         ; load it
+(byte-compile-file (concat config_base ".el")) ; finally byte-compile it
 #+END_SRC
 
 * Plans
@@ -56,8 +61,8 @@ machines I work on with Emacs.
 
 ** Currently under review
   - [[https://github.com/myuhe/org-gcal.el][org-gcal]]
-  - [[https://github.com/yjwen/org-reveal][ox-reveal]] (see [[https://github.com/yjwen/org-reveal#set-the-location-of-revealjs][installation]])
   - [[https://github.com/Kungsgeten/yankpad][yankpad]] + [[https://github.com/joaotavora/yasnippet][yasnippet]]
+  - [[https://github.com/yjwen/org-reveal][ox-reveal]] (see [[https://github.com/yjwen/org-reveal#set-the-location-of-revealjs][installation]])
 
 ** Installed, but need no or external config
 - [[https://github.com/edran/hc-zenburn-emacs][hc-zenburn-theme]]
@@ -339,8 +344,8 @@ Let's one jump around text
 #+BEGIN_SRC emacs-lisp
 (use-package ace-jump-mode
   :ensure t
-  :bind (("C-c SPC" . 'ace-jump-mode)
-         ("C-c DEL" . 'ace-jump-mode-pop-mark)))
+  :bind (("C-c C-SPC" . 'ace-jump-mode)
+         ("C-c C-DEL" . 'ace-jump-mode-pop-mark)))
 #+END_SRC
 * Editing Style
 ** No tabs, ever. No trailing spaces either.
@@ -385,7 +390,7 @@ Help cleanup the includes and using lists.
     (while (re-search-forward "^\\(.*\n\\)\\1+" end t)
       (replace-match "\\1"))))
 
-(defun fleury/sort-and-uniquify-region ()
+(defun paf/sort-and-uniquify-region ()
   "Remove duplicates and sort lines in region."
   (interactive)
   (sort-lines nil (region-beginning) (region-end))
@@ -394,7 +399,7 @@ Help cleanup the includes and using lists.
 
 Simplify cleanup of =#include= / =typedef= / =using= blocks.
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-p s") 'fleury/sort-and-uniquify-region)
+(global-set-key (kbd "C-p s") 'paf/sort-and-uniquify-region)
 #+END_SRC
 
 ** yankpad / yasnippet
@@ -624,6 +629,27 @@ You may set this in the =~/.emacs= to another value, e.g.
     (setq org-directory "~/OrgFiles"))
 #+END_SRC
 ** Helper Functions / Tools found on the web / worg
+*** Open remote org dir
+In your =.emacs= just add this to configure the location:
+
+#+begin_src emacs-lisp :tangle no
+(setq remote-org-directory "/ssh:fleury@my.hostname.com:OrgFiles")
+#+end_src
+
+Then you can use the keyboard shortcut to open that dir.
+
+#+begin_src emacs-lisp
+    (defcustom remote-org-directory "~/OrgFiles"
+      "Location of remove OrgFile directory, should you have one."
+      :type 'string
+      :group 'paf)
+    (defun paf/open-remote-org-directory ()
+      (interactive)
+      (find-file remote-org-directory))
+
+    (global-set-key (kbd "C-p r o") 'paf/open-remote-org-directory)
+#+end_src
+
 *** org-protocol
 Let other tools use emacs client to interact
 #+begin_src emacs-lisp
@@ -790,6 +816,8 @@ I have copied a version of the file here, it's not yet available
 on MELPA.
 
 #+begin_src emacs-lisp
+(use-package request
+  :ensure t)
 (load-file "~/Emacs/org-gtasks.el")
 #+end_src
 
@@ -887,10 +915,10 @@ when pressing M-f12 (on localhost:55555)
   (setq org-ehtml-everything-editable t)
   (setq org-ehtml-allow-agenda t))
 
-(defun fleury/start-web-server ()
+(defun paf/start-web-server ()
   (interactive)
   (ws-start org-ehtml-handler 55555))
-(global-set-key (kbd "<M-f12>") 'fleury/start-web-server)
+(global-set-key (kbd "<M-f12>") 'paf/start-web-server)
 #+END_SRC
 *** org-link-abbrev
 This lets one write links as e.g. [ [b:123457] ]
@@ -1010,7 +1038,11 @@ A more visible current-time marker in the agenda
   ;;(run-at-time nil 180 'update-agenda-if-visible)
   (add-hook 'org-mode-hook
             (lambda () (run-at-time nil 180 'kiwon/org-agenda-redo-in-other-window)))
+#+END_SRC
 
+This would open the agenda if any org file was opened. In the end, I don't like this feature,
+so it is disabled by not tangling it.
+#+BEGIN_SRC emacs-lisp :tangle no
   ;; Make this happen only if we open an org file.
   (add-hook 'org-mode-hook
             (lambda () (run-with-idle-timer 600 t 'jump-to-org-agenda)))
@@ -1019,7 +1051,7 @@ A more visible current-time marker in the agenda
 This will save them regularly when the idle for more than a minute.
 #+BEGIN_SRC emacs-lisp
 (add-hook 'org-mode-hook
-    (lambda () (run-with-idle-timer 60 t 'org-save-all-org-buffers)))
+    (lambda () (run-with-idle-timer 180 t 'org-save-all-org-buffers)))
 #+END_SRC
 **** export
 That's the export function to update the agenda view.
@@ -1080,7 +1112,9 @@ Capture and refile stuff, with some templates that I think are useful.
 *** org-reveal
 This presentation generator is still under review (by me).
 
-#+BEGIN_SRC emacs-lisp
+*NOTE* Currently problematic as it depends on org-20190225 which does not display
+       the calendar right.
+#+BEGIN_SRC emacs-lisp :tangle no
 ;;(add-to-list 'org-structure-template-alist
 ;;             (list "n" . "#+BEGIN_NOTES\n\?\n#+END_NOTES"))
 ;; disable the addition in the lib that does not do it right for Org 9.2
@@ -1130,9 +1164,6 @@ DIR="${HOME}/Apps"
 (cd "${DIR}" && wget -O plantuml.jar -o /tmp/plantuml.log "${URL}")
 ls -l "${DIR}/plantuml.jar"
 #+END_SRC
-
-#+RESULTS:
-: -rw-rw-r-- 1 fleury users 7394314 Dec 21 18:12 /home/fleury/Apps/plantuml.jar
 
 #+BEGIN_SRC emacs-lisp
 (use-package plantuml-mode
