@@ -851,7 +851,9 @@ These are mostly org-config specific to me, myself and I.
 (add-hook 'org-mode-hook
     (lambda ()
             (local-set-key (kbd "C-<up>") 'org-move-subtree-up)
-            (local-set-key (kbd "C-<down>") 'org-move-subtree-down)))
+            (local-set-key (kbd "C-<down>") 'org-move-subtree-down)
+            (local-set-key (kbd "C-c l") 'org-store-link)
+            (local-set-key (kbd "C-c C-l") 'org-insert-link)))
 
 #+END_SRC
 *** Display settings
@@ -872,7 +874,7 @@ Some config for display.
 #+BEGIN_SRC emacs-lisp
 (use-package org-habit
   :config
-  (setq org-habit-graph-column 28)
+  (setq org-habit-graph-column 38)
   (setq org-habit-preceding-days 35)
   (setq org-habit-following-days 10)
   (setq org-habit-show-habits-only-for-today nil))
