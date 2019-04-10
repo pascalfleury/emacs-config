@@ -455,7 +455,14 @@ Add the powerful Magit
 (use-package magit-todos
    :ensure t)
 #+END_SRC
-
+** monky
+Add the Magit-copy for Mercurial 'monky'
+#+begin_src emacs-lisp
+  (use-package monky
+    :ensure t
+    :config
+    (global-set-key (kbd "C-x m") 'monky-status))
+#+end_src
 ** annotate-mode
 The file-annotations are store externally.
 Seems to fail with =args-out-of-range= and then Emacs is confused.
