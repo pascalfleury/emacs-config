@@ -445,7 +445,8 @@ This is bound to change in Emacs 26, as it has built-in support for this and is 
 (setq gdb-many-windows t)
 #+END_SRC
 * Cool Packages
-** magit
+** VCS
+*** magit
 Add the powerful Magit
 #+BEGIN_SRC emacs-lisp
 (use-package magit
@@ -455,7 +456,7 @@ Add the powerful Magit
 (use-package magit-todos
    :ensure t)
 #+END_SRC
-** monky
+*** monky
 Add the Magit-copy for Mercurial 'monky'
 #+begin_src emacs-lisp
   (use-package monky
@@ -463,6 +464,21 @@ Add the Magit-copy for Mercurial 'monky'
     :config
     (global-set-key (kbd "C-x m") 'monky-status))
 #+end_src
+*** Global caller
+Have a single binding to call the most appropriate tool given the repository.
+#+begin_src emacs-lisp
+  (defun paf/vcs-status ()
+       (interactive)
+       (condition-case nil
+           (magit-status)
+         (error (monky-status))))
+
+  (global-set-key (kbd "C-p v") 'paf/vcs-status)
+#+end_src
+
+#+RESULTS:
+: paf/vcs-status
+
 ** annotate-mode
 The file-annotations are store externally.
 Seems to fail with =args-out-of-range= and then Emacs is confused.
