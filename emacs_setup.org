@@ -1229,6 +1229,7 @@ A bit difficult to find the docs of how to use it, but it seems quite useful.
 
 #+begin_src emacs-lisp
   (use-package pdf-tools
+    :if (eq system-type 'gnu/linux)  ;; Set it up only on Linux
     :pin manual ;; manually update
     :config
     ;; initialise
@@ -1241,7 +1242,9 @@ A bit difficult to find the docs of how to use it, but it seems quite useful.
     (define-key pdf-view-mode-map (kbd "t") 'pdf-annot-add-text-annotation)
     (define-key pdf-view-mode-map (kbd "D") 'pdf-annot-delete))
 
-  (eval-after-load 'org '(require 'org-pdfview))
-  (add-to-list 'org-file-apps '("\\.pdf\\'" . org-pdfview-open))
-  (add-to-list 'org-file-apps '("\\.pdf::\\([[:digit:]]+\\)\\'" . org-pdfview-open))
+  (use-package org-pdfview
+    :requires (org pdf-tools)
+    :config
+    (add-to-list 'org-file-apps '("\\.pdf\\'" . org-pdfview-open))
+    (add-to-list 'org-file-apps '("\\.pdf::\\([[:digit:]]+\\)\\'" . org-pdfview-open)))
 #+end_src
