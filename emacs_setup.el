@@ -219,6 +219,19 @@ tangled, and the tangled file is compiled."
 (use-package magit-todos
    :ensure t)
 
+(use-package monky
+  :ensure t
+  :config
+  (global-set-key (kbd "C-x m") 'monky-status))
+
+(defun paf/vcs-status ()
+     (interactive)
+     (condition-case nil
+         (magit-status)
+       (error (monky-status))))
+
+(global-set-key (kbd "C-p v") 'paf/vcs-status)
+
 (use-package annotate
   :ensure t
   :bind ("C-c C-A" . 'annotate-annotate)  ;; for ledger-mode, as 'C-c C-a' is taken there.
@@ -707,18 +720,21 @@ tangled, and the tangled file is compiled."
                             )))
 
 (use-package pdf-tools
-  :pin manual ;; manually update
+  :if (eq system-type 'gnu/linux)  ;; Set it up only on Linux
+  :pin manual  ;; update only manually
   :config
-  ;; initialise
+  ;; initialize
   (pdf-tools-install)
-  (setq-default pdf-view-display-size 'fit-page)  ;; Fit to page when opening
-  (add-hook 'pdf-view-mode-hook (lambda () (cua-mode 0)))   ;; turn off cua so copy works
-  (setq pdf-view-resize-factor 1.1) ;; mroe fine-grained zoom control
+  (setq-default pdf-view-display-size 'fit-page)           ;; Fit to page when opening
+  (add-hook 'pdf-view-mode-hook (lambda () (cua-mode 0)))  ;; turn off cua so copy works
+  (setq pdf-view-resize-factor 1.1)                        ;; more fine-grained zoom control
   ;; keyboard shortcuts
   (define-key pdf-view-mode-map (kbd "h") 'pdf-annot-add-highlight-markup-annotation)
   (define-key pdf-view-mode-map (kbd "t") 'pdf-annot-add-text-annotation)
   (define-key pdf-view-mode-map (kbd "D") 'pdf-annot-delete))
 
-(eval-after-load 'org '(require 'org-pdfview))
-(add-to-list 'org-file-apps '("\\.pdf\\'" . org-pdfview-open))
-(add-to-list 'org-file-apps '("\\.pdf::\\([[:digit:]]+\\)\\'" . org-pdfview-open))
+(use-package org-pdfview
+  :after (pdf-tools)
+  :init
+  (add-to-list 'org-file-apps '("\\.pdf\\'" . org-pdfview-open))
+  (add-to-list 'org-file-apps '("\\.pdf::\\([[:digit:]]+\\)\\'" . org-pdfview-open)))
