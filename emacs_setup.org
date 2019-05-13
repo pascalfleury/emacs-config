@@ -670,6 +670,13 @@ whole package yet.
  :config
    (require 'hyperbole))
 #+end_src
+** [[https://github.com/fourier/ztree#ztree][ztree]]
+A tree-view navigation of diles, with diff tool for directories.
+#+begin_src emacs-lisp
+  (use-package ztree
+    :ensure t)
+#+end_src
+
 * OrgMode
 Load all my org stuff, but first org-mode itself.
 ** Init
