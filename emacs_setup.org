@@ -364,6 +364,32 @@ Let's one jump around text
   :bind ("C-c m" . 'column-marker-1))
 #+END_SRC
 * Coding
+** Projectile
+Start using projectile. It has the documentation [[https://docs.projectile.mx/en/latest/][here]].
+#+begin_src emacs-lisp
+  (use-package projectile
+    :ensure t
+    :config
+    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+    (projectile-mode +1))
+
+  (use-package helm-projectile
+    :ensure t
+    :requires projectile
+    :config
+    (helm-projectile-on))
+#+end_src
+
+Also make sure we do have the faster silver search version.  This may need you
+to install the corresponding tool for this, with the following snippet:
+#+begin_src bash tangle: no
+sudo apt-get install silversearcher-ag
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package helm-ag
+    :ensure t)
+#+end_src
 ** header/implementation toggle
 Switch from header to implementation file quickly.
 #+BEGIN_SRC emacs-lisp
