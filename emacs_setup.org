@@ -380,11 +380,15 @@ Start using projectile. It has the documentation [[https://docs.projectile.mx/en
     (helm-projectile-on))
 #+end_src
 
-Also make sure we do have the faster silver search version.  This may need you
+Also make sure we do have the faster [[https://github.com/ggreer/the_silver_searcher#the-silver-searcher][silver searcher]] version.  This may need you
 to install the corresponding tool for this, with the following snippet:
 #+begin_src bash tangle: no
 sudo apt-get install silversearcher-ag
 #+end_src
+
+Search the entire project with =C-c p s s= for a regexp.
+This let's you turn the matching results into an editable buffer using
+=C-c C-e=. Other keys are listed [[https://github.com/syohex/emacs-helm-ag#keymap][here]].
 
 #+begin_src emacs-lisp
   (use-package helm-ag
