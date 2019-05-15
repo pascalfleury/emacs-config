@@ -364,6 +364,36 @@ Let's one jump around text
   :bind ("C-c m" . 'column-marker-1))
 #+END_SRC
 * Coding
+** Projectile
+Start using projectile. It has the documentation [[https://docs.projectile.mx/en/latest/][here]].
+#+begin_src emacs-lisp
+  (use-package projectile
+    :ensure t
+    :config
+    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+    (projectile-mode +1))
+
+  (use-package helm-projectile
+    :ensure t
+    :requires projectile
+    :config
+    (helm-projectile-on))
+#+end_src
+
+Also make sure we do have the faster [[https://github.com/ggreer/the_silver_searcher#the-silver-searcher][silver searcher]] version.  This may need you
+to install the corresponding tool for this, with the following snippet:
+#+begin_src bash tangle: no
+sudo apt-get install silversearcher-ag
+#+end_src
+
+Search the entire project with =C-c p s s= for a regexp.
+This let's you turn the matching results into an editable buffer using
+=C-c C-e=. Other keys are listed [[https://github.com/syohex/emacs-helm-ag#keymap][here]].
+
+#+begin_src emacs-lisp
+  (use-package helm-ag
+    :ensure t)
+#+end_src
 ** header/implementation toggle
 Switch from header to implementation file quickly.
 #+BEGIN_SRC emacs-lisp
@@ -445,7 +475,8 @@ This is bound to change in Emacs 26, as it has built-in support for this and is 
 (setq gdb-many-windows t)
 #+END_SRC
 * Cool Packages
-** magit
+** VCS
+*** magit
 Add the powerful Magit
 #+BEGIN_SRC emacs-lisp
 (use-package magit
@@ -455,6 +486,28 @@ Add the powerful Magit
 (use-package magit-todos
    :ensure t)
 #+END_SRC
+*** monky
+Add the Magit-copy for Mercurial 'monky'
+#+begin_src emacs-lisp
+  (use-package monky
+    :ensure t
+    :config
+    (global-set-key (kbd "C-x m") 'monky-status))
+#+end_src
+*** Global caller
+Have a single binding to call the most appropriate tool given the repository.
+#+begin_src emacs-lisp
+  (defun paf/vcs-status ()
+       (interactive)
+       (condition-case nil
+           (magit-status)
+         (error (monky-status))))
+
+  (global-set-key (kbd "C-p v") 'paf/vcs-status)
+#+end_src
+
+#+RESULTS:
+: paf/vcs-status
 
 ** annotate-mode
 The file-annotations are store externally.
@@ -617,6 +670,13 @@ whole package yet.
  :config
    (require 'hyperbole))
 #+end_src
+** [[https://github.com/fourier/ztree#ztree][ztree]]
+A tree-view navigation of diles, with diff tool for directories.
+#+begin_src emacs-lisp
+  (use-package ztree
+    :ensure t)
+#+end_src
+
 * OrgMode
 Load all my org stuff, but first org-mode itself.
 ** Init
@@ -851,7 +911,9 @@ These are mostly org-config specific to me, myself and I.
 (add-hook 'org-mode-hook
     (lambda ()
             (local-set-key (kbd "C-<up>") 'org-move-subtree-up)
-            (local-set-key (kbd "C-<down>") 'org-move-subtree-down)))
+            (local-set-key (kbd "C-<down>") 'org-move-subtree-down)
+            (local-set-key (kbd "C-c l") 'org-store-link)
+            (local-set-key (kbd "C-c C-l") 'org-insert-link)))
 
 #+END_SRC
 *** Display settings
@@ -872,7 +934,7 @@ Some config for display.
 #+BEGIN_SRC emacs-lisp
 (use-package org-habit
   :config
-  (setq org-habit-graph-column 28)
+  (setq org-habit-graph-column 38)
   (setq org-habit-preceding-days 35)
   (setq org-habit-following-days 10)
   (setq org-habit-show-habits-only-for-today nil))
@@ -1199,3 +1261,28 @@ Make the display of images a simple key-stroke away.
                              (local-set-key "\M-I" 'org-toggle-iimage-in-org)
                             )))
 #+END_SRC
+*** PDF-Tools
+A bit difficult to find the docs of how to use it, but it seems quite useful.
+
+#+begin_src emacs-lisp
+  (use-package pdf-tools
+    :if (and (eq system-type 'gnu/linux)  ;; Set it up on Linux
+             (not (string-prefix-p "aarch64" system-configuration)))  ;; but not mobile devices
+    :pin manual  ;; update only manually
+    :config
+    ;; initialize
+    (pdf-tools-install)
+    (setq-default pdf-view-display-size 'fit-page)           ;; Fit to page when opening
+    (add-hook 'pdf-view-mode-hook (lambda () (cua-mode 0)))  ;; turn off cua so copy works
+    (setq pdf-view-resize-factor 1.1)                        ;; more fine-grained zoom control
+    ;; keyboard shortcuts
+    (define-key pdf-view-mode-map (kbd "h") 'pdf-annot-add-highlight-markup-annotation)
+    (define-key pdf-view-mode-map (kbd "t") 'pdf-annot-add-text-annotation)
+    (define-key pdf-view-mode-map (kbd "D") 'pdf-annot-delete))
+
+  (use-package org-pdfview
+    :after (pdf-tools)
+    :init
+    (add-to-list 'org-file-apps '("\\.pdf\\'" . org-pdfview-open))
+    (add-to-list 'org-file-apps '("\\.pdf::\\([[:digit:]]+\\)\\'" . org-pdfview-open)))
+#+end_src
