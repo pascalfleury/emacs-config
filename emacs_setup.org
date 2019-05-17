@@ -9,6 +9,20 @@ Below, I also explain how this tangling is automated.
 
 Extensive documentation about how to do this can be found [[https://github.com/larstvei/dot-emacs][here]].
 
+* Plans
+I regularly try out new packages, this is my current list of things being evaluated.
+They usually live temporarily in my =~/.emacs= until I am happy, in
+which case I move their config into this file so that it gets replicated on all
+machines I work on with Emacs.
+
+** Currently under review
+  - [[https://github.com/myuhe/org-gcal.el][org-gcal]]
+  - [[https://github.com/Kungsgeten/yankpad][yankpad]] + [[https://github.com/joaotavora/yasnippet][yasnippet]]
+  - [[https://github.com/yjwen/org-reveal][ox-reveal]] (see [[https://github.com/yjwen/org-reveal#set-the-location-of-revealjs][installation]])
+
+** Installed, but need no or external config
+- [[https://github.com/edran/hc-zenburn-emacs][hc-zenburn-theme]]
+
 * Setup
 I have my config in directory =~/Emacs= which is where I clone this repository.
 The config setup is maintained purely in the =~/Emacs/emacs_setup.org= file.
@@ -39,6 +53,7 @@ to install that. After that step, it will also start installing any package that
 is marked as needed in this config automatically.
 
 The original content of the =emacs_setup.el= is as follows:
+
 #+BEGIN_SRC emacs-lisp :tangle no
 ;; This file replaces itself with the actual configuration at first run.
 
@@ -59,25 +74,12 @@ with new config settings, run this:
 git update-index --skip-worktree emacs_setup.el
 #+END_SRC
 
+* Initialize
+** header
 #+BEGIN_SRC emacs-lisp
 ;; ===== this file was auto-tangled, only edit the emacs_setup.org =====
 #+END_SRC
 
-* Plans
-I regularly try out new packages, this is my current list of things being evaluated.
-They usually live temporarily in my =~/.emacs= until I am happy, in
-which case I move their config into this file so that it gets replicated on all
-machines I work on with Emacs.
-
-** Currently under review
-  - [[https://github.com/myuhe/org-gcal.el][org-gcal]]
-  - [[https://github.com/Kungsgeten/yankpad][yankpad]] + [[https://github.com/joaotavora/yasnippet][yasnippet]]
-  - [[https://github.com/yjwen/org-reveal][ox-reveal]] (see [[https://github.com/yjwen/org-reveal#set-the-location-of-revealjs][installation]])
-
-** Installed, but need no or external config
-- [[https://github.com/edran/hc-zenburn-emacs][hc-zenburn-theme]]
-
-* Initialize
 ** melpa
 Make sure we have the package system initialized before we load anything.
 #+BEGIN_SRC emacs-lisp
@@ -86,6 +88,7 @@ Make sure we have the package system initialized before we load anything.
 #+END_SRC
 
 Adding my choice of packages repositories.
+#+NAME melpa-setup
 #+BEGIN_SRC emacs-lisp
 (setq package-archives '(("org" . "http://orgmode.org/elpa/")
                          ("melpa" . "http://melpa.org/packages/")
