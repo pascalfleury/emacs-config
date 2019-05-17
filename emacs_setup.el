@@ -2,7 +2,6 @@
 
 (require 'org) ; We can't tangle without org!
 
-<<<<<<< HEAD
 (unless (package-installed-p 'use-package)
         (package-refresh-contents)
         (package-install 'use-package))
@@ -735,9 +734,3 @@ tangled, and the tangled file is compiled."
   :init
   (add-to-list 'org-file-apps '("\\.pdf\\'" . org-pdfview-open))
   (add-to-list 'org-file-apps '("\\.pdf::\\([[:digit:]]+\\)\\'" . org-pdfview-open)))
-=======
-(find-file "~/Emacs/emacs_setup.org") ; Open the configuration
-(org-babel-tangle)                    ; tangle it
-(load-file "~/Emacs/emacs_setup.el")  ; load it
-(byte-compile-file "emacs_setup.el")  ; finally byte-compile it
->>>>>>> 7898b68d0ce722034b526167dac70078f70eb935
