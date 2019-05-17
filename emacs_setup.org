@@ -53,6 +53,16 @@ The original content of the =emacs_setup.el= is as follows:
 (byte-compile-file (concat config_base ".el")) ; finally byte-compile it
 #+END_SRC
 
+To preserve the original state of this file when updating the git repos
+with new config settings, run this:
+#+BEGIN_SRC emacs-lisp :tangle no
+git update-index --skip-worktree emacs_setup.el
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+;; ===== this file was auto-tangled, only edit the emacs_setup.org =====
+#+END_SRC
+
 * Plans
 I regularly try out new packages, this is my current list of things being evaluated.
 They usually live temporarily in my =~/.emacs= until I am happy, in
@@ -364,6 +374,36 @@ Let's one jump around text
   :bind ("C-c m" . 'column-marker-1))
 #+END_SRC
 * Coding
+** Projectile
+Start using projectile. It has the documentation [[https://docs.projectile.mx/en/latest/][here]].
+#+begin_src emacs-lisp
+  (use-package projectile
+    :ensure t
+    :config
+    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+    (projectile-mode +1))
+
+  (use-package helm-projectile
+    :ensure t
+    :requires projectile
+    :config
+    (helm-projectile-on))
+#+end_src
+
+Also make sure we do have the faster [[https://github.com/ggreer/the_silver_searcher#the-silver-searcher][silver searcher]] version.  This may need you
+to install the corresponding tool for this, with the following snippet:
+#+begin_src bash tangle: no
+sudo apt-get install silversearcher-ag
+#+end_src
+
+Search the entire project with =C-c p s s= for a regexp.
+This let's you turn the matching results into an editable buffer using
+=C-c C-e=. Other keys are listed [[https://github.com/syohex/emacs-helm-ag#keymap][here]].
+
+#+begin_src emacs-lisp
+  (use-package helm-ag
+    :ensure t)
+#+end_src
 ** header/implementation toggle
 Switch from header to implementation file quickly.
 #+BEGIN_SRC emacs-lisp
@@ -640,6 +680,13 @@ whole package yet.
  :config
    (require 'hyperbole))
 #+end_src
+** [[https://github.com/fourier/ztree#ztree][ztree]]
+A tree-view navigation of diles, with diff tool for directories.
+#+begin_src emacs-lisp
+  (use-package ztree
+    :ensure t)
+#+end_src
+
 * OrgMode
 Load all my org stuff, but first org-mode itself.
 ** Init
