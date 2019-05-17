@@ -28,7 +28,7 @@ file, /and replace itself/. This is useful the very first time.
 After that, the config itself should have the hook to re-tangle and re-compile
 the setup at each save.
 
-Therefore, my setup is very easy to install, goes in these step:
+Therefore my setup is very easy to install, and it needs these steps:
 
 1. clone this repo into =~/Emacs=
 2. add the one line in you =~/.emacs=
@@ -36,7 +36,7 @@ Therefore, my setup is very easy to install, goes in these step:
 
 It may be that [[https://github.com/jwiegley/use-package][use-package]] is not installed on your setup, so it will first try
 to install that. After that step, it will also start installing any package that
-is marked as neede din this config automatically.
+is marked as needed in this config automatically.
 
 The original content of the =emacs_setup.el= is as follows:
 #+BEGIN_SRC emacs-lisp :tangle no

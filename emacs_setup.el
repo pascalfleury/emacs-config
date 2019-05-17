@@ -720,7 +720,8 @@ tangled, and the tangled file is compiled."
                             )))
 
 (use-package pdf-tools
-  :if (eq system-type 'gnu/linux)  ;; Set it up only on Linux
+  :if (and (eq system-type 'gnu/linux)  ;; Set it up on Linux
+           (not (string-prefix-p "aarch64" system-configuration)))  ;; but not mobile devices
   :pin manual  ;; update only manually
   :config
   ;; initialize
