@@ -674,10 +674,11 @@ Colorize color names and codes in the correct color.
   (setq ledger-reconcile-default-commodity "CHF"))
 #+END_SRC
 ** [[http://www.gnu.org/software/hyperbole/][hyperbole]]
-Let's try this too, even though I sis not quite get the point of this
+Let's try this too, even though I do not quite get the point of this
 whole package yet.
 
-#+begin_src emacs-lisp
+*NOTE* Disabled, as it takes horribly long to load, and re-assigns the =C-c /= (org-mode sparse trees)
+#+begin_src emacs-lisp :tangle no
 (use-package hyperbole
  :ensure t
  :config
@@ -738,6 +739,7 @@ Let other tools use emacs client to interact
 Make sure archiving preserves the same tree structure, including when
 archiving subtrees.
 [[https://orgmode.org/worg/org-hacks.html#org4265b4c][source on worg]]
+
 #+BEGIN_SRC emacs-lisp
 (defun my-org-inherited-no-file-tags ()
   (let ((tags (org-entry-get nil "ALLTAGS" 'selective))
