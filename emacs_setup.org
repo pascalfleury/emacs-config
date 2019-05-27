@@ -53,16 +53,6 @@ The original content of the =emacs_setup.el= is as follows:
 (byte-compile-file (concat config_base ".el")) ; finally byte-compile it
 #+END_SRC
 
-To preserve the original state of this file when updating the git repos
-with new config settings, run this:
-#+BEGIN_SRC emacs-lisp :tangle no
-git update-index --skip-worktree emacs_setup.el
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-;; ===== this file was auto-tangled, only edit the emacs_setup.org =====
-#+END_SRC
-
 * Plans
 I regularly try out new packages, this is my current list of things being evaluated.
 They usually live temporarily in my =~/.emacs= until I am happy, in
