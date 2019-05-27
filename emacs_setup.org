@@ -9,6 +9,20 @@ Below, I also explain how this tangling is automated.
 
 Extensive documentation about how to do this can be found [[https://github.com/larstvei/dot-emacs][here]].
 
+* Plans
+I regularly try out new packages, this is my current list of things being evaluated.
+They usually live temporarily in my =~/.emacs= until I am happy, in
+which case I move their config into this file so that it gets replicated on all
+machines I work on with Emacs.
+
+** Currently under review
+  - [[https://github.com/myuhe/org-gcal.el][org-gcal]]
+  - [[https://github.com/Kungsgeten/yankpad][yankpad]] + [[https://github.com/joaotavora/yasnippet][yasnippet]]
+  - [[https://github.com/yjwen/org-reveal][ox-reveal]] (see [[https://github.com/yjwen/org-reveal#set-the-location-of-revealjs][installation]])
+
+** Installed, but need no or external config
+- [[https://github.com/edran/hc-zenburn-emacs][hc-zenburn-theme]]
+
 * Setup
 I have my config in directory =~/Emacs= which is where I clone this repository.
 The config setup is maintained purely in the =~/Emacs/emacs_setup.org= file.
@@ -28,7 +42,7 @@ file, /and replace itself/. This is useful the very first time.
 After that, the config itself should have the hook to re-tangle and re-compile
 the setup at each save.
 
-Therefore, my setup is very easy to install, goes in these step:
+Therefore my setup is very easy to install, and it needs these steps:
 
 1. clone this repo into =~/Emacs=
 2. add the one line in you =~/.emacs=
@@ -36,9 +50,10 @@ Therefore, my setup is very easy to install, goes in these step:
 
 It may be that [[https://github.com/jwiegley/use-package][use-package]] is not installed on your setup, so it will first try
 to install that. After that step, it will also start installing any package that
-is marked as neede din this config automatically.
+is marked as needed in this config automatically.
 
 The original content of the =emacs_setup.el= is as follows:
+
 #+BEGIN_SRC emacs-lisp :tangle no
 ;; This file replaces itself with the actual configuration at first run.
 
@@ -53,6 +68,7 @@ The original content of the =emacs_setup.el= is as follows:
 (byte-compile-file (concat config_base ".el")) ; finally byte-compile it
 #+END_SRC
 
+<<<<<<< HEAD
 * Plans
 I regularly try out new packages, this is my current list of things being evaluated.
 They usually live temporarily in my =~/.emacs= until I am happy, in
@@ -68,6 +84,20 @@ machines I work on with Emacs.
 - [[https://github.com/edran/hc-zenburn-emacs][hc-zenburn-theme]]
 
 * Initialize
+=======
+To preserve the original state of this file when updating the git repos
+with new config settings, run this:
+#+BEGIN_SRC emacs-lisp :tangle no
+git update-index --skip-worktree emacs_setup.el
+#+END_SRC
+
+* Initialize
+** header
+#+BEGIN_SRC emacs-lisp
+;; ===== this file was auto-tangled, only edit the emacs_setup.org =====
+#+END_SRC
+
+>>>>>>> a103d678d82969a067e04ffb7530c68b5dd0b3be
 ** melpa
 Make sure we have the package system initialized before we load anything.
 #+BEGIN_SRC emacs-lisp
@@ -76,6 +106,7 @@ Make sure we have the package system initialized before we load anything.
 #+END_SRC
 
 Adding my choice of packages repositories.
+#+NAME melpa-setup
 #+BEGIN_SRC emacs-lisp
 (setq package-archives '(("org" . "http://orgmode.org/elpa/")
                          ("melpa" . "http://melpa.org/packages/")
@@ -661,10 +692,11 @@ Colorize color names and codes in the correct color.
   (setq ledger-reconcile-default-commodity "CHF"))
 #+END_SRC
 ** [[http://www.gnu.org/software/hyperbole/][hyperbole]]
-Let's try this too, even though I sis not quite get the point of this
+Let's try this too, even though I do not quite get the point of this
 whole package yet.
 
-#+begin_src emacs-lisp
+*NOTE* Disabled, as it takes horribly long to load, and re-assigns the =C-c /= (org-mode sparse trees)
+#+begin_src emacs-lisp :tangle no
 (use-package hyperbole
  :ensure t
  :config
@@ -725,6 +757,7 @@ Let other tools use emacs client to interact
 Make sure archiving preserves the same tree structure, including when
 archiving subtrees.
 [[https://orgmode.org/worg/org-hacks.html#org4265b4c][source on worg]]
+
 #+BEGIN_SRC emacs-lisp
 (defun my-org-inherited-no-file-tags ()
   (let ((tags (org-entry-get nil "ALLTAGS" 'selective))
