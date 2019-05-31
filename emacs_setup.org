@@ -1,4 +1,4 @@
-#+TITLE: Emacs configuration file
+#+TITLE: Paf's portable Emacs configuration
 #+AUTHOR: Pascal Fleury
 #+BABEL: :cache yes
 #+PROPERTY: header-args :tangle yes
@@ -499,6 +499,7 @@ This is bound to change in Emacs 26, as it has built-in support for this and is 
 #+BEGIN_SRC emacs-lisp
 (use-package git-gutter-fringe+
   :ensure t
+  :if window-system
   :bind ("C-c g" . 'git-gutter+-mode))
 #+END_SRC
 ** GDB with many windows
