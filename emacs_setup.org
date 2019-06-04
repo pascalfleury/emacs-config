@@ -83,11 +83,10 @@ machines I work on with Emacs.
 ** Installed, but need no or external config
 - [[https://github.com/edran/hc-zenburn-emacs][hc-zenburn-theme]]
 
-* Initialize
-=======
+* One-time configure
 To preserve the original state of this file when updating the git repos
 with new config settings, run this:
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC bash :tangle no
 git update-index --skip-worktree emacs_setup.el
 #+END_SRC
 
