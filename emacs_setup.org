@@ -29,7 +29,9 @@ The config setup is maintained purely in the =~/Emacs/emacs_setup.org= file.
 
 In your =~/.emacs= file, all you need to add is
 
+#+NAME: emacs_bootstrap
 #+BEGIN_SRC emacs-lisp :tangle no
+;; Loads PAF's emacs setup with bootstrap
 (load-file "~/Emacs/emacs_setup.el")
 #+END_SRC
 
@@ -85,10 +87,27 @@ machines I work on with Emacs.
 
 * One-time configure
 To preserve the original state of this file when updating the git repos
-with new config settings, run this:
-#+BEGIN_SRC bash :tangle no
+with new config settings, execute the following block once (=C-c C-c=):
+#+BEGIN_SRC bash :tangle no :noweb yes
 git update-index --skip-worktree emacs_setup.el
+
+# Add the load-file as the first thing in the user's ~/.emacs
+declare lines=$(grep emacs_setup ~/.emacs | wc -l)
+if (( lines < 1 )); then
+  echo "Added loading the config in your ~/.emacs"
+  cat > ~/.emacs.new <<EOF
+<<emacs_bootstrap>>
+
+EOF
+  cat ~/.emacs >> ~/.emacs.new
+  mv ~/.emacs.new ~/.emacs
+else
+  echo "Config in your ~/.emacs already set up!"
+fi
 #+END_SRC
+
+#+RESULTS:
+: Config in your ~/.emacs already set up!
 
 * Initialize
 ** header
