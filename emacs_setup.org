@@ -522,6 +522,14 @@ This is bound to change in Emacs 26, as it has built-in support for this and is 
 #+BEGIN_SRC emacs-lisp
 (setq gdb-many-windows t)
 #+END_SRC
+** Dealing with numbers
+Simple way to increase/decrease a number in code.
+#+begin_src emacs-lisp
+  (use-package shift-number
+    :ensure t
+    :bind (("M-+" . shift-number-up)
+           ("M-_" . shift-number-down)))
+#+end_src
 * Cool Packages
 ** VCS
 *** magit
