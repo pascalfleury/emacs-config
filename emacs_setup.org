@@ -548,7 +548,7 @@ Have a single binding to call the most appropriate tool given the repository.
   (defun paf/vcs-status ()
        (interactive)
        (condition-case nil
-           (magit-status)
+           (magit-status-setup-buffer)
          (error (monky-status))))
 
   (global-set-key (kbd "C-p v") 'paf/vcs-status)
@@ -703,6 +703,7 @@ Colorize color names and codes in the correct color.
 #+BEGIN_SRC emacs-lisp
 (use-package ledger-mode
   :ensure t
+  :pin manual
   :mode "\\.ledger\\'"
   :bind ("<f6>" . 'paf/cleanup-ledger-buffer)
   :config
