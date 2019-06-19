@@ -70,23 +70,13 @@ The original content of the =emacs_setup.el= is as follows:
 (byte-compile-file (concat config_base ".el")) ; finally byte-compile it
 #+END_SRC
 
-* Plans
-I regularly try out new packages, this is my current list of things being evaluated.
-They usually live temporarily in my =~/.emacs= until I am happy, in
-which case I move their config into this file so that it gets replicated on all
-machines I work on with Emacs.
 
-** Currently under review
-  - [[https://github.com/myuhe/org-gcal.el][org-gcal]]
-  - [[https://github.com/Kungsgeten/yankpad][yankpad]] + [[https://github.com/joaotavora/yasnippet][yasnippet]]
-  - [[https://github.com/yjwen/org-reveal][ox-reveal]] (see [[https://github.com/yjwen/org-reveal#set-the-location-of-revealjs][installation]])
-
-** Installed, but need no or external config
 - [[https://github.com/edran/hc-zenburn-emacs][hc-zenburn-theme]]
 
-* One-time configure
+** One-time configure
 To preserve the original state of this file when updating the git repos
 with new config settings, execute the following block once (=C-c C-c=):
+
 #+BEGIN_SRC bash :tangle no :noweb yes
 git update-index --skip-worktree emacs_setup.el
 
