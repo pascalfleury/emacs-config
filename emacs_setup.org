@@ -70,10 +70,10 @@ The original content of the =emacs_setup.el= is as follows:
 (byte-compile-file (concat config_base ".el")) ; finally byte-compile it
 #+END_SRC
 
-
 ** One-time configure
 To preserve the original state of this file when updating the git repos
 with new config settings, execute the following block once (=C-c C-c=):
+
 #+BEGIN_SRC bash :tangle no :noweb yes
 git update-index --skip-worktree emacs_setup.el
 
@@ -543,7 +543,7 @@ Have a single binding to call the most appropriate tool given the repository.
   (defun paf/vcs-status ()
        (interactive)
        (condition-case nil
-           (magit-status)
+           (magit-status-setup-buffer)
          (error (monky-status))))
 
   (global-set-key (kbd "C-p v") 'paf/vcs-status)
@@ -698,6 +698,7 @@ Colorize color names and codes in the correct color.
 #+BEGIN_SRC emacs-lisp
 (use-package ledger-mode
   :ensure t
+  :pin manual
   :mode "\\.ledger\\'"
   :bind ("<f6>" . 'paf/cleanup-ledger-buffer)
   :config
@@ -727,6 +728,11 @@ Load all my org stuff, but first org-mode itself.
 If variable =org-directory= not set yet, map it to my home's files.
 You may set this in the =~/.emacs= to another value, e.g.
 =(setq org-directory "/ssh:fleury@machine.site.com:OrgFiles")=
+
+*** NEXT This does not seem to work, check out doc about [[https://stackoverflow.com/questions/3806423/how-can-i-get-a-variables-initial-value-in-elisp][defcustom]]
+:LOGBOOK:
+- State "NEXT"       from              [2019-06-24 Mon 10:10]
+:END:
 #+BEGIN_SRC emacs-lisp
 (require 'org)
 (if (not (boundp 'org-directory))
@@ -1191,7 +1197,7 @@ That's the export function to update the agenda view.
      )
   (org-duration-set-regexps))
 #+END_SRC
-*** org-refile
+*** Capture & refile
 Capture and refile stuff, with some templates that I think are useful.
 #+BEGIN_SRC emacs-lisp
 (setq org-default-notes-file (org-relative-file "refile.org"))
@@ -1268,9 +1274,12 @@ You could install the PlantUML JAR file with this snippet:
 URL='http://sourceforge.net/projects/plantuml/files/plantuml.jar/download'
 DIR="${HOME}/Apps"
 [[ -d "${DIR}" ]] || mkdir -p "${DIR}"
-(cd "${DIR}" && wget -O plantuml.jar -o /tmp/plantuml.log "${URL}")
+(cd "${DIR}" && curl -o plantuml.jar "${URL}")
 ls -l "${DIR}/plantuml.jar"
 #+END_SRC
+
+#+RESULTS:
+: -rw-r--r--  1 fleury  primarygroup  178 Jun 14 14:22 /Users/fleury/Apps/plantuml.jar
 
 #+BEGIN_SRC emacs-lisp
 (use-package plantuml-mode
