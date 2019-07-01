@@ -95,7 +95,7 @@ fi
 #+RESULTS:
 : Config in your ~/.emacs already set up!
 
-* Initialize
+* Initialize Emacs
 ** header
 #+BEGIN_SRC emacs-lisp
 ;; ===== this file was auto-tangled, only edit the emacs_setup.org =====
