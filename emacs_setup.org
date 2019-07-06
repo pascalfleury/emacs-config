@@ -31,7 +31,7 @@ Adding my own packages.
 (setq package-archives '(("org" . "http://orgmode.org/elpa/")
                          ("melpa" . "http://melpa.org/packages/")
                          ("gnu" . "http://elpa.gnu.org/packages/")
-                         ;("marmalade" . "http://marmalade-repo.org/packages/")
+                         ("marmalade" . "http://marmalade-repo.org/packages/")
                         ))
 #+END_SRC
 ** use-package
