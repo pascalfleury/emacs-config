@@ -1,5 +1,8 @@
 #!/bin/bash
-git update-index --skip-worktree emacs_setup.el
+
+# Make git ignore the tangled & updated emacs_setup.el
+GIT_ROOT=$(dirname $0)
+(cd ${GIT_ROOT} && git update-index --skip-worktree emacs_setup.el)
 
 # Maybe this is a new install, .emacs does not exist
 test -e ~/.emacs || touch ~/.emacs

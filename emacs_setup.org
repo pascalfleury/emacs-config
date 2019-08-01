@@ -76,6 +76,10 @@ with new config settings, execute the following block once (=C-c C-c=):
 
 #+BEGIN_SRC bash :noweb yes :tangle onetime_setup.sh
 #!/bin/bash
+
+# Make git ignore the tangled & updated emacs_setup.el
+GIT_ROOT=$(dirname $0)
+(cd ${GIT_ROOT} && git update-index --skip-worktree emacs_setup.el)
 git update-index --skip-worktree emacs_setup.el
 
 # Maybe this is a new install, .emacs does not exist
