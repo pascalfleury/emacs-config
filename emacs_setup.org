@@ -129,9 +129,11 @@ bindings etc. that happen only if the package is actually loaded.
 
 First, make sure it gets installed if it is not there yet.
 #+begin_src emacs-lisp
-(unless (package-installed-p 'use-package)
-        (package-refresh-contents)
-        (package-install 'use-package))
+  ;; make sure use-package is installed
+  (unless (package-installed-p 'use-package)
+    (unless package-archive-contents
+      (package-refresh-contents))
+    (package-install 'use-package))
 #+end_src
 
 #+BEGIN_SRC emacs-lisp
