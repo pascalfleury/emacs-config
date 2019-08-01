@@ -7,6 +7,12 @@
                          ("marmalade" . "http://marmalade-repo.org/packages/")
                         ))
 
+;; make sure use-package is installed
+(unless (package-installed-p 'use-package)
+  (unless package-archive-contents
+    (package-refresh-contents))
+  (package-install 'use-package))
+
 (eval-when-compile (require 'use-package))
 
 (defmacro add-hook-run-once (hook function &optional append local)
