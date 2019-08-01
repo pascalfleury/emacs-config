@@ -74,7 +74,8 @@ The original content of the =emacs_setup.el= is as follows:
 To preserve the original state of this file when updating the git repos
 with new config settings, execute the following block once (=C-c C-c=):
 
-#+BEGIN_SRC bash :tangle no :noweb yes
+#+BEGIN_SRC bash :file setup.sh :noweb yes
+#!/bin/bash
 git update-index --skip-worktree emacs_setup.el
 
 # Add the load-file as the first thing in the user's ~/.emacs
