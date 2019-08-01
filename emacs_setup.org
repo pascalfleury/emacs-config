@@ -74,7 +74,7 @@ The original content of the =emacs_setup.el= is as follows:
 To preserve the original state of this file when updating the git repos
 with new config settings, execute the following block once (=C-c C-c=):
 
-#+BEGIN_SRC bash :file setup.sh :noweb yes
+#+BEGIN_SRC bash :noweb yes :tangle onetime_setup.sh
 #!/bin/bash
 git update-index --skip-worktree emacs_setup.el
 
@@ -393,7 +393,7 @@ Let's one jump around text
 ** Mark the 80 cols boundary
 #+BEGIN_SRC emacs-lisp
 (use-package column-marker
-  :load-path "~/Emacs/"
+  :load-path "~/Emacs/column-marker.el"
   :config
   (add-hook 'c-mode-common-hook (lambda () (interactive) (column-marker-1 80)))
   :bind ("C-c m" . 'column-marker-1))

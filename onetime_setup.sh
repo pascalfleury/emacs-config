@@ -15,5 +15,3 @@ EOF
 else
   echo "Config in your ~/.emacs already set up!"
 fi
-
-sudo apt-get install silversearcher-ag
