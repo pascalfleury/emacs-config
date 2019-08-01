@@ -56,8 +56,9 @@ is marked as needed in this config automatically.
 
 The original content of the =emacs_setup.el= is as follows:
 
-#+BEGIN_SRC emacs-lisp :tangle no
-;; This file replaces itself with the actual configuration at first run.
+#+BEGIN_SRC emacs-lisp :tangle bootstrapping_emacs_setup.el
+;; This is the initial state of the file to be loaded.
+;; It will replace itself with the actual configuration at first run.
 
 (require 'org) ; We can't tangle without org!
 
@@ -80,7 +81,6 @@ with new config settings, execute the following block once (=C-c C-c=):
 # Make git ignore the tangled & updated emacs_setup.el
 GIT_ROOT=$(dirname $0)
 (cd ${GIT_ROOT} && git update-index --skip-worktree emacs_setup.el)
-git update-index --skip-worktree emacs_setup.el
 
 # Maybe this is a new install, .emacs does not exist
 test -e ~/.emacs || touch ~/.emacs
@@ -426,7 +426,7 @@ Start using projectile. It has the documentation [[https://docs.projectile.mx/en
 
 Also make sure we do have the faster [[https://github.com/ggreer/the_silver_searcher#the-silver-searcher][silver searcher]] version.  This may need you
 to install the corresponding tool for this, with the following snippet:
-#+begin_src bash tangle: install_deps.sh
+#+begin_src bash :tangle install_deps.sh
 # This can be used by helm-ag for faster grepping
 sudo apt-get install silversearcher-ag
 #+end_src
