@@ -1,6 +1,9 @@
 #!/bin/bash
 git update-index --skip-worktree emacs_setup.el
 
+# Maybe this is a new install, .emacs does not exist
+test -e ~/.emacs || touch ~/.emacs
+
 # Add the load-file as the first thing in the user's ~/.emacs
 declare lines=$(grep emacs_setup ~/.emacs | wc -l)
 if (( lines < 1 )); then

@@ -78,6 +78,9 @@ with new config settings, execute the following block once (=C-c C-c=):
 #!/bin/bash
 git update-index --skip-worktree emacs_setup.el
 
+# Maybe this is a new install, .emacs does not exist
+test -e ~/.emacs || touch ~/.emacs
+
 # Add the load-file as the first thing in the user's ~/.emacs
 declare lines=$(grep emacs_setup ~/.emacs | wc -l)
 if (( lines < 1 )); then
@@ -393,7 +396,7 @@ Let's one jump around text
 ** Mark the 80 cols boundary
 #+BEGIN_SRC emacs-lisp
 (use-package column-marker
-  :load-path "~/Emacs/column-marker.el"
+  :load-path "~/Emacs"
   :config
   (add-hook 'c-mode-common-hook (lambda () (interactive) (column-marker-1 80)))
   :bind ("C-c m" . 'column-marker-1))
@@ -417,7 +420,8 @@ Start using projectile. It has the documentation [[https://docs.projectile.mx/en
 
 Also make sure we do have the faster [[https://github.com/ggreer/the_silver_searcher#the-silver-searcher][silver searcher]] version.  This may need you
 to install the corresponding tool for this, with the following snippet:
-#+begin_src bash tangle: no
+#+begin_src bash tangle: install_deps.sh
+# This can be used by helm-ag for faster grepping
 sudo apt-get install silversearcher-ag
 #+end_src
 
@@ -1340,4 +1344,9 @@ A bit difficult to find the docs of how to use it, but it seems quite useful.
     :init
     (add-to-list 'org-file-apps '("\\.pdf\\'" . org-pdfview-open))
     (add-to-list 'org-file-apps '("\\.pdf::\\([[:digit:]]+\\)\\'" . org-pdfview-open)))
+#+end_src
+
+#+begin_src bash :tangle install_deps.sh
+# for all the native apps related to PDF tools
+sudo apt-get install pdf-tools
 #+end_src
