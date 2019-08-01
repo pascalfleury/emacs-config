@@ -119,10 +119,10 @@ Make sure we have the package system initialized before we load anything.
 Adding my choice of packages repositories.
 #+NAME melpa-setup
 #+BEGIN_SRC emacs-lisp
-(setq package-archives '(("org" . "http://orgmode.org/elpa/")
-                         ("melpa" . "http://melpa.org/packages/")
-                         ("gnu" . "http://elpa.gnu.org/packages/")
-                         ("marmalade" . "http://marmalade-repo.org/packages/")
+(setq package-archives '(("org" . "https://orgmode.org/elpa/")
+                         ("melpa" . "https://stable.melpa.org/packages/")
+                         ("gnu" . "https://elpa.gnu.org/packages/")
+                         ("marmalade" . "https://marmalade-repo.org/packages/")
                         ))
 #+END_SRC
 ** use-package
