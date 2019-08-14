@@ -56,8 +56,9 @@ is marked as needed in this config automatically.
 
 The original content of the =emacs_setup.el= is as follows:
 
-#+BEGIN_SRC emacs-lisp :tangle no
-;; This file replaces itself with the actual configuration at first run.
+#+BEGIN_SRC emacs-lisp :tangle bootstrapping_emacs_setup.el
+;; This is the initial state of the file to be loaded.
+;; It will replace itself with the actual configuration at first run.
 
 (require 'org) ; We can't tangle without org!
 
@@ -74,8 +75,15 @@ The original content of the =emacs_setup.el= is as follows:
 To preserve the original state of this file when updating the git repos
 with new config settings, execute the following block once (=C-c C-c=):
 
-#+BEGIN_SRC bash :tangle no :noweb yes
-git update-index --skip-worktree emacs_setup.el
+#+BEGIN_SRC bash :noweb yes :tangle onetime_setup.sh
+#!/bin/bash
+
+# Make git ignore the tangled & updated emacs_setup.el
+GIT_ROOT=$(dirname $0)
+(cd ${GIT_ROOT} && git update-index --skip-worktree emacs_setup.el)
+
+# Maybe this is a new install, .emacs does not exist
+test -e ~/.emacs || touch ~/.emacs
 
 # Add the load-file as the first thing in the user's ~/.emacs
 declare lines=$(grep emacs_setup ~/.emacs | wc -l)
@@ -111,10 +119,11 @@ Make sure we have the package system initialized before we load anything.
 Adding my choice of packages repositories.
 #+NAME melpa-setup
 #+BEGIN_SRC emacs-lisp
-(setq package-archives '(("org" . "http://orgmode.org/elpa/")
-                         ("melpa" . "http://melpa.org/packages/")
-                         ("gnu" . "http://elpa.gnu.org/packages/")
-                         ("marmalade" . "http://marmalade-repo.org/packages/")
+(setq package-archives '(("org" . "https://orgmode.org/elpa/")
+                         ; ("melpa" . "https://stable.melpa.org/packages/")
+                         ("melpa" . "https://melpa.org/packages/")
+                         ("gnu" . "https://elpa.gnu.org/packages/")
+                         ("marmalade" . "https://marmalade-repo.org/packages/")
                         ))
 #+END_SRC
 ** use-package
@@ -125,9 +134,11 @@ bindings etc. that happen only if the package is actually loaded.
 
 First, make sure it gets installed if it is not there yet.
 #+begin_src emacs-lisp
-(unless (package-installed-p 'use-package)
-        (package-refresh-contents)
-        (package-install 'use-package))
+  ;; make sure use-package is installed
+  (unless (package-installed-p 'use-package)
+    (unless package-archive-contents
+      (package-refresh-contents))
+    (package-install 'use-package))
 #+end_src
 
 #+BEGIN_SRC emacs-lisp
@@ -392,7 +403,7 @@ Let's one jump around text
 ** Mark the 80 cols boundary
 #+BEGIN_SRC emacs-lisp
 (use-package column-marker
-  :load-path "~/Emacs/"
+  :load-path "~/Emacs"
   :config
   (add-hook 'c-mode-common-hook (lambda () (interactive) (column-marker-1 80)))
   :bind ("C-c m" . 'column-marker-1))
@@ -416,7 +427,8 @@ Start using projectile. It has the documentation [[https://docs.projectile.mx/en
 
 Also make sure we do have the faster [[https://github.com/ggreer/the_silver_searcher#the-silver-searcher][silver searcher]] version.  This may need you
 to install the corresponding tool for this, with the following snippet:
-#+begin_src bash tangle: no
+#+begin_src bash :tangle install_deps.sh
+# This can be used by helm-ag for faster grepping
 sudo apt-get install silversearcher-ag
 #+end_src
 
@@ -1340,4 +1352,9 @@ Disabled, as it causes only trouble to me, and I am not really using it anyway.
     :init
     (add-to-list 'org-file-apps '("\\.pdf\\'" . org-pdfview-open))
     (add-to-list 'org-file-apps '("\\.pdf::\\([[:digit:]]+\\)\\'" . org-pdfview-open)))
+#+end_src
+
+#+begin_src bash :tangle install_deps.sh
+# for all the native apps related to PDF tools
+sudo apt-get install pdf-tools
 #+end_src
