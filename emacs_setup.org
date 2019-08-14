@@ -1148,9 +1148,9 @@ A more visible current-time marker in the agenda
 **** auto-refresh
 #+BEGIN_SRC emacs-lisp
   ;; will refresh it only if already visible
-  ;;(run-at-time nil 180 'update-agenda-if-visible)
-  (add-hook 'org-mode-hook
-            (lambda () (run-at-time nil 180 'kiwon/org-agenda-redo-in-other-window)))
+  (run-at-time nil 180 'update-agenda-if-visible)
+  ;;(add-hook 'org-mode-hook
+  ;;          (lambda () (run-at-time nil 180 'kiwon/org-agenda-redo-in-other-window)))
 #+END_SRC
 
 This would open the agenda if any org file was opened. In the end, I don't like this feature,
@@ -1318,7 +1318,8 @@ Make the display of images a simple key-stroke away.
 *** PDF-Tools
 A bit difficult to find the docs of how to use it, but it seems quite useful.
 
-#+begin_src emacs-lisp
+Disabled, as it causes only trouble to me, and I am not really using it anyway.
+#+begin_src emacs-lisp :tangle no
   (use-package pdf-tools
     :if (and (eq system-type 'gnu/linux)  ;; Set it up on Linux
              (not (string-prefix-p "aarch64" system-configuration)))  ;; but not mobile devices
