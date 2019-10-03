@@ -600,6 +600,13 @@ web-mode with config for Polymer editing
   (setq web-mode-css-indent-offset 2)
   (setq web-mode-code-indent-offset 2))
 #+END_SRC
+** csv-mode
+mode to edit CSV files.
+#+begin_src emacs-lisp
+  (use-package csv-mode
+    :ensure t
+    :mode "\\.csv\\'")
+#+end_src
 ** Helm (list completion)
 Trying out Helm instead of icicles, as it is available on ELPA.
 
@@ -709,7 +716,7 @@ Colorize color names and codes in the correct color.
 *** Setup
 #+BEGIN_SRC emacs-lisp
 (use-package ledger-mode
-  :ensure t
+  :ensure nil
   :pin manual
   :mode "\\.ledger\\'"
   :bind ("<f6>" . 'paf/cleanup-ledger-buffer)
