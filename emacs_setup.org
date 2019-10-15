@@ -9,7 +9,7 @@ Below, I also explain how this tangling is automated.
 
 Extensive documentation about how to do this can be found [[https://github.com/larstvei/dot-emacs][here]].
 
-* Plans
+* Personal Plans
 I regularly try out new packages, this is my current list of things being evaluated.
 They usually live temporarily in my =~/.emacs= until I am happy, in
 which case I move their config into this file so that it gets replicated on all
@@ -232,7 +232,7 @@ Code found [[https://www.emacswiki.org/emacs/EndOfLineTips][here]].
 ** Theme
 I really like the high-contract Zenburn theme.
 #+BEGIN_SRC emacs-lisp
-(use-package hc-zenburn-theme
+(use-package zenburn-theme
  :ensure t)
 #+END_SRC
 * Buffer behavior
@@ -709,7 +709,7 @@ Colorize color names and codes in the correct color.
 *** Setup
 #+BEGIN_SRC emacs-lisp
 (use-package ledger-mode
-  :ensure t
+  ;; :ensure t
   :pin manual
   :mode "\\.ledger\\'"
   :bind ("<f6>" . 'paf/cleanup-ledger-buffer)
