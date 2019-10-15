@@ -122,7 +122,7 @@ Adding my choice of packages repositories.
 (setq package-archives '(("org" . "https://orgmode.org/elpa/")
                          ; ("melpa" . "https://stable.melpa.org/packages/")
                          ("melpa" . "https://melpa.org/packages/")
-                         ("gnu" . "https://elpa.gnu.org/packages/")
+                         ("gnu" . "http://elpa.gnu.org/packages/")
                          ("marmalade" . "https://marmalade-repo.org/packages/")
                         ))
 #+END_SRC
@@ -600,6 +600,13 @@ web-mode with config for Polymer editing
   (setq web-mode-css-indent-offset 2)
   (setq web-mode-code-indent-offset 2))
 #+END_SRC
+** csv-mode
+mode to edit CSV files.
+#+begin_src emacs-lisp
+  (use-package csv-mode
+    :ensure t
+    :mode "\\.csv\\'")
+#+end_src
 ** Helm (list completion)
 Trying out Helm instead of icicles, as it is available on ELPA.
 
@@ -709,7 +716,7 @@ Colorize color names and codes in the correct color.
 *** Setup
 #+BEGIN_SRC emacs-lisp
 (use-package ledger-mode
-  ;; :ensure t
+  :ensure nil
   :pin manual
   :mode "\\.ledger\\'"
   :bind ("<f6>" . 'paf/cleanup-ledger-buffer)
@@ -720,12 +727,17 @@ Colorize color names and codes in the correct color.
 Let's try this too, even though I do not quite get the point of this
 whole package yet.
 
-*NOTE* Disabled, as it takes horribly long to load, and re-assigns the =C-c /= (org-mode sparse trees)
-#+begin_src emacs-lisp :tangle no
-(use-package hyperbole
- :ensure t
- :config
-   (require 'hyperbole))
+*NOTE* assigns =hui-search-web= to =C-c C-/= to not clobber the later used
+       =C-c /= from OrgMode (org-mode sparse trees)
+       This works because hyperbole will first check if the function
+       is already bound to some key before binding it to the coded
+       default.
+#+begin_src emacs-lisp
+  (use-package hyperbole
+    :ensure t
+    :config
+    (bind-key "C-c C-/" 'hui-search-web)  ;; bind before calling require
+    (require 'hyperbole))
 #+end_src
 ** [[https://github.com/fourier/ztree#ztree][ztree]]
 A tree-view navigation of diles, with diff tool for directories.
