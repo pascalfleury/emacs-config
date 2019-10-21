@@ -447,6 +447,21 @@ Switch from header to implementation file quickly.
           (lambda ()
             (local-set-key  (kbd "C-c o") 'ff-find-other-file)))
 #+END_SRC
+** ripgrep
+This enables searching recursively in projects.
+#+begin_src bash :tangle install_deps.sh
+# This can be used by helm-ag for faster grepping
+sudo apt-get install ripgrep
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package ripgrep
+    :ensure t)
+  (use-package projectile-ripgrep
+    :ensure t
+    :requires (ripgrep projectile))
+#+end_src
+
 ** commenting out
 Easy commenting out of lines.
 #+BEGIN_SRC emacs-lisp
