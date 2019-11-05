@@ -103,6 +103,14 @@ fi
 #+RESULTS:
 : Config in your ~/.emacs already set up!
 
+** Recompile all packages
+This will force-recompile everything in ~/.emacs.d/elpa/...
+Just run =M-:= and then enter this:
+#+begin_src emacs-lisp :tangle no
+(byte-recompile-directory package-user-dir nil 'force)
+#+end_src
+or simply =C-x C-e= at the end of that line.
+
 * Initialize Emacs
 ** header
 #+BEGIN_SRC emacs-lisp
