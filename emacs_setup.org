@@ -495,15 +495,21 @@ Simplify cleanup of =#include= / =typedef= / =using= blocks.
 
 ** yankpad / yasnippet
 #+BEGIN_SRC emacs-lisp
-(use-package yasnippet
-  :ensure t)
+  (use-package yasnippet
+    :ensure t)
+  (use-package auto-yasnippet
+    :ensure t
+    :config
+    (bind-key "C-p C-s c" 'aya-create)
+    (bind-key "C-p C-s e" 'aya-expand))
 
-(use-package yankpad
-  :ensure t
-  :init
-  (setq yankpad-file "~/OrgFiles/yankpad.org")
-  :config
-  (bind-key "<f7>" 'yankpad-map))
+  (use-package yankpad
+    :ensure t
+    :init
+    (setq yankpad-file "~/OrgFiles/yankpad.org")
+    :config
+    (bind-key "C-p y m" 'yankpad-map)
+    (bind-key "C-p y e" 'yankpad-expand))
 #+END_SRC
 
 ** Selective display
