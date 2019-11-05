@@ -73,7 +73,7 @@
 	(error-msg (request-response-error-thrown response)))
     (cond
      ((eq status nil)
-      (message "Please check your network connectivity"))
+      (error "Please check your network connectivity"))
      ((eq 401 (or (plist-get (plist-get data :error) :code)
                   status))
       (message "OAuth token expired. refresh access token")
@@ -81,13 +81,13 @@
       (if (functionp func)
 	  (apply func args)))
      ((eq 403 status)
-      (message "Ensure you enabled the Tasks API through the Developers Console"))
+      (error "Ensure you enabled the Tasks API through the Developers Console"))
      ((and (> 299 status) (eq data nil))
       (message "Received HTTP: %s" (number-to-string status))
-      (message "Error occured, but no message body."))
+      (error "Error occured, but no message body."))
      ((not (eq error-msg nil))
       (message "Status code: %s" (number-to-string status))
-      (message "%s" (pp-to-string error-msg))))))
+      (error "%s" (pp-to-string error-msg))))))
 
 (defun org-gtasks-get-refresh-token (account)
   (let* ((response (request
@@ -225,6 +225,7 @@
   (let* ((id  (plist-get plst :id))
 	 (title  (plist-get plst :title))
 	 (notes  (plist-get plst :notes))
+	 (links  (plist-get plst :links))
 	 (status (if (string= "completed" (plist-get plst :status))
 		     "DONE"
 		   "TODO"))
@@ -235,7 +236,19 @@
 	    "  :PROPERTIES:\n"
 	    "  :ID: " id "\n"
 	    "  :END:\n"
-	    (when notes) notes (when notes "\n"))))
+	    (when notes (concat notes "\n"))
+            (when links
+              (concat
+                "\n  :links:\n"
+                (mapconcat
+                 (lambda (link)
+                   (format "  - %s: %s\n"
+                           (plist-get link :type)
+                           (org-make-link-string
+                            (plist-get link :link)
+                            (plist-get link :description))))
+                 links "")
+                "  :end:\n")))))
 
 (defun org-gtasks-push-task (account url action data-list)
   (request
@@ -277,6 +290,15 @@
       "PATCH"
     "POST"))
 
+(defconst org-gtasks-links-drawer-re
+  (concat "\\("
+          "^[ \t]*:links:[ \t]*$"
+          "\\)[^\000]*?\\("
+          "^[ \t]*:end:[ \t]*$"
+          "\\)\n?")
+  "Matches an entire org-gtasks links drawer.")
+
+
 (defun org-gtasks-push-tasklist (account tasklist)
   (let ((default-directory (org-gtasks-directory account))
 	(file (tasklist-file tasklist))
@@ -289,8 +311,9 @@
 	  (let* ((url (format "%s/lists/%s/tasks" org-gtasks-default-url (tasklist-id tasklist)))
 		 (id (org-element-property :ID hl))
 		 (action (org-gtasks-find-action tasks id))
-		 (title (org-element-interpret-data
-			 (org-element-property :title hl)))
+		 (title (substring-no-properties
+                         (org-element-interpret-data
+                          (org-element-property :title hl))))
 		 (closed (org-element-property :closed hl))
 		 (completed (when closed
 			      (org-gtasks-format-org2iso
@@ -303,12 +326,20 @@
 			     "completed"
 			   "needsAction"))
 		 (notes (if (plist-get (cadr hl) :contents-begin)
-			    (replace-regexp-in-string "\\(.*\n\\)*.*END:\n"
+			    (replace-regexp-in-string org-property-drawer-re
 						      ""
 						      (buffer-substring-no-properties
 						       (plist-get (cadr hl) :contents-begin)
 						       (plist-get (cadr hl) :contents-end)))
 			  ""))
+                 ;; Strip :links: drawer - the links property should not be
+                 ;; inserted into the notes field. Currently links is a
+                 ;; read-only field:
+                 ;; https://developers.google.com/tasks/v1/reference/tasks#resource
+                 (notes (replace-regexp-in-string
+                         org-gtasks-links-drawer-re "" notes))
+                 ;; Strip leading and trailing newlines in notes
+                 (notes (string-trim notes))
 		 (data-list `(("title" . ,title)
 			      ("notes" . ,notes)
 			      ("status" . ,status))))
@@ -317,14 +348,14 @@
 	      (add-to-list 'data-list `("completed" . ,completed)))
 	    (when (string= action "PATCH")
 	      (setq url (format "%s/%s" url id)))
-	    (org-gtasks-push-task account url action data-list)))))
-    ;; push deleted tasks
-    (mapc (lambda (task)
-	    (let ((task-id (plist-get task :id))
-		  (tasklist-id (tasklist-id tasklist)))
-	      (unless (member task-id list-id)
-		(org-gtasks-delete-task account tasklist-id task-id))))
-	  tasks)))
+	    (org-gtasks-push-task account url action data-list)))
+        ;; push deleted tasks
+        (mapc (lambda (task)
+                (let ((task-id (plist-get task :id))
+                      (tasklist-id (tasklist-id tasklist)))
+                  (unless (member task-id list-id)
+                    (org-gtasks-delete-task account tasklist-id task-id))))
+              tasks)))))
 
 (defun org-gtasks-create-tasklist (account name)
   (let* ((response (request

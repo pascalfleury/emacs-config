@@ -23,7 +23,7 @@ machines I work on with Emacs.
 ** Installed, but need no or external config
 - [[https://github.com/edran/hc-zenburn-emacs][hc-zenburn-theme]]
 
-* Setup
+* Initial Setup
 I have my config in directory =~/Emacs= which is where I clone this repository.
 The config setup is maintained purely in the =~/Emacs/emacs_setup.org= file.
 
