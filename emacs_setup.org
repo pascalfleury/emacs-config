@@ -991,6 +991,23 @@ Show the agenda when emacs left idle.
   ;;    (org-agenda-goto-calendar)))
   )
 #+END_SRC
+*** Display location in agenda
+From some help on [[https://emacs.stackexchange.com/questions/26249/customize-text-after-task-in-custom-org-agenda-view][this page]] I think this could work:
+#+begin_src emacs-lisp
+  (defun paf/org-agenda-get-location()
+    "Gets the value of the LOCATION property"
+    (let ((loc (org-entry-get (point) "LOCATION")))
+      (if (> (length loc) 0)
+          loc
+        "")))
+#+end_src
+
+Also, to set this after org-mode has loaded ([[https://emacs.stackexchange.com/questions/19091/how-to-set-org-agenda-prefix-format-before-org-agenda-starts][see here]]):
+#+begin_src emacs-lisp :tangle no
+  (with-eval-after-load 'org-agenda
+    (add-to-list 'org-agenda-prefix-format
+                 '(agenda . "  %-12:c%?-12t %(paf/org-agenda-get-location)% s"))
+#+end_src
 *** org-gtasks
 Should follow this git repo: [[https://github.com/JulienMasson/org-gtasks][org-gtasks]]
 I have copied a version of the file here, it's not yet available
