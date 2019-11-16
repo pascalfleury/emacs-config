@@ -7,7 +7,7 @@ This is my Emacs config. You need to tangle this into a file that
 then gets loaded by Emacs: =C-c C-v t= [org-babel-tangle].
 Below, I also explain how this tangling is automated.
 
-Extensive documentation about how to do this can be found [[https://github.com/larstvei/dot-emacs][here]].
+Find extensive documentation about how to do this [[https://github.com/larstvei/dot-emacs][here]].
 
 * Personal Plans
 I regularly try out new packages, this is my current list of things being evaluated.
@@ -423,6 +423,14 @@ Seen demonstrated by [[https://www.youtube.com/watch?v=LFXA089Tx38][Uncle Dave]]
     :ensure t
     :bind ("M-y" . popup-kill-ring))
 #+end_src
+** Better writing
+This should highlight bad style in writing.
+#+begin_src emacs-lisp
+  (use-package artbollocks-mode
+    :ensure t
+    :config
+    (add-hook 'text-mode-hook 'artbollocks-mode))
+#+end_src
 * Coding
 ** Projectile
 Start using projectile. It has the documentation [[https://docs.projectile.mx/en/latest/][here]].
@@ -443,7 +451,7 @@ Start using projectile. It has the documentation [[https://docs.projectile.mx/en
 Also make sure we do have the faster [[https://github.com/ggreer/the_silver_searcher#the-silver-searcher][silver searcher]] version.  This may need you
 to install the corresponding tool for this, with the following snippet:
 #+begin_src bash :tangle install_deps.sh
-# This can be used by helm-ag for faster grepping
+# helm-ag uses this for faster grepping
 sudo apt-get install silversearcher-ag
 #+end_src
 
