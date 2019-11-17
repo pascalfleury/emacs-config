@@ -429,6 +429,9 @@ This should highlight bad style in writing.
   (use-package artbollocks-mode
     :ensure t
     :config
+    ;; Modify the mapping so it does not clash with Hyperbole's window management.
+    (define-key artbollocks-mode-keymap (kbd "C-c \\") nil)
+    (define-key artbollocks-mode-keymap (kbd "C-c %") 'artbollocks-readability-index)
     (add-hook 'text-mode-hook 'artbollocks-mode))
 #+end_src
 * Coding
