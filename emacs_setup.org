@@ -1486,3 +1486,5 @@ Update the version by downloading the latest version here:
 #+begin_src bash :tangle no
 wget https://raw.githubusercontent.com/EFLS/zetteldeft/master/zetteldeft.el -O ~/Emacs/zetteldeft.el
 #+end_src
+
+#+RESULTS:
