@@ -838,7 +838,10 @@ archiving subtrees.
                   (replace-regexp-in-string (concat tag ":") "" tags)))
           (append org-file-tags (when ltags (split-string ltags ":" t))))
     (if (string= ":" tags) nil tags)))
+#+END_SRC
 
+This used to work, but =org-extract-archive-file= is no longer defined.
+#+BEGIN_SRC emacs-lisp :tangle no
 (defadvice org-archive-subtree
     (around my-org-archive-subtree-low-level activate)
   (let ((tags (my-org-inherited-no-file-tags))
