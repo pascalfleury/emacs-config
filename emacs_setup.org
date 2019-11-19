@@ -7,7 +7,7 @@ This is my Emacs config. You need to tangle this into a file that
 then gets loaded by Emacs: =C-c C-v t= [org-babel-tangle].
 Below, I also explain how this tangling is automated.
 
-Extensive documentation about how to do this can be found [[https://github.com/larstvei/dot-emacs][here]].
+Find extensive documentation about how to do this [[https://github.com/larstvei/dot-emacs][here]].
 
 * Personal Plans
 I regularly try out new packages, this is my current list of things being evaluated.
@@ -130,7 +130,7 @@ Adding my choice of packages repositories.
 (setq package-archives '(("org" . "https://orgmode.org/elpa/")
                          ; ("melpa" . "https://stable.melpa.org/packages/")
                          ("melpa" . "https://melpa.org/packages/")
-                         ("gnu" . "http://elpa.gnu.org/packages/")
+                         ("gnu" . "https://elpa.gnu.org/packages/")
                          ("marmalade" . "https://marmalade-repo.org/packages/")
                         ))
 #+END_SRC
@@ -416,6 +416,21 @@ Let's one jump around text
   (add-hook 'c-mode-common-hook (lambda () (interactive) (column-marker-1 80)))
   :bind ("C-c m" . 'column-marker-1))
 #+END_SRC
+** Better kill ring
+Seen demonstrated by [[https://www.youtube.com/watch?v=LFXA089Tx38][Uncle Dave]]
+#+begin_src emacs-lisp
+  (use-package popup-kill-ring
+    :ensure t
+    :bind ("M-y" . popup-kill-ring))
+#+end_src
+** Better writing
+This should highlight bad style in writing.
+#+begin_src emacs-lisp
+  (use-package artbollocks-mode
+    :ensure t
+    :config
+    (add-hook 'text-mode-hook 'artbollocks-mode))
+#+end_src
 * Coding
 ** Projectile
 Start using projectile. It has the documentation [[https://docs.projectile.mx/en/latest/][here]].
@@ -436,7 +451,7 @@ Start using projectile. It has the documentation [[https://docs.projectile.mx/en
 Also make sure we do have the faster [[https://github.com/ggreer/the_silver_searcher#the-silver-searcher][silver searcher]] version.  This may need you
 to install the corresponding tool for this, with the following snippet:
 #+begin_src bash :tangle install_deps.sh
-# This can be used by helm-ag for faster grepping
+# helm-ag uses this for faster grepping
 sudo apt-get install silversearcher-ag
 #+end_src
 
@@ -500,6 +515,16 @@ Simplify cleanup of =#include= / =typedef= / =using= blocks.
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-p s") 'paf/sort-and-uniquify-region)
 #+END_SRC
+
+** diffing
+[[https://github.com/justbur/emacs-vdiff][vdiff]] let's one compare buffers or files.
+#+begin_src emacs-lisp
+  (use-package vdiff
+    :ensure t
+    :config
+    ; This binds commands under the prefix when vdiff is active.
+    (define-key vdiff-mode-map (kbd "C-c") vdiff-mode-prefix-map))
+#+end_src
 
 ** yankpad / yasnippet
 #+BEGIN_SRC emacs-lisp
@@ -977,6 +1002,23 @@ Show the agenda when emacs left idle.
   ;;    (org-agenda-goto-calendar)))
   )
 #+END_SRC
+*** Display location in agenda
+From some help on [[https://emacs.stackexchange.com/questions/26249/customize-text-after-task-in-custom-org-agenda-view][this page]] I think this could work:
+#+begin_src emacs-lisp
+  (defun paf/org-agenda-get-location()
+    "Gets the value of the LOCATION property"
+    (let ((loc (org-entry-get (point) "LOCATION")))
+      (if (> (length loc) 0)
+          loc
+        "")))
+#+end_src
+
+Also, to set this after org-mode has loaded ([[https://emacs.stackexchange.com/questions/19091/how-to-set-org-agenda-prefix-format-before-org-agenda-starts][see here]]):
+#+begin_src emacs-lisp :tangle no
+  (with-eval-after-load 'org-agenda
+    (add-to-list 'org-agenda-prefix-format
+                 '(agenda . "  %-12:c%?-12t %(paf/org-agenda-get-location)% s"))
+#+end_src
 *** org-gtasks
 Should follow this git repo: [[https://github.com/JulienMasson/org-gtasks][org-gtasks]]
 I have copied a version of the file here, it's not yet available
