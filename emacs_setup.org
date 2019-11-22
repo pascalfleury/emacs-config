@@ -429,6 +429,9 @@ This should highlight bad style in writing.
   (use-package artbollocks-mode
     :ensure t
     :config
+    ;; Modify the mapping so it does not clash with Hyperbole's window management.
+    (define-key artbollocks-mode-keymap (kbd "C-c \\") nil)
+    (define-key artbollocks-mode-keymap (kbd "C-c %") 'artbollocks-readability-index)
     (add-hook 'text-mode-hook 'artbollocks-mode))
 #+end_src
 * Coding
@@ -799,7 +802,6 @@ A tree-view navigation of diles, with diff tool for directories.
   (use-package ztree
     :ensure t)
 #+end_src
-
 * OrgMode
 Load all my org stuff, but first org-mode itself.
 ** Init
@@ -812,9 +814,11 @@ You may set this in the =~/.emacs= to another value, e.g.
 - State "NEXT"       from              [2019-06-24 Mon 10:10]
 :END:
 #+BEGIN_SRC emacs-lisp
-(require 'org)
-(if (not (boundp 'org-directory))
-    (setq org-directory "~/OrgFiles"))
+  (use-package org
+    :ensure nil
+    :config
+    (if (not (boundp 'org-directory))
+        (setq org-directory "~/OrgFiles")))
 #+END_SRC
 ** Helper Functions / Tools found on the web / worg
 *** Open remote org dir
@@ -1444,3 +1448,46 @@ Disabled, as it causes only trouble to me, and I am not really using it anyway.
 # for all the native apps related to PDF tools
 sudo apt-get install pdf-tools
 #+end_src
+*** [[https://www.eliasstorms.net/zetteldeft/][Zetteldeft]]
+This is a note-taking packages inspired by the principles of the [[https://zettelkasten.de/][Zettelkasten]]
+#+begin_src emacs-lisp
+  (use-package deft
+    :ensure t)
+  (use-package avy
+    :ensure t)
+
+  (use-package zetteldeft
+    :ensure nil
+    :after (org deft avy)
+
+    :config
+    (setq deft-extensions '("org" "md" "txt"))
+    (setq deft-directory (concat org-directory "/Zettelkasten"))
+    (setq deft-recursive t)
+
+    :bind (("C-p C-k d" . deft)
+           ("C-p C-k D" . zetteldeft-deft-new-search)
+           ("C-p C-k R" . deft-refresh)
+           ("C-p C-k s" . zetteldeft-search-at-point)
+           ("C-p C-k c" . zetteldeft-search-current-id)
+           ("C-p C-k f" . zetteldeft-follow-link)
+           ("C-p C-k F" . zetteldeft-avy-file-search-ace-window)
+           ("C-p C-k l" . zetteldeft-avy-link-search)
+           ("C-p C-k t" . zetteldeft-avy-tag-search)
+           ("C-p C-k T" . zetteldeft-tag-buffer)
+           ("C-p C-k i" . zetteldeft-find-file-id-insert)
+           ("C-p C-k I" . zetteldeft-find-file-full-title-insert)
+           ("C-p C-k o" . zetteldeft-find-file)
+           ("C-p C-k n" . zetteldeft-new-file)
+           ("C-p C-k N" . zetteldeft-new-file-and-link)
+           ("C-p C-k r" . zetteldeft-file-rename))
+  )
+#+end_src
+
+Update the version by downloading the latest version here:
+
+#+begin_src bash :tangle no
+wget https://raw.githubusercontent.com/EFLS/zetteldeft/master/zetteldeft.el -O ~/Emacs/zetteldeft.el
+#+end_src
+
+#+RESULTS:
