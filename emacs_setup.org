@@ -23,7 +23,7 @@ machines I work on with Emacs.
 ** Installed, but need no or external config
 - [[https://github.com/edran/hc-zenburn-emacs][hc-zenburn-theme]]
 
-* Initial Setup
+* One-time Initial Setup
 I have my config in directory =~/Emacs= which is where I clone this repository.
 The config setup is maintained purely in the =~/Emacs/emacs_setup.org= file.
 
@@ -112,7 +112,10 @@ Just run =M-:= and then enter this:
 or simply =C-x C-e= at the end of that line.
 
 * Initialize Emacs
-** header
+This section sets up Emacs so it can tangle the config, find =use-package=,
+and find the ELPA repositories where to get the new packes from.
+** Info header
+Just to add a little information in the tangled file.
 #+BEGIN_SRC emacs-lisp
 ;; ===== this file was auto-tangled, only edit the emacs_setup.org =====
 #+END_SRC
@@ -128,16 +131,16 @@ Adding my choice of packages repositories.
 #+NAME melpa-setup
 #+BEGIN_SRC emacs-lisp
 (setq package-archives '(("org" . "https://orgmode.org/elpa/")
-                         ; ("melpa" . "https://stable.melpa.org/packages/")
-                         ("melpa" . "https://melpa.org/packages/")
+                         ("melpa" . "https://stable.melpa.org/packages/")
+                         ; ("melpa" . "https://melpa.org/packages/")
                          ("gnu" . "https://elpa.gnu.org/packages/")
-                         ("marmalade" . "https://marmalade-repo.org/packages/")
+                         ; ("marmalade" . "https://marmalade-repo.org/packages/")
                         ))
 #+END_SRC
 ** use-package
 I use =use-package= for most configuration, and that needs to be at the top of
-the file.  =use-package= ensures requested the package is installed, if not it
-installs it, and has very convenient sections for configs of variables, key
+the file.  =use-package= verifies the presence of the requested package, otherwise
+installs it, and presents convenient sections for configs of variables, key
 bindings etc. that happen only if the package is actually loaded.
 
 First, make sure it gets installed if it is not there yet.
@@ -151,19 +154,6 @@ First, make sure it gets installed if it is not there yet.
 
 #+BEGIN_SRC emacs-lisp
 (eval-when-compile (require 'use-package))
-#+END_SRC
-** add-hook-run-once
-Use instead of add-hook to run it a single time.
-[[https://emacs.stackexchange.com/questions/3323/is-there-any-way-to-run-a-hook-function-only-once][found here]]
-#+BEGIN_SRC emacs-lisp
-(defmacro add-hook-run-once (hook function &optional append local)
-  "Like add-hook, but remove the hook after it is called"
-  (let ((sym (make-symbol "#once")))
-    `(progn
-       (defun ,sym ()
-         (remove-hook ,hook ',sym ,local)
-         (funcall ,function))
-       (add-hook ,hook ',sym ,append ,local))))
 #+END_SRC
 ** tangle-this-config
 I set this up to tangle the init org-mode file into the actual Emacs init file as soon as I save it.
@@ -180,33 +170,27 @@ tangled, and the tangled file is compiled."
 
 (add-hook 'after-save-hook 'tangle-init)
 #+END_SRC
+* Personal Initialization
 ** Clear =C-p= so I can use it as a prefix
 Remove =C-p= that I want to use for *me* personally as a prefix.
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-p") nil) ;; was 'previous-line'
 #+END_SRC
 
-** Speedup VCS
-Regexp matching directory names that are not under VC's control.
-The default regexp prevents fruitless and time-consuming attempts
-to determine the VC status in directories in which filenames are
-interpreted as hostnames.
-#+BEGIN_SRC emacs-lisp
-(defvar locate-dominating-stop-dir-regexp
-  "\\`\\(?:[\\/][\\/][^\\/]+\\|/\\(?:net\\|afs\\|\\.\\.\\.\\)/\\)\\'")
-#+END_SRC
-** Access my remote Org files directory
-Let's bind this to a key, so I can open remote dirs. I suually put
-this in my =.emacs= as it is host- and user-specific.
-#+begin_src emacs-lisp :tangle no
-(defun paf/open-remote-org-dir ()
-  (interactive)
-  (dired "/ssh:remote.host.com:OrgFiles"))
-
-(global-set-key (kbd "C-p r o") 'paf/open-remote-org-dir)
-#+end_src
-
 * Environment
+** add-hook-run-once
+Use instead of add-hook to run it a single time.
+[[https://emacs.stackexchange.com/questions/3323/is-there-any-way-to-run-a-hook-function-only-once][found here]]
+#+BEGIN_SRC emacs-lisp
+(defmacro add-hook-run-once (hook function &optional append local)
+  "Like add-hook, but remove the hook after it is called"
+  (let ((sym (make-symbol "#once")))
+    `(progn
+       (defun ,sym ()
+         (remove-hook ,hook ',sym ,local)
+         (funcall ,function))
+       (add-hook ,hook ',sym ,append ,local))))
+#+END_SRC
 ** Browser default
 #+BEGIN_SRC emacs-lisp
 (setq browse-url-generic-program (executable-find "google-chrome")
@@ -227,7 +211,7 @@ Start the background server, so we can use emacsclient.
 (set-language-environment "UTF-8")
 #+END_SRC
 ** Newline (only Unix wanted)
-This should autmoatically convert any files with dos or Mac line endings into Unix style ones.
+This should automatically convert any files with dos or Mac line endings into Unix style ones.
 Code found [[https://www.emacswiki.org/emacs/EndOfLineTips][here]].
 #+begin_src emacs-lisp
   (defun no-junk-please-we-are-unixish ()
@@ -574,6 +558,15 @@ This is bound to change in Emacs 26, as it has built-in support for this and is 
   :if window-system
   :bind ("C-c g" . 'git-gutter+-mode))
 #+END_SRC
+** Speedup VCS
+Regexp matching directory names that are not under VC's control.
+The default regexp prevents fruitless and time-consuming attempts
+to determine the VC status in directories in which filenames are
+interpreted as hostnames.
+#+BEGIN_SRC emacs-lisp
+(defvar locate-dominating-stop-dir-regexp
+  "\\`\\(?:[\\/][\\/][^\\/]+\\|/\\(?:net\\|afs\\|\\.\\.\\.\\)/\\)\\'")
+#+END_SRC
 ** GDB with many windows
 #+BEGIN_SRC emacs-lisp
 (setq gdb-many-windows t)
@@ -797,15 +790,15 @@ whole package yet.
     (require 'hyperbole))
 #+end_src
 ** [[https://github.com/fourier/ztree#ztree][ztree]]
-A tree-view navigation of diles, with diff tool for directories.
-#+begin_src emacs-lisp
+A tree-view navigation of files, with diff tool for directories.
+#+begin_src emacs-lisp :tangle no
   (use-package ztree
     :ensure t)
 #+end_src
 * OrgMode
 Load all my org stuff, but first org-mode itself.
 ** Init
-If variable =org-directory= not set yet, map it to my home's files.
+If variable =org-directory= is not set yet, map it to my home's files.
 You may set this in the =~/.emacs= to another value, e.g.
 =(setq org-directory "/ssh:fleury@machine.site.com:OrgFiles")=
 
@@ -820,6 +813,16 @@ You may set this in the =~/.emacs= to another value, e.g.
     (if (not (boundp 'org-directory))
         (setq org-directory "~/OrgFiles")))
 #+END_SRC
+** Access my remote Org files directory
+Let's bind this to a key, so I can open remote dirs. I suually put
+this in my =.emacs= as it is host- and user-specific.
+#+begin_src emacs-lisp :tangle no
+(defun paf/open-remote-org-dir ()
+  (interactive)
+  (dired "/ssh:remote.host.com:OrgFiles"))
+
+(global-set-key (kbd "C-p r o") 'paf/open-remote-org-dir)
+#+end_src
 ** Helper Functions / Tools found on the web / worg
 *** Open remote org dir
 In your =.emacs= just add this to configure the location:
@@ -1122,7 +1125,7 @@ F12 open the first agenda file
 *** org-ehtml [localhost:55555]
 This will start serving the org files through the emacs-based webbrowser
 when pressing M-f12 (on localhost:55555)
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (use-package org-ehtml
   :ensure t
   :config
