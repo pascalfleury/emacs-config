@@ -1095,6 +1095,25 @@ Some config for display.
   (setq org-habit-following-days 10)
   (setq org-habit-show-habits-only-for-today nil))
 #+END_SRC
+*** org-kanban
+#+begin_src emacs-lisp
+  (use-package org-kanban
+    :ensure t)
+#+end_src
+*** org-board
+Archive entire sites locally with `wget`.
+#+begin_src emacs-lisp
+  (use-package org-board
+    :ensure t
+    :config
+    (global-set-key (kbd "C-c o") org-board-keymap))
+#+end_src
+This is the needed tool used to fetch a URL's content.
+#+begin_src bash :tangle install_deps.sh
+# wget used for org-board archiving.
+sudo apt-get install wget
+#+end_src
+
 *** bash command
 #+BEGIN_SRC emacs-lisp
 (setq org-babel-sh-command "bash")
