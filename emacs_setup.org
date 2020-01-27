@@ -384,6 +384,11 @@ Let's one jump around text
   :bind (("C-c C-SPC" . 'ace-jump-mode)
          ("C-c C-DEL" . 'ace-jump-mode-pop-mark)))
 #+END_SRC
+** Hydra
+#+begin_src emacs-lisp
+  (use-package hydra
+    :ensure t)
+#+end_src
 * Editing Style
 ** No tabs, ever. No trailing spaces either.
 #+BEGIN_SRC emacs-lisp
@@ -1487,22 +1492,22 @@ This is a note-taking packages inspired by the principles of the [[https://zette
     (setq deft-directory (concat org-directory "/Zettelkasten"))
     (setq deft-recursive t)
 
-    :bind (("C-p C-k d" . deft)
-           ("C-p C-k D" . zetteldeft-deft-new-search)
-           ("C-p C-k R" . deft-refresh)
-           ("C-p C-k s" . zetteldeft-search-at-point)
-           ("C-p C-k c" . zetteldeft-search-current-id)
-           ("C-p C-k f" . zetteldeft-follow-link)
-           ("C-p C-k F" . zetteldeft-avy-file-search-ace-window)
-           ("C-p C-k l" . zetteldeft-avy-link-search)
-           ("C-p C-k t" . zetteldeft-avy-tag-search)
-           ("C-p C-k T" . zetteldeft-tag-buffer)
-           ("C-p C-k i" . zetteldeft-find-file-id-insert)
-           ("C-p C-k I" . zetteldeft-find-file-full-title-insert)
-           ("C-p C-k o" . zetteldeft-find-file)
-           ("C-p C-k n" . zetteldeft-new-file)
-           ("C-p C-k N" . zetteldeft-new-file-and-link)
-           ("C-p C-k r" . zetteldeft-file-rename))
+    :bind (("C-c z d" . deft)
+           ("C-c z D" . zetteldeft-deft-new-search)
+           ("C-c z R" . deft-refresh)
+           ("C-c z s" . zetteldeft-search-at-point)
+           ("C-c z c" . zetteldeft-search-current-id)
+           ("C-c z f" . zetteldeft-follow-link)
+           ("C-c z F" . zetteldeft-avy-file-search-ace-window)
+           ("C-c z l" . zetteldeft-avy-link-search)
+           ("C-c z t" . zetteldeft-avy-tag-search)
+           ("C-c z T" . zetteldeft-tag-buffer)
+           ("C-c z i" . zetteldeft-find-file-id-insert)
+           ("C-c z I" . zetteldeft-find-file-full-title-insert)
+           ("C-c z o" . zetteldeft-find-file)
+           ("C-c z n" . zetteldeft-new-file)
+           ("C-c z N" . zetteldeft-new-file-and-link)
+           ("C-c z r" . zetteldeft-file-rename))
   )
 #+end_src
 
