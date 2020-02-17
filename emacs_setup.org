@@ -131,8 +131,8 @@ Adding my choice of packages repositories.
 #+NAME melpa-setup
 #+BEGIN_SRC emacs-lisp
 (setq package-archives '(("org" . "https://orgmode.org/elpa/")
-                         ("melpa" . "https://stable.melpa.org/packages/")
-                         ; ("melpa" . "https://melpa.org/packages/")
+                         ; ("melpa" . "https://stable.melpa.org/packages/")
+                         ("melpa" . "https://melpa.org/packages/")
                          ("gnu" . "https://elpa.gnu.org/packages/")
                          ; ("marmalade" . "https://marmalade-repo.org/packages/")
                         ))
@@ -384,6 +384,11 @@ Let's one jump around text
   :bind (("C-c C-SPC" . 'ace-jump-mode)
          ("C-c C-DEL" . 'ace-jump-mode-pop-mark)))
 #+END_SRC
+** Hydra
+#+begin_src emacs-lisp
+  (use-package hydra
+    :ensure t)
+#+end_src
 * Editing Style
 ** No tabs, ever. No trailing spaces either.
 #+BEGIN_SRC emacs-lisp
@@ -1095,6 +1100,25 @@ Some config for display.
   (setq org-habit-following-days 10)
   (setq org-habit-show-habits-only-for-today nil))
 #+END_SRC
+*** org-kanban
+#+begin_src emacs-lisp
+  (use-package org-kanban
+    :ensure t)
+#+end_src
+*** org-board
+Archive entire sites locally with `wget`.
+#+begin_src emacs-lisp
+  (use-package org-board
+    :ensure t
+    :config
+    (global-set-key (kbd "C-c o") org-board-keymap))
+#+end_src
+This is the needed tool used to fetch a URL's content.
+#+begin_src bash :tangle install_deps.sh
+# wget used for org-board archiving.
+sudo apt-get install wget
+#+end_src
+
 *** bash command
 #+BEGIN_SRC emacs-lisp
 (setq org-babel-sh-command "bash")
@@ -1375,3 +1399,122 @@ Tell where PlantUML is to be found. This needs to be downloaded and installed
 separately, see the [[http://plantuml.com/][PlantUML website]].
 
 You could install the PlantUML JAR file with this snippet:
+#+BEGIN_SRC bash :tangle no :results output
+URL='http://sourceforge.net/projects/plantuml/files/plantuml.jar/download'
+DIR="${HOME}/Apps"
+[[ -d "${DIR}" ]] || mkdir -p "${DIR}"
+(cd "${DIR}" && curl -o plantuml.jar "${URL}")
+ls -l "${DIR}/plantuml.jar"
+#+END_SRC
+
+#+RESULTS:
+: -rw-r--r--  1 fleury  primarygroup  178 Jun 14 14:22 /Users/fleury/Apps/plantuml.jar
+
+#+BEGIN_SRC emacs-lisp
+(use-package plantuml-mode
+ :ensure t
+ :config
+  (setq plantuml-jar-path "~/Apps/plantuml.jar")
+  (setq org-plantuml-jar-path "~/Apps/plantuml.jar")
+  ;; Let us edit PlantUML snippets in plantuml-mode within orgmode
+  (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
+  ;; Enable plantuml-mode for PlantUML files
+  (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode)))
+#+END_SRC
+
+*** iimage (M-I)
+Make the display of images a simple key-stroke away.
+#+BEGIN_SRC emacs-lisp
+(use-package iimage
+  :config
+  (add-to-list 'iimage-mode-image-regex-alist
+               (cons (concat "\\[\\[file:\\(~?" iimage-mode-image-filename-regex
+                             "\\)\\]")  1))
+
+  (defun org-toggle-iimage-in-org ()
+    "display images in your org file"
+    (interactive)
+    (if (face-underline-p 'org-link)
+        (set-face-underline 'org-link nil)
+      (set-face-underline 'org-link t))
+    (iimage-mode 'toggle))
+
+  (add-hook 'org-mode-hook (lambda ()
+                             ;; display images
+                             (local-set-key "\M-I" 'org-toggle-iimage-in-org)
+                            )))
+#+END_SRC
+*** PDF-Tools
+A bit difficult to find the docs of how to use it, but it seems quite useful.
+
+Disabled, as it causes only trouble to me, and I am not really using it anyway.
+#+begin_src emacs-lisp :tangle no
+  (use-package pdf-tools
+    :if (and (eq system-type 'gnu/linux)  ;; Set it up on Linux
+             (not (string-prefix-p "aarch64" system-configuration)))  ;; but not mobile devices
+    :pin manual  ;; update only manually
+    :config
+    ;; initialize
+    (pdf-tools-install)
+    (setq-default pdf-view-display-size 'fit-page)           ;; Fit to page when opening
+    (add-hook 'pdf-view-mode-hook (lambda () (cua-mode 0)))  ;; turn off cua so copy works
+    (setq pdf-view-resize-factor 1.1)                        ;; more fine-grained zoom control
+    ;; keyboard shortcuts
+    (define-key pdf-view-mode-map (kbd "h") 'pdf-annot-add-highlight-markup-annotation)
+    (define-key pdf-view-mode-map (kbd "t") 'pdf-annot-add-text-annotation)
+    (define-key pdf-view-mode-map (kbd "D") 'pdf-annot-delete))
+
+  (use-package org-pdfview
+    :after (pdf-tools)
+    :init
+    (add-to-list 'org-file-apps '("\\.pdf\\'" . org-pdfview-open))
+    (add-to-list 'org-file-apps '("\\.pdf::\\([[:digit:]]+\\)\\'" . org-pdfview-open)))
+#+end_src
+
+#+begin_src bash :tangle install_deps.sh
+# for all the native apps related to PDF tools
+sudo apt-get install pdf-tools
+#+end_src
+*** [[https://www.eliasstorms.net/zetteldeft/][Zetteldeft]]
+This is a note-taking packages inspired by the principles of the [[https://zettelkasten.de/][Zettelkasten]]
+#+begin_src emacs-lisp
+  (use-package deft
+    :ensure t)
+  (use-package avy
+    :ensure t)
+
+  (use-package zetteldeft
+    :ensure nil
+    :after (org deft avy)
+
+    :config
+    (setq deft-extensions '("org" "md" "txt"))
+    (setq deft-directory (concat org-directory "/Zettelkasten"))
+    (setq deft-recursive t)
+
+    :bind (("C-c z d" . deft)
+           ("C-c z D" . zetteldeft-deft-new-search)
+           ("C-c z R" . deft-refresh)
+           ("C-c z s" . zetteldeft-search-at-point)
+           ("C-c z c" . zetteldeft-search-current-id)
+           ("C-c z f" . zetteldeft-follow-link)
+           ("C-c z F" . zetteldeft-avy-file-search-ace-window)
+           ("C-c z l" . zetteldeft-avy-link-search)
+           ("C-c z t" . zetteldeft-avy-tag-search)
+           ("C-c z T" . zetteldeft-tag-buffer)
+           ("C-c z i" . zetteldeft-find-file-id-insert)
+           ("C-c z I" . zetteldeft-find-file-full-title-insert)
+           ("C-c z o" . zetteldeft-find-file)
+           ("C-c z n" . zetteldeft-new-file)
+           ("C-c z N" . zetteldeft-new-file-and-link)
+           ("C-c z r" . zetteldeft-file-rename))
+  )
+#+end_src
+
+Update the version by downloading the latest version here:
+
+#+begin_src bash :tangle no
+wget https://raw.githubusercontent.com/EFLS/zetteldeft/master/zetteldeft.el -O ~/Emacs/zetteldeft.el
+#+end_src
+
+#+RESULTS:
