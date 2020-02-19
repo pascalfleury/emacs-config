@@ -1201,7 +1201,7 @@ Track task dependencies, and dim them in in the agenda.
 (setq org-todo-keywords
       '((sequence "TODO(t!)" "NEXT(n!)" "STARTED(s!)" "WAITING(w!)" "AI(a!)" "|" "DONE(d!)" "CANCELLED(C@)" "DEFERRED(D@)" "SOMEDAY(S!)" "FAILED(F!)" "REFILED(R!)")
         (sequence "APPLIED(A!)" "WAITING(w!)" "ACCEPTED" "|" "REJECTED" "PUBLISHED")
-        (sequence "TASK(m!)" "DAILY" "|" "DONE(d!)" "CANCELLED(C@)" )))
+        (sequence "TASK(m!)" "REGULAR" "|" "DONE(d!)" "CANCELLED(C@)" )))
 
 (setq org-tags-exclude-from-inheritance '("PRJ")
       org-use-property-inheritance '("PRIORITY")
@@ -1214,7 +1214,7 @@ Track task dependencies, and dim them in in the agenda.
         ("TODO" . (:foreground "purple" :weight bold))
         ("TASK" . (:foreground "steelblue" :weight bold))
         ("NEXT" . (:foreground "red" :weight bold))
-        ("STARTED" . (:foreground "darkgreen" :weight bold))
+        ("STARTED" . (:foreground "green" :weight bold))
         ("WAITING" . (:foreground "orange" :weight bold))
         ("FLAG_GATED" . (:foreground "orange" :weight bold))
         ("SOMEDAY" . (:foreground "steelblue" :weight bold))
@@ -1231,7 +1231,7 @@ Track task dependencies, and dim them in in the agenda.
         ("REJECTED" . (:foreground "red" :weight bold))
         ("PUBLISHED" . (:foreground "green" :weight bold))
          ; Other stuff
-        ("DAILY" . (:foreground "orange" :weight bold))
+        ("REGULAR" . (:foreground "darkgreen" :weight bold))
         ))
 #+END_SRC
 *** org-agenda
@@ -1240,7 +1240,7 @@ Track task dependencies, and dim them in in the agenda.
 (setq org-agenda-custom-commands
        '(("t" "Hot Today" ((agenda "" ((org-agenda-span 'day)))
                            (tags-todo "-dowith={.+}/WAITING")
-                           (tags-todo "-dowith={.+}+TODO=\"STARTED\"|-dowith={.+}+TODO=\"DAILY\"")
+                           (tags-todo "-dowith={.+}+TODO=\"STARTED\"|-dowith={.+}+TODO=\"REGULAR\"")
                            (tags-todo "/NEXT")))
          ("n" "Agenda and all TODO's" ((agenda "") (alltodo "")))
          ("N" "Next actions" tags-todo
