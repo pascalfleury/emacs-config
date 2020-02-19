@@ -1201,7 +1201,7 @@ Track task dependencies, and dim them in in the agenda.
 (setq org-todo-keywords
       '((sequence "TODO(t!)" "NEXT(n!)" "STARTED(s!)" "WAITING(w!)" "AI(a!)" "|" "DONE(d!)" "CANCELLED(C@)" "DEFERRED(D@)" "SOMEDAY(S!)" "FAILED(F!)" "REFILED(R!)")
         (sequence "APPLIED(A!)" "WAITING(w!)" "ACCEPTED" "|" "REJECTED" "PUBLISHED")
-        (sequence "TASK(m!)" "|" "DONE(d!)" "CANCELLED(C@)" )))
+        (sequence "TASK(m!)" "DAILY" "|" "DONE(d!)" "CANCELLED(C@)" )))
 
 (setq org-tags-exclude-from-inheritance '("PRJ")
       org-use-property-inheritance '("PRIORITY")
@@ -1230,6 +1230,8 @@ Track task dependencies, and dim them in in the agenda.
         ("ACCEPTED" . (:foreground "orange" :weight bold))
         ("REJECTED" . (:foreground "red" :weight bold))
         ("PUBLISHED" . (:foreground "green" :weight bold))
+         ; Other stuff
+        ("DAILY" . (:foreground "orange" :weight bold))
         ))
 #+END_SRC
 *** org-agenda
@@ -1237,9 +1239,9 @@ Track task dependencies, and dim them in in the agenda.
 #+BEGIN_SRC emacs-lisp
 (setq org-agenda-custom-commands
        '(("t" "Hot Today" ((agenda "" ((org-agenda-span 'day)))
-                           (tags-todo "/NEXT")
-                           (tags-todo "-dowith={.+}/STARTED")
-                           (tags-todo "-dowith={.+}/WAITING")))
+                           (tags-todo "-dowith={.+}/WAITING")
+                           (tags-todo "-dowith={.+}+TODO=\"STARTED\"|-dowith={.+}+TODO=\"DAILY\"")
+                           (tags-todo "/NEXT")))
          ("n" "Agenda and all TODO's" ((agenda "") (alltodo "")))
          ("N" "Next actions" tags-todo
           "-personal-doat={.+}-dowith={.+}/!-TASK-TODO"
