@@ -268,6 +268,17 @@ Map it to a key.
 #+BEGIN_SRC emacs-lisp
 (global-set-key [M-f8] 'toggle-maximize-buffer)
 #+END_SRC
+** diminish
+Make sure we do have the diminish mode.
+#+BEGIN_SRC emacs-lisp
+(use-package diminish
+ :ensure t)
+#+END_SRC
+** remove some modelines
+#+BEGIN_SRC emacs-lisp
+  (use-package eldoc
+    :diminish "")
+#+END_SRC
 * Colors and Look
 ** Fontlock
 This gets the font coloring switched on for all buffers.
@@ -436,6 +447,7 @@ Start using projectile. It has the documentation [[https://docs.projectile.mx/en
   (use-package helm-projectile
     :ensure t
     :requires projectile
+    :diminish projectile-mode
     :config
     (helm-projectile-on))
 #+end_src
@@ -670,6 +682,7 @@ I just took over the config described in this [[https://tuhdo.github.io/helm-int
 #+begin_src emacs-lisp
 (use-package helm
  :ensure t
+ :diminish helm-mode
  :config
   (require 'helm-config)
   ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
@@ -814,6 +827,7 @@ You may set this in the =~/.emacs= to another value, e.g.
 #+BEGIN_SRC emacs-lisp
   (use-package org
     :ensure nil
+    :diminish org-mode
     :config
     (if (not (boundp 'org-directory))
         (setq org-directory "~/OrgFiles")))
