@@ -268,16 +268,16 @@ Map it to a key.
 #+BEGIN_SRC emacs-lisp
 (global-set-key [M-f8] 'toggle-maximize-buffer)
 #+END_SRC
-** diminish
-Make sure we do have the diminish mode.
-#+BEGIN_SRC emacs-lisp
-(use-package diminish
- :ensure t)
-#+END_SRC
+** delight
+Package to remove some info from the mode-line for minor-modes.
+#+begin_src emacs-lisp
+  (use-package delight
+    :ensure t)
+#+end_src
 ** remove some modelines
 #+BEGIN_SRC emacs-lisp
   (use-package eldoc
-    :diminish "")
+    :delight)
 #+END_SRC
 * Colors and Look
 ** Fontlock
@@ -423,17 +423,6 @@ Seen demonstrated by [[https://www.youtube.com/watch?v=LFXA089Tx38][Uncle Dave]]
     :ensure t
     :bind ("M-y" . popup-kill-ring))
 #+end_src
-** Better writing
-This should highlight bad style in writing.
-#+begin_src emacs-lisp
-  (use-package artbollocks-mode
-    :ensure t
-    :config
-    ;; Modify the mapping so it does not clash with Hyperbole's window management.
-    (define-key artbollocks-mode-keymap (kbd "C-c \\") nil)
-    (define-key artbollocks-mode-keymap (kbd "C-c %") 'artbollocks-readability-index)
-    (add-hook 'text-mode-hook 'artbollocks-mode))
-#+end_src
 * Coding
 ** Projectile
 Start using projectile. It has the documentation [[https://docs.projectile.mx/en/latest/][here]].
@@ -447,7 +436,7 @@ Start using projectile. It has the documentation [[https://docs.projectile.mx/en
   (use-package helm-projectile
     :ensure t
     :requires projectile
-    :diminish projectile-mode
+    :delight projectile-mode
     :config
     (helm-projectile-on))
 #+end_src
@@ -682,7 +671,7 @@ I just took over the config described in this [[https://tuhdo.github.io/helm-int
 #+begin_src emacs-lisp
 (use-package helm
  :ensure t
- :diminish helm-mode
+ :delight helm-mode
  :config
   (require 'helm-config)
   ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
@@ -827,7 +816,7 @@ You may set this in the =~/.emacs= to another value, e.g.
 #+BEGIN_SRC emacs-lisp
   (use-package org
     :ensure nil
-    :diminish org-mode
+    :delight org-mode
     :config
     (if (not (boundp 'org-directory))
         (setq org-directory "~/OrgFiles")))
@@ -1066,7 +1055,16 @@ I have this currently in my `~/.emacs`:
      :client-id "XXX"
      :client-secret "XXX"))
 #+end_src
-
+*** org-clock-convenience
+#+begin_src emacs-lisp
+  (use-package org-clock-convenience
+    :ensure t
+    :bind (:map org-agenda-mode-map
+             ("<S-right>" . org-clock-convenience-timestamp-up)
+             ("<S-left>" . org-clock-convenience-timestamp-down)
+             ("[" . org-clock-convenience-fill-gap)
+             ("]" . org-clock-convenience-fill-gap-both)))
+#+end_src
 *** Properties collector
 Collect properties into tables.
 See documentation in the file.
@@ -1105,9 +1103,18 @@ Some config for display.
 ;;  :config
 ;;  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 #+END_SRC
+
+#+begin_src emacs-lisp
+  (use-package org-indent
+    :ensure nil
+    :delight
+    :custom
+    (org-indent-indentation-per-level 2))
+#+end_src
 *** org-habit
 #+BEGIN_SRC emacs-lisp
 (use-package org-habit
+  :delight
   :config
   (setq org-habit-graph-column 38)
   (setq org-habit-preceding-days 35)
@@ -1249,6 +1256,10 @@ Track task dependencies, and dim them in in the agenda.
         ))
 #+END_SRC
 *** org-agenda
+**** delight
+#+begin_src emacs-lisp
+(delight 'org-agenda-mode)
+#+end_src
 **** views
 #+BEGIN_SRC emacs-lisp
 (setq org-agenda-custom-commands
