@@ -30,7 +30,7 @@ The config setup is maintained purely in the =~/Emacs/emacs_setup.org= file.
 In your =~/.emacs= file, all you need to add is
 
 #+NAME: emacs_bootstrap
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp :tangle dot_emacs.el
 ;; Loads PAF's emacs setup with bootstrap
 (load-file "~/Emacs/emacs_setup.el")
 #+END_SRC
@@ -71,6 +71,14 @@ The original content of the =emacs_setup.el= is as follows:
 (byte-compile-file (concat config_base ".el")) ; finally byte-compile it
 #+END_SRC
 
+** Recompile all packages
+This will force-recompile everything in ~/.emacs.d/elpa/...
+Just run =M-:= and then enter this:
+#+begin_src emacs-lisp :tangle no
+(byte-recompile-directory package-user-dir nil 'force)
+#+end_src
+or simply =C-x C-e= at the end of that line.
+
 ** One-time configure
 To preserve the original state of this file when updating the git repos
 with new config settings, execute the following block once (=C-c C-c=):
@@ -86,13 +94,12 @@ GIT_ROOT=$(dirname $0)
 test -e ~/.emacs || touch ~/.emacs
 
 # Add the load-file as the first thing in the user's ~/.emacs
-declare lines=$(grep emacs_setup ~/.emacs | wc -l)
+# If not yet added.
+declare lines=$(grep ';; dot_emacs.el' ~/.emacs | wc -l)
 if (( lines < 1 )); then
   echo "Added loading the config in your ~/.emacs"
-  cat > ~/.emacs.new <<EOF
-<<emacs_bootstrap>>
-
-EOF
+  echo ";; dot_emacs.el" > ~/.emacs.new
+  cat ${GIT_ROOT}/dot_emacs.el >> ~/.emacs.new
   cat ~/.emacs >> ~/.emacs.new
   mv ~/.emacs.new ~/.emacs
 else
@@ -102,14 +109,6 @@ fi
 
 #+RESULTS:
 : Config in your ~/.emacs already set up!
-
-** Recompile all packages
-This will force-recompile everything in ~/.emacs.d/elpa/...
-Just run =M-:= and then enter this:
-#+begin_src emacs-lisp :tangle no
-(byte-recompile-directory package-user-dir nil 'force)
-#+end_src
-or simply =C-x C-e= at the end of that line.
 
 * Initialize Emacs
 This section sets up Emacs so it can tangle the config, find =use-package=,
@@ -344,6 +343,15 @@ mode.
 
 (add-hook 'post-command-hook 'hcz-set-cursor-color-according-to-mode)
 #+END_SRC
+** faces
+This makes some of the faces a bit more contrasted.
+#+begin_src emacs-lisp :tangle dot_emacs.el
+;; faces for general region highlighting zenburn is too low-key.
+(custom-set-faces
+ '(highlight ((t (:background "forest green"))))
+ '(region ((t (:background "forest green")))))
+#+end_src
+***
 * Key Mappings
 ** alternate key mappings
 Letting one enter chars that are otherwise difficult in e.g. the minibuffer.
@@ -1110,6 +1118,15 @@ Some config for display.
     :delight
     :custom
     (org-indent-indentation-per-level 2))
+#+end_src
+*** faces
+Some special faces that make Org more constrasted
+#+begin_src emacs-lisp :tangle dot_emacs.el
+;; Faces to make the calendar more colorful.
+(custom-set-faces
+ '(org-agenda-current-time ((t (:inherit org-time-grid :foreground "yellow" :weight bold))))
+ '(org-agenda-date ((t (:inherit org-agenda-structure :background "pale green" :foreground "black" :weight bold))))
+ '(org-agenda-date-weekend ((t (:inherit org-agenda-date :background "light blue" :weight bold)))))
 #+end_src
 *** org-habit
 #+BEGIN_SRC emacs-lisp

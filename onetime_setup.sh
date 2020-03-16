@@ -8,14 +8,12 @@ GIT_ROOT=$(dirname $0)
 test -e ~/.emacs || touch ~/.emacs
 
 # Add the load-file as the first thing in the user's ~/.emacs
-declare lines=$(grep emacs_setup ~/.emacs | wc -l)
+# If not yet added.
+declare lines=$(grep ';; dot_emacs.el' ~/.emacs | wc -l)
 if (( lines < 1 )); then
   echo "Added loading the config in your ~/.emacs"
-  cat > ~/.emacs.new <<EOF
-;; Loads PAF's emacs setup with bootstrap
-(load-file "~/Emacs/emacs_setup.el")
-
-EOF
+  echo ";; dot_emacs.el" > ~/.emacs.new
+  cat ${GIT_ROOT}/dot_emacs.el >> ~/.emacs.new
   cat ~/.emacs >> ~/.emacs.new
   mv ~/.emacs.new ~/.emacs
 else
