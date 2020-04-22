@@ -431,203 +431,7 @@ Seen demonstrated by [[https://www.youtube.com/watch?v=LFXA089Tx38][Uncle Dave]]
     :ensure t
     :bind ("M-y" . popup-kill-ring))
 #+end_src
-* Coding
-** Projectile
-Start using projectile. It has the documentation [[https://docs.projectile.mx/en/latest/][here]].
-#+begin_src emacs-lisp
-  (use-package projectile
-    :ensure t
-    :config
-    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-    (projectile-mode +1))
-
-  (use-package helm-projectile
-    :ensure t
-    :requires projectile
-    :delight projectile-mode
-    :config
-    (helm-projectile-on))
-#+end_src
-
-Also make sure we do have the faster [[https://github.com/ggreer/the_silver_searcher#the-silver-searcher][silver searcher]] version.  This may need you
-to install the corresponding tool for this, with the following snippet:
-#+begin_src bash :tangle install_deps.sh
-# helm-ag uses this for faster grepping
-sudo apt-get install silversearcher-ag
-#+end_src
-
-Search the entire project with =C-c p s s= for a regexp.
-This let's you turn the matching results into an editable buffer using
-=C-c C-e=. Other keys are listed [[https://github.com/syohex/emacs-helm-ag#keymap][here]].
-
-#+begin_src emacs-lisp
-  (use-package helm-ag
-    :ensure t)
-#+end_src
-** header/implementation toggle
-Switch from header to implementation file quickly.
-#+BEGIN_SRC emacs-lisp
-(add-hook 'c-mode-common-hook
-          (lambda ()
-            (local-set-key  (kbd "C-c o") 'ff-find-other-file)))
-#+END_SRC
-** ripgrep
-This enables searching recursively in projects.
-#+begin_src bash :tangle install_deps.sh
-# This can be used by helm-ag for faster grepping
-sudo apt-get install ripgrep
-#+end_src
-
-#+begin_src emacs-lisp
-  (use-package ripgrep
-    :ensure t)
-  (use-package projectile-ripgrep
-    :ensure t
-    :requires (ripgrep projectile))
-#+end_src
-
-** commenting out
-Easy commenting out of lines.
-#+BEGIN_SRC emacs-lisp
-(autoload 'comment-out-region "comment" nil t)
-(global-set-key (kbd "C-c q") 'comment-out-region)
-#+END_SRC
-
-** Deduplicate and sort
-Help cleanup the includes and using lists.
-[[http://www.emacswiki.org/emacs/DuplicateLines][found here]]
-#+BEGIN_SRC emacs-lisp
-(defun uniquify-region-lines (beg end)
-  "Remove duplicate adjacent lines in region."
-  (interactive "*r")
-  (save-excursion
-    (goto-char beg)
-    (while (re-search-forward "^\\(.*\n\\)\\1+" end t)
-      (replace-match "\\1"))))
-
-(defun paf/sort-and-uniquify-region ()
-  "Remove duplicates and sort lines in region."
-  (interactive)
-  (sort-lines nil (region-beginning) (region-end))
-  (uniquify-region-lines (region-beginning) (region-end)))
-#+END_SRC
-
-Simplify cleanup of =#include= / =typedef= / =using= blocks.
-#+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-p s") 'paf/sort-and-uniquify-region)
-#+END_SRC
-
-** diffing
-[[https://github.com/justbur/emacs-vdiff][vdiff]] let's one compare buffers or files.
-#+begin_src emacs-lisp
-  (use-package vdiff
-    :ensure t
-    :config
-    ; This binds commands under the prefix when vdiff is active.
-    (define-key vdiff-mode-map (kbd "C-c") vdiff-mode-prefix-map))
-#+end_src
-
-** yankpad / yasnippet
-#+BEGIN_SRC emacs-lisp
-  (use-package yasnippet
-    :ensure t)
-  (use-package auto-yasnippet
-    :ensure t
-    :config
-    (bind-key "C-p C-s c" 'aya-create)
-    (bind-key "C-p C-s e" 'aya-expand))
-
-  (use-package yankpad
-    :ensure t
-    :init
-    (setq yankpad-file "~/OrgFiles/yankpad.org")
-    :config
-    (bind-key "C-p y m" 'yankpad-map)
-    (bind-key "C-p y e" 'yankpad-expand))
-#+END_SRC
-
-** Selective display
-Will fold all text indented more than the position of the cursor at the time the
-keys are pressed.
-#+BEGIN_SRC emacs-lisp
-(defun set-selective-display-dlw (&optional level)
-  "Fold text indented more than the cursor.
-   If level is set, set the indent level to level.
-   0 displays the entire buffer."
-  (interactive "P")
-  (set-selective-display (or level (current-column))))
-
-(global-set-key "\C-x$" 'set-selective-display-dlw)
-#+END_SRC
-** Info in the gutter
-*** Line numbers
-This is bound to change in Emacs 26, as it has built-in support for this and is more efficient.
-#+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-c C-n") 'linum-mode)
-#+END_SRC
-*** git informations
-#+BEGIN_SRC emacs-lisp
-(use-package git-gutter-fringe+
-  :ensure t
-  :if window-system
-  :bind ("C-c g" . 'git-gutter+-mode))
-#+END_SRC
-** Speedup VCS
-Regexp matching directory names that are not under VC's control.
-The default regexp prevents fruitless and time-consuming attempts
-to determine the VC status in directories in which filenames are
-interpreted as hostnames.
-#+BEGIN_SRC emacs-lisp
-(defvar locate-dominating-stop-dir-regexp
-  "\\`\\(?:[\\/][\\/][^\\/]+\\|/\\(?:net\\|afs\\|\\.\\.\\.\\)/\\)\\'")
-#+END_SRC
-** GDB with many windows
-#+BEGIN_SRC emacs-lisp
-(setq gdb-many-windows t)
-#+END_SRC
-** Dealing with numbers
-Simple way to increase/decrease a number in code.
-#+begin_src emacs-lisp
-  (use-package shift-number
-    :ensure t
-    :bind (("M-+" . shift-number-up)
-           ("M-_" . shift-number-down)))
-#+end_src
 * Cool Packages
-** VCS
-*** magit
-Add the powerful Magit
-#+BEGIN_SRC emacs-lisp
-(use-package magit
-  :ensure t
-  :config
-  (global-set-key (kbd "C-x g") 'magit-status))
-(use-package magit-todos
-   :ensure t)
-#+END_SRC
-*** monky
-Add the Magit-copy for Mercurial 'monky'
-#+begin_src emacs-lisp
-  (use-package monky
-    :ensure t
-    :config
-    (global-set-key (kbd "C-x m") 'monky-status))
-#+end_src
-*** Global caller
-Have a single binding to call the most appropriate tool given the repository.
-#+begin_src emacs-lisp
-  (defun paf/vcs-status ()
-       (interactive)
-       (condition-case nil
-           (magit-status-setup-buffer)
-         (error (monky-status))))
-
-  (global-set-key (kbd "C-p v") 'paf/vcs-status)
-#+end_src
-
-#+RESULTS:
-: paf/vcs-status
-
 ** annotate-mode
 The file-annotations are store externally.
 Seems to fail with =args-out-of-range= and then Emacs is confused.
@@ -809,6 +613,202 @@ A tree-view navigation of files, with diff tool for directories.
 #+begin_src emacs-lisp :tangle no
   (use-package ztree
     :ensure t)
+#+end_src
+* Coding
+** VCS
+*** magit
+Add the powerful Magit
+#+BEGIN_SRC emacs-lisp
+(use-package magit
+  :ensure t
+  :config
+  (global-set-key (kbd "C-x g") 'magit-status))
+(use-package magit-todos
+   :ensure t)
+#+END_SRC
+*** monky
+Add the Magit-copy for Mercurial 'monky'
+#+begin_src emacs-lisp
+  (use-package monky
+    :ensure t
+    :config
+    (global-set-key (kbd "C-x m") 'monky-status))
+#+end_src
+*** Global caller
+Have a single binding to call the most appropriate tool given the repository.
+#+begin_src emacs-lisp
+  (defun paf/vcs-status ()
+       (interactive)
+       (condition-case nil
+           (magit-status-setup-buffer)
+         (error (monky-status))))
+
+  (global-set-key (kbd "C-p v") 'paf/vcs-status)
+#+end_src
+
+#+RESULTS:
+: paf/vcs-status
+
+** Projectile
+Start using projectile. It has the documentation [[https://docs.projectile.mx/en/latest/][here]].
+#+begin_src emacs-lisp
+  (use-package projectile
+    :ensure t
+    :config
+    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+    (projectile-mode +1))
+
+  (use-package helm-projectile
+    :ensure t
+    :requires projectile
+    :delight projectile-mode
+    :config
+    (helm-projectile-on))
+#+end_src
+
+Also make sure we do have the faster [[https://github.com/ggreer/the_silver_searcher#the-silver-searcher][silver searcher]] version.  This may need you
+to install the corresponding tool for this, with the following snippet:
+#+begin_src bash :tangle install_deps.sh
+# helm-ag uses this for faster grepping
+sudo apt-get install silversearcher-ag
+#+end_src
+
+Search the entire project with =C-c p s s= for a regexp.
+This let's you turn the matching results into an editable buffer using
+=C-c C-e=. Other keys are listed [[https://github.com/syohex/emacs-helm-ag#keymap][here]].
+
+#+begin_src emacs-lisp
+  (use-package helm-ag
+    :ensure t)
+#+end_src
+** header/implementation toggle
+Switch from header to implementation file quickly.
+#+BEGIN_SRC emacs-lisp
+(add-hook 'c-mode-common-hook
+          (lambda ()
+            (local-set-key  (kbd "C-c o") 'ff-find-other-file)))
+#+END_SRC
+** ripgrep
+This enables searching recursively in projects.
+#+begin_src bash :tangle install_deps.sh
+# This can be used by helm-ag for faster grepping
+sudo apt-get install ripgrep
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package ripgrep
+    :ensure t)
+  (use-package projectile-ripgrep
+    :ensure t
+    :requires (ripgrep projectile))
+#+end_src
+
+** commenting out
+Easy commenting out of lines.
+#+BEGIN_SRC emacs-lisp
+(autoload 'comment-out-region "comment" nil t)
+(global-set-key (kbd "C-c q") 'comment-out-region)
+#+END_SRC
+
+** Deduplicate and sort
+Help cleanup the includes and using lists.
+[[http://www.emacswiki.org/emacs/DuplicateLines][found here]]
+#+BEGIN_SRC emacs-lisp
+(defun uniquify-region-lines (beg end)
+  "Remove duplicate adjacent lines in region."
+  (interactive "*r")
+  (save-excursion
+    (goto-char beg)
+    (while (re-search-forward "^\\(.*\n\\)\\1+" end t)
+      (replace-match "\\1"))))
+
+(defun paf/sort-and-uniquify-region ()
+  "Remove duplicates and sort lines in region."
+  (interactive)
+  (sort-lines nil (region-beginning) (region-end))
+  (uniquify-region-lines (region-beginning) (region-end)))
+#+END_SRC
+
+Simplify cleanup of =#include= / =typedef= / =using= blocks.
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-p s") 'paf/sort-and-uniquify-region)
+#+END_SRC
+
+** diffing
+[[https://github.com/justbur/emacs-vdiff][vdiff]] let's one compare buffers or files.
+#+begin_src emacs-lisp
+  (use-package vdiff
+    :ensure t
+    :config
+    ; This binds commands under the prefix when vdiff is active.
+    (define-key vdiff-mode-map (kbd "C-c") vdiff-mode-prefix-map))
+#+end_src
+
+** yankpad / yasnippet
+#+BEGIN_SRC emacs-lisp
+  (use-package yasnippet
+    :ensure t)
+  (use-package auto-yasnippet
+    :ensure t
+    :config
+    (bind-key "C-p C-s c" 'aya-create)
+    (bind-key "C-p C-s e" 'aya-expand))
+
+  (use-package yankpad
+    :ensure t
+    :init
+    (setq yankpad-file "~/OrgFiles/yankpad.org")
+    :config
+    (bind-key "C-p y m" 'yankpad-map)
+    (bind-key "C-p y e" 'yankpad-expand))
+#+END_SRC
+
+** Selective display
+Will fold all text indented more than the position of the cursor at the time the
+keys are pressed.
+#+BEGIN_SRC emacs-lisp
+(defun set-selective-display-dlw (&optional level)
+  "Fold text indented more than the cursor.
+   If level is set, set the indent level to level.
+   0 displays the entire buffer."
+  (interactive "P")
+  (set-selective-display (or level (current-column))))
+
+(global-set-key "\C-x$" 'set-selective-display-dlw)
+#+END_SRC
+** Info in the gutter
+*** Line numbers
+This is bound to change in Emacs 26, as it has built-in support for this and is more efficient.
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-c C-n") 'linum-mode)
+#+END_SRC
+*** git informations
+#+BEGIN_SRC emacs-lisp
+(use-package git-gutter-fringe+
+  :ensure t
+  :if window-system
+  :bind ("C-c g" . 'git-gutter+-mode))
+#+END_SRC
+** Speedup VCS
+Regexp matching directory names that are not under VC's control.
+The default regexp prevents fruitless and time-consuming attempts
+to determine the VC status in directories in which filenames are
+interpreted as hostnames.
+#+BEGIN_SRC emacs-lisp
+(defvar locate-dominating-stop-dir-regexp
+  "\\`\\(?:[\\/][\\/][^\\/]+\\|/\\(?:net\\|afs\\|\\.\\.\\.\\)/\\)\\'")
+#+END_SRC
+** GDB with many windows
+#+BEGIN_SRC emacs-lisp
+(setq gdb-many-windows t)
+#+END_SRC
+** Dealing with numbers
+Simple way to increase/decrease a number in code.
+#+begin_src emacs-lisp
+  (use-package shift-number
+    :ensure t
+    :bind (("M-+" . shift-number-up)
+           ("M-_" . shift-number-down)))
 #+end_src
 * OrgMode
 Load all my org stuff, but first org-mode itself.
