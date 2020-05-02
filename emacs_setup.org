@@ -1398,17 +1398,22 @@ Capture and refile stuff, with some templates that I think are useful.
 *** org-reveal
 This presentation generator is still under review (by me).
 
-*NOTE* Currently problematic as it depends on org-20190225 which does not display
-       the calendar right.
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC bash :noweb yes :tangle onetime_setup.sh
+# Install reveal.js
+(cd ~/ && git clone https://github.com/hakimel/reveal.js.git)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
 ;;(add-to-list 'org-structure-template-alist
 ;;             (list "n" . "#+BEGIN_NOTES\n\?\n#+END_NOTES"))
 ;; disable the addition in the lib that does not do it right for Org 9.2
-(setq org-reveal-note-key-char nil)
+;;(setq org-reveal-note-key-char nil)
 
 ;; import as usual.
 (use-package ox-reveal
- :ensure t)
+ :ensure t
+ :config
+ (setq org-reveal-root "~/reveal.js"))
 #+END_SRC
 
 *** org-babel
