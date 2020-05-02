@@ -619,20 +619,21 @@ A tree-view navigation of files, with diff tool for directories.
 *** magit
 Add the powerful Magit
 #+BEGIN_SRC emacs-lisp
-(use-package magit
-  :ensure t
-  :config
-  (global-set-key (kbd "C-x g") 'magit-status))
-(use-package magit-todos
-   :ensure t)
+  (use-package magit
+    :ensure t
+    :defer
+    :bind ("C-x g" . 'magit-status))
+  (use-package magit-todos
+    :ensure t
+    :defer)
 #+END_SRC
 *** monky
 Add the Magit-copy for Mercurial 'monky'
 #+begin_src emacs-lisp
   (use-package monky
     :ensure t
-    :config
-    (global-set-key (kbd "C-x m") 'monky-status))
+    :defer
+    :bind ("C-x m" . 'monky-status))
 #+end_src
 *** Global caller
 Have a single binding to call the most appropriate tool given the repository.
@@ -660,6 +661,7 @@ Start using projectile. It has the documentation [[https://docs.projectile.mx/en
 
   (use-package helm-projectile
     :ensure t
+    :defer
     :requires projectile
     :delight projectile-mode
     :config
@@ -756,6 +758,7 @@ Simplify cleanup of =#include= / =typedef= / =using= blocks.
 
   (use-package yankpad
     :ensure t
+    :defer
     :init
     (setq yankpad-file "~/OrgFiles/yankpad.org")
     :config
@@ -786,6 +789,7 @@ This is bound to change in Emacs 26, as it has built-in support for this and is 
 #+BEGIN_SRC emacs-lisp
 (use-package git-gutter-fringe+
   :ensure t
+  :defer
   :if window-system
   :bind ("C-c g" . 'git-gutter+-mode))
 #+END_SRC
@@ -1440,8 +1444,10 @@ What kind of code block languages do I need
 Add a few formats to the export functionality of org-mode.
 
 #+BEGIN_SRC emacs-lisp
-(use-package ox-odt)
-(use-package ox-taskjuggler)
+  (use-package ox-odt
+    :defer)
+  (use-package ox-taskjuggler
+    :defer)
 #+END_SRC
 *** plant-uml
 Tell where PlantUML is to be found. This needs to be downloaded and installed
