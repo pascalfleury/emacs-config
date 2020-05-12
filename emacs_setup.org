@@ -547,6 +547,8 @@ Colorize color names and codes in the correct color.
 #+BEGIN_SRC emacs-lisp
 (use-package tj3-mode
  :ensure t)
+
+(require 'ox-taskjuggler)
 #+END_SRC
 
 ** writeroom-mode
