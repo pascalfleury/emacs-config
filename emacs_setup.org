@@ -661,7 +661,7 @@ Start using projectile. It has the documentation [[https://docs.projectile.mx/en
 
   (use-package helm-projectile
     :ensure t
-    :defer
+    ;; :defer
     :requires projectile
     :delight projectile-mode
     :config
