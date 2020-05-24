@@ -547,9 +547,12 @@ Colorize color names and codes in the correct color.
 ** taskjuggler-mode (tj3-mode)
 #+BEGIN_SRC emacs-lisp
 (use-package tj3-mode
- :ensure t)
+ :ensure t
+ :after org-plus-contrib
+:config
+(require 'ox-taskjuggler))
 
-(require 'ox-taskjuggler)
+
 #+END_SRC
 
 ** writeroom-mode
@@ -1081,7 +1084,7 @@ I have this currently in my `~/.emacs`:
              ("]" . org-clock-convenience-fill-gap-both)))
 #+end_src
 *** org-roam
-#+begin_src elisp
+#+begin_src emacs-lisp
   (use-package org-roam
     :ensure t)
 
