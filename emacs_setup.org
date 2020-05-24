@@ -147,9 +147,9 @@ First, make sure it gets installed if it is not there yet.
 #+begin_src emacs-lisp
   ;; make sure use-package is installed
   (unless (package-installed-p 'use-package)
-    (unless package-archive-contents
-      (package-refresh-contents))
+    (package-refresh-contents)
     (package-install 'use-package))
+  (require 'use-package)
 #+end_src
 
 #+BEGIN_SRC emacs-lisp
@@ -1167,8 +1167,8 @@ Some special faces that make Org more constrasted
 #+END_SRC
 *** org-kanban
 #+begin_src emacs-lisp
-  (use-package org-kanban
-    :ensure t)
+  ;;(use-package org-kanban
+  ;;  :ensure t)
 #+end_src
 *** org-board
 Archive entire sites locally with `wget`.
