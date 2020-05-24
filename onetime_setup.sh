@@ -20,5 +20,8 @@ else
   echo "Config in your ~/.emacs already set up!"
 fi
 
+# Make sure there is a C compiler for emacsql-sqlite
+[[ -n "$(which cc)" ]] || pkg install clang
+
 # Install reveal.js
 (cd ~/ && git clone https://github.com/hakimel/reveal.js.git)
