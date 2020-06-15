@@ -1441,7 +1441,7 @@ This presentation generator is still under review (by me).
     :ensure t
     :after (htmlize)
     :config
-    (setq org-reveal-root "~/reveal.js"))
+    (setq org-reveal-root (expand-file-name "~/reveal.js")))
 
   (use-package htmlize
     :ensure t)
@@ -1475,6 +1475,7 @@ Add a few formats to the export functionality of org-mode.
     :defer)
   (use-package ox-taskjuggler
     :defer)
+  (require 'ox-impress-js)
 #+END_SRC
 *** plant-uml
 Tell where PlantUML is to be found. This needs to be downloaded and installed
