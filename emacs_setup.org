@@ -86,11 +86,39 @@ with new config settings, execute the following block once (=C-c C-c=):
 
 #+BEGIN_SRC bash :noweb yes :tangle onetime_setup.sh
   #!/bin/bash
+  # Make git ignore the tangled & updated emacs_setup.el
+  if [[ -z "$(which git)" ]]; then
+    echo "You will need 'git' to be installed !"
+    exit 1
+  fi
+  GIT_ROOT=$(dirname $0)
+  (cd ${GIT_ROOT} && git update-index --skip-worktree emacs_setup.el)
+
+  # Maybe this is a new install, .emacs does not exist
+  test -e ~/.emacs || touch ~/.emacs
+
+  # Add the load-file as the first thing in the user's ~/.emacs
+  # If not yet added.
+  declare lines=$(grep ';; dot_emacs.el' ~/.emacs | wc -l)
+  if (( lines < 1 )); then
+    echo "Added loading the config in your ~/.emacs"
+    echo ";; dot_emacs.el" > ~/.emacs.new
+    cat ${GIT_ROOT}/dot_emacs.el >> ~/.emacs.new
+    cat ~/.emacs >> ~/.emacs.new
+    mv ~/.emacs.new ~/.emacs
+  else
+    echo "Config in your ~/.emacs already set up!"
+  fi
+#+END_SRC
+
+This script is then used to install the needed packages on the system.
+#+BEGIN_SRC bash :noweb yes :tangle install_deps.sh
+  #!/bin/bash
 
   # This is a bit of heuristics to find out what the install system is
-  PKG_MGRS=(   "apt-get" "pkg"     )
-  PKG_PREFIX=( "sudo"    ""        )
-  PKG_CMD=(    "install" "install" )
+  PKG_MGRS=(   "apt-get" "pkg"     "apt"     )
+  PKG_PREFIX=( "sudo"    ""        "sudo"    )
+  PKG_CMD=(    "install" "install" "install" )
   for pkg in "${PKG_MGRS[@]}"; do
       if [[ -x "$(which ${pkg})" ]]; then
           INSTALLER="${pkg}"
@@ -128,8 +156,6 @@ with new config settings, execute the following block once (=C-c C-c=):
   fi
 #+END_SRC
 
-#+RESULTS:
-: Config in your ~/.emacs already set up!
 
 * Initialize Emacs
 This section sets up Emacs so it can tangle the config, find =use-package=,
@@ -698,7 +724,7 @@ Also make sure we do have the faster [[https://github.com/ggreer/the_silver_sear
 to install the corresponding tool for this, with the following snippet:
 #+begin_src bash :tangle install_deps.sh
 # helm-ag uses this for faster grepping
-sudo apt-get install silversearcher-ag
+install_pkg silversearcher-ag
 #+end_src
 
 Search the entire project with =C-c p s s= for a regexp.
@@ -720,7 +746,7 @@ Switch from header to implementation file quickly.
 This enables searching recursively in projects.
 #+begin_src bash :tangle install_deps.sh
 # This can be used by helm-ag for faster grepping
-sudo apt-get install ripgrep
+install_pkg ripgrep
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1127,7 +1153,7 @@ I have this currently in my `~/.emacs`:
 
 EmacSQL will need to get its C-binary compiled, and needs supporting tools. Note that 'tcc'
 for Termux seems not complete enough for the job.
-#+begin_src bash :tangle onetime_setup.sh
+#+begin_src bash :tangle install_deps.sh
 # org-roam needs this binary
 install_pkg sqlite3
 # Make sure there is a C compiler for emacsql-sqlite
@@ -1215,7 +1241,7 @@ Archive entire sites locally with `wget`.
 This is the needed tool used to fetch a URL's content.
 #+begin_src bash :tangle install_deps.sh
 # wget used for org-board archiving.
-sudo apt-get install wget
+install_pkg wget
 #+end_src
 
 *** bash command
@@ -1594,7 +1620,7 @@ Disabled, as it causes only trouble to me, and I am not really using it anyway.
 
 #+begin_src bash :tangle install_deps.sh
 # for all the native apps related to PDF tools
-sudo apt-get install pdf-tools
+install_pkg pdf-tools
 #+end_src
 *** [[https://www.eliasstorms.net/zetteldeft/][Zetteldeft]]
 This is a note-taking packages inspired by the principles of the [[https://zettelkasten.de/][Zettelkasten]]
