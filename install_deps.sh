@@ -1,9 +1,10 @@
 #!/bin/bash
 
 # This is a bit of heuristics to find out what the install system is
-PKG_MGRS=(   "apt-get" "pkg"     "apt"     )
-PKG_PREFIX=( "sudo"    ""        "sudo"    )
-PKG_CMD=(    "install" "install" "install" )
+declare -a PKG_MGRS=("apt-get" "pkg" "brew")
+
+PKG_PREFIX_apt_get="sudo"
+
 for pkg in "${PKG_MGRS[@]}"; do
     if [[ -x "$(which ${pkg})" ]]; then
         INSTALLER="${pkg}"
@@ -15,44 +16,57 @@ if [[ -z "${INSTALLER}" ]]; then
     exit 1
 fi
 
+# This is the function to call to install anything. It can optionally
+# check for a binary and avoid installing if it's found.  install_pkg
+# [-x <binary>] <package>
 function install_pkg() {
-  echo "Trying to install package $*"
-  ${PKG_PREFIX[$INSTALLER]} $(which ${INSTALLER}) ${PKG_CMD[$INSTALLER]} "$@"
+    if [[ "$1" == "-x" ]]; then
+        local binary="$(which $2)"
+        shift 2
+        if [[ -n "${binary}" && -x "${binary}" ]]; then
+            echo "Found $2 (${binary}), nothing to install."
+            return
+        fi
+    fi
+
+    local token=$(echo -n ${INSTALLER} | tr -c '0-9a-zA-Z_' '_')
+    local prefix_var="PKG_PREFIX_${token}"
+
+    echo "Trying: ${INSTALLER} install $*"
+    ${!prefix_var} $(which ${INSTALLER}) install "$@"
 }
 
-# Make git ignore the tangled & updated emacs_setup.el
-GIT_ROOT=$(dirname $0)
-(cd ${GIT_ROOT} && git update-index --skip-worktree emacs_setup.el)
-
-# Maybe this is a new install, .emacs does not exist
-test -e ~/.emacs || touch ~/.emacs
-
-# Add the load-file as the first thing in the user's ~/.emacs
-# If not yet added.
-declare lines=$(grep ';; dot_emacs.el' ~/.emacs | wc -l)
-if (( lines < 1 )); then
-  echo "Added loading the config in your ~/.emacs"
-  echo ";; dot_emacs.el" > ~/.emacs.new
-  cat ${GIT_ROOT}/dot_emacs.el >> ~/.emacs.new
-  cat ~/.emacs >> ~/.emacs.new
-  mv ~/.emacs.new ~/.emacs
+# helm-ag uses this for faster grepping
+if [[ "$(uname)" == "Darwin" ]]; then
+  install_pkg -x ag the_silver_searcher
 else
-  echo "Config in your ~/.emacs already set up!"
+  install_pkg -x ag silversearcher-ag
 fi
 
-# helm-ag uses this for faster grepping
-install_pkg silversearcher-ag
-
 # This can be used by helm-ag for faster grepping
-install_pkg ripgrep
+install_pkg -x rg ripgrep
 
 # org-roam needs this binary
-install_pkg sqlite3
+install_pkg -x sqlite3 sqlite3
 # Make sure there is a C compiler for emacsql-sqlite
-[[ -n "$(which cc)" ]] || install_pkg clang
+[[ -n "$(which cc)" ]] || install_pkg -x cc clang
 
 # wget used for org-board archiving.
-install_pkg wget
+install_pkg -x wget wget
 
-# for all the native apps related to PDF tools
-install_pkg pdf-tools
+# Get a version of the PlantUML jar file.
+install_pkg -x wget wget
+
+URL='http://sourceforge.net/projects/plantuml/files/plantuml.jar/download'
+DIR="${HOME}/Apps"
+if [[ ! -e "${DIR}/plantuml.jar" ]]; then
+    [[ -d "${DIR}" ]] || mkdir -p "${DIR}"
+    (cd "${DIR}" && wget -O plantuml.jar "${URL}")
+    ls -l "${DIR}/plantuml.jar"
+fi
+
+# For all the native apps related to PDF tools
+# I did not sintall it on Max OSX yet.
+if [[ "$(uname)" != "Darwin" ]]; then
+  install_pkg pdf-tools
+fi
