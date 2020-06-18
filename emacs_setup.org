@@ -902,40 +902,6 @@ Let other tools use emacs client to interact
   "Compute an expanded absolute file path for org files"
   (expand-file-name filename org-directory))
 #+END_SRC
-*** Preserve structure in archives
-Make sure archiving preserves the same tree structure, including when
-archiving subtrees.
-[[https://orgmode.org/worg/org-hacks.html#org4265b4c][source on worg]]
-
-#+BEGIN_SRC emacs-lisp
-(defun my-org-inherited-no-file-tags ()
-  (let ((tags (org-entry-get nil "ALLTAGS" 'selective))
-        (ltags (org-entry-get nil "TAGS")))
-    (mapc (lambda (tag)
-            (setq tags
-                  (replace-regexp-in-string (concat tag ":") "" tags)))
-          (append org-file-tags (when ltags (split-string ltags ":" t))))
-    (if (string= ":" tags) nil tags)))
-#+END_SRC
-
-This used to work, but =org-extract-archive-file= is no longer defined.
-#+BEGIN_SRC emacs-lisp :tangle no
-(defadvice org-archive-subtree
-    (around my-org-archive-subtree-low-level activate)
-  (let ((tags (my-org-inherited-no-file-tags))
-        (org-archive-location
-         (if (save-excursion (org-back-to-heading)
-                             (> (org-outline-level) 1))
-             (concat (car (split-string org-archive-location "::"))
-                     "::* "
-                     (car (org-get-outline-path)))
-           org-archive-location)))
-    ad-do-it
-    (with-current-buffer (find-file-noselect (org-extract-archive-file))
-      (save-excursion
-        (while (org-up-heading-safe))
-        (org-set-tags tags)))))
-#+END_SRC
 *** Adjust tags on the right
 Dynamically adjust tag position
 [[https://orgmode.org/worg/org-hacks.html#org0560357][source on worg]]
@@ -1009,6 +975,40 @@ Dynamically adjust tag position
 [[https://orgmode.org/worg/doc.html#org-set-tags-to][=org-set-tags-to=]] is gone, and =org-set-tags= with > 1 args is not working.
 Not sure what to replace it with though...
 
+*** Preserve structure in archives
+Make sure archiving preserves the same tree structure, including when
+archiving subtrees.
+[[https://orgmode.org/worg/org-hacks.html#org4265b4c][source on worg]]
+
+#+BEGIN_SRC emacs-lisp
+(defun my-org-inherited-no-file-tags ()
+  (let ((tags (org-entry-get nil "ALLTAGS" 'selective))
+        (ltags (org-entry-get nil "TAGS")))
+    (mapc (lambda (tag)
+            (setq tags
+                  (replace-regexp-in-string (concat tag ":") "" tags)))
+          (append org-file-tags (when ltags (split-string ltags ":" t))))
+    (if (string= ":" tags) nil tags)))
+#+END_SRC
+
+This used to work, but =org-extract-archive-file= is no longer defined.
+#+BEGIN_SRC emacs-lisp :tangle no
+(defadvice org-archive-subtree
+    (around my-org-archive-subtree-low-level activate)
+  (let ((tags (my-org-inherited-no-file-tags))
+        (org-archive-location
+         (if (save-excursion (org-back-to-heading)
+                             (> (org-outline-level) 1))
+             (concat (car (split-string org-archive-location "::"))
+                     "::* "
+                     (car (org-get-outline-path)))
+           org-archive-location)))
+    ad-do-it
+    (with-current-buffer (find-file-noselect (org-extract-archive-file))
+      (save-excursion
+        (while (org-up-heading-safe))
+        (org-set-tags tags)))))
+#+END_SRC
 *** Auto-Refresh Agenda
 Refresh org-mode agenda regularly.
 [[https://orgmode.org/worg/org-hacks.html#orgab827a7][source on worg]]
@@ -1107,23 +1107,21 @@ I have this currently in my `~/.emacs`:
 #+begin_src emacs-lisp
   (use-package org-roam
     :ensure t
-    :config (setq org-roam-directory
-                  (concat (file-name-as-directory org-directory) "org-roam"))
+    :hook (after-init . org-roam-mode)
+    :init (setq org-roam-directory
+                (org-relative-file "OrgRoam"))
     :bind (:map org-roam-mode-map
                 (("C-c n l" . org-roam)
                  ("C-c n b" . org-roam-switch-to-buffer)
                  ("C-c n f" . org-roam-find-file)
                  ("C-c n c" . org-roam-capture)
-                 ("C-c n g" . org-roam-show-graph))
+                 ("C-c n g" . org-roam-graph))
                 :map org-mode-map
                 (("C-c n i" . org-roam-insert))))
 
   (use-package company-org-roam
     :ensure t
     :after org-roam)
-
-  (use-package emacsql-sqlite
-    :ensure t)
 
 #+end_src
 
