@@ -22,11 +22,11 @@ fi
 function install_pkg() {
     if [[ "$1" == "-x" ]]; then
         local binary="$(which $2)"
-        shift 2
         if [[ -n "${binary}" && -x "${binary}" ]]; then
             echo "Found $2 (${binary}), nothing to install."
             return
         fi
+        shift 2
     fi
 
     local token=$(echo -n ${INSTALLER} | tr -c '0-9a-zA-Z_' '_')
