@@ -23,7 +23,7 @@ function install_pkg() {
     if [[ "$1" == "-x" ]]; then
         local binary="$(which $2)"
         if [[ -n "${binary}" && -x "${binary}" ]]; then
-            echo "Found $2 (${binary}), nothing to install."
+            echo "Found $2 (${binary}), nothing to install for $3."
             return
         fi
         shift 2
