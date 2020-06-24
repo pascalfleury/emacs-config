@@ -16,7 +16,6 @@ which case I move their config into this file so that it gets replicated on all
 machines I work on with Emacs.
 
 ** Currently under review
-  - [[https://github.com/myuhe/org-gcal.el][org-gcal]]
   - [[https://github.com/Kungsgeten/yankpad][yankpad]] + [[https://github.com/joaotavora/yasnippet][yasnippet]]
   - [[https://github.com/yjwen/org-reveal][ox-reveal]] (see [[https://github.com/yjwen/org-reveal#set-the-location-of-revealjs][installation]])
   - org-roam
@@ -218,8 +217,7 @@ Remove =C-p= that I want to use for *me* personally as a prefix.
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-p") nil) ;; was 'previous-line'
 #+END_SRC
-
-* Environment
+* Helper Functions
 ** add-hook-run-once
 Use instead of add-hook to run it a single time.
 [[https://emacs.stackexchange.com/questions/3323/is-there-any-way-to-run-a-hook-function-only-once][found here]]
@@ -233,6 +231,7 @@ Use instead of add-hook to run it a single time.
          (funcall ,function))
        (add-hook ,hook ',sym ,append ,local))))
 #+END_SRC
+* Environment
 ** Browser default
 #+BEGIN_SRC emacs-lisp
 (setq browse-url-generic-program (executable-find "google-chrome")
@@ -269,7 +268,7 @@ I really like the high-contract Zenburn theme.
 (use-package zenburn-theme
  :ensure t)
 #+END_SRC
-* Buffer behavior
+** auto revert
 Use =auto-revert=, which reloads a file if it's updated on disk
 and not modified in the buffer.
 #+BEGIN_SRC emacs-lisp
@@ -309,17 +308,6 @@ Temporarily maximize a buffer.
 Map it to a key.
 #+BEGIN_SRC emacs-lisp
 (global-set-key [M-f8] 'toggle-maximize-buffer)
-#+END_SRC
-** delight
-Package to remove some info from the mode-line for minor-modes.
-#+begin_src emacs-lisp
-  (use-package delight
-    :ensure t)
-#+end_src
-** remove some modelines
-#+BEGIN_SRC emacs-lisp
-  (use-package eldoc
-    :delight)
 #+END_SRC
 * Colors and Look
 ** Fontlock
@@ -395,6 +383,17 @@ This makes some of the faces a bit more contrasted.
  '(region ((t (:background "forest green")))))
 #+end_src
 ***
+** delight
+Package to remove some info from the mode-line for minor-modes.
+#+begin_src emacs-lisp
+  (use-package delight
+    :ensure t)
+#+end_src
+** remove some modelines
+#+BEGIN_SRC emacs-lisp
+  (use-package eldoc
+    :delight)
+#+END_SRC
 * Key Mappings
 ** alternate key mappings
 Letting one enter chars that are otherwise difficult in e.g. the minibuffer.
@@ -1230,6 +1229,7 @@ Archive entire sites locally with `wget`.
     :config
     (global-set-key (kbd "C-c o") org-board-keymap))
 #+end_src
+
 This is the needed tool used to fetch a URL's content.
 #+begin_src bash :tangle install_deps.sh
 # wget used for org-board archiving.
@@ -1246,12 +1246,6 @@ clock stuff into a drawer.
 (setq org-clock-into-drawer t)
 (setq org-log-into-drawer t)
 (setq org-clock-int-drawer "CLOCK")
-#+END_SRC
-*** org-mobile
-config for org-mobile-*
-#+BEGIN_SRC emacs-lisp
-(setq org-mobile-directory (org-relative-file "Mobile"))
-(setq org-mobile-inbox-for-pull (org-relative-file "mobileorg.org"))
 #+END_SRC
 *** open first agenda file
 F12 open the first agenda file
@@ -1490,12 +1484,6 @@ fi
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-  ;;(add-to-list 'org-structure-template-alist
-  ;;             (list "n" . "#+BEGIN_NOTES\n\?\n#+END_NOTES"))
-  ;; disable the addition in the lib that does not do it right for Org 9.2
-  ;;(setq org-reveal-note-key-char nil)
-
-  ;; import as usual.
   (use-package ox-reveal
     :ensure t
     :after (htmlize)
@@ -1538,13 +1526,7 @@ Add a few formats to the export functionality of org-mode.
 *** iimage (M-I)
 Make the display of images a simple key-stroke away.
 #+BEGIN_SRC emacs-lisp
-(use-package iimage
-  :config
-  (add-to-list 'iimage-mode-image-regex-alist
-               (cons (concat "\\[\\[file:\\(~?" iimage-mode-image-filename-regex
-                             "\\)\\]")  1))
-
-  (defun org-toggle-iimage-in-org ()
+  (defun paf/org-toggle-iimage-in-org ()
     "display images in your org file"
     (interactive)
     (if (face-underline-p 'org-link)
@@ -1552,10 +1534,15 @@ Make the display of images a simple key-stroke away.
       (set-face-underline 'org-link t))
     (iimage-mode 'toggle))
 
-  (add-hook 'org-mode-hook (lambda ()
-                             ;; display images
-                             (local-set-key "\M-I" 'org-toggle-iimage-in-org)
-                            )))
+  (use-package iimage
+    :config
+    (add-to-list 'iimage-mode-image-regex-alist
+                 (cons (concat "\\[\\[file:\\(~?" iimage-mode-image-filename-regex
+                               "\\)\\]")  1))
+    (add-hook 'org-mode-hook (lambda ()
+                               ;; display images
+                               (local-set-key "\M-I" 'paf/org-toggle-iimage-in-org)
+                              )))
 #+END_SRC
 *** plant-uml
 Tell where PlantUML is to be found. This needs to be downloaded and installed
