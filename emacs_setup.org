@@ -1633,7 +1633,7 @@ Check out the [[https://kungsgeten.github.io/yankpad.html][blog post]] (and the 
     :ensure t
     :defer
     :init
-    (setq yankpad-file (org-relative-file "yankpad.org") t)
+    (setq yankpad-file (org-relative-file "yankpad.org"))
     :config
     (bind-key "C-p y m" 'yankpad-map)
     (bind-key "C-p y e" 'yankpad-expand))
