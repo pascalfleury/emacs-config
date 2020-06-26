@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Trick to makeit work on Termux
-which "ls" || pkg install debian-utils
+# Trick to make it work on Termux
+which "ls" || pkg install debianutils
 
 # This is a bit of heuristics to find out what the install system is
 # They are attempted in this order, put the least likely first.
