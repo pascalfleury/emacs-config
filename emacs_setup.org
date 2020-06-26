@@ -16,7 +16,6 @@ which case I move their config into this file so that it gets replicated on all
 machines I work on with Emacs.
 
 ** Currently under review
-  - [[https://github.com/myuhe/org-gcal.el][org-gcal]]
   - [[https://github.com/Kungsgeten/yankpad][yankpad]] + [[https://github.com/joaotavora/yasnippet][yasnippet]]
   - [[https://github.com/yjwen/org-reveal][ox-reveal]] (see [[https://github.com/yjwen/org-reveal#set-the-location-of-revealjs][installation]])
   - org-roam
@@ -222,8 +221,7 @@ Remove =C-p= that I want to use for *me* personally as a prefix.
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-p") nil) ;; was 'previous-line'
 #+END_SRC
-
-* Environment
+* Helper Functions
 ** add-hook-run-once
 Use instead of add-hook to run it a single time.
 [[https://emacs.stackexchange.com/questions/3323/is-there-any-way-to-run-a-hook-function-only-once][found here]]
@@ -237,6 +235,7 @@ Use instead of add-hook to run it a single time.
          (funcall ,function))
        (add-hook ,hook ',sym ,append ,local))))
 #+END_SRC
+* Environment
 ** Browser default
 #+BEGIN_SRC emacs-lisp
 (setq browse-url-generic-program (executable-find "google-chrome")
@@ -273,7 +272,7 @@ I really like the high-contract Zenburn theme.
 (use-package zenburn-theme
  :ensure t)
 #+END_SRC
-* Buffer behavior
+** auto revert
 Use =auto-revert=, which reloads a file if it's updated on disk
 and not modified in the buffer.
 #+BEGIN_SRC emacs-lisp
@@ -313,17 +312,6 @@ Temporarily maximize a buffer.
 Map it to a key.
 #+BEGIN_SRC emacs-lisp
 (global-set-key [M-f8] 'toggle-maximize-buffer)
-#+END_SRC
-** delight
-Package to remove some info from the mode-line for minor-modes.
-#+begin_src emacs-lisp
-  (use-package delight
-    :ensure t)
-#+end_src
-** remove some modelines
-#+BEGIN_SRC emacs-lisp
-  (use-package eldoc
-    :delight)
 #+END_SRC
 * Colors and Look
 ** Fontlock
@@ -399,6 +387,17 @@ This makes some of the faces a bit more contrasted.
  '(region ((t (:background "forest green")))))
 #+end_src
 ***
+** delight
+Package to remove some info from the mode-line for minor-modes.
+#+begin_src emacs-lisp
+  (use-package delight
+    :ensure t)
+#+end_src
+** remove some modelines
+#+BEGIN_SRC emacs-lisp
+  (use-package eldoc
+    :delight)
+#+END_SRC
 * Key Mappings
 ** alternate key mappings
 Letting one enter chars that are otherwise difficult in e.g. the minibuffer.
@@ -802,8 +801,9 @@ Simplify cleanup of =#include= / =typedef= / =using= blocks.
     (define-key vdiff-mode-map (kbd "C-c") vdiff-mode-prefix-map))
 #+end_src
 
-** yankpad / yasnippet
-#+BEGIN_SRC emacs-lisp
+** yasnippet
+Let's first see how far I get with file-based capture templates and yankpad.
+#+BEGIN_SRC emacs-lisp :tangle no
   (use-package yasnippet
     :ensure t)
   (use-package auto-yasnippet
@@ -811,15 +811,6 @@ Simplify cleanup of =#include= / =typedef= / =using= blocks.
     :config
     (bind-key "C-p C-s c" 'aya-create)
     (bind-key "C-p C-s e" 'aya-expand))
-
-  (use-package yankpad
-    :ensure t
-    :defer
-    :init
-    (setq yankpad-file "~/OrgFiles/yankpad.org")
-    :config
-    (bind-key "C-p y m" 'yankpad-map)
-    (bind-key "C-p y e" 'yankpad-expand))
 #+END_SRC
 
 ** Selective display
@@ -1242,6 +1233,7 @@ Archive entire sites locally with `wget`.
     :config
     (global-set-key (kbd "C-c o") org-board-keymap))
 #+end_src
+
 This is the needed tool used to fetch a URL's content.
 #+begin_src bash :tangle install_deps.sh
 # wget used for org-board archiving.
@@ -1258,12 +1250,6 @@ clock stuff into a drawer.
 (setq org-clock-into-drawer t)
 (setq org-log-into-drawer t)
 (setq org-clock-int-drawer "CLOCK")
-#+END_SRC
-*** org-mobile
-config for org-mobile-*
-#+BEGIN_SRC emacs-lisp
-(setq org-mobile-directory (org-relative-file "Mobile"))
-(setq org-mobile-inbox-for-pull (org-relative-file "mobileorg.org"))
 #+END_SRC
 *** open first agenda file
 F12 open the first agenda file
@@ -1428,7 +1414,7 @@ so it is disabled by not tangling it.
 This will save them regularly when the idle for more than a minute.
 #+BEGIN_SRC emacs-lisp
 (add-hook 'org-mode-hook
-    (lambda () (run-with-idle-timer 180 t 'org-save-all-org-buffers)))
+    (lambda () (run-with-idle-timer 600 t 'org-save-all-org-buffers)))
 #+END_SRC
 **** export
 That's the export function to update the agenda view.
@@ -1463,6 +1449,9 @@ That's the export function to update the agenda view.
 #+END_SRC
 *** Capture & refile
 Capture and refile stuff, with some templates that I think are useful.
+
+Very nice post on how to get capture templats from a file: [[https://joshrollinswrites.com/help-desk-head-desk/org-capture-in-files/][Org-capture in Files]].
+
 #+BEGIN_SRC emacs-lisp
 (setq org-default-notes-file (org-relative-file "refile.org"))
 
@@ -1499,12 +1488,6 @@ fi
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-  ;;(add-to-list 'org-structure-template-alist
-  ;;             (list "n" . "#+BEGIN_NOTES\n\?\n#+END_NOTES"))
-  ;; disable the addition in the lib that does not do it right for Org 9.2
-  ;;(setq org-reveal-note-key-char nil)
-
-  ;; import as usual.
   (use-package ox-reveal
     :ensure t
     :after (htmlize)
@@ -1544,6 +1527,27 @@ Add a few formats to the export functionality of org-mode.
     :defer)
   (require 'ox-impress-js)
 #+END_SRC
+*** iimage (M-I)
+Make the display of images a simple key-stroke away.
+#+BEGIN_SRC emacs-lisp
+  (defun paf/org-toggle-iimage-in-org ()
+    "display images in your org file"
+    (interactive)
+    (if (face-underline-p 'org-link)
+        (set-face-underline 'org-link nil)
+      (set-face-underline 'org-link t))
+    (iimage-mode 'toggle))
+
+  (use-package iimage
+    :config
+    (add-to-list 'iimage-mode-image-regex-alist
+                 (cons (concat "\\[\\[file:\\(~?" iimage-mode-image-filename-regex
+                               "\\)\\]")  1))
+    (add-hook 'org-mode-hook (lambda ()
+                               ;; display images
+                               (local-set-key "\M-I" 'paf/org-toggle-iimage-in-org)
+                              )))
+#+END_SRC
 *** plant-uml
 Tell where PlantUML is to be found. This needs to be downloaded and installed
 separately, see the [[http://plantuml.com/][PlantUML website]].
@@ -1579,28 +1583,6 @@ You could install the PlantUML JAR file with this snippet:
   (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode)))
 #+END_SRC
 
-*** iimage (M-I)
-Make the display of images a simple key-stroke away.
-#+BEGIN_SRC emacs-lisp
-(use-package iimage
-  :config
-  (add-to-list 'iimage-mode-image-regex-alist
-               (cons (concat "\\[\\[file:\\(~?" iimage-mode-image-filename-regex
-                             "\\)\\]")  1))
-
-  (defun org-toggle-iimage-in-org ()
-    "display images in your org file"
-    (interactive)
-    (if (face-underline-p 'org-link)
-        (set-face-underline 'org-link nil)
-      (set-face-underline 'org-link t))
-    (iimage-mode 'toggle))
-
-  (add-hook 'org-mode-hook (lambda ()
-                             ;; display images
-                             (local-set-key "\M-I" 'org-toggle-iimage-in-org)
-                            )))
-#+END_SRC
 *** PDF-Tools
 A bit difficult to find the docs of how to use it, but it seems quite useful.
 
@@ -1635,6 +1617,19 @@ if [[ "$(uname)" != "Darwin" ]]; then
   install_pkg pdf-tools
 fi
 #+end_src
+*** yankpad
+Check out the [[https://kungsgeten.github.io/yankpad.html][blog post]] (and the [[https://kungsgeten.github.io/yankpad13.html][follow-up]]) and the [[https://github.com/Kungsgeten/yankpad][package docs]].
+#+begin_src emacs-lisp
+  (use-package yankpad
+    :ensure t
+    :defer
+    :init
+    (setq yankpad-file (org-relative-file "yankpad.org"))
+    :config
+    (bind-key "C-p y m" 'yankpad-map)
+    (bind-key "C-p y e" 'yankpad-expand))
+#+end_src
+
 *** [[https://www.eliasstorms.net/zetteldeft/][Zetteldeft]]
 This is a note-taking packages inspired by the principles of the [[https://zettelkasten.de/][Zettelkasten]]
 #+begin_src emacs-lisp
