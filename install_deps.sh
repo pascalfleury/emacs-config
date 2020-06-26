@@ -1,7 +1,11 @@
 #!/bin/bash
 
+# Trick to makeit work on Termux
+which "ls" || pkg install debian-utils
+
 # This is a bit of heuristics to find out what the install system is
-declare -a PKG_MGRS=("apt-get" "pkg" "brew")
+# They are attempted in this order, put the least likely first.
+declare -a PKG_MGRS=("pkg" "brew" "apt-get")
 
 PKG_PREFIX_apt_get="sudo"
 
@@ -53,6 +57,13 @@ install_pkg -x sqlite3 sqlite3
 
 # wget used for org-board archiving.
 install_pkg -x wget wget
+
+# Install reveal.js
+if [[ -d "${HOME}/reveal.js" ]]; then
+  echo "Reveal already installed"
+else
+  (cd ~/ && git clone https://github.com/hakimel/reveal.js.git)
+fi
 
 # Get a version of the PlantUML jar file.
 install_pkg -x wget wget

@@ -22,10 +22,3 @@ if (( lines < 1 )); then
 else
   echo "Config in your ~/.emacs already set up!"
 fi
-
-# Install reveal.js
-if [[ -d "${HOME}/reveal.js" ]]; then
-  echo "Reveal already installed"
-else
-  (cd ~/ && git clone https://github.com/hakimel/reveal.js.git)
-fi
