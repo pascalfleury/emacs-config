@@ -851,6 +851,16 @@ interpreted as hostnames.
 ** GDB with many windows
 #+BEGIN_SRC emacs-lisp
 (setq gdb-many-windows t)
+
+(defun easy-gdb-top-of-stack-and-restore-windows ()
+  (interactive)
+  (switch-to-buffer (gdb-stack-buffer-name))
+  (beginning-of-buffer)
+  (gdb-select-frame)
+  (gdb-restore-windows)
+  (other-window 2))
+
+(global-set-key (kbd "C-x C-a C-t") 'easy-gdb-top-of-stack-and-restore-windows)
 #+END_SRC
 ** Dealing with numbers
 Simple way to increase/decrease a number in code.
@@ -1524,7 +1534,7 @@ Add a few formats to the export functionality of org-mode.
     :defer)
   (use-package ox-taskjuggler
     :defer)
-  (require 'ox-impress-js)
+  ;;(require 'ox-impress-js)
 #+END_SRC
 *** iimage (M-I)
 Make the display of images a simple key-stroke away.
