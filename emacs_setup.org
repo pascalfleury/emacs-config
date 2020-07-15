@@ -154,7 +154,6 @@ This script is then used to install the needed packages on the system.
   }
 #+END_SRC
 
-
 * Initialize Emacs
 This section sets up Emacs so it can tangle the config, find =use-package=,
 and find the ELPA repositories where to get the new packes from.
@@ -268,8 +267,12 @@ Code found [[https://www.emacswiki.org/emacs/EndOfLineTips][here]].
 ** Theme
 I really like the high-contract Zenburn theme.
 #+BEGIN_SRC emacs-lisp
-(use-package zenburn-theme
- :ensure t)
+  (use-package zenburn-theme
+   :ensure t)
+
+  (custom-set-faces
+   '(highlight ((t (:background "forest green"))))
+   '(region ((t (:background "forest green")))))
 #+END_SRC
 ** auto revert
 Use =auto-revert=, which reloads a file if it's updated on disk
@@ -344,7 +347,7 @@ This gets the font coloring switched on for all buffers.
 ** Buffer Decorations
 Setup the visual cues about the current editing buffer
 #+BEGIN_SRC emacs-lisp
-(column-number-mode 1)
+(column-number-mode t)
 (setq visible-bell t)
 (setq scroll-step 1)
 (setq-default transient-mark-mode t)  ;; highlight selection
@@ -379,7 +382,7 @@ mode.
 #+END_SRC
 ** faces
 This makes some of the faces a bit more contrasted.
-#+begin_src emacs-lisp :tangle dot_emacs.el
+#+begin_src emacs-lisp
 ;; faces for general region highlighting zenburn is too low-key.
 (custom-set-faces
  '(highlight ((t (:background "forest green"))))
@@ -590,11 +593,14 @@ Colorize color names and codes in the correct color.
 #+END_SRC
 ** taskjuggler-mode (tj3-mode)
 #+BEGIN_SRC emacs-lisp
-(use-package tj3-mode
- :ensure t
- :after org-plus-contrib
-:config
-(require 'ox-taskjuggler))
+  (use-package tj3-mode
+    :ensure t
+    :after org-plus-contrib
+    :config
+    (require 'ox-taskjuggler)
+    (custom-set-variables
+     '(org-taskjuggler-process-command
+       "/usr/local/bin/tj3 --silent --no-color --output-dir %o %f")))
 
 
 #+END_SRC
@@ -863,6 +869,33 @@ interpreted as hostnames.
 
 (global-set-key (kbd "C-x C-a C-t") 'easy-gdb-top-of-stack-and-restore-windows)
 #+END_SRC
+
+Here is my cheatsheet for the keyboard commands:
+
+All prefixed with =C-x C-a=
+
+|------------+----------------------+---------|
+| Domain     | Command              | C-<key> |
+| <l>        | <l>                  |   <c>   |
+|------------+----------------------+---------|
+| Breakpoint | set                  |    b    |
+|            | delete               |    d    |
+|            | temporary            |    t    |
+|------------+----------------------+---------|
+| Execute    | Next                 |    n    |
+|            | Step Into            |    s    |
+|            | Return               |    f    |
+|            | Continue (run)       |    r    |
+|------------+----------------------+---------|
+| Stack      | Up                   |    <    |
+|            | Down                 |    >    |
+|------------+----------------------+---------|
+| Execute    | Until current line   |    u    |
+| (rarer)    | Single instruction   |    i    |
+|            | Jump to current line |    j    |
+|------------+----------------------+---------|
+
+
 ** Dealing with numbers
 Simple way to increase/decrease a number in code.
 #+begin_src emacs-lisp
@@ -1124,17 +1157,26 @@ I have this currently in my `~/.emacs`:
      :client-id "XXX"
      :client-secret "XXX"))
 #+end_src
-*** org-clock-convenience
-#+begin_src emacs-lisp
-  (use-package org-clock-convenience
-    :ensure t
-    :bind (:map org-agenda-mode-map
-             ("<S-right>" . org-clock-convenience-timestamp-up)
-             ("<S-left>" . org-clock-convenience-timestamp-down)
-             ("[" . org-clock-convenience-fill-gap)
-             ("]" . org-clock-convenience-fill-gap-both)))
-#+end_src
 *** org-roam
+My cheat sheet for =org-roam=
+
+All keys prefixed with =C-c n=
+
+|-------------------+---------------|
+| Function          | =C-c n <key>= |
+| <l>               |      <c>      |
+|-------------------+---------------|
+| Toggle side panel |       l       |
+|-------------------+---------------|
+| Find/create       |       f       |
+| Insert link       |       i       |
+| Capture           |       c       |
+|-------------------+---------------|
+| Graph             |       g       |
+| Switch to buffer  |       b       |
+|-------------------+---------------|
+
+
 #+begin_src emacs-lisp
   (use-package org-roam
     :ensure t
@@ -1153,7 +1195,6 @@ I have this currently in my `~/.emacs`:
   (use-package company-org-roam
     :ensure t
     :after org-roam)
-
 #+end_src
 
 EmacSQL will need to get its C-binary compiled, and needs supporting tools. Note that 'tcc'
@@ -1165,6 +1206,80 @@ install_pkg -x sqlite3 sqlite3
 [[ -n "$(which cc)" ]] || install_pkg -x cc clang
 #+end_src
 
+*** org-clock-convenience
+#+begin_src emacs-lisp
+  (use-package org-clock-convenience
+    :ensure t
+    :bind (:map org-agenda-mode-map
+             ("<S-right>" . org-clock-convenience-timestamp-up)
+             ("<S-left>" . org-clock-convenience-timestamp-down)
+             ("[" . org-clock-convenience-fill-gap)
+             ("]" . org-clock-convenience-fill-gap-both)))
+#+end_src
+*** org-kanban
+#+begin_src emacs-lisp
+  ;;(use-package org-kanban
+  ;;  :ensure t)
+#+end_src
+*** org-board
+Archive entire sites locally with `wget`.
+#+begin_src emacs-lisp
+  (use-package org-board
+    :ensure t
+    :config
+    (global-set-key (kbd "C-c o") org-board-keymap))
+#+end_src
+
+This is the needed tool used to fetch a URL's content.
+#+begin_src bash :tangle install_deps.sh
+# wget used for org-board archiving.
+install_pkg -x wget wget
+#+end_src
+
+*** org-reveal
+This presentation generator is still under review (by me).
+
+#+BEGIN_SRC bash :noweb yes :tangle install_deps.sh
+# Install reveal.js
+if [[ -d "${HOME}/reveal.js" ]]; then
+  echo "Reveal already installed"
+else
+  (cd ~/ && git clone https://github.com/hakimel/reveal.js.git)
+fi
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (use-package ox-reveal
+    :ensure t
+    :after (htmlize)
+    :config
+    (setq org-reveal-root (expand-file-name "~/reveal.js")))
+
+  (use-package htmlize
+    :ensure t)
+#+END_SRC
+
+*** iimage (M-I)
+Make the display of images a simple key-stroke away.
+#+BEGIN_SRC emacs-lisp
+  (defun paf/org-toggle-iimage-in-org ()
+    "display images in your org file"
+    (interactive)
+    (if (face-underline-p 'org-link)
+        (set-face-underline 'org-link nil)
+      (set-face-underline 'org-link t))
+    (iimage-mode 'toggle))
+
+  (use-package iimage
+    :config
+    (add-to-list 'iimage-mode-image-regex-alist
+                 (cons (concat "\\[\\[file:\\(~?" iimage-mode-image-filename-regex
+                               "\\)\\]")  1))
+    (add-hook 'org-mode-hook (lambda ()
+                               ;; display images
+                               (local-set-key "\M-I" 'paf/org-toggle-iimage-in-org)
+                              )))
+#+END_SRC
 *** Properties collector
 Collect properties into tables.
 See documentation in the file.
@@ -1211,15 +1326,6 @@ Some config for display.
     :custom
     (org-indent-indentation-per-level 2))
 #+end_src
-*** faces
-Some special faces that make Org more constrasted
-#+begin_src emacs-lisp :tangle dot_emacs.el
-;; Faces to make the calendar more colorful.
-(custom-set-faces
- '(org-agenda-current-time ((t (:inherit org-time-grid :foreground "yellow" :weight bold))))
- '(org-agenda-date ((t (:inherit org-agenda-structure :background "pale green" :foreground "black" :weight bold))))
- '(org-agenda-date-weekend ((t (:inherit org-agenda-date :background "light blue" :weight bold)))))
-#+end_src
 *** org-habit
 #+BEGIN_SRC emacs-lisp
 (use-package org-habit
@@ -1230,26 +1336,6 @@ Some special faces that make Org more constrasted
   (setq org-habit-following-days 10)
   (setq org-habit-show-habits-only-for-today nil))
 #+END_SRC
-*** org-kanban
-#+begin_src emacs-lisp
-  ;;(use-package org-kanban
-  ;;  :ensure t)
-#+end_src
-*** org-board
-Archive entire sites locally with `wget`.
-#+begin_src emacs-lisp
-  (use-package org-board
-    :ensure t
-    :config
-    (global-set-key (kbd "C-c o") org-board-keymap))
-#+end_src
-
-This is the needed tool used to fetch a URL's content.
-#+begin_src bash :tangle install_deps.sh
-# wget used for org-board archiving.
-install_pkg -x wget wget
-#+end_src
-
 *** bash command
 #+BEGIN_SRC emacs-lisp
 (setq org-babel-sh-command "bash")
@@ -1309,7 +1395,7 @@ This lets one write links as e.g. [ [b:123457] ]
                       ("VC" . ?v))))
 #+END_SRC
 *** task tracking
-Track task dependencies, and dim them in in the agenda.
+Track task dependencies, and dim them in the agenda.
 #+BEGIN_SRC emacs-lisp
 (setq org-enforce-todo-dependencies t)
 (setq org-agenda-dim-blocked-tasks 'invisible)
@@ -1360,10 +1446,6 @@ Track task dependencies, and dim them in in the agenda.
         ))
 #+END_SRC
 *** org-agenda
-**** delight
-#+begin_src emacs-lisp
-(delight 'org-agenda-mode)
-#+end_src
 **** views
 #+BEGIN_SRC emacs-lisp
 (setq org-agenda-custom-commands
@@ -1392,14 +1474,19 @@ Track task dependencies, and dim them in in the agenda.
          ("J" "Interactive TODO dowith and TASK with"
           ((org-sec-who-view "TODO dowith")))))
 #+END_SRC
-**** colors
-Make the calendar day info a bit more visible.
-Move this into the custom-set-faces in ~/.emacs
-#+BEGIN_SRC emacs-lisp
-;; '(org-agenda-date ((t (:inherit org-agenda-structure :background "pale green" :foreground "black" :weight bold))) t)
-;; '(org-agenda-date-weekend ((t (:inherit org-agenda-date :background "light blue" :weight bold))) t)
-;; '(org-agenda-current-time ((t (:inherit org-time-grid :foreground "yellow" :weight bold))))
-#+END_SRC
+**** delight
+#+begin_src emacs-lisp
+(delight 'org-agenda-mode)
+#+end_src
+**** colors and faces
+Make the calendar day info a bit more visible and constrasted.
+#+begin_src emacs-lisp
+;; Faces to make the calendar more colorful.
+(custom-set-faces
+ '(org-agenda-current-time ((t (:inherit org-time-grid :foreground "yellow" :weight bold))))
+ '(org-agenda-date ((t (:inherit org-agenda-structure :background "pale green" :foreground "black" :weight bold))))
+ '(org-agenda-date-weekend ((t (:inherit org-agenda-date :background "light blue" :weight bold)))))
+#+end_src
 **** now marker
 A more visible current-time marker in the agenda
 #+BEGIN_SRC emacs-lisp
@@ -1485,29 +1572,6 @@ Very nice post on how to get capture templats from a file: [[https://joshrollins
   (not (member (nth 2 (org-heading-components)) org-done-keywords)))
 (setq org-refile-target-verify-function 'bh/verify-refile-target)
 #+END_SRC
-*** org-reveal
-This presentation generator is still under review (by me).
-
-#+BEGIN_SRC bash :noweb yes :tangle install_deps.sh
-# Install reveal.js
-if [[ -d "${HOME}/reveal.js" ]]; then
-  echo "Reveal already installed"
-else
-  (cd ~/ && git clone https://github.com/hakimel/reveal.js.git)
-fi
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-  (use-package ox-reveal
-    :ensure t
-    :after (htmlize)
-    :config
-    (setq org-reveal-root (expand-file-name "~/reveal.js")))
-
-  (use-package htmlize
-    :ensure t)
-#+END_SRC
-
 *** org-babel
 What kind of code block languages do I need
 #+BEGIN_SRC emacs-lisp
@@ -1536,27 +1600,6 @@ Add a few formats to the export functionality of org-mode.
   (use-package ox-taskjuggler
     :defer)
   ;;(require 'ox-impress-js)
-#+END_SRC
-*** iimage (M-I)
-Make the display of images a simple key-stroke away.
-#+BEGIN_SRC emacs-lisp
-  (defun paf/org-toggle-iimage-in-org ()
-    "display images in your org file"
-    (interactive)
-    (if (face-underline-p 'org-link)
-        (set-face-underline 'org-link nil)
-      (set-face-underline 'org-link t))
-    (iimage-mode 'toggle))
-
-  (use-package iimage
-    :config
-    (add-to-list 'iimage-mode-image-regex-alist
-                 (cons (concat "\\[\\[file:\\(~?" iimage-mode-image-filename-regex
-                               "\\)\\]")  1))
-    (add-hook 'org-mode-hook (lambda ()
-                               ;; display images
-                               (local-set-key "\M-I" 'paf/org-toggle-iimage-in-org)
-                              )))
 #+END_SRC
 *** plant-uml
 Tell where PlantUML is to be found. This needs to be downloaded and installed
