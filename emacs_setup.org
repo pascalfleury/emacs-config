@@ -807,6 +807,7 @@ Let's first see how far I get with file-based capture templates and yankpad.
     :ensure t)
   (use-package auto-yasnippet
     :ensure t
+:after yasnippet
     :config
     (bind-key "C-p C-s c" 'aya-create)
     (bind-key "C-p C-s e" 'aya-expand))
