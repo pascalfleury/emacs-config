@@ -262,7 +262,7 @@ Code found [[https://www.emacswiki.org/emacs/EndOfLineTips][here]].
       (when (string-match "-\\(?:dos\\|mac\\)$" coding-str)
         (set-buffer-file-coding-system 'unix))))
 
-  (add-hook 'find-file-hooks 'no-junk-please-we-are-unixish)
+  (add-hook 'find-file-hook 'no-junk-please-we-are-unixish)
 #+end_src
 ** Theme
 I really like the high-contract Zenburn theme.
@@ -335,7 +335,7 @@ This gets the font coloring switched on for all buffers.
 #+BEGIN_SRC emacs-lisp
 (setq frame-title-format "emacs @ %b - %f")
 (when window-system
-  (mwheel-install)  ;; enable wheelmouse support by default
+  (mouse-wheel-mode)  ;; enable wheelmouse support by default
   (set-selection-coding-system 'compound-text-with-extensions))
 #+END_SRC
 ** Look: buffer naming
@@ -1559,7 +1559,7 @@ Very nice post on how to get capture templats from a file: [[https://joshrollins
              "* %U  :MTG:\n %^{with}p\n%?")
         ("n" "Note" entry (file+headline ,(org-relative-file "refile.org") "Notes")
              "* %?\n%U")
-        ("j" "Journal" entry (file+datetree ,(org-relative-file "journal.org"))
+        ("j" "Journal" entry (file+olp+datetree ,(org-relative-file "journal.org"))
              "* %?\n  %U")))
 
 ; show up to 2 levels for refile targets, in all agenda files
@@ -1599,7 +1599,8 @@ Add a few formats to the export functionality of org-mode.
     :defer)
   (use-package ox-taskjuggler
     :defer)
-  ;;(require 'ox-impress-js)
+  (use-package ox-impress-js
+    :defer)
 #+END_SRC
 *** plant-uml
 Tell where PlantUML is to be found. This needs to be downloaded and installed
