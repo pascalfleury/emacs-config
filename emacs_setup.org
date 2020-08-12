@@ -1573,6 +1573,16 @@ Very nice post on how to get capture templats from a file: [[https://joshrollins
   (not (member (nth 2 (org-heading-components)) org-done-keywords)))
 (setq org-refile-target-verify-function 'bh/verify-refile-target)
 #+END_SRC
+*** OrgRoam templates
+#+begin_src emacs-lisp
+(setq org-roam-capture-templates
+      `(("m" "Meeting" entry (function org-roam--capture-get-point)
+             "* %?\n%U\n%^{with}\n"
+             :file-name "meeting/%<%Y%m%d%H%M%S>-${slug}"
+             :head "#+title: ${title}\n#+roam_tags: %^{with}\n\n"
+             )))
+
+#+end_src
 *** org-babel
 What kind of code block languages do I need
 #+BEGIN_SRC emacs-lisp
