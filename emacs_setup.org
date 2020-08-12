@@ -219,6 +219,7 @@ Remove =C-p= that I want to use for *me* personally as a prefix.
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-p") nil) ;; was 'previous-line'
 #+END_SRC
+
 * Helper Functions
 ** add-hook-run-once
 Use instead of add-hook to run it a single time.
@@ -1189,7 +1190,7 @@ All keys prefixed with =C-c n=
                  ("C-c n f" . org-roam-find-file)
                  ("C-c n c" . org-roam-capture)
                  ("C-c n g" . org-roam-graph))
-                :map org-mode-map
+           :map org-mode-map
                 (("C-c n i" . org-roam-insert))))
 
   (use-package company-org-roam
