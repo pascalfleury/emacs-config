@@ -1408,77 +1408,81 @@ Track task dependencies, and dim them in the agenda.
 #+END_SRC
 *** org-todo keywords
 #+BEGIN_SRC emacs-lisp
-(setq org-todo-keywords
-      '((sequence "TODO(t!)" "NEXT(n!)" "STARTED(s!)" "WAITING(w!)" "AI(a!)" "|" "DONE(d!)" "CANCELLED(C@)" "DEFERRED(D@)" "SOMEDAY(S!)" "FAILED(F!)" "REFILED(R!)")
-        (sequence "APPLIED(A!)" "WAITING(w!)" "ACCEPTED" "|" "REJECTED" "PUBLISHED")
-        (sequence "TASK(m!)" "REGULAR" "|" "DONE(d!)" "CANCELLED(C@)" )))
+  (setq org-todo-keywords
+        '((sequence "TODO(t!)" "NEXT(n!)" "STARTED(s!)" "WAITING(w!)" "AI(a!)" "|" "DONE(d!)" "CANCELLED(C@)" "DEFERRED(D@)" "SOMEDAY(S!)" "FAILED(F!)" "REFILED(R!)")
+          (sequence "APPLIED(A!)" "WAITING(w!)" "ACCEPTED" "|" "REJECTED" "PUBLISHED")
+          (sequence "TASK(m!)" "ACTIVE" "|" "DONE(d!)" "CANCELLED(C@)" )))
 
-(setq org-tags-exclude-from-inheritance '("PRJ")
-      org-use-property-inheritance '("PRIORITY")
-      org-stuck-projects '("+PRJ/-DONE-CANCELLED"
-			   ; it is considered stuck if there is no next action
-                           (;"TODO"
-			    "NEXT" "STARTED" "TASK") ()))
+  (setq org-tags-exclude-from-inheritance '("PRJ")
+        org-use-property-inheritance '("PRIORITY")
+        org-stuck-projects '("+PRJ/-DONE-CANCELLED"
+                             ;; it is considered stuck if there is no next action
+                             (;"TODO"
+                              "NEXT" "STARTED" "TASK") ()))
 
-(setq org-todo-keyword-faces '(
-        ("TODO" . (:foreground "purple" :weight bold))
-        ("TASK" . (:foreground "steelblue" :weight bold))
-        ("NEXT" . (:foreground "red" :weight bold))
-        ("STARTED" . (:foreground "green" :weight bold))
-        ("WAITING" . (:foreground "orange" :weight bold))
-        ("FLAG_GATED" . (:foreground "orange" :weight bold))
-        ("SOMEDAY" . (:foreground "steelblue" :weight bold))
-        ("MAYBE" . (:foreground "steelblue" :weight bold))
-        ("AI" . (:foreground "red" :weight bold))
-        ("NEW" . (:foreground "orange" :weight bold))
-        ("RUNNING" . (:foreground "orange" :weight bold))
-        ("WORKED" . (:foreground "green" :weight bold))
-        ("FAILED" . (:foreground "red" :weight bold))
-        ("REFILED" . (:foreground "gray"))
-        ; For publications
-        ("APPLIED" . (:foreground "orange" :weight bold))
-        ("ACCEPTED" . (:foreground "orange" :weight bold))
-        ("REJECTED" . (:foreground "red" :weight bold))
-        ("PUBLISHED" . (:foreground "green" :weight bold))
-         ; Other stuff
-        ("REGULAR" . (:foreground "darkgreen" :weight bold))
-        ))
+  (setq org-todo-keyword-faces
+        '(
+          ("TODO" . (:foreground "purple" :weight bold))
+          ("TASK" . (:foreground "steelblue" :weight bold))
+          ("NEXT" . (:foreground "red" :weight bold))
+          ("STARTED" . (:foreground "green" :weight bold))
+          ("WAITING" . (:foreground "orange" :weight bold))
+          ("FLAG_GATED" . (:foreground "orange" :weight bold))
+          ("SOMEDAY" . (:foreground "steelblue" :weight bold))
+          ("MAYBE" . (:foreground "steelblue" :weight bold))
+          ("AI" . (:foreground "red" :weight bold))
+          ("NEW" . (:foreground "orange" :weight bold))
+          ("RUNNING" . (:foreground "orange" :weight bold))
+          ("WORKED" . (:foreground "green" :weight bold))
+          ("FAILED" . (:foreground "red" :weight bold))
+          ("REFILED" . (:foreground "gray"))
+          ;; For publications
+          ("APPLIED" . (:foreground "orange" :weight bold))
+          ("ACCEPTED" . (:foreground "orange" :weight bold))
+          ("REJECTED" . (:foreground "red" :weight bold))
+          ("PUBLISHED" . (:foreground "green" :weight bold))
+          ;; Other stuff
+          ("ACTIVE" . (:foreground "darkgreen" :weight bold))
+          ))
 #+END_SRC
 *** org-agenda
 **** views
 #+BEGIN_SRC emacs-lisp
-(setq org-agenda-custom-commands
-       '(("t" "Hot Today" ((agenda "" ((org-agenda-span 'day)))
-                           (tags-todo "-dowith={.+}/WAITING")
-                           (tags-todo "-dowith={.+}+TODO=\"STARTED\"|-dowith={.+}+TODO=\"REGULAR\"")
-                           (tags-todo "/NEXT")))
-         ("n" "Agenda and all TODO's" ((agenda "") (alltodo "")))
-         ("N" "Next actions" tags-todo
-          "-personal-doat={.+}-dowith={.+}/!-TASK-TODO"
-          ((org-agenda-todo-ignore-scheduled t)))
-         ("h" "Work todos" tags-todo
-          "-personal-doat={.+}-dowith={.+}/!-TASK"
-          ((org-agenda-todo-ignore-scheduled t)))
-         ("H" "All work todos" tags-todo "-personal/!-TASK-CANCELLED"
-          ((org-agenda-todo-ignore-scheduled nil)))
-         ("A" "Work todos with doat or dowith" tags-todo
-          "-personal+doat={.+}|dowith={.+}/!-TASK"
-          ((org-agenda-todo-ignore-scheduled nil)))
-         ("j" "TODO dowith and TASK with"
-         ((org-sec-with-view "TODO dowith")
-          (org-sec-where-view "TODO doat")
-          (org-sec-assigned-with-view "TASK with")
-          (org-sec-stuck-with-view "STUCK with")
-          (todo "STARTED")))
-         ("J" "Interactive TODO dowith and TASK with"
-          ((org-sec-who-view "TODO dowith")))))
+  (setq org-agenda-custom-commands
+        '(("t" "Hot Today" ((agenda "" ((org-agenda-span 'day)))
+                            (tags-todo "-dowith={.+}/WAITING")
+                            (tags-todo "-dowith={.+}+TODO=\"STARTED\"")
+                            (tags-todo "/NEXT")))
+          ("r" "Recurring" ((tags-todo "/WAITING")
+                            (tags-todo "TODO=\"STARTED\"")
+                            (tags "REGULAR")
+                            (tags-todo "/NEXT")))
+          ("n" "Agenda and all TODO's" ((agenda "") (alltodo "")))
+          ("N" "Next actions" tags-todo "-dowith={.+}/!-TASK-TODO"
+           ((org-agenda-todo-ignore-scheduled t)))
+          ("h" "Work todos" tags-todo "-dowith={.+}/!-TASK"
+           ((org-agenda-todo-ignore-scheduled t)))
+          ("H" "All work todos" tags-todo "-personal/!-TASK-CANCELLED"
+           ((org-agenda-todo-ignore-scheduled nil)))
+          ("A" "Work todos with doat or dowith" tags-todo
+           "dowith={.+}/!-TASK"
+           ((org-agenda-todo-ignore-scheduled nil)))
+          ("j" "TODO dowith and TASK with"
+           ((org-sec-with-view "TODO dowith")
+            (org-sec-stuck-with-view "TALK with")
+            (org-sec-where-view "TODO doat")
+            (org-sec-assigned-with-view "TASK with")
+            (org-sec-stuck-with-view "STUCK with")
+            (todo "STARTED")))
+          ("J" "Interactive TODO dowith and TASK with"
+           ((org-sec-who-view "TODO dowith")))))
 #+END_SRC
 **** delight
 #+begin_src emacs-lisp
 (delight 'org-agenda-mode)
 #+end_src
 **** colors and faces
-Make the calendar day info a bit more visible and constrasted.
+Make the calendar day info a bit more visible and contrasted.
 #+begin_src emacs-lisp
 ;; Faces to make the calendar more colorful.
 (custom-set-faces
@@ -1549,27 +1553,53 @@ Capture and refile stuff, with some templates that I think are useful.
 Very nice post on how to get capture templats from a file: [[https://joshrollinswrites.com/help-desk-head-desk/org-capture-in-files/][Org-capture in Files]].
 
 #+BEGIN_SRC emacs-lisp
-(setq org-default-notes-file (org-relative-file "refile.org"))
+  (setq org-default-notes-file (org-relative-file "Inbox.org"))
 
-(setq org-capture-templates
-      `(("a" "Action Item" entry (file+headline ,(org-relative-file "refile.org") "Tasks")
-             "* AI %?\n  %U")
-        ("m" "Meeting" entry (file+headline ,(org-relative-file "refile.org") "Meetings")
-             "* %U  :MTG:\n %^{with}p\n%?")
-        ("n" "Note" entry (file+headline ,(org-relative-file "refile.org") "Notes")
-             "* %?\n%U")
-        ("j" "Journal" entry (file+olp+datetree ,(org-relative-file "journal.org"))
-             "* %?\n  %U")))
+  (setq org-capture-templates
+        `(("t" "Task"
+           entry (file+headline ,(org-relative-file "Inbox.org") "Tasks")
+           "* TODO %?\n%U\n\n%x"
+           :clock-resume t)
+          ;;
+          ("i" "Idea"
+           entry (file+headline ,(org-relative-file "Inbox.org") "Ideas")
+           "* SOMEDAY %?\n%U\n\n%x"
+           :clock-resume t)
+          ;;
+          ("m" "Meeting"
+           entry (file+headline ,(org-relative-file "Inbox.org") "Meetings")
+           "* %?  :MTG:\n%U\n%^{with}p"
+           :clock-in t
+           :clock-resume t)
+          ;;
+          ("s" "Stand-up"
+           entry (file+headline ,(org-relative-file "Inbox.org") "Meetings")
+           "* Stand-up  :MTG:\n%U\n\n%?"
+           :clock-in t
+           :clock-resume t)
+          ;;
+          ("p" "Talking Point"
+           entry (file+headline ,(org-relative-file "refile.org") "Talking Points")
+           "* %?  :TALK:\n%U\n%^{dowith}p"
+           :clock-keep t)
+          ;;
+          ("j" "Journal"
+           entry (file+olp+datetree ,(org-relative-file "journal.org"))
+           "* %?\n%U"
+           :clock-in t
+           :clock-resume t
+           :kill-buffer t)))
 
-; show up to 2 levels for refile targets, in all agenda files
-(setq org-refile-targets '((org-agenda-files . (:maxlevel . 2))))
-(setq org-log-refile t)  ;; will add timestamp when refiled.
-; from: http://doc.norang.ca/org-mode.html
-; Exclude DONE state tasks from refile targets
-(defun bh/verify-refile-target ()
-  "Exclude todo keywords with a done state from refile targets"
-  (not (member (nth 2 (org-heading-components)) org-done-keywords)))
-(setq org-refile-target-verify-function 'bh/verify-refile-target)
+  ;; show up to 2 levels for refile targets, in all agenda files
+  (setq org-refile-targets '((org-agenda-files . (:maxlevel . 2))))
+  (setq org-log-refile t)  ;; will add timestamp when refiled.
+
+  ;; from: http://doc.norang.ca/org-mode.html
+  ;; Exclude DONE state tasks from refile targets
+  (defun bh/verify-refile-target ()
+    "Exclude todo keywords with a done state from refile targets"
+    (not (member (nth 2 (org-heading-components)) org-done-keywords)))
+  (setq org-refile-target-verify-function 'bh/verify-refile-target)
 #+END_SRC
 *** OrgRoam templates
 #+begin_src emacs-lisp
