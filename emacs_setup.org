@@ -718,7 +718,7 @@ Start using projectile. It has the documentation [[https://docs.projectile.mx/en
 
   (use-package helm-projectile
     :ensure t
-    ;; :defer
+    :after projectile
     :requires projectile
     :delight projectile-mode
     :config
@@ -1292,17 +1292,17 @@ See documentation in the file.
 These are mostly org-config specific to me, myself and I.
 *** Key mappings
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-c l") 'org-store-link)
-(global-set-key (kbd "C-c c") 'org-capture)
-(global-set-key (kbd "C-c a") 'org-agenda)
-(global-set-key (kbd "C-c b") 'org-iswitchb)
+  (global-set-key (kbd "C-c l") 'org-store-link)
+  (global-set-key (kbd "C-c c") 'org-capture)
+  (global-set-key (kbd "C-c a") 'org-agenda)
+  (global-set-key (kbd "C-c b") 'org-iswitchb)
 
-(add-hook 'org-mode-hook
-    (lambda ()
-            (local-set-key (kbd "C-<up>") 'org-move-subtree-up)
-            (local-set-key (kbd "C-<down>") 'org-move-subtree-down)
-            (local-set-key (kbd "C-c l") 'org-store-link)
-            (local-set-key (kbd "C-c C-l") 'org-insert-link)))
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (local-set-key (kbd "C-<up>") 'org-move-subtree-up)
+              (local-set-key (kbd "C-<down>") 'org-move-subtree-down)
+              (local-set-key (kbd "C-c l") 'org-store-link)
+              (local-set-key (kbd "C-c C-l") 'org-insert-link)))
 
 #+END_SRC
 *** Display settings
@@ -1351,12 +1351,12 @@ clock stuff into a drawer.
 *** open first agenda file
 F12 open the first agenda file
 #+BEGIN_SRC emacs-lisp
-(defun org-get-first-agenda-file ()
-  (interactive)
-  (find-file (elt org-agenda-files 0)))
-(global-set-key [f12] 'org-get-first-agenda-file)
-; F12 on Mac OSX displays the dashboard....
-(global-set-key [C-f12] 'org-get-first-agenda-file)
+  (defun org-get-first-agenda-file ()
+    (interactive)
+    (find-file (elt org-agenda-files 0)))
+  (global-set-key [f12] 'org-get-first-agenda-file)
+  ; F12 on Mac OSX displays the dashboard....
+  (global-set-key [C-f12] 'org-get-first-agenda-file)
 #+END_SRC
 *** org-ehtml [localhost:55555]
 This will start serving the org files through the emacs-based webbrowser
@@ -1384,16 +1384,16 @@ This lets one write links as e.g. [ [b:123457] ]
 #+END_SRC
 *** org-secretary
 #+BEGIN_SRC emacs-lisp
-(use-package  org-secretary
-:ensure org-plus-contrib
-:config
-(setq org-sec-me "paf")
-(setq org-tag-alist '(("PRJ" . ?p)
-                      ("DESIGNDOC" . ?D)
-                      ("Milestone" . ?m)
-                      ("DESK" . ?d)
-                      ("HOME" . ?h)
-                      ("VC" . ?v))))
+  (use-package  org-secretary
+    :ensure org-plus-contrib
+    :config
+    (setq org-sec-me "paf")
+    (setq org-tag-alist '(("PRJ" . ?p)
+                          ("DESIGNDOC" . ?D)
+                          ("Milestone" . ?m)
+                          ("DESK" . ?d)
+                          ("HOME" . ?h)
+                          ("VC" . ?v))))
 #+END_SRC
 *** task tracking
 Track task dependencies, and dim them in the agenda.
@@ -1533,17 +1533,17 @@ That's the export function to update the agenda view.
 #+END_SRC
 *** org-duration
 #+BEGIN_SRC emacs-lisp
-(use-package org-duration
-  :config
-  (setq org-duration-units
-    `(("min" . 1)
-      ("h" . 60)
-      ("d" . ,(* 60 8))
-      ("w" . ,(* 60 8 5))
-      ("m" . ,(* 60 8 5 4))
-      ("y" . ,(* 60 8 5 4 10)))
-     )
-  (org-duration-set-regexps))
+  (use-package org-duration
+    :config
+    (setq org-duration-units
+          `(("min" . 1)
+            ("h" . 60)
+            ("d" . ,(* 60 8))
+            ("w" . ,(* 60 8 5))
+            ("m" . ,(* 60 8 5 4))
+            ("y" . ,(* 60 8 5 4 10)))
+          )
+    (org-duration-set-regexps))
 #+END_SRC
 *** Capture & refile
 Capture and refile stuff, with some templates that I think are useful.
@@ -1709,7 +1709,7 @@ This is a note-taking packages inspired by the principles of the [[https://zette
 
     :config
     (setq deft-extensions '("org" "md" "txt"))
-    (setq deft-directory (concat org-directory "/Zettelkasten"))
+    (setq deft-directory (org-relative-file "Zettelkasten"))
     (setq deft-recursive t)
 
     :bind (("C-c z d" . deft)
