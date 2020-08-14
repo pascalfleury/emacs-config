@@ -600,10 +600,8 @@ Colorize color names and codes in the correct color.
     :config
     (require 'ox-taskjuggler)
     (custom-set-variables
-     '(org-taskjuggler-process-command
-       "/usr/local/bin/tj3 --silent --no-color --output-dir %o %f")))
-
-
+     '(org-taskjuggler-process-command "/usr/local/bin/tj3 --silent --no-color --output-dir %o %f")
+     '(org-taskjuggler-project-tag "PRJ")))
 #+END_SRC
 
 ** writeroom-mode
