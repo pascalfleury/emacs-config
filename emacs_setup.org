@@ -751,6 +751,14 @@ Switch from header to implementation file quickly.
           (lambda ()
             (local-set-key  (kbd "C-c o") 'ff-find-other-file)))
 #+END_SRC
+** no indentation of namespaces in C++
+#+begin_src emacs-lisp
+  (defconst my-cc-style
+    '("cc-mode"
+      (c-offsets-alist . ((innamespace . [0])))))
+
+  (c-add-style "my-cc-mode" my-cc-style)
+#+end_src
 ** ripgrep
 This enables searching recursively in projects.
 #+begin_src bash :tangle install_deps.sh
