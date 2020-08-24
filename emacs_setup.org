@@ -1413,7 +1413,7 @@ Track task dependencies, and dim them in the agenda.
           (sequence "APPLIED(A!)" "WAITING(w!)" "ACCEPTED" "|" "REJECTED" "PUBLISHED")
           (sequence "TASK(m!)" "ACTIVE" "|" "DONE(d!)" "CANCELLED(C@)" )))
 
-  (setq org-tags-exclude-from-inheritance '("PRJ")
+  (setq org-tags-exclude-from-inheritance '("PRJ" "REGULAR")
         org-use-property-inheritance '("PRIORITY")
         org-stuck-projects '("+PRJ/-DONE-CANCELLED"
                              ;; it is considered stuck if there is no next action
