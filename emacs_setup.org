@@ -862,6 +862,14 @@ interpreted as hostnames.
 (defvar locate-dominating-stop-dir-regexp
   "\\`\\(?:[\\/][\\/][^\\/]+\\|/\\(?:net\\|afs\\|\\.\\.\\.\\)/\\)\\'")
 #+END_SRC
+** Dealing with numbers
+Simple way to increase/decrease a number in code.
+#+begin_src emacs-lisp
+  (use-package shift-number
+    :ensure t
+    :bind (("M-+" . shift-number-up)
+           ("M-_" . shift-number-down)))
+#+end_src
 ** GDB with many windows
 #+BEGIN_SRC emacs-lisp
 (setq gdb-many-windows t)
@@ -869,7 +877,7 @@ interpreted as hostnames.
 (defun easy-gdb-top-of-stack-and-restore-windows ()
   (interactive)
   (switch-to-buffer (gdb-stack-buffer-name))
-  (beginning-of-buffer)
+  (goto-char (point-min))
   (gdb-select-frame)
   (gdb-restore-windows)
   (other-window 2))
@@ -903,14 +911,6 @@ All prefixed with =C-x C-a=
 |------------+----------------------+---------|
 
 
-** Dealing with numbers
-Simple way to increase/decrease a number in code.
-#+begin_src emacs-lisp
-  (use-package shift-number
-    :ensure t
-    :bind (("M-+" . shift-number-up)
-           ("M-_" . shift-number-down)))
-#+end_src
 * OrgMode
 Load all my org stuff, but first org-mode itself.
 ** Init
@@ -1463,8 +1463,8 @@ Track task dependencies, and dim them in the agenda.
                             (tags-todo "/NEXT")))
           ("r" "Recurring" ((tags-todo "/WAITING")
                             (tags-todo "TODO=\"STARTED\"")
-                            (tags "REGULAR")
-                            (tags-todo "/NEXT")))
+                            (tags-todo "/NEXT")
+                            (tags "REGULAR")))
           ("n" "Agenda and all TODO's" ((agenda "")
                                         (alltodo "")))
           ("N" "Next actions" tags-todo "-dowith={.+}/!-TASK-TODO"
