@@ -1389,6 +1389,7 @@ This lets one write links as e.g. [ [b:123457] ]
         ("cl" . "http://cr/")))
 #+END_SRC
 *** org-secretary
+This package is good, but it does not do it simply. I re-modeled it somewhat below.
 #+BEGIN_SRC emacs-lisp
   (use-package  org-secretary
     :ensure org-plus-contrib
@@ -1400,6 +1401,22 @@ This lets one write links as e.g. [ [b:123457] ]
                           ("DESK" . ?d)
                           ("HOME" . ?h)
                           ("VC" . ?v))))
+#+END_SRC
+This is my version of the org-secretary
+#+BEGIN_SRC emacs-lisp
+    (use-package paf-secretary
+      :load-path "~/Emacs"
+      :bind (("\C-cw" . paf-sec-set-with)
+             ("\C-cW" . paf-sec-set-where)
+             ("\C-cj" . paf-sec-tag-entry))
+      :config
+      (setq paf-sec-me "paf")
+      (setq org-tag-alist '(("PRJ" . ?p)
+                            ("DESIGNDOC" . ?D)
+                            ("Milestone" . ?m)
+                            ("DESK" . ?d)
+                            ("HOME" . ?h)
+                            ("VC" . ?v))))
 #+END_SRC
 *** task tracking
 Track task dependencies, and dim them in the agenda.
@@ -1476,6 +1493,12 @@ Track task dependencies, and dim them in the agenda.
           ("A" "Work todos with doat or dowith" tags-todo
            "dowith={.+}/!-TASK"
            ((org-agenda-todo-ignore-scheduled nil)))
+          ("p" "TODO and TASK with"
+           (;;((paf-sec-use-with-where 'org-tags-view "with={$WITH}/TODO"))
+            ((org-stuck-projects '((paf-sec-use-with-where "PRJ+$WITH/-MAYBE-DONE") ("NEXT" "DONE") ())))
+            ;;((paf-sec-use-with-where 'org-tags-view "doat={$WHERE}/TODO"))
+            ;;((paf-sec-use-with-where 'org-tags-view "$WITH/TASK"))
+            (todo "STARTED")))
           ("j" "TODO dowith and TASK with"
            ((org-sec-with-view "TODO dowith")
             (org-sec-stuck-with-view "TALK with")
