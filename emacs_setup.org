@@ -1507,7 +1507,7 @@ This would open the agenda if any org file was opened. In the end, I don't like 
 #+END_SRC
 **** auto-save org files when idle
 This will save them regularly when the idle for more than a minute.
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (add-hook 'org-mode-hook
     (lambda () (run-with-idle-timer 600 t 'org-save-all-org-buffers)))
 #+END_SRC
