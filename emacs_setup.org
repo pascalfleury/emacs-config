@@ -3,17 +3,13 @@
 #+BABEL: :cache yes
 #+PROPERTY: header-args :tangle yes
 
-This is my Emacs config. You need to tangle this into a file that
-then gets loaded by Emacs: =C-c C-v t= [org-babel-tangle].
-Below, I also explain how this tangling is automated.
+This is my Emacs config. You need to tangle this into a file that then gets loaded by Emacs: =C-c C-v t= [org-babel-tangle]. Below, I also explain how this tangling is automated.
 
 Find extensive documentation about how to do this [[https://github.com/larstvei/dot-emacs][here]].
 
 * Personal Plans
 I regularly try out new packages, this is my current list of things being evaluated.
-They usually live temporarily in my =~/.emacs= until I am happy, in
-which case I move their config into this file so that it gets replicated on all
-machines I work on with Emacs.
+They usually live temporarily in my =~/.emacs= until I am happy, in which case I move their config into this file so that it gets replicated on all machines I work on with Emacs.
 
 ** Currently under review
   - [[https://github.com/Kungsgeten/yankpad][yankpad]] + [[https://github.com/joaotavora/yasnippet][yasnippet]]
@@ -23,8 +19,7 @@ machines I work on with Emacs.
 - [[https://github.com/edran/hc-zenburn-emacs][hc-zenburn-theme]]
 
 * One-time Initial Setup
-I have my config in directory =~/Emacs= which is where I clone this repository.
-The config setup is maintained purely in the =~/Emacs/emacs_setup.org= file.
+I have my config in directory =~/Emacs= which is where I clone this repository. The config setup is maintained purely in the =~/Emacs/emacs_setup.org= file.
 
 In your =~/.emacs= file, all you need to add is
 
@@ -35,13 +30,9 @@ In your =~/.emacs= file, all you need to add is
 #+END_SRC
 
 ** Bootstrap
-Initially when cloning this repository, you have the =emacs_setup.org= file,
-that contains the config that you adapt to your specific setup, and an
-=emacs_setup.el= with a bootstrap content that will tangle and compile the org
-file, /and replace itself/. This is useful the very first time.
+Initially when cloning this repository, you have the =emacs_setup.org= file, that contains the config that you adapt to your specific setup, and an =emacs_setup.el= with a bootstrap content that will tangle and compile the org file, /and replace itself/. This is useful the very first time.
 
-After that, the config itself should have the hook to re-tangle and re-compile
-the setup at each save.
+After that, the config itself should have the hook to re-tangle and re-compile the setup at each save.
 
 Therefore my setup is very easy to install, and it needs these steps:
 
@@ -49,9 +40,7 @@ Therefore my setup is very easy to install, and it needs these steps:
 2. add the one line in you =~/.emacs=
 3. make sure Emacs re-interprets its init (you could restart it)
 
-It may be that [[https://github.com/jwiegley/use-package][use-package]] is not installed on your setup, so it will first try
-to install that. After that step, it will also start installing any package that
-is marked as needed in this config automatically.
+It may be that [[https://github.com/jwiegley/use-package][use-package]] is not installed on your setup, so it will first try to install that. After that step, it will also start installing any package that is marked as needed in this config automatically.
 
 The original content of the =emacs_setup.el= is as follows:
 
@@ -71,16 +60,14 @@ The original content of the =emacs_setup.el= is as follows:
 #+END_SRC
 
 ** Recompile all packages
-This will force-recompile everything in ~/.emacs.d/elpa/...
-Just run =M-:= and then enter this:
+This will force-recompile everything in =~/.emacs.d/elpa/...= Just run =M-:= and then enter this:
 #+begin_src emacs-lisp :tangle no
 (byte-recompile-directory package-user-dir nil 'force)
 #+end_src
 or simply =C-x C-e= at the end of that line.
 
 ** One-time configure
-To preserve the original state of this file when updating the git repos
-with new config settings, execute the following block once (=C-c C-c=):
+To preserve the original state of this file when updating the git repos with new config settings, execute the following block once (=C-c C-c=):
 
 #+BEGIN_SRC bash :noweb yes :tangle onetime_setup.sh
   #!/bin/bash
@@ -155,8 +142,7 @@ This script is then used to install the needed packages on the system.
 #+END_SRC
 
 * Initialize Emacs
-This section sets up Emacs so it can tangle the config, find =use-package=,
-and find the ELPA repositories where to get the new packes from.
+This section sets up Emacs so it can tangle the config, find =use-package=, and find the ELPA repositories where to get the new packes from.
 ** Info header
 Just to add a little information in the tangled file.
 #+BEGIN_SRC emacs-lisp
@@ -181,10 +167,7 @@ Adding my choice of packages repositories.
                         ))
 #+END_SRC
 ** use-package
-I use =use-package= for most configuration, and that needs to be at the top of
-the file.  =use-package= verifies the presence of the requested package, otherwise
-installs it, and presents convenient sections for configs of variables, key
-bindings etc. that happen only if the package is actually loaded.
+I use =use-package= for most configuration, and that needs to be at the top of the file.  =use-package= verifies the presence of the requested package, otherwise installs it, and presents convenient sections for configs of variables, key bindings etc. that happen only if the package is actually loaded.
 
 First, make sure it gets installed if it is not there yet.
 #+begin_src emacs-lisp
@@ -255,8 +238,7 @@ Start the background server, so we can use emacsclient.
 (set-language-environment "UTF-8")
 #+END_SRC
 ** Newline (only Unix wanted)
-This should automatically convert any files with dos or Mac line endings into Unix style ones.
-Code found [[https://www.emacswiki.org/emacs/EndOfLineTips][here]].
+This should automatically convert any files with dos or Mac line endings into Unix style ones. Code found [[https://www.emacswiki.org/emacs/EndOfLineTips][here]].
 #+begin_src emacs-lisp
   (defun no-junk-please-we-are-unixish ()
     (let ((coding-str (symbol-name buffer-file-coding-system)))
@@ -286,8 +268,7 @@ and not modified in the buffer.
 
 * Managing Buffers
 ** winner-mode (layout managing)
-Enables =winner-mode=.
-Navigate buffer-window configs with =C-c left= and =C-c right=.
+Enables =winner-mode=. Navigate buffer-window configs with =C-c left= and =C-c right=.
 #+BEGIN_SRC emacs-lisp
 (winner-mode 1)
 #+END_SRC
@@ -360,8 +341,7 @@ Setup the visual cues about the current editing buffer
   :bind ("C-p n" . 'nyan-mode))
 #+END_SRC
 ** dynamic cursor colors
-The cursor is displayed in different colors, depending on overwrite or insert
-mode.
+The cursor is displayed in different colors, depending on overwrite or insert mode.
 #+BEGIN_SRC emacs-lisp
 (setq hcz-set-cursor-color-color "")
 (setq hcz-set-cursor-color-buffer "")
@@ -482,12 +462,9 @@ Seen demonstrated by [[https://www.youtube.com/watch?v=LFXA089Tx38][Uncle Dave]]
 #+end_src
 * Cool Packages
 ** annotate-mode
-The file-annotations are store externally.
-Seems to fail with =args-out-of-range= and then Emacs is confused.
-(filed issue for this)
+The file-annotations are store externally. Seems to fail with =args-out-of-range= and then Emacs is confused. (filed issue for this)
 
-Also, it seems to interfere with colorful modes like =magit= or =org-agenda-mode=
-so that I went with a whitelist instead of the wish of a blacklist of modes.
+Also, it seems to interfere with colorful modes like =magit= or =org-agenda-mode= so that I went with a whitelist instead of the wish of a blacklist of modes.
 
 #+BEGIN_SRC emacs-lisp
 (use-package annotate
@@ -581,7 +558,7 @@ I just took over the config described in this [[https://tuhdo.github.io/helm-int
 #+end_src
 
 ** [[https://github.com/smihica/emmet-mode][emmet-mode]]
-Useful abbreviations when codng in HTML.
+Useful abbreviations when coding in HTML.
 #+BEGIN_SRC emacs-lisp
 (use-package emmet-mode
 :ensure t)
@@ -651,11 +628,7 @@ Colorize color names and codes in the correct color.
 Let's try this too, even though I do not quite get the point of this
 whole package yet.
 
-*NOTE* assigns =hui-search-web= to =C-c C-/= to not clobber the later used
-       =C-c /= from OrgMode (org-mode sparse trees)
-       This works because hyperbole will first check if the function
-       is already bound to some key before binding it to the coded
-       default.
+*NOTE* assigns =hui-search-web= to =C-c C-/= to not clobber the later used =C-c /= from OrgMode (org-mode sparse trees). This works because hyperbole will first check if the function is already bound to some key before binding it to the coded default.
 #+begin_src emacs-lisp
   (use-package hyperbole
     :ensure t
@@ -723,8 +696,7 @@ Start using projectile. It has the documentation [[https://docs.projectile.mx/en
     (helm-projectile-on))
 #+end_src
 
-Also make sure we do have the faster [[https://github.com/ggreer/the_silver_searcher#the-silver-searcher][silver searcher]] version.  This may need you
-to install the corresponding tool for this, with the following snippet:
+Also make sure we do have the faster [[https://github.com/ggreer/the_silver_searcher#the-silver-searcher][silver searcher]] version.  This may need you to install the corresponding tool for this, with the following snippet:
 #+begin_src bash :tangle install_deps.sh
 # helm-ag uses this for faster grepping
 if [[ "$(uname)" == "Darwin" ]]; then
@@ -734,9 +706,7 @@ else
 fi
 #+end_src
 
-Search the entire project with =C-c p s s= for a regexp.
-This let's you turn the matching results into an editable buffer using
-=C-c C-e=. Other keys are listed [[https://github.com/syohex/emacs-helm-ag#keymap][here]].
+Search the entire project with =C-c p s s= for a regexp. This let's you turn the matching results into an editable buffer using =C-c C-e=. Other keys are listed [[https://github.com/syohex/emacs-helm-ag#keymap][here]].
 
 #+begin_src emacs-lisp
   (use-package helm-ag
@@ -827,8 +797,7 @@ Let's first see how far I get with file-based capture templates and yankpad.
 #+END_SRC
 
 ** Selective display
-Will fold all text indented more than the position of the cursor at the time the
-keys are pressed.
+Will fold all text indented more than the position of the cursor at the time the keys are pressed.
 #+BEGIN_SRC emacs-lisp
 (defun set-selective-display-dlw (&optional level)
   "Fold text indented more than the cursor.
@@ -854,10 +823,7 @@ This is bound to change in Emacs 26, as it has built-in support for this and is 
   :bind ("C-c g" . 'git-gutter+-mode))
 #+END_SRC
 ** Speedup VCS
-Regexp matching directory names that are not under VC's control.
-The default regexp prevents fruitless and time-consuming attempts
-to determine the VC status in directories in which filenames are
-interpreted as hostnames.
+Regexp matching directory names that are not under VC's control. The default regexp prevents fruitless and time-consuming attempts to determine the VC status in directories in which filenames are interpreted as hostnames.
 #+BEGIN_SRC emacs-lisp
 (defvar locate-dominating-stop-dir-regexp
   "\\`\\(?:[\\/][\\/][^\\/]+\\|/\\(?:net\\|afs\\|\\.\\.\\.\\)/\\)\\'")
@@ -914,9 +880,7 @@ All prefixed with =C-x C-a=
 * OrgMode
 Load all my org stuff, but first org-mode itself.
 ** Init
-If variable =org-directory= is not set yet, map it to my home's files.
-You may set this in the =~/.emacs= to another value, e.g.
-=(setq org-directory "/ssh:fleury@machine.site.com:OrgFiles")=
+If variable =org-directory= is not set yet, map it to my home's files. You may set this in the =~/.emacs= to another value, e.g. =(setq org-directory "/ssh:fleury@machine.site.com:OrgFiles")=
 
 *** NEXT This does not seem to work, check out doc about [[https://stackoverflow.com/questions/3806423/how-can-i-get-a-variables-initial-value-in-elisp][defcustom]]
 :LOGBOOK:
@@ -928,11 +892,13 @@ You may set this in the =~/.emacs= to another value, e.g.
     :delight org-mode
     :config
     (if (not (boundp 'org-directory))
-        (setq org-directory "~/OrgFiles")))
+        (setq org-directory "~/OrgFiles"))
+    (add-hook 'org-mode-hook #'(lambda ()
+                                 (visual-line-mode)
+                                 (org-indent-mode))))
 #+END_SRC
 ** Access my remote Org files directory
-Let's bind this to a key, so I can open remote dirs. I suually put
-this in my =.emacs= as it is host- and user-specific.
+Let's bind this to a key, so I can open remote dirs. I suually put this in my =.emacs= as it is host- and user-specific.
 #+begin_src emacs-lisp :tangle no
 (defun paf/open-remote-org-dir ()
   (interactive)
@@ -1047,8 +1013,7 @@ Dynamically adjust tag position
 Not sure what to replace it with though...
 
 *** Preserve structure in archives
-Make sure archiving preserves the same tree structure, including when
-archiving subtrees.
+Make sure archiving preserves the same tree structure, including when archiving subtrees.
 [[https://orgmode.org/worg/org-hacks.html#org4265b4c][source on worg]]
 
 #+BEGIN_SRC emacs-lisp
@@ -1145,10 +1110,9 @@ Also, to set this after org-mode has loaded ([[https://emacs.stackexchange.com/q
 #+end_src
 *** org-gtasks
 Should follow this git repo: [[https://github.com/JulienMasson/org-gtasks][org-gtasks]]
-I have copied a version of the file here, it's not yet available
-on MELPA.
+I have copied a version of the file here, it's not yet available on MELPA.
 
-To help debug, usr this before running things:
+To help debug, use this before running things:
 (setq request-log-level 'debug)
 
 #+begin_src emacs-lisp
@@ -1207,8 +1171,7 @@ All keys prefixed with =C-c n=
     :after org-roam)
 #+end_src
 
-EmacSQL will need to get its C-binary compiled, and needs supporting tools. Note that 'tcc'
-for Termux seems not complete enough for the job.
+EmacSQL will need to get its C-binary compiled, and needs supporting tools. Note that 'tcc' for Termux seems not complete enough for the job.
 #+begin_src bash :tangle install_deps.sh
 # org-roam needs this binary
 install_pkg -x sqlite3 sqlite3
@@ -1291,8 +1254,7 @@ Make the display of images a simple key-stroke away.
                               )))
 #+END_SRC
 *** Properties collector
-Collect properties into tables.
-See documentation in the file.
+Collect properties into tables. See documentation in the file.
 #+BEGIN_SRC emacs-lisp
 (load-file "~/Emacs/org-collector.el")
 #+END_SRC
@@ -1368,8 +1330,7 @@ F12 open the first agenda file
   (global-set-key [C-f12] 'org-get-first-agenda-file)
 #+END_SRC
 *** org-ehtml [localhost:55555]
-This will start serving the org files through the emacs-based webbrowser
-when pressing M-f12 (on localhost:55555)
+This will start serving the org files through the emacs-based webbrowser when pressing =M-f12= (on localhost:55555)
 #+BEGIN_SRC emacs-lisp :tangle no
 (use-package org-ehtml
   :ensure t
@@ -1538,8 +1499,7 @@ A more visible current-time marker in the agenda
   ;;          (lambda () (run-at-time nil 180 'kiwon/org-agenda-redo-in-other-window)))
 #+END_SRC
 
-This would open the agenda if any org file was opened. In the end, I don't like this feature,
-so it is disabled by not tangling it.
+This would open the agenda if any org file was opened. In the end, I don't like this feature, so it is disabled by not tangling it.
 #+BEGIN_SRC emacs-lisp :tangle no
   ;; Make this happen only if we open an org file.
   (add-hook 'org-mode-hook
@@ -1677,8 +1637,7 @@ Add a few formats to the export functionality of org-mode.
     :defer)
 #+END_SRC
 *** plant-uml
-Tell where PlantUML is to be found. This needs to be downloaded and installed
-separately, see the [[http://plantuml.com/][PlantUML website]].
+Tell where PlantUML is to be found. This needs to be downloaded and installed separately, see the [[http://plantuml.com/][PlantUML website]].
 
 You could install the PlantUML JAR file with this snippet:
 #+BEGIN_SRC bash :tangle install_deps.sh
