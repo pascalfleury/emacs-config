@@ -1148,6 +1148,9 @@ Should follow this git repo: [[https://github.com/JulienMasson/org-gtasks][org-g
 I have copied a version of the file here, it's not yet available
 on MELPA.
 
+To help debug, usr this before running things:
+(setq request-log-level 'debug)
+
 #+begin_src emacs-lisp
 (use-package request
   :ensure t)
