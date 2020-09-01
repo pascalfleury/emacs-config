@@ -1438,41 +1438,41 @@ Track task dependencies, and dim them in the agenda.
 *** org-agenda
 **** views
 #+BEGIN_SRC emacs-lisp
-  (setq org-agenda-custom-commands
-        '(("t" "Hot Today" ((agenda "" ((org-agenda-span 'day)))
-                            (tags-todo "-dowith={.+}/WAITING")
-                            (tags-todo "-dowith={.+}+TODO=\"STARTED\"")
-                            (tags-todo "/NEXT")))
-          ("r" "Recurring" ((tags-todo "/WAITING")
-                            (tags-todo "TODO=\"STARTED\"")
-                            (tags-todo "/NEXT")
-                            (tags "REGULAR")))
-          ("n" "Agenda and all TODO's" ((agenda "")
-                                        (alltodo "")))
-          ("N" "Next actions" tags-todo "-dowith={.+}/!-TASK-TODO"
-                               ((org-agenda-todo-ignore-scheduled t)))
-          ("h" "Work todos" tags-todo "-dowith={.+}/!-TASK"
-           ((org-agenda-todo-ignore-scheduled t)))
-          ("H" "All work todos" tags-todo "-personal/!-TASK-CANCELLED"
-           ((org-agenda-todo-ignore-scheduled nil)))
-          ("A" "Work todos with doat or dowith" tags-todo
-           "dowith={.+}/!-TASK"
-           ((org-agenda-todo-ignore-scheduled nil)))
-          ("p" "TODO and TASK with"
-           (;;((paf-sec-use-with-where 'org-tags-view "with={$WITH}/TODO"))
-            ((org-stuck-projects '((paf-sec-use-with-where "PRJ+$WITH/-MAYBE-DONE") ("NEXT" "DONE") ())))
-            ;;((paf-sec-use-with-where 'org-tags-view "doat={$WHERE}/TODO"))
-            ;;((paf-sec-use-with-where 'org-tags-view "$WITH/TASK"))
-            (todo "STARTED")))
-          ("j" "TODO dowith and TASK with"
-           ((org-sec-with-view "TODO dowith")
-            (org-sec-stuck-with-view "TALK with")
-            (org-sec-where-view "TODO doat")
-            (org-sec-assigned-with-view "TASK with")
-            (org-sec-stuck-with-view "STUCK with")
-            (todo "STARTED")))
-          ("J" "Interactive TODO dowith and TASK with"
-           ((org-sec-who-view "TODO dowith")))))
+    (setq org-agenda-custom-commands
+          '(("t" "Hot Today" ((agenda "" ((org-agenda-span 'day)))
+                              (tags-todo "-dowith={.+}/WAITING")
+                              (tags-todo "-dowith={.+}+TODO=\"STARTED\"")
+                              (tags-todo "/NEXT")))
+            ("r" "Recurring" ((tags "REGULAR")
+                              (tags-todo "/WAITING")
+                              (tags-todo "TODO=\"STARTED\"")
+                              (tags-todo "/NEXT")))
+            ("n" "Agenda and all TODO's" ((agenda "")
+                                          (alltodo "")))
+            ("N" "Next actions" tags-todo "-dowith={.+}/!-TASK-TODO"
+                                 ((org-agenda-todo-ignore-scheduled t)))
+            ("h" "Work todos" tags-todo "-dowith={.+}/!-TASK"
+             ((org-agenda-todo-ignore-scheduled t)))
+            ("H" "All work todos" tags-todo "-personal/!-TASK-CANCELLED"
+             ((org-agenda-todo-ignore-scheduled nil)))
+            ("A" "Work todos with doat or dowith" tags-todo
+             "dowith={.+}/!-TASK"
+             ((org-agenda-todo-ignore-scheduled nil)))
+            ("p" "TODO and TASK with"
+             (;;((paf-sec-use-with-where 'org-tags-view "with={$WITH}/TODO"))
+              ((org-stuck-projects '((paf-sec-use-with-where "PRJ+$WITH/-MAYBE-DONE") ("NEXT" "DONE") ())))
+              ;;((paf-sec-use-with-where 'org-tags-view "doat={$WHERE}/TODO"))
+              ;;((paf-sec-use-with-where 'org-tags-view "$WITH/TASK"))
+              (todo "STARTED")))
+            ("j" "TODO dowith and TASK with"
+             ((org-sec-with-view "TODO dowith")
+              (org-sec-stuck-with-view "TALK with")
+              (org-sec-where-view "TODO doat")
+              (org-sec-assigned-with-view "TASK with")
+              (org-sec-stuck-with-view "STUCK with")
+              (todo "STARTED")))
+            ("J" "Interactive TODO dowith and TASK with"
+             ((org-sec-who-view "TODO dowith")))))
 #+END_SRC
 **** delight
 #+begin_src emacs-lisp
@@ -1571,6 +1571,12 @@ Very nice post on how to get capture templats from a file: [[https://joshrollins
           ("s" "Stand-up"
            entry (file+headline ,(org-relative-file "Inbox.org") "Meetings")
            "* Stand-up  :MTG:\n%U\n\n%?"
+           :clock-in t
+           :clock-resume t)
+          ;;
+          ("1" "1:1"
+           entry (file+headline ,(org-relative-file "Inbox.org") "Meetings")
+           "* 1:1 ^{with}p  :MTG:\n%U\n%^{with}p\n%?"
            :clock-in t
            :clock-resume t)
           ;;
