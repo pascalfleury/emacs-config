@@ -1592,7 +1592,7 @@ Very nice post on how to get capture templats from a file: [[https://joshrollins
           ;;
           ("1" "1:1"
            entry (file+headline ,(org-relative-file "Inbox.org") "Meetings")
-           "* 1:1 ^{with}p  :MTG:\n%U\n%^{with}p\n%?"
+           "* 1:1 %^{With}  :MTG:\n%U\n:PROPERTIES:\n:with: %\\1\n:END:\n\n%?"
            :clock-in t
            :clock-resume t)
           ;;
