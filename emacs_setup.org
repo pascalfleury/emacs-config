@@ -1458,11 +1458,12 @@ Track task dependencies, and dim them in the agenda.
            "dowith={.+}/!-TASK"
            ((org-agenda-todo-ignore-scheduled nil)))
           ("p" "TODO and TASK with"
-           (;;((paf-sec-use-with-where 'org-tags-view "with={$WITH}/TODO"))
-            ((org-stuck-projects '((paf-sec-use-with-where "PRJ+$WITH/-MAYBE-DONE") ("NEXT" "DONE") ())))
+           ((todo "STARTED")
+            (org-tags-view (paf-sec-use-with-where "with={$WITH}/TODO"))
+            (org-stuck-projects ((paf-sec-use-with-where "PRJ+$WITH/-MAYBE-DONE") ("NEXT" "DONE") ()))
             ;;((paf-sec-use-with-where 'org-tags-view "doat={$WHERE}/TODO"))
             ;;((paf-sec-use-with-where 'org-tags-view "$WITH/TASK"))
-            (todo "STARTED")))
+            ))
           ("j" "TODO dowith and TASK with"
            ((org-sec-with-view "TODO dowith")
             (org-sec-stuck-with-view "TALK with")
