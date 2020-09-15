@@ -118,7 +118,7 @@
    paf-sec-tag-entry. Change it with paf-sec-set-with,
    set to C-c w.  Defaults to paf-sec-me")
 
-(defvar paf-sec-where ""
+(defvar paf-sec-where nil
   "Value of the :where: property when doing an
    paf-sec-tag-entry. Change it with paf-sec-set-with,
    set to C-c W")
@@ -175,24 +175,36 @@
                              (org-time-stamp-format 'long)
                              (current-time)))
     (unless (string= paf-sec-where "")
-      (org-entry-put nil paf-sec-at-property paf-sec-where))
+      (org-entry-put nil paf-sec-where-property paf-sec-where))
     (if paf-sec-with
         (org-entry-put nil paf-sec-with-property paf-sec-with))))
 
-(defun paf-sec-replace-with-where (config)
+(defun paf-sec-default (value &optional default-value)
+  (let ((fallback-value (if default-value default-value "")))
+    (if value
+        (if (string= value "") fallback-value value)
+      fallback-value)))
+
+(defun paf-sec-replace-with-where (config &optional with-default where-default)
   "Replaces $WITH and $WHERE with the respective values of
    :paf-sec-with: and :paf-sec-where:."
-  (let ((with-replaced (replace-regexp-in-string "$WITH" paf-sec-with config))
-        (all-replaced (replace-regexp-in-string "$WHERE" paf-sec-where with-replaced)))
-    all-replaced))
-
+  (let ((with (paf-sec-default paf-sec-with with-default))
+        (where (paf-sec-default paf-sec-where where-default)))
+    (replace-regexp-in-string "\\$WHERE" where
+                              (replace-regexp-in-string "\\$WITH" with config 't) 't)))
 
 ;; ===== function to use in calendar
-(defun paf-sec-use-with-where (fct config &optional options)
-  "Replaces $WITH and $WHERE with the respective values of
-   :paf-sec-with: and :paf-sec-where:, then calls the passed function"
-  (let ((expanded-config (paf-sec-replace-with-where config)))
-    (funcall fct expanded-config options)))
+(defun paf-sec-limit-to-with-where (item)
+  "Returns t if the item satisfies the current :with: and :where:
+  properties. This can be used as a predicate in the
+  org-super-agenda grouping."
+  (let* ((item-with (org-find-text-property-in-string paf-sec-with-property item))
+         (item-where (org-find-text-property-in-string paf-sec-where-property item))
+         (with-ok (eq item-with paf-sec-with))
+         (where-ok (eq item-where paf-sec-where)))
+    't ;;(and with-ok where-ok)
+    ))
+
 
 (provide 'paf-secretary)
 
