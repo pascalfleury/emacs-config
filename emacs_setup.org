@@ -1363,8 +1363,8 @@ This lets one write links as e.g. [ [b:123457] ]
 #+END_SRC
 *** org-secretary
 This package is good, but it does not do it simply. I re-modeled it somewhat below.
-#+BEGIN_SRC emacs-lisp
-  (use-package  org-secretary
+#+BEGIN_SRC emacs-lisp :tangle no
+  (use-package org-secretary
     :ensure org-plus-contrib
     :config
     (setq org-sec-me "paf")
