@@ -1489,6 +1489,8 @@ Track task dependencies, and dim them in the agenda.
             (todo "STARTED")))
           ("J" "Interactive TODO dowith and TASK with"
            ((org-sec-who-view "TODO dowith")))))
+
+  (setq org-agenda-skip-deadline-prewarning-if-scheduled 2)
 #+END_SRC
 **** delight
 #+begin_src emacs-lisp
