@@ -721,12 +721,16 @@ Switch from header to implementation file quickly.
             (local-set-key  (kbd "C-c o") 'ff-find-other-file)))
 #+END_SRC
 ** no indentation of namespaces in C++
+Essentially, use the Google C++ style formatting.
 #+begin_src emacs-lisp
-  (defconst my-cc-style
-    '("cc-mode"
-      (c-offsets-alist . ((innamespace . [0])))))
+  (use-package google-c-style
+    :ensure t
+    :config
+    (add-hook 'c-mode-common-hook 'google-set-c-style)
+    (add-hook 'c-mode-common-hook 'google-make-newline-indent))
 
-  (c-add-style "my-cc-mode" my-cc-style)
+  (use-package flymake-google-cpplint
+    :ensure t)
 #+end_src
 ** ripgrep
 This enables searching recursively in projects.
