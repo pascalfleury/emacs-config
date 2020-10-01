@@ -502,6 +502,13 @@ mode to edit CSV files.
     :ensure t
     :mode "\\.csv\\'")
 #+end_src
+** protobuf-mode
+Mode for Google protocol buffer mode
+#+begin_src emacs-lisp
+  (use-package protobuf-mode
+    :ensure t
+    :mode "\\.proto\\'")
+#+end_src
 ** Helm (list completion)
 Trying out Helm instead of icicles, as it is available on ELPA.
 
