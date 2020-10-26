@@ -850,17 +850,18 @@ Simple way to increase/decrease a number in code.
 #+end_src
 ** GDB with many windows
 #+BEGIN_SRC emacs-lisp
-(setq gdb-many-windows t)
+  (setq gdb-many-windows t)
+  (setq gdb-max-source-window-count 2)
 
-(defun easy-gdb-top-of-stack-and-restore-windows ()
-  (interactive)
-  (switch-to-buffer (gdb-stack-buffer-name))
-  (goto-char (point-min))
-  (gdb-select-frame)
-  (gdb-restore-windows)
-  (other-window 2))
+  (defun easy-gdb-top-of-stack-and-restore-windows ()
+    (interactive)
+    (switch-to-buffer (gdb-stack-buffer-name))
+    (goto-char (point-min))
+    (gdb-select-frame)
+    (gdb-restore-windows)
+    (other-window 2))
 
-(global-set-key (kbd "C-x C-a C-t") 'easy-gdb-top-of-stack-and-restore-windows)
+  (global-set-key (kbd "C-x C-a C-t") 'easy-gdb-top-of-stack-and-restore-windows)
 #+END_SRC
 
 Here is my cheatsheet for the keyboard commands:
@@ -877,7 +878,7 @@ All prefixed with =C-x C-a=
 |------------+----------------------+---------|
 | Execute    | Next                 |    n    |
 |            | Step Into            |    s    |
-|            | Return               |    f    |
+|            | Return / Finish      |    f    |
 |            | Continue (run)       |    r    |
 |------------+----------------------+---------|
 | Stack      | Up                   |    <    |
