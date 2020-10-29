@@ -872,8 +872,8 @@ All prefixed with =C-x C-a=
 | <l>        | <l>                  |   <c>   |
 |------------+----------------------+---------|
 | Breakpoint | set                  |    b    |
-|            | delete               |    d    |
 |            | temporary            |    t    |
+|            | delete               |    d    |
 |------------+----------------------+---------|
 | Execute    | Next                 |    n    |
 |            | Step Into            |    s    |
