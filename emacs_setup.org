@@ -850,18 +850,51 @@ Simple way to increase/decrease a number in code.
 #+end_src
 ** GDB with many windows
 #+BEGIN_SRC emacs-lisp
-(setq gdb-many-windows t)
+  (setq gdb-many-windows t)
+  (setq gdb-use-separate-io-buffer t)
 
-(defun easy-gdb-top-of-stack-and-restore-windows ()
-  (interactive)
-  (switch-to-buffer (gdb-stack-buffer-name))
-  (goto-char (point-min))
-  (gdb-select-frame)
-  (gdb-restore-windows)
-  (other-window 2))
+  (defun easy-gdb-top-of-stack-and-restore-windows ()
+    (interactive)
+    (switch-to-buffer (gdb-stack-buffer-name))
+    (goto-char (point-min))
+    (gdb-select-frame)
+    (gdb-restore-windows)
+    (other-window 2))
 
-(global-set-key (kbd "C-x C-a C-t") 'easy-gdb-top-of-stack-and-restore-windows)
+    (global-set-key (kbd "C-x C-a C-t") 'easy-gdb-top-of-stack-and-restore-windows)
 #+END_SRC
+
+This should display the source code always in the same window when debugging.
+Found on [[https://stackoverflow.com/questions/39762833/emacsgdb-customization-how-to-display-source-buffer-in-one-window][Stack Overflow]].
+#+begin_src emacs-lisp
+  (add-to-list 'display-buffer-alist
+               (cons 'cdb-source-code-buffer-p
+                     (cons 'display-source-code-buffer nil)))
+
+  (defun cdb-source-code-buffer-p (bufName action)
+    "Return whether BUFNAME is a source code buffer."
+    (let ((buf (get-buffer bufName)))
+      (and buf
+           (with-current-buffer buf
+             (derived-mode-p buf 'c++-mode 'c-mode 'csharp-mode 'nxml-mode)))))
+
+  (defun display-source-code-buffer (sourceBuf alist)
+    "Find a window with source code and set sourceBuf inside it."
+    (let* ((curbuf (current-buffer))
+           (wincurbuf (get-buffer-window curbuf))
+           (win (if (and wincurbuf
+                         (derived-mode-p sourceBuf 'c++-mode 'c-mode 'nxml-mode)
+                         (derived-mode-p (current-buffer) 'c++-mode 'c-mode 'nxml-mode))
+                    wincurbuf
+                  (get-window-with-predicate
+                   (lambda (window)
+                     (let ((bufName (buffer-name (window-buffer window))))
+                       (or (cdb-source-code-buffer-p bufName nil)
+                           (assoc bufName display-buffer-alist)
+                           ))))))) ;; derived-mode-p doesn't work inside this, don't know why...
+      (set-window-buffer win sourceBuf)
+      win))
+#+end_src
 
 Here is my cheatsheet for the keyboard commands:
 
@@ -877,7 +910,7 @@ All prefixed with =C-x C-a=
 |------------+----------------------+---------|
 | Execute    | Next                 |    n    |
 |            | Step Into            |    s    |
-|            | Return               |    f    |
+|            | Return / Finish      |    f    |
 |            | Continue (run)       |    r    |
 |------------+----------------------+---------|
 | Stack      | Up                   |    <    |
