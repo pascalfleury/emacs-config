@@ -921,7 +921,6 @@ All prefixed with =C-x C-a=
 |            | Jump to current line |    j    |
 |------------+----------------------+---------|
 
-
 * OrgMode
 Load all my org stuff, but first org-mode itself.
 ** Init
