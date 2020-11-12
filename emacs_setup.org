@@ -861,15 +861,16 @@ Simple way to increase/decrease a number in code.
     (gdb-restore-windows)
     (other-window 2))
 
-    (global-set-key (kbd "C-x C-a C-t") 'easy-gdb-top-of-stack-and-restore-windows)
+  (global-set-key (kbd "C-x C-a C-t") 'easy-gdb-top-of-stack-and-restore-windows)
 #+END_SRC
 
 This should display the source code always in the same window when debugging.
 Found on [[https://stackoverflow.com/questions/39762833/emacsgdb-customization-how-to-display-source-buffer-in-one-window][Stack Overflow]].
 #+begin_src emacs-lisp
-  (add-to-list 'display-buffer-alist
-               (cons 'cdb-source-code-buffer-p
-                     (cons 'display-source-code-buffer nil)))
+  ; This unfortunately also messes up the regular frame navigation of source code.
+  ;(add-to-list 'display-buffer-alist
+  ;             (cons 'cdb-source-code-buffer-p
+  ;                   (cons 'display-source-code-buffer nil)))
 
   (defun cdb-source-code-buffer-p (bufName action)
     "Return whether BUFNAME is a source code buffer."
