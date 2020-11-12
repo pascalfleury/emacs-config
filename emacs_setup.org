@@ -849,6 +849,8 @@ Simple way to increase/decrease a number in code.
            ("M-_" . shift-number-down)))
 #+end_src
 ** GDB with many windows
+*** TODO Make it so that the source frame placement is forced only when using gdb.
+
 #+BEGIN_SRC emacs-lisp
   (setq gdb-many-windows t)
   (setq gdb-use-separate-io-buffer t)
