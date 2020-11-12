@@ -105,7 +105,7 @@ To preserve the original state of this file when updating the git repos with new
   fi
 
   # Install system dependencies
-  bash ${GENERATED}/onetime_setup.sh
+  bash ${GENERATED}/install_deps.sh
 #+END_SRC
 
 This script is then used to install the needed packages on the system.

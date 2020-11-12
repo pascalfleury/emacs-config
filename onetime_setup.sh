@@ -33,4 +33,4 @@ else
 fi
 
 # Install system dependencies
-bash ${GENERATED}/onetime_setup.sh
+bash ${GENERATED}/install_deps.sh
