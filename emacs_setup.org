@@ -469,7 +469,6 @@ Let's one jump around text
     :config
     (setq column-enforce-column 80)
     :bind ("C-c m" . 'column-enforce-mode))
-  (column-enforce-mode 1)
   ;; column-enforce-face
 #+end_src
 ** Better kill ring
