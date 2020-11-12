@@ -24,7 +24,7 @@ I have my config in directory =~/Emacs= which is where I clone this repository. 
 In your =~/.emacs= file, all you need to add is
 
 #+NAME: emacs_bootstrap
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp :tangle /tmp/dot_emacs.el
 ;; Loads PAF's emacs setup with bootstrap
 (load-file "~/Emacs/emacs_setup.el")
 #+END_SRC
@@ -44,7 +44,7 @@ It may be that [[https://github.com/jwiegley/use-package][use-package]] is not i
 
 The original content of the =emacs_setup.el= is as follows:
 
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp :tangle /tmp/emacs_setup.el
 ;; This is the initial state of the file to be loaded.
 ;; It will replace itself with the actual configuration at first run.
 
@@ -76,11 +76,20 @@ To preserve the original state of this file when updating the git repos with new
     echo "You will need 'git' to be installed !"
     exit 1
   fi
+  if  [[ -z "$(which emacs)" ]]; then
+    echo "You might need 'emacs' for this to be useful !"
+    exit 1
+  fi
+
   GIT_ROOT=$(dirname $0)
   (cd ${GIT_ROOT} && git update-index --skip-worktree emacs_setup.el)
 
   # Maybe this is a new install, .emacs does not exist
   test -e ~/.emacs || touch ~/.emacs
+
+  # Initial tangle of files.
+  emacs --batch --load ${GIT_ROOT}/emacs_setup.el
+  GENERATED=/tmp  # where it creates files
 
   # Add the load-file as the first thing in the user's ~/.emacs
   # If not yet added.
@@ -88,16 +97,19 @@ To preserve the original state of this file when updating the git repos with new
   if (( lines < 1 )); then
     echo "Added loading the config in your ~/.emacs"
     echo ";; dot_emacs.el" > ~/.emacs.new
-    cat ${GIT_ROOT}/dot_emacs.el >> ~/.emacs.new
+    cat ${GENERATED}/dot_emacs.el >> ~/.emacs.new
     cat ~/.emacs >> ~/.emacs.new
     mv ~/.emacs.new ~/.emacs
   else
     echo "Config in your ~/.emacs already set up!"
   fi
+
+  # Install system dependencies
+  bash ${GENERATED}/onetime_setup.sh
 #+END_SRC
 
 This script is then used to install the needed packages on the system.
-#+BEGIN_SRC bash :noweb yes :tangle install_deps.sh
+#+BEGIN_SRC bash :noweb yes :tangle /tmp/install_deps.sh
   #!/bin/bash
 
   # Trick to make it work on Termux
