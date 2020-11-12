@@ -109,7 +109,7 @@ To preserve the original state of this file when updating the git repos with new
 
   echo "Cleanup"
   rm ${GIT_ROOT}/dot_emacs.el
-  rm ${GIT_ROOT}/install_deps.el
+  rm ${GIT_ROOT}/install_deps.sh
 #+END_SRC
 
 This script is then used to install the needed packages on the system.

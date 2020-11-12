@@ -37,4 +37,4 @@ bash ${GIT_ROOT}/install_deps.sh
 
 echo "Cleanup"
 rm ${GIT_ROOT}/dot_emacs.el
-rm ${GIT_ROOT}/install_deps.el
+rm ${GIT_ROOT}/install_deps.sh
