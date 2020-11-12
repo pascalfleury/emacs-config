@@ -1797,7 +1797,7 @@ This is a note-taking packages inspired by the principles of the [[https://zette
     :ensure t)
 
   (use-package zetteldeft
-    :ensure nil
+    :ensure t
     :after (org deft avy)
 
     :config
