@@ -24,7 +24,7 @@ I have my config in directory =~/Emacs= which is where I clone this repository. 
 In your =~/.emacs= file, all you need to add is
 
 #+NAME: emacs_bootstrap
-#+BEGIN_SRC emacs-lisp :tangle /tmp/dot_emacs.el
+#+BEGIN_SRC emacs-lisp :tangle dot_emacs.el
 ;; Loads PAF's emacs setup with bootstrap
 (load-file "~/Emacs/emacs_setup.el")
 #+END_SRC
@@ -89,7 +89,6 @@ To preserve the original state of this file when updating the git repos with new
 
   # Initial tangle of files.
   emacs --batch --load ${GIT_ROOT}/emacs_setup.el
-  GENERATED=/tmp  # where it creates files
 
   # Add the load-file as the first thing in the user's ~/.emacs
   # If not yet added.
@@ -97,7 +96,7 @@ To preserve the original state of this file when updating the git repos with new
   if (( lines < 1 )); then
     echo "Added loading the config in your ~/.emacs"
     echo ";; dot_emacs.el" > ~/.emacs.new
-    cat ${GENERATED}/dot_emacs.el >> ~/.emacs.new
+    cat ${GIT_ROOT}/dot_emacs.el >> ~/.emacs.new
     cat ~/.emacs >> ~/.emacs.new
     mv ~/.emacs.new ~/.emacs
   else
@@ -105,11 +104,16 @@ To preserve the original state of this file when updating the git repos with new
   fi
 
   # Install system dependencies
-  bash ${GENERATED}/install_deps.sh
+  echo "Installing dependencies"
+  bash ${GIT_ROOT}/install_deps.sh
+
+  echo "Cleanup"
+  rm ${GIT_ROOT}/dot_emacs.el
+  rm ${GIT_ROOT}/install_deps.el
 #+END_SRC
 
 This script is then used to install the needed packages on the system.
-#+BEGIN_SRC bash :noweb yes :tangle /tmp/install_deps.sh
+#+BEGIN_SRC bash :noweb yes :tangle install_deps.sh
   #!/bin/bash
 
   # Trick to make it work on Termux
