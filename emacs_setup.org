@@ -44,7 +44,7 @@ It may be that [[https://github.com/jwiegley/use-package][use-package]] is not i
 
 The original content of the =emacs_setup.el= is as follows:
 
-#+BEGIN_SRC emacs-lisp :tangle /tmp/emacs_setup.el
+#+BEGIN_SRC emacs-lisp :tangle (expand-file-name "emacs_setup.el" temporary-file-directory)
 ;; This is the initial state of the file to be loaded.
 ;; It will replace itself with the actual configuration at first run.
 
