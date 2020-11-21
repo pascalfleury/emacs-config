@@ -1425,19 +1425,6 @@ This lets one write links as e.g. [ [b:123457] ]
         ("cl" . "http://cr/")))
 #+END_SRC
 *** org-secretary
-This package is good, but it does not do it simply. I re-modeled it somewhat below.
-#+BEGIN_SRC emacs-lisp :tangle no
-  (use-package org-secretary
-    :ensure org-plus-contrib
-    :config
-    (setq org-sec-me "paf")
-    (setq org-tag-alist '(("PRJ" . ?p)
-                          ("DESIGNDOC" . ?D)
-                          ("Milestone" . ?m)
-                          ("DESK" . ?d)
-                          ("HOME" . ?h)
-                          ("VC" . ?v))))
-#+END_SRC
 This is my version of the org-secretary
 #+BEGIN_SRC emacs-lisp
     (use-package paf-secretary
