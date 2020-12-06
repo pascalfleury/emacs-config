@@ -115,6 +115,7 @@ To preserve the original state of this file when updating the git repos with new
 This script is then used to install the needed packages on the system.
 #+BEGIN_SRC bash :noweb yes :tangle install_deps.sh
   #!/bin/bash
+  set -e
 
   # Trick to make it work on Termux
   which "ls" || pkg install debianutils
@@ -666,6 +667,40 @@ A tree-view navigation of files, with diff tool for directories.
 #+begin_src emacs-lisp :tangle no
   (use-package ztree
     :ensure t)
+#+end_src
+** Emacs Application Framework
+#+begin_src emacs-lisp
+  (use-package eaf
+    :load-path "~/.emacs.d/site-lisp/emacs-application-framework"
+    :custom
+    (eaf-find-alternate-file-in-dired t)
+    :config
+    (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key take_photo "p" eaf-camera-keybinding))
+#+end_src
+
+#+begin_src bash :tangle install_deps.sh
+  if [[ $(uname -m) == 'x86_64' ]]; then
+    # Get the application framework
+    install_pkg -x git git
+    LISPDIR="${HOME}/.emacs.d/site-lisp"
+    REPOS="https://github.com/manateelazycat/emacs-application-framework.git"
+    [[ -d "${LISPDIR}" ]] || mkdir -p "${LISPDIR}"
+    # try initial checkout if not dir yet
+    (cd "${LISPDIR}" && [[ -d "emacs-application-framework" ]] || git clone "${REPOS}" --depth=1)
+    # otherwise try to update the framework
+    (cd "${LISPDIR}/emacs-application-framework" && git pull)
+    # Install dependencies
+    install_pkg nodejs
+    install_pkg python3-pyqt5
+    install_pkg python3-pyqt5.qtwebengine
+    install_pkg python3-dbus
+    install_pkg wmctrl
+    # Install some needed Python packages
+    install_pkg -x /usr/bin/pip3 python3-pip
+    /usr/bin/pip3 install pymupdf qrcode pynotify qtconsole
+  fi
 #+end_src
 * Coding
 ** VCS
@@ -1799,13 +1834,16 @@ Disabled, as it causes only trouble to me, and I am not really using it anyway.
     (add-to-list 'org-file-apps '("\\.pdf::\\([[:digit:]]+\\)\\'" . org-pdfview-open)))
 #+end_src
 
-#+begin_src bash :tangle install_deps.sh
+#+begin_src bash :tangle no install_deps.sh
 # For all the native apps related to PDF tools
 # I did not sintall it on Max OSX yet.
-if [[ "$(uname)" != "Darwin" ]]; then
-  install_pkg pdf-tools
+if [[ "$(uname -m)" == "x86_64" ]]; then
+  install_pkg elpa-pdf-tools elpa-pdf-tools-server
 fi
 #+end_src
+
+#+RESULTS:
+
 *** yankpad
 Check out the [[https://kungsgeten.github.io/yankpad.html][blog post]] (and the [[https://kungsgeten.github.io/yankpad13.html][follow-up]]) and the [[https://github.com/Kungsgeten/yankpad][package docs]].
 #+begin_src emacs-lisp
