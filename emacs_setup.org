@@ -267,7 +267,7 @@ This should automatically convert any files with dos or Mac line endings into Un
 ** Theme
 I really like the high-contract Zenburn theme.
 #+BEGIN_SRC emacs-lisp
-  (use-package zenburn-theme
+  (use-package hc-zenburn-theme
    :ensure t)
 
   (custom-set-faces
@@ -940,6 +940,33 @@ All prefixed with =C-x C-a=
 | (rarer)    | Single instruction   |    i    |
 |            | Jump to current line |    j    |
 |------------+----------------------+---------|
+** vterm
+#+begin_src emacs-lisp
+  (if (not (eq module-file-suffix nil))
+      (use-package vterm
+        :ensure t
+        :config
+        (setq vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no")
+        (define-key vterm-mode-map (kbd "<C-backspace>")
+          (lambda () (interactive) (vterm-send-key (kbd "C-w"))))))
+#+end_src
+
+#+begin_src bash :tangle install_deps.sh
+  # Needed to compile vterm first time
+  install_pkg -x libtool libtool-bin
+  install_pkg -x cmake cmake
+
+  # Also amend the bash config
+  cat >> ${HOME}/.bashrc <<EOF
+  # Setup Emacs's VTerm communication
+  if [[ "\${INSIDE_EMACS}" = 'vterm' ]] \\
+      && [[ -n "\${EMACS_VTERM_PATH}" ]] \\
+      && [[ -f "\${EMACS_VTERM_PATH}/etc/emacs-vterm-bash.sh" ]]; then
+          source "\${EMACS_VTERM_PATH}/etc/emacs-vterm-bash.sh"
+  fi
+  EOF
+#+end_src
+
 
 * OrgMode
 Load all my org stuff, but first org-mode itself.
