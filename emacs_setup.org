@@ -670,14 +670,15 @@ A tree-view navigation of files, with diff tool for directories.
 #+end_src
 ** Emacs Application Framework
 #+begin_src emacs-lisp
-  (use-package eaf
-    :load-path "~/.emacs.d/site-lisp/emacs-application-framework"
-    :custom
-    (eaf-find-alternate-file-in-dired t)
-    :config
-    (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
-    (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
-    (eaf-bind-key take_photo "p" eaf-camera-keybinding))
+  (if (string-equal system-type "gnu/linux")
+      (use-package eaf
+        :load-path "~/.emacs.d/site-lisp/emacs-application-framework"
+        :custom
+        (eaf-find-alternate-file-in-dired t)
+        :config
+        (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
+        (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
+        (eaf-bind-key take_photo "p" eaf-camera-keybinding)))
 #+end_src
 
 #+begin_src bash :tangle install_deps.sh
@@ -992,13 +993,14 @@ All prefixed with =C-x C-a=
 |------------+----------------------+---------|
 ** vterm
 #+begin_src emacs-lisp
-  (if (not (eq module-file-suffix nil))
-      (use-package vterm
-        :ensure t
-        :config
-        (setq vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no")
-        (define-key vterm-mode-map (kbd "<C-backspace>")
-          (lambda () (interactive) (vterm-send-key (kbd "C-w"))))))
+  (if (not (string-equal system-type "darwin"))
+      (if (not (eq module-file-suffix nil))
+          (use-package vterm
+            :ensure t
+            :config
+            (setq vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no")
+            (define-key vterm-mode-map (kbd "<C-backspace>")
+              (lambda () (interactive) (vterm-send-key (kbd "C-w")))))))
 #+end_src
 
 #+begin_src bash :tangle install_deps.sh
