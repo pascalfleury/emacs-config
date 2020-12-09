@@ -1849,7 +1849,7 @@ Disabled, as it causes only trouble to me, and I am not really using it anyway.
     (add-to-list 'org-file-apps '("\\.pdf::\\([[:digit:]]+\\)\\'" . org-pdfview-open)))
 #+end_src
 
-#+begin_src bash :tangle no install_deps.sh
+#+begin_src bash :tangle no :var dummy=install_deps.sh
 # For all the native apps related to PDF tools
 # I did not sintall it on Max OSX yet.
 if [[ "$(uname -m)" == "x86_64" ]]; then
