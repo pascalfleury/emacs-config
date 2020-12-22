@@ -516,6 +516,14 @@ web-mode with config for Polymer editing
   (setq web-mode-css-indent-offset 2)
   (setq web-mode-code-indent-offset 2))
 #+END_SRC
+** typescript-mode
+#+begin_src emacs-lisp
+  (use-package typescript-mode
+    :mode "\\.ts\\'"
+    :config
+    (setq typescript-indent-level 2))
+#+end_src
+
 ** csv-mode
 mode to edit CSV files.
 #+begin_src emacs-lisp
