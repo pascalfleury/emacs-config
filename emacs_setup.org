@@ -214,6 +214,11 @@ tangled, and the tangled file is compiled."
 
 (add-hook 'after-save-hook 'tangle-init)
 #+END_SRC
+** Detect System
+Some hints about how to do this are [[http://ergoemacs.org/emacs/elisp_determine_OS_version.html][here]].
+#+begin_src emacs-lisp
+;; Detect the current system and capabilities
+#+end_src
 * Personal Initialization
 ** Clear =C-p= so I can use it as a prefix
 Remove =C-p= that I want to use for *me* personally as a prefix.
