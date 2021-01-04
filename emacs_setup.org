@@ -15,8 +15,6 @@ They usually live temporarily in my =~/.emacs= until I am happy, in which case I
   - [[https://github.com/Kungsgeten/yankpad][yankpad]] + [[https://github.com/joaotavora/yasnippet][yasnippet]]
   - [[https://github.com/yjwen/org-reveal][ox-reveal]] (see [[https://github.com/yjwen/org-reveal#set-the-location-of-revealjs][installation]])
 
-** Installed, but need no or external config
-- [[https://github.com/edran/hc-zenburn-emacs][hc-zenburn-theme]]
 
 * One-time Initial Setup
 I have my config in directory =~/Emacs= which is where I clone this repository. The config setup is maintained purely in the =~/Emacs/emacs_setup.org= file.
@@ -272,16 +270,6 @@ This should automatically convert any files with dos or Mac line endings into Un
 
   (add-hook 'find-file-hook 'no-junk-please-we-are-unixish)
 #+end_src
-** Theme
-I really like the high-contract Zenburn theme.
-#+BEGIN_SRC emacs-lisp
-  (use-package hc-zenburn-theme
-   :ensure t)
-
-  (custom-set-faces
-   '(highlight ((t (:background "forest green"))))
-   '(region ((t (:background "forest green")))))
-#+END_SRC
 ** auto revert
 Use =auto-revert=, which reloads a file if it's updated on disk
 and not modified in the buffer.
@@ -386,15 +374,18 @@ The cursor is displayed in different colors, depending on overwrite or insert mo
 
 (add-hook 'post-command-hook 'hcz-set-cursor-color-according-to-mode)
 #+END_SRC
-** faces
-This makes some of the faces a bit more contrasted.
-#+begin_src emacs-lisp
-;; faces for general region highlighting zenburn is too low-key.
-(custom-set-faces
- '(highlight ((t (:background "forest green"))))
- '(region ((t (:background "forest green")))))
-#+end_src
-***
+** theme / faces
+I really like the high-contract Zenburn theme.
+#+BEGIN_SRC emacs-lisp
+  (use-package hc-zenburn-theme
+    :ensure t)
+
+  ;; This makes some of the faces a bit more contrasted.
+  ;; faces for general region highlighting zenburn is too low-key.
+  (custom-set-faces
+   '(highlight ((t (:background "forest green"))))
+   '(region ((t (:background "forest green")))))
+#+END_SRC
 ** delight
 Package to remove some info from the mode-line for minor-modes.
 #+begin_src emacs-lisp
