@@ -125,6 +125,7 @@ This script is then used to install the needed packages on the system.
   declare -a PKG_MGRS=("pkg" "brew" "apt-get")
 
   PKG_PREFIX_apt_get="sudo"
+  PKG_POSTFIX_apt_get="-y"
 
   for pkg in "${PKG_MGRS[@]}"; do
       if [[ -x "$(which ${pkg})" ]]; then
@@ -152,9 +153,10 @@ This script is then used to install the needed packages on the system.
 
       local token=$(echo -n ${INSTALLER} | tr -c '0-9a-zA-Z_' '_')
       local prefix_var="PKG_PREFIX_${token}"
+      local postfix_var="PKG_POSTFIX_${token}"
 
       echo "Trying: ${INSTALLER} install $*"
-      ${!prefix_var} $(which ${INSTALLER}) install "$@"
+      ${!prefix_var} $(which ${INSTALLER}) ${!postfix_var} install "$@"
   }
 #+END_SRC
 
