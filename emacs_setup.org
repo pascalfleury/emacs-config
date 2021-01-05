@@ -1049,15 +1049,7 @@ If variable =org-directory= is not set yet, map it to my home's files. You may s
                                  (visual-line-mode)
                                  (org-indent-mode))))
 #+END_SRC
-** Access my remote Org files directory
-Let's bind this to a key, so I can open remote dirs. I suually put this in my =.emacs= as it is host- and user-specific.
-#+begin_src emacs-lisp :tangle no
-(defun paf/open-remote-org-dir ()
-  (interactive)
-  (dired "/ssh:remote.host.com:OrgFiles"))
 
-(global-set-key (kbd "C-p r o") 'paf/open-remote-org-dir)
-#+end_src
 ** Helper Functions / Tools found on the web / worg
 *** Open remote org dir
 In your =.emacs= just add this to configure the location:
@@ -1265,7 +1257,7 @@ Should follow this git repo: [[https://github.com/JulienMasson/org-gtasks][org-g
 I have copied a version of the file here, it's not yet available on MELPA.
 
 To help debug, use this before running things:
-(setq request-log-level 'debug)
+=(setq request-log-level 'debug)=
 
 #+begin_src emacs-lisp
 (use-package request
