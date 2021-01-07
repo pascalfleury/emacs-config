@@ -1264,6 +1264,8 @@ To help debug, use this before running things:
     :ensure t)
   (use-package deferred
     :ensure t)
+  (use-package request-deferred
+    :ensure t)
   (load-file "~/Emacs/org-gtasks.el")
 #+end_src
 
