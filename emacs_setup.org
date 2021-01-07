@@ -1260,9 +1260,11 @@ To help debug, use this before running things:
 =(setq request-log-level 'debug)=
 
 #+begin_src emacs-lisp
-(use-package request
-  :ensure t)
-(load-file "~/Emacs/org-gtasks.el")
+  (use-package request
+    :ensure t)
+  (use-package deferred
+    :ensure t)
+  (load-file "~/Emacs/org-gtasks.el")
 #+end_src
 
 I have this currently in my `~/.emacs`:
