@@ -278,6 +278,11 @@ and not modified in the buffer.
 (put 'upcase-region 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
 #+END_SRC
+** Calendar starts on Monday
+#+begin_src emacs-lisp
+  ;; Calendar starts on Monday
+  (setq calendar-week-start-day 1)
+#+end_src
 
 * Managing Buffers
 ** winner-mode (layout managing)
