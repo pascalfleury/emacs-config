@@ -1069,7 +1069,6 @@ All prefixed with =C-x C-a=
   EOF
 #+end_src
 
-
 * OrgMode
 Load all my org stuff, but first org-mode itself.
 ** Init
