@@ -678,7 +678,8 @@ A tree-view navigation of files, with diff tool for directories.
     :ensure t)
 #+end_src
 ** Emacs Application Framework
-#+begin_src emacs-lisp
+Tried it, but it fails often. too fiddly.
+#+begin_src emacs-lisp :tangle no
   (if (string-equal system-type "gnu/linux")
       (use-package eaf
         :load-path "~/.emacs.d/site-lisp/emacs-application-framework"
