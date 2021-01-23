@@ -278,6 +278,11 @@ and not modified in the buffer.
 (put 'upcase-region 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
 #+END_SRC
+** Calendar starts on Monday
+#+begin_src emacs-lisp
+  ;; Calendar starts on Monday
+  (setq calendar-week-start-day 1)
+#+end_src
 
 * Managing Buffers
 ** winner-mode (layout managing)
@@ -645,6 +650,42 @@ Colorize color names and codes in the correct color.
   (ledger-mode-clean-buffer)
   (ledger-sort-buffer))
 #+END_SRC
+*** Compute formatted sum of region
+#+begin_src emacs-lisp
+  (defun apply-function-to-region (fn)
+    (interactive "XFunction to apply to region: ")
+    (save-excursion
+      (let* ((beg (region-beginning))
+             (end (region-end))
+             (had-region (use-region-p))
+             (resulting-text
+              (funcall
+               fn
+               (buffer-substring-no-properties beg end)))
+             (new-end (+ beg (length resulting-text))))
+        (kill-region beg end)
+        (insert resulting-text)
+        ;; set the active region again if it was set originally.
+        (if had-region
+            (progn
+              (goto-char beg)
+              (push-mark new-end)
+              (setq mark-active t))))))
+
+  (defun paf/sum-amount (expression)
+    "Computes the sum from the arith expression given as argument."
+    (format "%.2f" (string-to-number (calc-eval expression))))
+
+  (defun paf/sum-amount-of-region ()
+    "Takes the region as an arithmetic expr, and replaces it with its sum."
+    (interactive)
+    (if (use-region-p)
+        (progn
+          (apply-function-to-region 'paf/sum-amount)
+          (goto-char (region-end)))))
+
+  (global-set-key (kbd "C-p S") 'paf/sum-amount-of-region)
+#+end_src
 *** Setup
 #+BEGIN_SRC emacs-lisp
   (use-package ledger-mode
@@ -1028,7 +1069,6 @@ All prefixed with =C-x C-a=
   fi
   EOF
 #+end_src
-
 
 * OrgMode
 Load all my org stuff, but first org-mode itself.
