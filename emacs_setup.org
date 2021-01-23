@@ -1363,9 +1363,9 @@ All keys prefixed with =C-c n=
            :map org-mode-map
                 (("C-c n i" . org-roam-insert))))
 
-  (use-package company-org-roam
-    :ensure t
-    :after org-roam)
+  ;;(use-package company-org-roam
+  ;;  :ensure t
+  ;;  :after org-roam)
 #+end_src
 
 EmacSQL will need to get its C-binary compiled, and needs supporting tools. Note that 'tcc' for Termux seems not complete enough for the job.
