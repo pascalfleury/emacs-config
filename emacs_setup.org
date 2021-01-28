@@ -926,11 +926,16 @@ Simplify cleanup of =#include= / =typedef= / =using= blocks.
 Let's first see how far I get with file-based capture templates and yankpad.
 #+BEGIN_SRC emacs-lisp :tangle no
   (use-package yasnippet
-    :ensure t)
+    :ensure t
+    :config
+    (setq yas-snippet-dirs
+          '("~/Emacs/Yasnippets/"
+            "~/Yasnippets/")))
   (use-package auto-yasnippet
     :ensure t
-:after yasnippet
+    :after yasnippet
     :config
+    (yas-global-mode 1)
     (bind-key "C-p C-s c" 'aya-create)
     (bind-key "C-p C-s e" 'aya-expand))
 #+END_SRC
