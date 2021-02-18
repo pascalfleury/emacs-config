@@ -15,6 +15,16 @@ They usually live temporarily in my =~/.emacs= until I am happy, in which case I
   - [[https://github.com/Kungsgeten/yankpad][yankpad]] + [[https://github.com/joaotavora/yasnippet][yasnippet]]
   - [[https://github.com/yjwen/org-reveal][ox-reveal]] (see [[https://github.com/yjwen/org-reveal#set-the-location-of-revealjs][installation]])
 
+** Make the config work fine when initially installed
+*** TODO F12 does not find any files
+:LOGBOOK:
+- State "TODO"       from              [2021-02-03 Wed 16:52]
+:END:
+because nothing is set in the =org-agenda-files=
+*** TODO maybe complain when org-directory is not set t an existing directory
+:LOGBOOK:
+- State "TODO"       from              [2021-02-03 Wed 16:53]
+:
 
 * One-time Initial Setup
 I have my config in directory =~/Emacs= which is where I clone this repository. The config setup is maintained purely in the =~/Emacs/emacs_setup.org= file.
@@ -23,6 +33,10 @@ In your =~/.emacs= file, all you need to add is
 
 #+NAME: emacs_bootstrap
 #+BEGIN_SRC emacs-lisp :tangle dot_emacs.el
+
+;; Setup your Org directory
+(setq org-directory "~/OrgFiles")
+
 ;; Loads PAF's emacs setup with bootstrap
 (load-file "~/Emacs/emacs_setup.el")
 #+END_SRC
@@ -66,6 +80,12 @@ or simply =C-x C-e= at the end of that line.
 
 ** One-time configure
 To preserve the original state of this file when updating the git repos with new config settings, execute the following block once (=C-c C-c=):
+
+*** TODO detect the system better
+:LOGBOOK:
+- State "TODO"       from              [2021-02-03 Wed 16:57]
+:END:
+currently it does not a good job of figuring out the diff between OSX, Linux, Termux (android) and Windows.
 
 #+BEGIN_SRC bash :noweb yes :tangle onetime_setup.sh
   #!/bin/bash
@@ -204,7 +224,7 @@ I set this up to tangle the init org-mode file into the actual Emacs init file a
 #+BEGIN_SRC emacs-lisp
 (defun tangle-init ()
   "If the current buffer is 'init.org' the code-blocks are
-tangled, and the tangled file is compiled."
+  tangled, and the tangled file is compiled."
   (when (equal (buffer-file-name)
                (expand-file-name "~/Emacs/emacs_setup.org"))
     ;; Avoid running hooks when tangling.
@@ -216,6 +236,7 @@ tangled, and the tangled file is compiled."
 #+END_SRC
 ** Detect System
 Some hints about how to do this are [[http://ergoemacs.org/emacs/elisp_determine_OS_version.html][here]].
+
 #+begin_src emacs-lisp
 ;; Detect the current system and capabilities
 #+end_src
@@ -411,6 +432,11 @@ Letting one enter chars that are otherwise difficult in e.g. the minibuffer.
 (global-set-key [delete] 'delete-char)
 (global-set-key [kp-delete] 'delete-char)
 #+END_SRC
+** home and end
+#+begin_src emacs-lisp
+  (global-set-key (kbd "<home>") 'beginning-of-line)
+  (global-set-key (kbd "<end>") 'end-of-line)
+#+end_src
 ** Macros
 #+BEGIN_SRC emacs-lisp
 (global-set-key [f3] 'start-kbd-macro)
