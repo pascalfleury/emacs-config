@@ -889,8 +889,8 @@ Essentially, use the Google C++ style formatting.
     (add-hook 'c-mode-common-hook 'google-set-c-style)
     (add-hook 'c-mode-common-hook 'google-make-newline-indent))
 
-  (use-package flymake-google-cpplint
-    :ensure t)
+  ;;(use-package flymake-google-cpplint
+  ;;  :ensure t)
 #+end_src
 ** ripgrep
 This enables searching recursively in projects.
