@@ -1880,8 +1880,12 @@ Very nice post on how to get capture templats from a file: [[https://joshrollins
              "* %?\n%U\n%^{with}\n"
              :file-name "meeting/%<%Y%m%d%H%M%S>-${slug}"
              :head "#+title: ${title}\n#+roam_tags: %^{with}\n\n"
+             )
+        ("r" "Reference" entry (function org-roam--capture-get-point)
+             "* %?\n%U\n\n"
+             :file-name "%<%Y%m%d%H%M%S>-${slug}"
+             :head "#+title: ${title}\n#+roam_tags: reference\n\n"
              )))
-
 #+end_src
 *** org-babel
 What kind of code block languages do I need
