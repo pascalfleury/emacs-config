@@ -1543,8 +1543,12 @@ Then you can use the keyboard shortcut to open that dir.
               (local-set-key (kbd "C-<down>") 'org-move-subtree-down)
               (local-set-key (kbd "C-c l") 'org-store-link)
               (local-set-key (kbd "C-c C-l") 'org-insert-link)))
-
 #+END_SRC
+
+*** Links by ID
+#+begin_src emacs-lisp
+  (setq org-id-link-to-org-use-id 'create-if-interactive)
+#+end_src
 *** Display settings
 Some config for display.
 #+BEGIN_SRC emacs-lisp
