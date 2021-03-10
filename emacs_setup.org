@@ -570,38 +570,38 @@ Trying out Helm instead of icicles, as it is available on ELPA.
 I just took over the config described in this [[https://tuhdo.github.io/helm-intro.html][helm intro]].
 
 #+begin_src emacs-lisp
-(use-package helm
- :ensure t
- :delight helm-mode
- :config
-  (require 'helm-config)
-  ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
-  ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
-  ;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
-  (global-set-key (kbd "C-c h") 'helm-command-prefix)
-  (global-unset-key (kbd "C-x c"))
+  (use-package helm
+   :ensure t
+   :delight helm-mode
+   :config
+    (require 'helm-config)
+    ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
+    ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
+    ;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
+    (global-set-key (kbd "C-c h") 'helm-command-prefix)
+    (global-unset-key (kbd "C-x c"))
 
-  (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
-  (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB work in terminal
-  (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+    (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
+    (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB work in terminal
+    (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
 
-  (when (executable-find "curl")
-    (setq helm-google-suggest-use-curl-p t))
+    (when (executable-find "curl")
+      (setq helm-google-suggest-use-curl-p t))
 
-  (setq helm-split-window-inside-p            t ; open helm buffer inside current window, not occupy whole other window
-        helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
-        helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
-        helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
-        helm-ff-file-name-history-use-recentf t
-        helm-echo-input-in-header-line t)
+    (setq helm-split-window-inside-p            t ; open helm buffer inside current window, not occupy whole other window
+          helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
+          helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
+          helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
+          helm-ff-file-name-history-use-recentf t
+          helm-echo-input-in-header-line t)
 
-  (setq helm-autoresize-max-height 0)
-  (setq helm-autoresize-min-height 20)
-  (helm-autoresize-mode 1)
+    (setq helm-autoresize-max-height 0)
+    (setq helm-autoresize-min-height 20)
+    (helm-autoresize-mode 1)
 
-  (helm-mode 1)
+    (helm-mode 1)
 
-  (global-set-key (kbd "M-x") 'helm-M-x))
+    (global-set-key (kbd "M-x") 'helm-M-x))
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
@@ -685,6 +685,7 @@ Colorize color names and codes in the correct color.
   (ledger-sort-buffer))
 #+END_SRC
 *** Compute formatted sum of region
+It actually computes the entire arithmetic expression that is selected, and replaces it with the numerical result.
 #+begin_src emacs-lisp
   (defun apply-function-to-region (fn)
     (interactive "XFunction to apply to region: ")
@@ -735,8 +736,7 @@ Colorize color names and codes in the correct color.
                 (setq-local ledger-complete-in-steps t))))
 #+END_SRC
 ** [[http://www.gnu.org/software/hyperbole/][hyperbole]]
-Let's try this too, even though I do not quite get the point of this
-whole package yet.
+Let's try this too, even though I do not quite get the point of this whole package yet.
 
 *NOTE* assigns =hui-search-web= to =C-c C-/= to not clobber the later used =C-c /= from OrgMode (org-mode sparse trees). This works because hyperbole will first check if the function is already bound to some key before binding it to the coded default.
 #+begin_src emacs-lisp
@@ -980,9 +980,8 @@ Will fold all text indented more than the position of the cursor at the time the
 #+END_SRC
 ** Info in the gutter
 *** Line numbers
-This is bound to change in Emacs 26, as it has built-in support for this and is more efficient.
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-c C-n") 'linum-mode)
+  (add-hook 'prog-mode-hook 'linum-mode)
 #+END_SRC
 *** git informations
 #+BEGIN_SRC emacs-lisp
@@ -1130,34 +1129,13 @@ If variable =org-directory= is not set yet, map it to my home's files. You may s
                                  (org-indent-mode))))
 #+END_SRC
 
-** Helper Functions / Tools found on the web / worg
-*** Open remote org dir
-In your =.emacs= just add this to configure the location:
-
-#+begin_src emacs-lisp :tangle no
-(setq remote-org-directory "/ssh:fleury@my.hostname.com:OrgFiles")
-#+end_src
-
-Then you can use the keyboard shortcut to open that dir.
-
-#+begin_src emacs-lisp
-    (defcustom remote-org-directory "~/OrgFiles"
-      "Location of remove OrgFile directory, should you have one."
-      :type 'string
-      :group 'paf)
-    (defun paf/open-remote-org-directory ()
-      (interactive)
-      (find-file remote-org-directory))
-
-    (global-set-key (kbd "C-p r o") 'paf/open-remote-org-directory)
-#+end_src
-
+** Packages / Helper Functions / Tools found on the web / worg
 *** org-protocol
 Let other tools use emacs client to interact
 #+begin_src emacs-lisp
 (require 'org-protocol)
 #+end_src
-*** Org-relative file function
+*** Org-relative file helper function
 #+BEGIN_SRC emacs-lisp
 (defun org-relative-file (filename)
   "Compute an expanded absolute file path for org files"
@@ -1359,6 +1337,35 @@ I have this currently in my `~/.emacs`:
      :client-id "XXX"
      :client-secret "XXX"))
 #+end_src
+*** Search in org
+**** org-ql
+A powerful query language for Org mode: https://github.com/alphapapa/org-ql
+
+Make sure that =org-ql= is installed after =helm-org=, otherwise it may be the case that =helm-org-ql= is not working according to [[https://github.com/alphapapa/org-ql][this comment]].
+#+begin_src emacs-lisp
+  (use-package helm-org
+    :ensure t
+    :config
+    (add-to-list 'helm-completing-read-handlers-alist '(org-capture . helm-org-completing-read-tags))
+    (add-to-list 'helm-completing-read-handlers-alist '(org-set-tags . helm-org-completing-read-tags)))
+
+  (use-package org-ql
+    :ensure t
+    :config
+    (require 'org-ql-search) ;; workaround for https://github.com/alphapapa/org-ql/issues/53
+    )
+#+end_src
+**** org-rifle
+[[https://github.com/alphapapa/org-rifle][org-rifle]] is the swiss-army knife for searching in an org-file.
+
+#+begin_src emacs-lisp
+  (use-package helm-org-rifle
+    :ensure t
+    :defer 110
+    :after org
+    )
+#+end_src
+
 *** org-super-agenda
 This enables a more fine-grained filtering of the agenda items.
 #+begin_src emacs-lisp
@@ -1413,6 +1420,11 @@ EmacSQL will need to get its C-binary compiled, and needs supporting tools. Note
 install_pkg -x sqlite3 sqlite3
 # Make sure there is a C compiler for emacsql-sqlite
 [[ -n "$(which cc)" ]] || install_pkg -x cc clang
+#+end_src
+*** org-ref
+#+begin_src emacs-lisp
+  (use-package org-ref
+    :ensure t)
 #+end_src
 
 *** org-clock-convenience
@@ -1497,6 +1509,27 @@ Collect properties into tables. See documentation in the file.
 
 ** My Setup
 These are mostly org-config specific to me, myself and I.
+*** Open remote org dir
+In your =.emacs= just add this to configure the location:
+
+#+begin_src emacs-lisp :tangle no
+(setq remote-org-directory "/ssh:fleury@my.hostname.com:OrgFiles")
+#+end_src
+
+Then you can use the keyboard shortcut to open that dir.
+
+#+begin_src emacs-lisp
+    (defcustom remote-org-directory "~/OrgFiles"
+      "Location of remove OrgFile directory, should you have one."
+      :type 'string
+      :group 'paf)
+    (defun paf/open-remote-org-directory ()
+      (interactive)
+      (find-file remote-org-directory))
+
+    (global-set-key (kbd "C-p r o") 'paf/open-remote-org-directory)
+#+end_src
+
 *** Key mappings
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "C-c l") 'org-store-link)
@@ -1562,7 +1595,7 @@ F12 open the first agenda file
     (interactive)
     (find-file (elt org-agenda-files 0)))
   (global-set-key [f12] 'org-get-first-agenda-file)
-  ; F12 on Mac OSX displays the dashboard....
+  ; F12 on Mac OSX displays the dashboard, so add Control F12
   (global-set-key [C-f12] 'org-get-first-agenda-file)
 #+END_SRC
 *** org-ehtml [localhost:55555]
@@ -1833,6 +1866,7 @@ Very nice post on how to get capture templats from a file: [[https://joshrollins
   (defun bh/verify-refile-target ()
     "Exclude todo keywords with a done state from refile targets"
     (not (member (nth 2 (org-heading-components)) org-done-keywords)))
+
   (setq org-refile-target-verify-function 'bh/verify-refile-target)
 #+END_SRC
 *** OrgRoam templates
