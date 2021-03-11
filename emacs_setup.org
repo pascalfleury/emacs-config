@@ -836,9 +836,6 @@ Have a single binding to call the most appropriate tool given the repository.
   (global-set-key (kbd "C-p v") 'paf/vcs-status)
 #+end_src
 
-#+RESULTS:
-: paf/vcs-status
-
 ** Projectile
 Start using projectile. It has the documentation [[https://docs.projectile.mx/en/latest/][here]].
 #+begin_src emacs-lisp
@@ -1986,8 +1983,6 @@ if [[ "$(uname -m)" == "x86_64" ]]; then
 fi
 #+end_src
 
-#+RESULTS:
-
 *** yankpad
 Check out the [[https://kungsgeten.github.io/yankpad.html][blog post]] (and the [[https://kungsgeten.github.io/yankpad13.html][follow-up]]) and the [[https://github.com/Kungsgeten/yankpad][package docs]].
 #+begin_src emacs-lisp
@@ -2042,5 +2037,3 @@ Update the version by downloading the latest version here:
 #+begin_src bash :tangle no
 wget https://raw.githubusercontent.com/EFLS/zetteldeft/master/zetteldeft.el -O ~/Emacs/zetteldeft.el
 #+end_src
-
-#+RESULTS:
