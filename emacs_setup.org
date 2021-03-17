@@ -736,7 +736,8 @@ It actually computes the entire arithmetic expression that is selected, and repl
                 (setq-local ledger-complete-in-steps t))))
 #+end_src
 ** [[http://www.gnu.org/software/hyperbole/][hyperbole]]
-Let's try this too, even though I do not quite get the point of this whole package yet.
+I found some gems that explain a bit better what hyperbole is trying to solve. See John Wiegley's [[https://www.reddit.com/r/emacs/comments/7daneo/announce_gnu_hyperbole_7_aka_the_git_ready_for/dpx5sxw/][Using hyperbole: a motivation]]
+Once more it shows that the most powerful things are not always the most visible.
 
 *NOTE* assigns =hui-search-web= to =C-c C-/= to not clobber the later used =C-c /= from OrgMode (org-mode sparse trees). This works because hyperbole will first check if the function is already bound to some key before binding it to the coded default.
 #+begin_src emacs-lisp
