@@ -978,7 +978,8 @@ Will fold all text indented more than the position of the cursor at the time the
 ** Info in the gutter
 *** Line numbers
 #+begin_src emacs-lisp
-  (add-hook 'prog-mode-hook 'linum-mode)
+  (add-hook 'prog-mode-hook 'display-line-numbers-mode)
+  (setq-default display-line-number-width 3)
 #+end_src
 *** git informations
 #+begin_src emacs-lisp
