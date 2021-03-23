@@ -295,10 +295,23 @@ This should automatically convert any files with dos or Mac line endings into Un
 Use =auto-revert=, which reloads a file if it's updated on disk
 and not modified in the buffer.
 #+begin_src emacs-lisp
-(global-auto-revert-mode 1)
-(put 'upcase-region 'disabled nil)
-(put 'narrow-to-region 'disabled nil)
+  (global-auto-revert-mode 1)
 #+end_src
+
+** enable upcase- and downcase-region and narrowing
+these got diabled in Emacs 19 (!) because they were considered confusing.
+Use =C-x C-u= and =C-x C-l= to effect them.
+
+#+begin_src emacs-lisp
+  (put 'upcase-region 'disabled nil)  ;; C-x C-u
+  (put 'downcase-region 'disabled nil)  ;; C-x C-l (lowercase L)
+
+  ;; C-x n <key>. Widen with C-x n w
+  (put 'narrow-to-region 'disabled nil)  ; C-x n n
+  (put 'narrow-to-defun  'disabled nil)
+  (put 'narrow-to-page   'disabled nil)
+#+end_src
+
 ** Calendar starts on Monday
 #+begin_src emacs-lisp
   ;; Calendar starts on Monday
