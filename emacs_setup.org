@@ -1451,6 +1451,7 @@ All keys prefixed with =C-c n=
     :load-path "~/Emacs/org-roam-extras.el"
     :after org-roam
     :config
+    (setq roam-extras-todo-tag-name "project")
     ;; set the todo tag to roam fiels when they contain tasks
     (add-hook 'org-roam-file-setup-hook #'roam-extras/update-todo-tag)
     (add-hook 'before-save-hook #'roam-extras/update-todo-tag)

@@ -1,6 +1,14 @@
 ;; Some functions to use GTD withint org-roam files without
 ;; taxing the org-agenda too much.
 
+(defcustom roam-extras-todo-tag-name "todo"
+  "The tag to use to mark files containing org-mode todo items."
+  :type '(string))
+
+(defcustom roam-extras-org-agenda-files-cache nil
+  "Keeps the original org-agenda-files while it tweaks it."
+  :type 'sexp)
+
 (defun roam-extras/todo-p ()
   "Return non-nil if current buffer has any TODO entry.
 
@@ -24,8 +32,8 @@ tasks."
            (prop-tags (org-roam--extract-tags-prop file))
            (tags prop-tags))
       (if (roam-extras/todo-p)
-          (setq tags (seq-uniq (cons "todo" tags)))
-        (setq tags (remove "todo" tags)))
+          (setq tags (seq-uniq (cons roam-extras-todo-tag-name tags)))
+        (setq tags (remove roam-extras-todo-tag-name tags)))
       (unless (equal prop-tags tags)
         (org-roam--set-global-prop
          "roam_tags"
@@ -33,16 +41,13 @@ tasks."
 
 (defun roam-extras/todo-files ()
   "Return a list of note files containing todo tag."
-  (seq-map
-   #'car
-   (org-roam-db-query
-    [:select file
-             :from tags
-             :where (like tags (quote "%\"todo\"%"))])))
-
-(defcustom roam-extras-org-agenda-files-cache nil
-  "Keeps the original org-agenda-files while it tweaks it."
-  :type 'sexp)
+  (let* ((search-tag (concatenate 'string "%\"" roam-extras-todo-tag-name "\"%")))
+    (seq-map
+     #'car
+     (org-roam-db-query
+      [:select file
+               :from tags
+               :where (like tags (quote search-tag))]))))
 
 (defun roam-extras/update-todo-files (&rest _)
   "Sets the value of `org-agenda-files' to only relevant org-roam files."
