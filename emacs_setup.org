@@ -2,6 +2,7 @@
 #+AUTHOR: Pascal Fleury
 #+BABEL: :cache yes
 #+PROPERTY: header-args :tangle yes
+#+roam_tags: todo
 
 This is my Emacs config. You need to tangle this into a file that then gets loaded by Emacs: =C-c C-v t= [org-babel-tangle]. Below, I also explain how this tangling is automated.
 
@@ -260,6 +261,26 @@ Use instead of add-hook to run it a single time.
          (remove-hook ,hook ',sym ,local)
          (funcall ,function))
        (add-hook ,hook ',sym ,append ,local))))
+#+end_src
+
+** truncate a string
+#+begin_src emacs-lisp
+  (defun paf/truncate-string (text &optional len)
+    "Truncate the text to a given length.
+
+  When LEN is a number, resulting string is truncated at that length.
+  If the length is bigger, then '...' is added at the end.
+
+  Usage example:
+
+    (setq org-agenda-prefix-format
+          '((agenda . \" %(paf/truncate-string (roam-extras/extract-agenda-category) 12) %?-12t %12s\")))
+
+  Refer to `org-agenda-prefix-format' for more information."
+    (interactive)
+    (if (numberp len)
+        (s-truncate len text "…")
+      text))
 #+end_src
 * Environment
 ** Browser default
@@ -1419,12 +1440,25 @@ All keys prefixed with =C-c n=
                  ("C-c n f" . org-roam-find-file)
                  ("C-c n c" . org-roam-capture)
                  ("C-c n g" . org-roam-graph))
-           :map org-mode-map
+                :map org-mode-map
                 (("C-c n i" . org-roam-insert))))
 
   ;;(use-package company-org-roam
   ;;  :ensure t
   ;;  :after org-roam)
+
+  (use-package org-roam-extras
+    :load-path "~/Emacs/org-roam-extras.el"
+    :after org-roam
+    :config
+    ;; set the todo tag to roam fiels when they contain tasks
+    (add-hook 'org-roam-file-setup-hook #'roam-extras/update-todo-tag)
+    (add-hook 'before-save-hook #'roam-extras/update-todo-tag)
+    ;; update the agenda-files just before constructing the agenda
+    (advice-add 'org-agenda :before #'roam-extras/add-todo-files)
+    (advice-add 'org-agenda :after #'roam-extras/restore-todo-files)
+    )
+
 #+end_src
 
 EmacSQL will need to get its C-binary compiled, and needs supporting tools. Note that 'tcc' for Termux seems not complete enough for the job.
@@ -1756,6 +1790,31 @@ Track task dependencies, and dim them in the agenda.
 
   (setq org-agenda-skip-deadline-prewarning-if-scheduled 2)
 #+end_src
+**** text formatting
+These are some improved rendering of the calendar view.
+
+First, d12frosted's [[https://d12frosted.io/posts/2020-06-24-task-management-with-roam-vol2.html][post]] handles the category length:
+#+begin_src emacs-lisp
+  (defun paf/agenda-category (len)
+    (paf/truncate-string (roam-extras/extract-agenda-category) len))
+
+  (setq org-agenda-prefix-format
+        '((agenda . " %i %-12(paf/agenda-category 12) %?-12t% s")
+          (todo . " %i %-12(paf/agenda-category 12) ")
+          (tags . " %i %-12(paf/agenda-category 12) ")
+          (search . " %i %-12(paf/agenda-category 12) ")))
+#+end_src
+
+Displaying a grid of 3 hours seems better, as show by AbstProcDo's [[https://www.reddit.com/r/orgmode/comments/mbs4ia/my_agendatime_grid_segmented_by_3_hours/][post]]:
+#+begin_src emacs-lisp
+  (setq org-agenda-time-grid
+        (quote ((daily today remove-match)
+                (600 900 1200 1500 1800 2100)
+                " ……………"
+                "" ;; ———————————————"
+                )))
+#+end_src
+
 **** delight
 #+begin_src emacs-lisp
 (delight 'org-agenda-mode)
@@ -1888,17 +1947,22 @@ Very nice post on how to get capture templats from a file: [[https://joshrollins
 #+end_src
 *** OrgRoam templates
 #+begin_src emacs-lisp
-(setq org-roam-capture-templates
-      `(("m" "Meeting" entry (function org-roam--capture-get-point)
-             "* %?\n%U\n%^{with}\n"
-             :file-name "meeting/%<%Y%m%d%H%M%S>-${slug}"
-             :head "#+title: ${title}\n#+roam_tags: %^{with}\n\n"
-             )
-        ("r" "Reference" entry (function org-roam--capture-get-point)
-             "* %?\n%U\n\n"
-             :file-name "%<%Y%m%d%H%M%S>-${slug}"
-             :head "#+title: ${title}\n#+roam_tags: reference\n\n"
-             )))
+  (setq org-roam-capture-templates
+        `(("m" "Meeting" entry (function org-roam--capture-get-point)
+           "* %?\n%U\n%^{with}\n"
+           :file-name "Meeting/%<%Y%m%d%H%M%S>-${slug}"
+           :head "#+title: ${title}\n#+roam_tags: %^{with}\n\n"
+           )
+          ("n" "Note" entry (function org-roam--capture-get-point)
+           "* %?"
+           :file-name "%<%Y%m%d%H%M%S>-${slug}"
+           :head "#+title: ${title}\n#+roam_tags: draft\n\n"
+           )
+          ("r" "Reference" entry (function org-roam--capture-get-point)
+           "* %?\n%U\n\n"
+           :file-name "%<%Y%m%d%H%M%S>-${slug}"
+           :head "#+title: ${title}\n#+roam_tags: reference\n\n"
+           )))
 #+end_src
 *** org-babel
 What kind of code block languages do I need
