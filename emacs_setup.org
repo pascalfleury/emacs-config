@@ -2,7 +2,7 @@
 #+AUTHOR: Pascal Fleury
 #+BABEL: :cache yes
 #+PROPERTY: header-args :tangle yes
-#+roam_tags: todo
+#+roam_tags: project todo
 
 This is my Emacs config. You need to tangle this into a file that then gets loaded by Emacs: =C-c C-v t= [org-babel-tangle]. Below, I also explain how this tangling is automated.
 
@@ -13,7 +13,7 @@ I regularly try out new packages, this is my current list of things being evalua
 They usually live temporarily in my =~/.emacs= until I am happy, in which case I move their config into this file so that it gets replicated on all machines I work on with Emacs.
 
 ** Currently under review
-  - [[https://github.com/Kungsgeten/yankpad][yankpad]] + [[https://github.com/joaotavora/yasnippet][yasnippet]]
+  - [[https://github.com/Kungsgeten/yankpad][yankpad]]
   - [[https://github.com/yjwen/org-reveal][ox-reveal]] (see [[https://github.com/yjwen/org-reveal#set-the-location-of-revealjs][installation]])
 
 ** Make the config work fine when initially installed
@@ -980,22 +980,44 @@ Simplify cleanup of =#include= / =typedef= / =using= blocks.
     (define-key vdiff-mode-map (kbd "C-c") vdiff-mode-prefix-map))
 #+end_src
 
-** yasnippet
-Let's first see how far I get with file-based capture templates and yankpad.
-#+begin_src emacs-lisp :tangle no
+** yasnippet / abbrev / auto-yasnippet
+The key for yasnippet expansion is simply =TAB=.
+The snippets are mode-dependent. See the [[http://joaotavora.github.io/yasnippet/][full documentation]].
+
+Some of the keys are listed here. The prefix is =C-c &=
+
+| Command                | key after C-x & |
+|------------------------+-----------------|
+| yas-new-snippet        | C-n             |
+| yas-insert-snippet     | C-s             |
+| yas-visit-snippet-file | C-v             |
+
+#+begin_src emacs-lisp
   (use-package yasnippet
     :ensure t
     :config
-    (setq yas-snippet-dirs
-          '("~/Emacs/Yasnippets/"
-            "~/Yasnippets/")))
+    (setq yas-snippet-dirs '("~/Emacs/Yasnippets/"
+                             "~/Yasnippets/"))
+    (yas-global-mode 1))
+
   (use-package auto-yasnippet
     :ensure t
     :after yasnippet
     :config
-    (yas-global-mode 1)
+    (setq aya-case-fold t)
     (bind-key "C-p C-s c" 'aya-create)
     (bind-key "C-p C-s e" 'aya-expand))
+#+end_src
+
+For the abbrev mode, that I use only for correcting typos, I set it up in emacs dir.
+To add an abbrev after one has typed something wrong, just use =C-x a i g= (add inverse global) to add the actual text that should have been written.
+
+#+begin_src emacs-lisp
+  ;; tell emacs where to read/save abbrev
+  (setq abbrev-file-name "~/.emacs.d/abbrev_defs")
+  ;; save abbrevs when files are saved
+  (setq save-abbrevs 'silent)
+  (setq-default abbrev-mode t)
 #+end_src
 
 ** Selective display
