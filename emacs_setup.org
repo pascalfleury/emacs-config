@@ -265,6 +265,10 @@ Use instead of add-hook to run it a single time.
 
 ** truncate a string
 #+begin_src emacs-lisp
+  ;; This one provides a version with custom ellipsis.
+  (use-package s
+    :ensure t)
+
   (defun paf/truncate-string (text &optional len)
     "Truncate the text to a given length.
 
