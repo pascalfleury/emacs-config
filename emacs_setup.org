@@ -1274,57 +1274,27 @@ Dynamically adjust tag position
 [[https://orgmode.org/worg/doc.html#org-set-tags-to][=org-set-tags-to=]] is gone, and =org-set-tags= with > 1 args is not working.
 Not sure what to replace it with though...
 
-*** Preserve structure in archives
+*** Archiving
 Make sure archiving preserves the same tree structure, including when archiving subtrees.
-[[https://orgmode.org/worg/org-hacks.html#org4265b4c][source on worg]]
+This is found on [[https://gist.github.com/edgimar/072d99d8650abe81a9fe7c8687c0c993][github Gist from edgimar]]
 
 #+begin_src emacs-lisp
-(defun my-org-inherited-no-file-tags ()
-  (let ((tags (org-entry-get nil "ALLTAGS" 'selective))
-        (ltags (org-entry-get nil "TAGS")))
-    (mapc (lambda (tag)
-            (setq tags
-                  (replace-regexp-in-string (concat tag ":") "" tags)))
-          (append org-file-tags (when ltags (split-string ltags ":" t))))
-    (if (string= ":" tags) nil tags)))
+  (load-file "~/Emacs/archive-with-ancestors.el")
+  ;; Set the function to use for org-archive-default  (C-c C-x C-a)
+  (setq org-archive-location (concat org-directory "/Archive/%s_archive::"))
 #+end_src
 
-This used to work, but =org-extract-archive-file= is no longer defined.
-#+begin_src emacs-lisp :tangle no
-(defadvice org-archive-subtree
-    (around my-org-archive-subtree-low-level activate)
-  (let ((tags (my-org-inherited-no-file-tags))
-        (org-archive-location
-         (if (save-excursion (org-back-to-heading)
-                             (> (org-outline-level) 1))
-             (concat (car (split-string org-archive-location "::"))
-                     "::* "
-                     (car (org-get-outline-path)))
-           org-archive-location)))
-    ad-do-it
-    (with-current-buffer (find-file-noselect (org-extract-archive-file))
-      (save-excursion
-        (while (org-up-heading-safe))
-        (org-set-tags tags)))))
-#+end_src
-*** Auto-Refresh Agenda
+*** Refresh Agenda
 Refresh org-mode agenda regularly.
 [[https://orgmode.org/worg/org-hacks.html#orgab827a7][source on worg]]
 There are two functions that supposedly do the same.
 #+begin_src emacs-lisp
-(defun kiwon/org-agenda-redo-in-other-window ()
-  "Call org-agenda-redo function even in the non-agenda buffer."
-  (interactive)
-  (let ((agenda-window (get-buffer-window org-agenda-buffer-name t)))
-    (when agenda-window
-      (with-selected-window agenda-window (org-agenda-redo)))))
-
-(defun update-agenda-if-visible ()
-  (interactive)
-  (let ((buf (get-buffer "*Org Agenda*"))
-        wind)
-    (if buf
-        (org-agenda-redo))))
+  (defun kiwon/org-agenda-redo-if-visible ()
+    "Call org-agenda-redo function even in the non-agenda buffer."
+    (interactive)
+    (let ((agenda-window (get-buffer-window org-agenda-buffer-name t)))
+      (when agenda-window
+        (with-selected-window agenda-window (org-agenda-redo)))))
 #+end_src
 *** Display Agenda when idle
 Show the agenda when emacs left idle.
