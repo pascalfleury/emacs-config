@@ -1281,7 +1281,12 @@ This is found on [[https://gist.github.com/edgimar/072d99d8650abe81a9fe7c8687c0c
 #+begin_src emacs-lisp
   (load-file "~/Emacs/archive-with-ancestors.el")
   ;; Set the function to use for org-archive-default  (C-c C-x C-a)
-  (setq org-archive-location (concat org-directory "/Archive/%s_archive::"))
+  (setq org-archive-location (concat org-directory "/Archive/%s_archive::* Archived"))
+
+  ;; Auto-save the archive buffer
+  (setq org-archive-subtree-save-file-p t)
+
+  ;; (setq org-archive-save-context-info '(time etc.))
 #+end_src
 
 *** Refresh Agenda
