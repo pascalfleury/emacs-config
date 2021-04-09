@@ -283,7 +283,7 @@ Use instead of add-hook to run it a single time.
   Refer to `org-agenda-prefix-format' for more information."
     (interactive)
     (if (numberp len)
-        (s-truncate len text "…")
+        (s-truncate len text) ;; "…")
       text))
 #+end_src
 * Environment
@@ -1795,11 +1795,12 @@ First, d12frosted's [[https://d12frosted.io/posts/2020-06-24-task-management-wit
   (defun paf/agenda-category (len)
     (paf/truncate-string (roam-extras/extract-agenda-category) len))
 
-  (setq org-agenda-prefix-format
-        '((agenda . " %i %-12(paf/agenda-category 12) %?-12t% s")
-          (todo . " %i %-12(paf/agenda-category 12) ")
-          (tags . " %i %-12(paf/agenda-category 12) ")
-          (search . " %i %-12(paf/agenda-category 12) ")))
+  (with-eval-after-load 'org-agenda
+    (setq org-agenda-prefix-format
+          '((agenda . " %i %-12(paf/agenda-category 12) %?-12t% s")
+            (todo . " %i %-12(paf/agenda-category 12) ")
+            (tags . " %i %-12(paf/agenda-category 12) ")
+            (search . " %i %-12(paf/agenda-category 12) "))))
 #+end_src
 
 Displaying a grid of 3 hours seems better, as show by AbstProcDo's [[https://www.reddit.com/r/orgmode/comments/mbs4ia/my_agendatime_grid_segmented_by_3_hours/][post]]:
