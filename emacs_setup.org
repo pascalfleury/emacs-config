@@ -294,7 +294,7 @@ Use instead of add-hook to run it a single time.
   Refer to `org-agenda-prefix-format' for more information."
     (interactive)
     (if (numberp len)
-        (s-truncate len text) ;; "…")
+        (s-truncate len text org-ellipsis) ;; "…")
       text))
 #+end_src
 * Environment
@@ -1617,7 +1617,7 @@ Some config for display.
 (setq org-startup-folded 't)
 (setq org-startup-indented 't)
 (setq org-startup-folded 't)
-(setq org-ellipsis "...")
+(setq org-ellipsis "…")
 ; Don't really like the new bullets though.
 ;;(use-package 'org-bullets
 ;;  :config
