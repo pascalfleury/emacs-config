@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   width="140mm"
+   height="100mm"
+   viewBox="0 0 140 100"
+   version="1.1"
+   id="svg8">
+  <title
+     id="title836">Emacs Splash Logo</title>
+  <defs
+     id="defs2" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>Emacs Splash Logo</dc:title>
+        <dc:date>2021-04-13</dc:date>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Pascal Fleury</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>(c)2021 by Pascal Fleury</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by-nc/4.0/" />
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by-nc/4.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Notice" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Attribution" />
+        <cc:prohibits
+           rdf:resource="http://creativecommons.org/ns#CommercialUse" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1">
+    <path
+       style="fill:#ff980e;fill-opacity:1;stroke:#019729;stroke-width:2.90034;stroke-linecap:square;stroke-miterlimit:12.4;stroke-dasharray:none;stroke-opacity:1"
+       id="path845-4"
+       transform="matrix(2.1318786,0,0,1.2692875,-34.111154,-91.843599)"
+       d="m 72.55474,123.79752 -11.904435,-3.74625 4.659911,11.43282 -8.034249,-7.56886 1.976239,10.11143 -8.534872,-6.47629 -5.275839,6.79752 -1.006288,-6.54446 -8.632597,6.56498 4.655611,-12.18717 -9.980937,3.40804 4.841566,-7.5002 -7.827254,-5.01092 10.916757,-4.7729 -9.346769,-5.67973 11.909409,3.62677 -8.361515,-12.350778 11.730958,4.240359 -1.976397,-11.198653 9.483206,8.625944 1.628287,-5.752217 1.006288,11.454025 10.599311,-10.095448 -3.658358,10.422788 11.666829,-0.49875 -7.789382,8.99877 8.824507,-1.663 -7.004454,6.53727 z" />
+    <path
+       style="fill:#fddc00;fill-opacity:1;stroke:#000000;stroke-width:2.90034;stroke-linecap:square;stroke-miterlimit:12.4;stroke-dasharray:none;stroke-opacity:1"
+       id="path845"
+       d="m 72.55474,123.79752 -11.904435,-3.74625 4.659911,11.43282 -8.034249,-7.56886 1.976239,10.11143 -8.534872,-6.47629 -5.275839,6.79752 -1.006288,-6.54446 -8.632597,6.56498 4.655611,-12.18717 -9.980937,3.40804 4.841566,-7.5002 -7.827254,-5.01092 10.916757,-4.7729 -9.346769,-5.67973 11.909409,3.62677 -8.361515,-12.350778 11.730958,4.240359 -1.976397,-11.198653 9.483206,8.625944 1.628287,-5.752217 1.006288,11.454025 10.599311,-10.095448 -3.658358,10.422788 11.666829,-0.49875 -7.789382,8.99877 8.824507,-1.663 -7.004454,6.53727 z"
+       transform="matrix(1.8698778,0,0,1.1132963,-19.836881,-73.92955)" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:22.5778px;line-height:125%;font-family:'20 CENTS MARKER';-inkscape-font-specification:'20 CENTS MARKER, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#ff0000;fill-opacity:1;stroke:#000000;stroke-width:1.57881px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="36.969814"
+       y="74.701218"
+       id="text839"
+       transform="matrix(0.99957642,-0.26683609,0.24929692,0.93387415,0,0)"><tspan
+         id="tspan837"
+         x="36.969814"
+         y="74.701218"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:22.5778px;font-family:'20 CENTS MARKER';-inkscape-font-specification:'20 CENTS MARKER, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ff0000;fill-opacity:1;stroke-width:1.57881px">PAF</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:12.7px;line-height:125%;font-family:'20 CENTS MARKER';-inkscape-font-specification:'20 CENTS MARKER, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#0097ff;fill-opacity:1;stroke:#000000;stroke-width:0.665;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       x="63.788548"
+       y="61.573971"
+       id="text843"><tspan
+         id="tspan841"
+         x="63.788548"
+         y="61.573971"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:12.7px;font-family:'20 CENTS MARKER';-inkscape-font-specification:'20 CENTS MARKER, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#0097ff;fill-opacity:1;stroke:#000000;stroke-width:0.665;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">Emacs</tspan></text>
+  </g>
+</svg>
