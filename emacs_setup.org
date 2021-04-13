@@ -247,6 +247,17 @@ Remove =C-p= that I want to use for *me* personally as a prefix.
 #+begin_src emacs-lisp
 (global-set-key (kbd "C-p") nil) ;; was 'previous-line'
 #+end_src
+** Initial scratch content
+#+begin_src emacs-lisp
+(setq initial-scratch-message "; Paf's unsaved ramblings and tests...\n")
+#+end_src
+** Splash screen
+#+begin_src emacs-lisp
+  (setq initial-buffer-choice "~/Emacs/welcome.org")
+  (setq fancy-splash-image "~/Emacs/paf_emacs.svg")
+  (setq org-startup-with-inline-images t)
+#+end_src
+
 
 * Helper Functions
 ** add-hook-run-once
@@ -283,7 +294,7 @@ Use instead of add-hook to run it a single time.
   Refer to `org-agenda-prefix-format' for more information."
     (interactive)
     (if (numberp len)
-        (s-truncate len text) ;; "…")
+        (s-truncate len text org-ellipsis) ;; "…")
       text))
 #+end_src
 * Environment
@@ -1601,6 +1612,7 @@ Then you can use the keyboard shortcut to open that dir.
 *** Display settings
 Some config for display.
 #+begin_src emacs-lisp
+<<<<<<< HEAD
   (setq org-hide-leading-stars 't)
   (setq org-log-done 't)
   (setq org-startup-folded 't)
@@ -1615,6 +1627,18 @@ Some config for display.
   ;;(use-package 'org-bullets
   ;;  :config
   ;;  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+=======
+(setq org-hide-leading-stars 't)
+(setq org-log-done 't)
+(setq org-startup-folded 't)
+(setq org-startup-indented 't)
+(setq org-startup-folded 't)
+(setq org-ellipsis "…")
+; Don't really like the new bullets though.
+;;(use-package 'org-bullets
+;;  :config
+;;  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+>>>>>>> 35ad208dcad11dcc588a04a6da541feca7778c3d
 #+end_src
 
 #+begin_src emacs-lisp
