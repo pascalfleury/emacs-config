@@ -15,7 +15,10 @@
    version="1.1"
    id="svg8"
    sodipodi:docname="paf_emacs.svg"
-   inkscape:version="1.0.2 (1.0.2+r75+1)">
+   inkscape:version="1.0.2 (1.0.2+r75+1)"
+   inkscape:export-filename="/home/fleury/Emacs/paf_emacs.png"
+   inkscape:export-xdpi="96.012001"
+   inkscape:export-ydpi="96.012001">
   <sodipodi:namedview
      pagecolor="#ffffff"
      bordercolor="#666666"
@@ -25,8 +28,8 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="2924"
-     inkscape:window-height="2008"
+     inkscape:window-width="3840"
+     inkscape:window-height="2036"
      id="namedview27"
      showgrid="false"
      inkscape:zoom="2.872619"
@@ -34,8 +37,9 @@
      inkscape:cy="188.97638"
      inkscape:window-x="0"
      inkscape:window-y="0"
-     inkscape:window-maximized="0"
-     inkscape:current-layer="svg8" />
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg8"
+     inkscape:document-rotation="0" />
   <title
      id="title836">Emacs Splash Logo</title>
   <defs
@@ -122,17 +126,17 @@
   <path
      style="fill:#fddc00;fill-opacity:1;stroke:#000000;stroke-width:4.18467;stroke-linecap:square;stroke-miterlimit:12.4;stroke-dasharray:none;stroke-opacity:1"
      id="path845"
-     d="M 115.83162,64.422938 93.571778,60.252252 102.28524,72.980368 87.262178,64.553984 90.957504,75.811002 74.998336,68.600972 65.133162,76.168626 63.251526,68.882703 47.109625,76.191471 55.815048,62.623539 37.151916,66.417698 46.205053,58.067753 31.569044,52.489114 51.982046,47.175462 34.50473,40.85224 56.773869,44.889909 41.138858,31.139834 63.074316,35.86061 59.378695,23.393191 l 17.732436,9.603232 3.044698,-6.403922 1.881636,12.751723 19.819415,-11.239225 -6.840681,11.603652 21.815541,-0.555257 -14.56519,10.018298 16.50075,-1.851412 -13.09747,7.277918 z" />
+     d="M 115.30245,64.422938 93.042611,60.252252 101.75607,72.980368 86.733011,64.553984 90.428337,75.811002 74.469169,68.600972 64.603995,76.168626 62.722359,68.882703 46.580458,76.191471 55.285881,62.623539 36.622749,66.417698 45.675886,58.067753 31.039877,52.489114 51.452879,47.175462 33.975563,40.85224 56.244702,44.889909 40.609691,31.139834 62.545149,35.86061 58.849528,23.393191 l 17.732436,9.603232 3.044698,-6.403922 1.881636,12.751723 19.819412,-11.239225 -6.840678,11.603652 21.815538,-0.555257 -14.56519,10.018298 16.50075,-1.851412 -13.09747,7.277918 z" />
   <text
      xml:space="preserve"
      style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:22.5778px;line-height:125%;font-family:'20 CENTS MARKER';-inkscape-font-specification:'20 CENTS MARKER, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#ff0000;fill-opacity:1;stroke:#000000;stroke-width:1.57881px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-     x="36.837894"
-     y="75.230164"
+     x="37.562405"
+     y="76.57045"
      id="text839"
      transform="matrix(0.99957642,-0.26683609,0.24929692,0.93387415,0,0)"><tspan
        id="tspan837"
-       x="36.837894"
-       y="75.230164"
+       x="37.562405"
+       y="76.57045"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:22.5778px;font-family:'20 CENTS MARKER';-inkscape-font-specification:'20 CENTS MARKER, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ff0000;fill-opacity:1;stroke-width:1.57881px">PAF</tspan></text>
   <text
      xml:space="preserve"
