@@ -1612,16 +1612,20 @@ Then you can use the keyboard shortcut to open that dir.
 *** Display settings
 Some config for display.
 #+begin_src emacs-lisp
-(setq org-hide-leading-stars 't)
-(setq org-log-done 't)
-(setq org-startup-folded 't)
-(setq org-startup-indented 't)
-(setq org-startup-folded 't)
-(setq org-ellipsis "…")
-; Don't really like the new bullets though.
-;;(use-package 'org-bullets
-;;  :config
-;;  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+  (setq org-hide-leading-stars 't)
+  (setq org-log-done 't)
+  (setq org-startup-folded 't)
+  (setq org-startup-indented 't)
+  (setq org-startup-folded 't)
+  (setq org-ellipsis "...")
+
+  (setq org-time-stamp-formats '("<%Y-%m-%d %a>" . "<%Y-%m-%d %a %H:%M>"))
+  (setq org-time-stamp-custom-formats '("<%Y-%m-%d %a>" . "<%Y-%m-%d %a %H:%M>"))
+
+  ; Don't really like the new bullets though.
+  ;;(use-package 'org-bullets
+  ;;  :config
+  ;;  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 #+end_src
 
 #+begin_src emacs-lisp
