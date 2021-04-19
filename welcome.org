@@ -1,0 +1,8 @@
+
+            [[file:~/Emacs/paf_emacs.png]]
+
+  *Welcome to PAF's Emacs*                         /Press {M-Ret} on selection/
+
+  *Tasks*                                                      *Moving Windows*
+  Calendar ............. {C-c a t}          Full height  ....... {C-c \\ t H q}
+  Recurring tasks ...... {C-c a r}          Right border ... {C-c \\ t c c c q}

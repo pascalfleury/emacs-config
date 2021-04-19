@@ -13,7 +13,7 @@ I regularly try out new packages, this is my current list of things being evalua
 They usually live temporarily in my =~/.emacs= until I am happy, in which case I move their config into this file so that it gets replicated on all machines I work on with Emacs.
 
 ** Currently under review
-  - [[https://github.com/Kungsgeten/yankpad][yankpad]] + [[https://github.com/joaotavora/yasnippet][yasnippet]]
+  - [[https://github.com/Kungsgeten/yankpad][yankpad]]
   - [[https://github.com/yjwen/org-reveal][ox-reveal]] (see [[https://github.com/yjwen/org-reveal#set-the-location-of-revealjs][installation]])
 
 ** Make the config work fine when initially installed
@@ -247,6 +247,17 @@ Remove =C-p= that I want to use for *me* personally as a prefix.
 #+begin_src emacs-lisp
 (global-set-key (kbd "C-p") nil) ;; was 'previous-line'
 #+end_src
+** Initial scratch content
+#+begin_src emacs-lisp
+(setq initial-scratch-message "; Paf's unsaved ramblings and tests...\n")
+#+end_src
+** Splash screen
+#+begin_src emacs-lisp
+  (setq initial-buffer-choice "~/Emacs/welcome.org")
+  (setq fancy-splash-image "~/Emacs/paf_emacs.svg")
+  (setq org-startup-with-inline-images t)
+#+end_src
+
 
 * Helper Functions
 ** add-hook-run-once
@@ -265,6 +276,10 @@ Use instead of add-hook to run it a single time.
 
 ** truncate a string
 #+begin_src emacs-lisp
+  ;; This one provides a version with custom ellipsis.
+  (use-package s
+    :ensure t)
+
   (defun paf/truncate-string (text &optional len)
     "Truncate the text to a given length.
 
@@ -279,7 +294,7 @@ Use instead of add-hook to run it a single time.
   Refer to `org-agenda-prefix-format' for more information."
     (interactive)
     (if (numberp len)
-        (s-truncate len text "…")
+        (s-truncate len text org-ellipsis) ;; "…")
       text))
 #+end_src
 * Environment
@@ -980,22 +995,44 @@ Simplify cleanup of =#include= / =typedef= / =using= blocks.
     (define-key vdiff-mode-map (kbd "C-c") vdiff-mode-prefix-map))
 #+end_src
 
-** yasnippet
-Let's first see how far I get with file-based capture templates and yankpad.
-#+begin_src emacs-lisp :tangle no
+** yasnippet / abbrev / auto-yasnippet
+The key for yasnippet expansion is simply =TAB=.
+The snippets are mode-dependent. See the [[http://joaotavora.github.io/yasnippet/][full documentation]].
+
+Some of the keys are listed here. The prefix is =C-c &=
+
+| Command                | key after C-x & |
+|------------------------+-----------------|
+| yas-new-snippet        | C-n             |
+| yas-insert-snippet     | C-s             |
+| yas-visit-snippet-file | C-v             |
+
+#+begin_src emacs-lisp
   (use-package yasnippet
     :ensure t
     :config
-    (setq yas-snippet-dirs
-          '("~/Emacs/Yasnippets/"
-            "~/Yasnippets/")))
+    (setq yas-snippet-dirs '("~/Emacs/Yasnippets/"
+                             "~/Yasnippets/"))
+    (yas-global-mode 1))
+
   (use-package auto-yasnippet
     :ensure t
     :after yasnippet
     :config
-    (yas-global-mode 1)
+    (setq aya-case-fold t)
     (bind-key "C-p C-s c" 'aya-create)
     (bind-key "C-p C-s e" 'aya-expand))
+#+end_src
+
+For the abbrev mode, that I use only for correcting typos, I set it up in emacs dir.
+To add an abbrev after one has typed something wrong, just use =C-x a i g= (add inverse global) to add the actual text that should have been written.
+
+#+begin_src emacs-lisp
+  ;; tell emacs where to read/save abbrev
+  (setq abbrev-file-name "~/.emacs.d/abbrev_defs")
+  ;; save abbrevs when files are saved
+  (setq save-abbrevs 'silent)
+  (setq-default abbrev-mode t)
 #+end_src
 
 ** Selective display
@@ -1248,57 +1285,32 @@ Dynamically adjust tag position
 [[https://orgmode.org/worg/doc.html#org-set-tags-to][=org-set-tags-to=]] is gone, and =org-set-tags= with > 1 args is not working.
 Not sure what to replace it with though...
 
-*** Preserve structure in archives
+*** Archiving
 Make sure archiving preserves the same tree structure, including when archiving subtrees.
-[[https://orgmode.org/worg/org-hacks.html#org4265b4c][source on worg]]
+This is found on [[https://gist.github.com/edgimar/072d99d8650abe81a9fe7c8687c0c993][github Gist from edgimar]]
 
 #+begin_src emacs-lisp
-(defun my-org-inherited-no-file-tags ()
-  (let ((tags (org-entry-get nil "ALLTAGS" 'selective))
-        (ltags (org-entry-get nil "TAGS")))
-    (mapc (lambda (tag)
-            (setq tags
-                  (replace-regexp-in-string (concat tag ":") "" tags)))
-          (append org-file-tags (when ltags (split-string ltags ":" t))))
-    (if (string= ":" tags) nil tags)))
+  (load-file "~/Emacs/archive-with-ancestors.el")
+  ;; Set the function to use for org-archive-default  (C-c C-x C-a)
+  (setq org-archive-location (concat org-directory "/Archive/%s_archive::* Archived"))
+
+  ;; Auto-save the archive buffer
+  (setq org-archive-subtree-save-file-p t)
+
+  ;; (setq org-archive-save-context-info '(time etc.))
 #+end_src
 
-This used to work, but =org-extract-archive-file= is no longer defined.
-#+begin_src emacs-lisp :tangle no
-(defadvice org-archive-subtree
-    (around my-org-archive-subtree-low-level activate)
-  (let ((tags (my-org-inherited-no-file-tags))
-        (org-archive-location
-         (if (save-excursion (org-back-to-heading)
-                             (> (org-outline-level) 1))
-             (concat (car (split-string org-archive-location "::"))
-                     "::* "
-                     (car (org-get-outline-path)))
-           org-archive-location)))
-    ad-do-it
-    (with-current-buffer (find-file-noselect (org-extract-archive-file))
-      (save-excursion
-        (while (org-up-heading-safe))
-        (org-set-tags tags)))))
-#+end_src
-*** Auto-Refresh Agenda
+*** Refresh Agenda
 Refresh org-mode agenda regularly.
 [[https://orgmode.org/worg/org-hacks.html#orgab827a7][source on worg]]
 There are two functions that supposedly do the same.
 #+begin_src emacs-lisp
-(defun kiwon/org-agenda-redo-in-other-window ()
-  "Call org-agenda-redo function even in the non-agenda buffer."
-  (interactive)
-  (let ((agenda-window (get-buffer-window org-agenda-buffer-name t)))
-    (when agenda-window
-      (with-selected-window agenda-window (org-agenda-redo)))))
-
-(defun update-agenda-if-visible ()
-  (interactive)
-  (let ((buf (get-buffer "*Org Agenda*"))
-        wind)
-    (if buf
-        (org-agenda-redo))))
+  (defun kiwon/org-agenda-redo-if-visible ()
+    "Call org-agenda-redo function even in the non-agenda buffer."
+    (interactive)
+    (let ((agenda-window (get-buffer-window org-agenda-buffer-name t)))
+      (when agenda-window
+        (with-selected-window agenda-window (org-agenda-redo)))))
 #+end_src
 *** Display Agenda when idle
 Show the agenda when emacs left idle.
@@ -1600,16 +1612,20 @@ Then you can use the keyboard shortcut to open that dir.
 *** Display settings
 Some config for display.
 #+begin_src emacs-lisp
-(setq org-hide-leading-stars 't)
-(setq org-log-done 't)
-(setq org-startup-folded 't)
-(setq org-startup-indented 't)
-(setq org-startup-folded 't)
-(setq org-ellipsis "...")
-; Don't really like the new bullets though.
-;;(use-package 'org-bullets
-;;  :config
-;;  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+  (setq org-hide-leading-stars 't)
+  (setq org-log-done 't)
+  (setq org-startup-folded 't)
+  (setq org-startup-indented 't)
+  (setq org-startup-folded 't)
+  (setq org-ellipsis "...")
+
+  (setq org-time-stamp-formats '("<%Y-%m-%d %a>" . "<%Y-%m-%d %a %H:%M>"))
+  (setq org-time-stamp-custom-formats '("<%Y-%m-%d %a>" . "<%Y-%m-%d %a %H:%M>"))
+
+  ; Don't really like the new bullets though.
+  ;;(use-package 'org-bullets
+  ;;  :config
+  ;;  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1799,11 +1815,12 @@ First, d12frosted's [[https://d12frosted.io/posts/2020-06-24-task-management-wit
   (defun paf/agenda-category (len)
     (paf/truncate-string (roam-extras/extract-agenda-category) len))
 
-  (setq org-agenda-prefix-format
-        '((agenda . " %i %-12(paf/agenda-category 12) %?-12t% s")
-          (todo . " %i %-12(paf/agenda-category 12) ")
-          (tags . " %i %-12(paf/agenda-category 12) ")
-          (search . " %i %-12(paf/agenda-category 12) ")))
+  (with-eval-after-load 'org-agenda
+    (setq org-agenda-prefix-format
+          '((agenda . " %i %-12(paf/agenda-category 12) %?-12t% s")
+            (todo . " %i %-12(paf/agenda-category 12) ")
+            (tags . " %i %-12(paf/agenda-category 12) ")
+            (search . " %i %-12(paf/agenda-category 12) "))))
 #+end_src
 
 Displaying a grid of 3 hours seems better, as show by AbstProcDo's [[https://www.reddit.com/r/orgmode/comments/mbs4ia/my_agendatime_grid_segmented_by_3_hours/][post]]:
@@ -1837,17 +1854,9 @@ A more visible current-time marker in the agenda
 **** auto-refresh
 #+begin_src emacs-lisp
   ;; will refresh it only if already visible
-  (run-at-time nil 180 'update-agenda-if-visible)
-  ;;(add-hook 'org-mode-hook
-  ;;          (lambda () (run-at-time nil 180 'kiwon/org-agenda-redo-in-other-window)))
+  (run-at-time nil 180 'kiwon/org-agenda-redo-if-visible)
 #+end_src
 
-This would open the agenda if any org file was opened. In the end, I don't like this feature, so it is disabled by not tangling it.
-#+begin_src emacs-lisp :tangle no
-  ;; Make this happen only if we open an org file.
-  (add-hook 'org-mode-hook
-            (lambda () (run-with-idle-timer 600 t 'jump-to-org-agenda)))
-#+end_src
 **** auto-save org files when idle
 This will save them regularly when the idle for more than a minute.
 #+begin_src emacs-lisp :tangle no
@@ -2071,7 +2080,7 @@ Check out the [[https://kungsgeten.github.io/yankpad.html][blog post]] (and the 
     :ensure t
     :defer
     :init
-    (setq yankpad-file (org-relative-file "yankpad.org"))
+    (setq yankpad-file (org-relative-file "Templates/yankpad.org"))
     :config
     (bind-key "C-p y m" 'yankpad-map)
     (bind-key "C-p y e" 'yankpad-expand))
