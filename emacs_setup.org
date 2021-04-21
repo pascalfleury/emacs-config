@@ -892,8 +892,8 @@ Start using projectile. It has the documentation [[https://docs.projectile.mx/en
   (use-package projectile
     :ensure t
     :config
-    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-    (projectile-mode +1))
+    (projectile-mode 1)
+    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
 
   (use-package helm-projectile
     :ensure t
