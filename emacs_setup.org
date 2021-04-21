@@ -1371,6 +1371,14 @@ To help debug, use this before running things:
   (use-package request-deferred
     :ensure t)
   (load-file "~/Emacs/org-gtasks.el")
+
+  ;; Helper to sync all task lists for an account
+  (defun paf/org-gtasks-sync (account-name)
+    (interactive)
+    (let* ((account (org-gtasks-find-account-by-name account-name)))
+      (org-gtasks-pull account "ALL")
+      (org-gtasks-push account "ALL")))
+
 #+end_src
 
 I have this currently in my `~/.emacs`:
