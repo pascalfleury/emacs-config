@@ -903,9 +903,7 @@ Start using projectile. It has the documentation [[https://docs.projectile.mx/en
     :config
     (projectile-mode 1)
     (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-    :init
     (add-hook 'find-file-hook 'paf/projectile-relative-buf-name))
-
 
   (use-package helm-projectile
     :ensure t
