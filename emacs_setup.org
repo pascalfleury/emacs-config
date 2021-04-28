@@ -1372,20 +1372,13 @@ To help debug, use this before running things:
     :ensure t)
   (load-file "~/Emacs/org-gtasks.el")
 
-<<<<<<< HEAD
   ;; Helper to sync all task lists for an account
-  (defun paf/org-gtasks-sync (account-name)
-    (interactive)
-    (let* ((account (org-gtasks-find-account-by-name account-name)))
-=======
   (defun paf/org-gtasks-sync (account_name)
     "Synchronizes all tasklists for the account with given name."
     (interactive)
     (let* ((account (org-gtasks-find-account-by-name account_name)))
->>>>>>> a37b98b (Added a helper function to sync gtasks)
       (org-gtasks-pull account "ALL")
       (org-gtasks-push account "ALL")))
-
 #+end_src
 
 I have this currently in my `~/.emacs`:
