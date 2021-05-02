@@ -683,7 +683,7 @@ Colorize color names and codes in the correct color.
 #+end_src
 ** taskjuggler-mode (tj3-mode)
 #+begin_src emacs-lisp
-  ;; ox-taskjuggler is on here somewhere...
+  ;; ox-taskjuggler is in here somewhere...
   (use-package org-plus-contrib
     :ensure t)
 
