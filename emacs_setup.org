@@ -902,7 +902,7 @@ Start using projectile. It has the documentation [[https://docs.projectile.mx/en
     :ensure t
     :config
     (projectile-mode 1)
-    (define-key projectile-mode-map (kbd "S-p") 'projectile-command-map)
+    (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
     (add-hook 'find-file-hook 'paf/projectile-relative-buf-name))
 
   (use-package helm-projectile
