@@ -799,7 +799,10 @@ Once more it shows that the most powerful things are not always the most visible
     :ensure t
     :config
     (bind-key "C-c C-/" 'hui-search-web)  ;; bind before calling require
-    (require 'hyperbole))
+    (require 'hyperbole)
+    (load-file "~/Emacs/hyperbole-systems.el"))
+
+
 #+end_src
 ** [[https://github.com/fourier/ztree#ztree][ztree]]
 A tree-view navigation of files, with diff tool for directories.
