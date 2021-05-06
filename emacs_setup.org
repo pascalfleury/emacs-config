@@ -685,7 +685,8 @@ Colorize color names and codes in the correct color.
 #+begin_src emacs-lisp
   ;; ox-taskjuggler is in here somewhere...
   (use-package org-plus-contrib
-    :ensure t)
+    :ensure t
+    :no-require t)
 
   (use-package tj3-mode
     :ensure t
@@ -1305,7 +1306,7 @@ This is found on [[https://gist.github.com/edgimar/072d99d8650abe81a9fe7c8687c0c
 #+begin_src emacs-lisp
   (load-file "~/Emacs/archive-with-ancestors.el")
   ;; Set the function to use for org-archive-default  (C-c C-x C-a)
-  (setq org-archive-location (concat org-directory "/Archive/%s_archive::* Archived"))
+  ;;(setq org-archive-location (concat org-directory "/Archive/%s_archive::* Archived"))
 
   ;; Auto-save the archive buffer
   (setq org-archive-subtree-save-file-p t)
