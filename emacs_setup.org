@@ -461,6 +461,7 @@ I really like the high-contract Zenburn theme.
    '(highlight ((t (:background "forest green"))))
    '(region ((t (:background "forest green")))))
 #+end_src
+
 ** delight
 Package to remove some info from the mode-line for minor-modes.
 #+begin_src emacs-lisp
@@ -799,6 +800,10 @@ Once more it shows that the most powerful things are not always the most visible
     :ensure t
     :config
     (bind-key "C-c C-/" 'hui-search-web)  ;; bind before calling require
+    (custom-set-faces
+     '(hbut ((t (:foreground "green yellow"))) t)
+     '(hbut-flash ((t (:background "green yellow"
+                       :foreground "dark gray"))) t))
     (require 'hyperbole)
     (load-file "~/Emacs/hyperbole-systems.el"))
 
