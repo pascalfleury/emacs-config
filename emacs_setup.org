@@ -461,6 +461,7 @@ I really like the high-contract Zenburn theme.
    '(highlight ((t (:background "forest green"))))
    '(region ((t (:background "forest green")))))
 #+end_src
+
 ** delight
 Package to remove some info from the mode-line for minor-modes.
 #+begin_src emacs-lisp
@@ -683,13 +684,12 @@ Colorize color names and codes in the correct color.
 #+end_src
 ** taskjuggler-mode (tj3-mode)
 #+begin_src emacs-lisp
-  ;; ox-taskjuggler is in here somewhere...
-  (use-package org-plus-contrib
-    :ensure t)
+  (use-package ox-taskjuggler
+    :load-path "~/Emacs")
 
   (use-package tj3-mode
     :ensure t
-    :after org-plus-contrib
+    :after ox-taskjuggler
     :config
     (require 'ox-taskjuggler)
     (custom-set-variables
@@ -798,7 +798,14 @@ Once more it shows that the most powerful things are not always the most visible
     :ensure t
     :config
     (bind-key "C-c C-/" 'hui-search-web)  ;; bind before calling require
-    (require 'hyperbole))
+    (custom-set-faces
+     '(hbut ((t (:foreground "green yellow"))) t)
+     '(hbut-flash ((t (:background "green yellow"
+                       :foreground "dark gray"))) t))
+    (require 'hyperbole)
+    (load-file "~/Emacs/hyperbole-systems.el"))
+
+
 #+end_src
 ** [[https://github.com/fourier/ztree#ztree][ztree]]
 A tree-view navigation of files, with diff tool for directories.
@@ -902,7 +909,7 @@ Start using projectile. It has the documentation [[https://docs.projectile.mx/en
     :ensure t
     :config
     (projectile-mode 1)
-    (define-key projectile-mode-map (kbd "S-p") 'projectile-command-map)
+    (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
     (add-hook 'find-file-hook 'paf/projectile-relative-buf-name))
 
   (use-package helm-projectile
@@ -1305,7 +1312,7 @@ This is found on [[https://gist.github.com/edgimar/072d99d8650abe81a9fe7c8687c0c
 #+begin_src emacs-lisp
   (load-file "~/Emacs/archive-with-ancestors.el")
   ;; Set the function to use for org-archive-default  (C-c C-x C-a)
-  (setq org-archive-location (concat org-directory "/Archive/%s_archive::* Archived"))
+  ;;(setq org-archive-location (concat org-directory "/Archive/%s_archive::* Archived"))
 
   ;; Auto-save the archive buffer
   (setq org-archive-subtree-save-file-p t)
