@@ -360,7 +360,7 @@ Enables =winner-mode=. Navigate buffer-window configs with =C-c left= and =C-c r
 #+begin_src emacs-lisp :tangle no
 (winner-mode 1)
 #+end_src
-** popper.el
+** popper.el: deal with popup windows
 A minor-mode to dal with lots of popup windows and bring some order in them.
 See [[https://github.com/karthink/popper][github:popper]] for more informatin.
 #+begin_src emacs-lisp
@@ -377,6 +377,15 @@ See [[https://github.com/karthink/popper][github:popper]] for more informatin.
             compilation-mode))
     (setq popper-group-function #'popper-group-by-projectile)
     (popper-mode +1))
+#+end_src
+
+** bufler.el: list/switch buffers
+Helping listing and switching buffers easily.
+From our very own =alphapapa= on [[https://github.com/alphapapa/bufler.el][github:bufler.el]]
+
+#+begin_src emacs-lisp
+  (use-package bufler
+    :ensure t)
 #+end_src
 
 ** eyebrowse (layout managing)
