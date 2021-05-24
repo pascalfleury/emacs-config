@@ -16,7 +16,7 @@ GIT_ROOT=$(dirname $0)
 test -e ~/.emacs || touch ~/.emacs
 
 # Initial tangle of files, saying no to vterm compilation
-yes no | emacs --batch --load ${GIT_ROOT}/emacs_setup.el
+emacs --batch --load ${GIT_ROOT}/emacs_setup.el
 
 # Add the load-file as the first thing in the user's ~/.emacs
 # If not yet added.
