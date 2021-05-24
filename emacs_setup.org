@@ -106,8 +106,8 @@ currently it does not a good job of figuring out the diff between OSX, Linux, Te
   # Maybe this is a new install, .emacs does not exist
   test -e ~/.emacs || touch ~/.emacs
 
-  # Initial tangle of files.
-  emacs --batch --load ${GIT_ROOT}/emacs_setup.el
+  # Initial tangle of files, saying no to vterm compilation
+  yes no | emacs --batch --load ${GIT_ROOT}/emacs_setup.el
 
   # Add the load-file as the first thing in the user's ~/.emacs
   # If not yet added.
@@ -137,7 +137,7 @@ This script is then used to install the needed packages on the system.
   set -e
 
   # Trick to make it work on Termux
-  which "ls" || pkg install debianutils
+  #which "ls" || pkg install debianutils
 
   # This is a bit of heuristics to find out what the install system is
   # They are attempted in this order, put the least likely first.
