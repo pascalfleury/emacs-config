@@ -1213,9 +1213,10 @@ All prefixed with =C-x C-a=
       (if (not (eq module-file-suffix nil))
           (use-package vterm
             :ensure t
+            :init:
+            (setq vterm-always-compile-module t)
             :config
             (setq vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no")
-            (setq vterm-always-compile-module t)
             (define-key vterm-mode-map (kbd "<C-backspace>")
               (lambda () (interactive) (vterm-send-key (kbd "C-w")))))))
 #+end_src
