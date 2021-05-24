@@ -622,10 +622,11 @@ web-mode with config for Polymer editing
 #+end_src
 ** typescript-mode
 #+begin_src emacs-lisp
-  (use-package typescript-mode
-    :mode "\\.ts\\'"
-    :config
-    (setq typescript-indent-level 2))
+    (use-package typescript-mode
+      :mode "\\.ts\\'"
+      ;; :config
+      ;; (setq typescript-indent-level 2)
+      )
 #+end_src
 
 ** csv-mode
@@ -664,7 +665,7 @@ I just took over the config described in this [[https://tuhdo.github.io/helm-int
     (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
 
     (when (executable-find "curl")
-      (setq helm-google-suggest-use-curl-p t))
+      (setq helm-net-prefer-curl-p t))
 
     (setq helm-split-window-inside-p            t ; open helm buffer inside current window, not occupy whole other window
           helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
@@ -1219,8 +1220,13 @@ All prefixed with =C-x C-a=
 
 #+begin_src bash :tangle install_deps.sh
   # Needed to compile vterm first time
-  install_pkg -x libtool libtool-bin
+  if [[ "$(uname -o)" == "Android" ]]; then
+    install_pkg -x libtool libtool
+  else
+    install_pkg -x libtool libtool-bin
+  fi
   install_pkg -x cmake cmake
+  install_pkg -x perl perl
 
   # Also amend the bash config
   cat >> ${HOME}/.bashrc <<EOF
@@ -1544,10 +1550,14 @@ All keys prefixed with =C-c n=
 
 EmacSQL will need to get its C-binary compiled, and needs supporting tools. Note that 'tcc' for Termux seems not complete enough for the job.
 #+begin_src bash :tangle install_deps.sh
-# org-roam needs this binary
-install_pkg -x sqlite3 sqlite3
-# Make sure there is a C compiler for emacsql-sqlite
-[[ -n "$(which cc)" ]] || install_pkg -x cc clang
+  # org-roam needs this binary
+  if [[ "$(uname -o)" == "Android" ]]; then
+      install_pkg -x sqlite3 sqlite
+  else
+      install_pkg -x sqlite3 sqlite3
+  fi
+  # Make sure there is a C compiler for emacsql-sqlite
+  [[ -n "$(which cc)" ]] || install_pkg -x cc clang
 #+end_src
 *** org-ref
 #+begin_src emacs-lisp
