@@ -143,6 +143,7 @@ This script is then used to install the needed packages on the system.
   # They are attempted in this order, put the least likely first.
   declare -a PKG_MGRS=("pkg" "brew" "apt-get")
 
+  PKG_PREFIX_pkg="yes | "
   PKG_PREFIX_apt_get="sudo"
   PKG_POSTFIX_apt_get="-y"
 
@@ -364,20 +365,21 @@ Enables =winner-mode=. Navigate buffer-window configs with =C-c left= and =C-c r
 A minor-mode to dal with lots of popup windows and bring some order in them.
 See [[https://github.com/karthink/popper][github:popper]] for more informatin.
 #+begin_src emacs-lisp
-    (use-package popper
-      :ensure t
-      :bind (("<C-tab>"   . popper-toggle-latest)
-             ("<C-S-tab>" . popper-cycle)
-             ("<C-M-tab>" . popper-toggle-type))
-      :init
-      (setq popper-reference-buffers
-            '("\\*Messages\\*"
-              "\\*Bufler\\*"
-              "Output\\*$"
-              help-mode
-              compilation-mode))
-      (setq popper-group-function #'popper-group-by-projectile)
-      (popper-mode +1))
+  (use-package popper
+    :ensure t
+    :after projectil
+    :bind (("<C-tab>"   . popper-toggle-latest)
+           ("<C-S-tab>" . popper-cycle)
+           ("<C-M-tab>" . popper-toggle-type))
+    :init
+    (setq popper-reference-buffers
+          '("\\*Messages\\*"
+            "\\*Bufler\\*"
+            "Output\\*$"
+            help-mode
+            compilation-mode))
+    (setq popper-group-function #'popper-group-by-projectile)
+    (popper-mode +1))
 #+end_src
 
 ** bufler.el: list/switch buffers
