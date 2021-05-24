@@ -666,7 +666,7 @@ I just took over the config described in this [[https://tuhdo.github.io/helm-int
     (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
 
     (when (executable-find "curl")
-      (setq helm-net-prefer-curl-p t))
+      (setq helm-net-prefer-curl t))
 
     (setq helm-split-window-inside-p            t ; open helm buffer inside current window, not occupy whole other window
           helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
@@ -1213,7 +1213,7 @@ All prefixed with =C-x C-a=
       (if (not (eq module-file-suffix nil))
           (use-package vterm
             :ensure t
-            :init:
+            :init
             (setq vterm-always-compile-module t)
             :config
             (setq vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no")
@@ -1285,7 +1285,7 @@ Let other tools use emacs client to interact
 Dynamically adjust tag position
 [[https://orgmode.org/worg/org-hacks.html#org0560357][source on worg]]
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (defun ba/org-adjust-tags-column-reset-tags ()
   "In org-mode buffers it will reset tag position according to
 `org-tags-column'."
