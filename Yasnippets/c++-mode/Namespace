@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: GenX namespace
+# key: nsg
+# --
+
+namespace nlp_generation {
+
+$0
+
+}  // namespace nlp_generation

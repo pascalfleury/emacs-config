@@ -1052,12 +1052,12 @@ Simplify cleanup of =#include= / =typedef= / =using= blocks.
 #+end_src
 
 ** yasnippet / abbrev / auto-yasnippet
-The key for yasnippet expansion is simply =TAB=.
+The key for yasnippet expansion is for me =S-TAB= to no clash with regular code indentation.
 The snippets are mode-dependent. See the [[http://joaotavora.github.io/yasnippet/][full documentation]].
 
 Some of the keys are listed here. The prefix is =C-c &=
 
-| Command                | key after C-x & |
+| Command                | key after C-c & |
 |------------------------+-----------------|
 | yas-new-snippet        | C-n             |
 | yas-insert-snippet     | C-s             |
