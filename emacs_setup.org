@@ -258,7 +258,6 @@ Remove =C-p= that I want to use for *me* personally as a prefix.
   (setq org-startup-with-inline-images t)
 #+end_src
 
-
 * Helper Functions
 ** add-hook-run-once
 Use instead of add-hook to run it a single time.
@@ -1154,17 +1153,18 @@ This should display the source code always in the same window when debugging.
 Found on [[https://stackoverflow.com/questions/39762833/emacsgdb-customization-how-to-display-source-buffer-in-one-window][Stack Overflow]].
 
 #+begin_src emacs-lisp
-  ;;(add-to-list 'display-buffer-alist
-  ;;             (cons 'gdb-source-code-buffer-p
-  ;;                   (cons 'display-buffer-use-some-window nil)))
+  (add-to-list 'display-buffer-alist
+               (cons 'gdb-source-code-buffer-p
+                     (cons 'display-buffer-use-some-window nil)))
 
   (defun gdb-source-code-buffer-p (bufName action)
     "Return whether BUFNAME is a source code buffer and gdb is running."
     (let ((buf (get-buffer bufName)))
       (and buf
-	   (and (boundp gud-minor-mode) (eq gud-minor-mode 'gdbmi))
-	   (with-current-buffer buf
-	     (derived-mode-p buf 'c++-mode 'c-mode)))))
+            (boundp 'gud-minor-mode)
+            (eq gud-minor-mode 'gdbmi)
+            (with-current-buffer buf
+              (derived-mode-p buf 'c++-mode 'c-mode)))))
 #+end_src
 
 This was the longer and fault version...
