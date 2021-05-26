@@ -277,8 +277,8 @@ Use instead of add-hook to run it a single time.
 ** truncate a string
 #+begin_src emacs-lisp
   ;; This one provides a version with custom ellipsis.
-  (use-package s
-    :ensure t)
+  ;;(use-package s
+  ;;  :ensure t)
 
   (defun paf/truncate-string (text &optional len)
     "Truncate the text to a given length.
@@ -1152,11 +1152,27 @@ Simple way to increase/decrease a number in code.
 
 This should display the source code always in the same window when debugging.
 Found on [[https://stackoverflow.com/questions/39762833/emacsgdb-customization-how-to-display-source-buffer-in-one-window][Stack Overflow]].
+
 #+begin_src emacs-lisp
+  (add-to-list 'display-buffer-alist
+               (cons 'gdb-source-code-buffer-p
+                     (cons 'display-buffer-use-some-window nil)))
+
+  (defun gdb-source-code-buffer-p (bufName action)
+    "Return whether BUFNAME is a source code buffer and gdb is running."
+    (let ((buf (get-buffer bufName)))
+      (and buf
+           (eq gud-minor-mode 'gdbmi)
+           (with-current-buffer buf
+             (derived-mode-p buf 'c++-mode 'c-mode)))))
+#+end_src
+
+This was the longer and fault version...
+#+begin_src emacs-lisp :tangle no
   ; This unfortunately also messes up the regular frame navigation of source code.
-  ;(add-to-list 'display-buffer-alist
-  ;             (cons 'cdb-source-code-buffer-p
-  ;                   (cons 'display-source-code-buffer nil)))
+  (add-to-list 'display-buffer-alist
+               (cons 'cdb-source-code-buffer-p
+                     (cons 'display-source-code-buffer nil)))
 
   (defun cdb-source-code-buffer-p (bufName action)
     "Return whether BUFNAME is a source code buffer."
