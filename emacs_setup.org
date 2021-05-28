@@ -253,9 +253,12 @@ Remove =C-p= that I want to use for *me* personally as a prefix.
 #+end_src
 ** Splash screen
 #+begin_src emacs-lisp
-  (setq initial-buffer-choice "~/Emacs/welcome.org")
-  (setq fancy-splash-image "~/Emacs/paf_emacs.svg")
-  (setq org-startup-with-inline-images t)
+  (if window-system
+      (progn
+        (setq initial-buffer-choice "~/Emacs/welcome.org")
+        (setq fancy-splash-image "~/Emacs/paf_emacs.svg")
+        (setq org-startup-with-inline-images t))
+    (setq initial-buffer-choice "~/Emacs/welcome_nox.org"))
 #+end_src
 
 * Helper Functions
@@ -1293,7 +1296,7 @@ Let other tools use emacs client to interact
 #+end_src
 *** Org-relative file helper function
 #+begin_src emacs-lisp
-(defun org-relative-file (filename)
+(defun org-relative (filename)
   "Compute an expanded absolute file path for org files"
   (expand-file-name filename org-directory))
 #+end_src
@@ -1538,7 +1541,7 @@ All keys prefixed with =C-c n=
     :ensure t
     :hook (after-init . org-roam-mode)
     :init (setq org-roam-directory
-                (org-relative-file "OrgRoam"))
+                (org-relative "OrgRoam"))
     :bind (:map org-roam-mode-map
                 (("C-c n l" . org-roam)
                  ("C-c n b" . org-roam-switch-to-buffer)
@@ -1997,44 +2000,44 @@ Capture and refile stuff, with some templates that I think are useful.
 Very nice post on how to get capture templats from a file: [[https://joshrollinswrites.com/help-desk-head-desk/org-capture-in-files/][Org-capture in Files]].
 
 #+begin_src emacs-lisp
-  (setq org-default-notes-file (org-relative-file "Inbox.org"))
+  (setq org-default-notes-file (org-relative "Inbox.org"))
 
   (setq org-capture-templates
         `(("t" "Task"
-           entry (file+headline ,(org-relative-file "Inbox.org") "Tasks")
+           entry (file+headline ,(org-relative "Inbox.org") "Tasks")
            "* TODO %?\n%U\n\n%x"
            :clock-resume t)
           ;;
           ("i" "Idea"
-           entry (file+headline ,(org-relative-file "Inbox.org") "Ideas")
+           entry (file+headline ,(org-relative "Inbox.org") "Ideas")
            "* SOMEDAY %?\n%U\n\n%x"
            :clock-resume t)
           ;;
           ("m" "Meeting"
-           entry (file+headline ,(org-relative-file "Inbox.org") "Meetings")
+           entry (file+headline ,(org-relative "Inbox.org") "Meetings")
            "* %?  :MTG:\n%U\n%^{with}p"
            :clock-in t
            :clock-resume t)
           ;;
           ("s" "Stand-up"
-           entry (file+headline ,(org-relative-file "Inbox.org") "Meetings")
+           entry (file+headline ,(org-relative "Inbox.org") "Meetings")
            "* Stand-up  :MTG:\n%U\n\n%?"
            :clock-in t
            :clock-resume t)
           ;;
           ("1" "1:1"
-           entry (file+headline ,(org-relative-file "Inbox.org") "Meetings")
+           entry (file+headline ,(org-relative "Inbox.org") "Meetings")
            "* 1:1 %^{With}  :MTG:\n%U\n:PROPERTIES:\n:with: %\\1\n:END:\n\n%?"
            :clock-in t
            :clock-resume t)
           ;;
           ("p" "Talking Point"
-           entry (file+headline ,(org-relative-file "refile.org") "Talking Points")
+           entry (file+headline ,(org-relative "refile.org") "Talking Points")
            "* %?  :TALK:\n%U\n%^{dowith}p"
            :clock-keep t)
           ;;
           ("j" "Journal"
-           entry (file+olp+datetree ,(org-relative-file "journal.org"))
+           entry (file+olp+datetree ,(org-relative "journal.org"))
            "* %?\n%U"
            :clock-in t
            :clock-resume t
@@ -2177,7 +2180,7 @@ Check out the [[https://kungsgeten.github.io/yankpad.html][blog post]] (and the 
     :ensure t
     :defer
     :init
-    (setq yankpad-file (org-relative-file "Templates/yankpad.org"))
+    (setq yankpad-file (org-relative "Templates/yankpad.org"))
     :config
     (bind-key "C-p y m" 'yankpad-map)
     (bind-key "C-p y e" 'yankpad-expand))
@@ -2197,7 +2200,7 @@ This is a note-taking packages inspired by the principles of the [[https://zette
 
     :config
     (setq deft-extensions '("org" "md" "txt"))
-    (setq deft-directory (org-relative-file "Zettelkasten"))
+    (setq deft-directory (org-relative "Zettelkasten"))
     (setq deft-recursive t)
 
     :bind (("C-c z d" . deft)
