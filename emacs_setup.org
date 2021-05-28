@@ -253,9 +253,12 @@ Remove =C-p= that I want to use for *me* personally as a prefix.
 #+end_src
 ** Splash screen
 #+begin_src emacs-lisp
-  (setq initial-buffer-choice "~/Emacs/welcome.org")
-  (setq fancy-splash-image "~/Emacs/paf_emacs.svg")
-  (setq org-startup-with-inline-images t)
+  (if window-system
+      (progn
+        (setq initial-buffer-choice "~/Emacs/welcome.org")
+        (setq fancy-splash-image "~/Emacs/paf_emacs.svg")
+        (setq org-startup-with-inline-images t))
+    (setq initial-buffer-choice "~/Emacs/welcome_nox.org"))
 #+end_src
 
 * Helper Functions
