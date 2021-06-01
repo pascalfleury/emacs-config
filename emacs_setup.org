@@ -295,9 +295,15 @@ Use instead of add-hook to run it a single time.
 
   Refer to `org-agenda-prefix-format' for more information."
     (interactive)
-    (if (numberp len)
-        (s-truncate len text org-ellipsis) ;; "…")
+    (if (and (numberp len) (> (length text) len))
+        (let* ((ellipsis org-ellipsis)
+               (ellipsis-length (length ellipsis))
+               (short-text (substring text 0 (- len ellipsis-length))))
+          (format "%s%s" short-text ellipsis))
       text))
+
+  ;; (setq paf-tests/truncate (paf/truncate-string "Here is some long text" 10))
+  ;; (s-truncate len text) ;; org-ellipsis) ;; "…")
 #+end_src
 * Environment
 ** Browser default
