@@ -357,9 +357,9 @@ Use =C-x C-u= and =C-x C-l= to effect them.
 #+end_src
 
 * Managing Buffers
-** winner-mode (not used anymore)
+** winner-mode
 Enables =winner-mode=. Navigate buffer-window configs with =C-c left= and =C-c right=.
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
 (winner-mode 1)
 #+end_src
 ** popper.el: deal with popup windows
@@ -392,9 +392,24 @@ From our very own =alphapapa= on [[https://github.com/alphapapa/bufler.el][githu
     :ensure t)
 #+end_src
 
+** [[https://github.com/nex3/perspective-el][perspective]]
+#+begin_src emacs-lisp
+  (use-package perspective
+    :ensure t
+    :bind
+    (("C-x C-b" . persp-list-buffers)
+     ("C-x b" . persp-switch-to-buffer*)
+     ("C-x k" . persp-kill-buffer*))
+    :hook (kill-emacs-hook . persp-state-save)
+    :config
+    (persp-mode)
+    (setq persp-state-default-file
+          (expand-file-name "perspective.save" user-emacs-directory)))
+#+end_src
+
 ** eyebrowse (layout managing)
 This is supposed to be a better window manager.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (use-package eyebrowse
   :ensure t)
 #+end_src
@@ -957,6 +972,11 @@ Start using projectile. It has the documentation [[https://docs.projectile.mx/en
     :delight projectile-mode
     :config
     (helm-projectile-on))
+
+  (use-package persp-projectile
+    :ensure t
+    :after (perspective projectile)
+    :requires persp-projectile)
 #+end_src
 
 Also make sure we do have the faster [[https://github.com/ggreer/the_silver_searcher#the-silver-searcher][silver searcher]] version.  This may need you to install the corresponding tool for this, with the following snippet:
@@ -1068,6 +1088,7 @@ Some of the keys are listed here. The prefix is =C-c &=
 #+begin_src emacs-lisp
   (use-package yasnippet
     :ensure t
+    :delight yas-minor-mode
     :config
     (setq yas-snippet-dirs '("~/Emacs/Yasnippets/"
                              "~/Yasnippets/"))
@@ -1086,11 +1107,14 @@ For the abbrev mode, that I use only for correcting typos, I set it up in emacs 
 To add an abbrev after one has typed something wrong, just use =C-x a i g= (add inverse global) to add the actual text that should have been written.
 
 #+begin_src emacs-lisp
-  ;; tell emacs where to read/save abbrev
-  (setq abbrev-file-name "~/.emacs.d/abbrev_defs")
-  ;; save abbrevs when files are saved
-  (setq save-abbrevs 'silent)
-  (setq-default abbrev-mode t)
+  (use-package abbrev
+    :delight abbrev-mode
+    :config
+    (setq abbrev-file-name "~/.emacs.d/abbrev_defs")
+    (setq save-abbrevs 'silent)
+    (setq-default abbrev-mode t)
+    (if (file-exists-p abbrev-file-name)
+        (quietly-read-abbrev-file)))
 #+end_src
 
 ** Selective display
@@ -1277,15 +1301,17 @@ If variable =org-directory= is not set yet, map it to my home's files. You may s
 - State "NEXT"       from              [2019-06-24 Mon 10:10]
 :END:
 #+begin_src emacs-lisp
-  (use-package org
-    :ensure nil
-    :delight org-mode
-    :config
-    (if (not (boundp 'org-directory))
-        (setq org-directory "~/OrgFiles"))
-    (add-hook 'org-mode-hook #'(lambda ()
-                                 (visual-line-mode)
-                                 (org-indent-mode))))
+    (use-package org
+      :ensure nil
+      :delight
+      (org-mode)
+      (visual-line-mode)
+      :config
+      (if (not (boundp 'org-directory))
+          (setq org-directory "~/OrgFiles"))
+      (add-hook 'org-mode-hook #'(lambda ()
+                                   (visual-line-mode)
+                                   (org-indent-mode))))
 #+end_src
 
 ** Packages / Helper Functions / Tools found on the web / worg
