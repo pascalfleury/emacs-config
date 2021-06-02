@@ -89,12 +89,12 @@
       (goto-char (point-min))
 
       ; simplified version of org-complex-heading-regexp-format
-    (setq my-org-complex-heading-regexp-format
-        (concat "^"
-          "\\(%s\\)"
-          "\\(?: *\\[[0-9%%/]+\\]\\)*"
-          "\\(?:[ \t]+\\(:[[:alnum:]_@#%%:]+:\\)\\)?"
-          "[ \t]*$"))
+	  (setq my-org-complex-heading-regexp-format
+	      (concat "^"
+		      "\\(%s\\)"
+		      "\\(?: *\\[[0-9%%/]+\\]\\)*"
+		      "\\(?:[ \t]+\\(:[[:alnum:]_@#%%:]+:\\)\\)?"
+		      "[ \t]*$"))
       (setq top-level-p t)
       (while (not (equal org-tree nil))
         (let ((child-list (org-child-list top-level-p))
