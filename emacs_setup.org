@@ -1409,7 +1409,12 @@ Not sure what to replace it with though...
 Make sure archiving preserves the same tree structure, including when archiving subtrees.
 This is found on [[https://gist.github.com/edgimar/072d99d8650abe81a9fe7c8687c0c993][github Gist from edgimar]]
 
-#+begin_src emacs-lisp
+**** TODO Does not seem to work with archiving org-gcal files.
+:LOGBOOK:
+- State "TODO"       from              [2021-06-03 Thu 00:28]
+:END:
+
+#+begin_src emacs-lisp :tangle no
   (load-file "~/Emacs/archive-with-ancestors.el")
   ;; Set the function to use for org-archive-default  (C-c C-x C-a)
   ;;(setq org-archive-location (concat org-directory "/Archive/%s_archive::* Archived"))
