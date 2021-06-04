@@ -17,12 +17,14 @@ They usually live temporarily in my =~/.emacs= until I am happy, in which case I
   - [[https://github.com/yjwen/org-reveal][ox-reveal]] (see [[https://github.com/yjwen/org-reveal#set-the-location-of-revealjs][installation]])
 
 ** Make the config work fine when initially installed
-*** TODO F12 does not find any files
+*** DONE F12 does not find any files
+CLOSED: [2021-06-04 Fri 22:36]
 :LOGBOOK:
+- State "DONE"       from "TODO"       [2021-06-04 Fri 22:36]
 - State "TODO"       from              [2021-02-03 Wed 16:52]
 :END:
 because nothing is set in the =org-agenda-files=
-*** TODO maybe complain when org-directory is not set t an existing directory
+*** TODO maybe complain when org-directory is not set to an existing directory
 :LOGBOOK:
 - State "TODO"       from              [2021-02-03 Wed 16:53]
 :
@@ -646,11 +648,12 @@ web-mode with config for Polymer editing
 #+end_src
 ** typescript-mode
 #+begin_src emacs-lisp
-    (use-package typescript-mode
-      :mode "\\.ts\\'"
-      ;; :config
-      ;; (setq typescript-indent-level 2)
-      )
+  (use-package typescript-mode
+    :ensure t
+    :mode "\\.ts\\'"
+    ;; :config
+    ;; (setq typescript-indent-level 2)
+    )
 #+end_src
 
 ** csv-mode
@@ -1798,8 +1801,14 @@ F12 open the first agenda file
 #+begin_src emacs-lisp
   (defun org-get-first-agenda-file ()
     (interactive)
-    (find-file (elt org-agenda-files 0)))
+    (let* ((num-files (length org-agenda-files))
+           (the-file (if (eq num-files 0)
+                         org-directory
+                       (elt org-agenda-files 0))))
+      (find-file the-file)))
+
   (global-set-key [f12] 'org-get-first-agenda-file)
+
   ; F12 on Mac OSX displays the dashboard, so add Control F12
   (global-set-key [C-f12] 'org-get-first-agenda-file)
 #+end_src
