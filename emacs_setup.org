@@ -294,10 +294,10 @@ Use instead of add-hook to run it a single time.
   Refer to `org-agenda-prefix-format' for more information."
     (interactive)
     (if (and (numberp len) (> (length text) len))
-        (let* ((ellipsis (if (eq ellipsis nil) "…" ellipsis))
-               (ellipsis-length (length ellipsis))
+        (let* ((used-ellipsis (if (eq ellipsis nil) "…" ellipsis))
+               (ellipsis-length (length used-ellipsis))
                (short-text (substring text 0 (- len ellipsis-length))))
-          (format "%s%s" short-text ellipsis))
+          (format "%s%s" short-text used-ellipsis))
       text))
 
   ;; (setq paf-tests/truncate (paf/truncate-string "Here is some long text" 10))
