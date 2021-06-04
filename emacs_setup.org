@@ -257,10 +257,10 @@ Remove =C-p= that I want to use for *me* personally as a prefix.
 #+begin_src emacs-lisp
   (if window-system
       (progn
-        (setq initial-buffer-choice "~/Emacs/welcome.org")
-        (setq fancy-splash-image "~/Emacs/paf_emacs.svg")
+        (setq initial-buffer-choice "~/Emacs/Resources/welcome.org")
+        (setq fancy-splash-image "~/Emacs/Resources/paf_emacs.svg")
         (setq org-startup-with-inline-images t))
-    (setq initial-buffer-choice "~/Emacs/welcome_nox.org"))
+    (setq initial-buffer-choice "~/Emacs/Resources/welcome_nox.org"))
 #+end_src
 
 * Helper Functions
@@ -736,7 +736,7 @@ Colorize color names and codes in the correct color.
 ** taskjuggler-mode (tj3-mode)
 #+begin_src emacs-lisp
   (use-package ox-taskjuggler
-    :load-path "~/Emacs")
+    :load-path "~/Emacs/lisp")
 
   (use-package tj3-mode
     :ensure t
@@ -854,7 +854,7 @@ Once more it shows that the most powerful things are not always the most visible
      '(hbut-flash ((t (:background "green yellow"
                        :foreground "dark gray"))) t))
     (require 'hyperbole)
-    (load-file "~/Emacs/hyperbole-systems.el"))
+    (load-file "~/Emacs/lisp/hyperbole-systems.el"))
 
 
 #+end_src
@@ -1413,7 +1413,7 @@ This is found on [[https://gist.github.com/edgimar/072d99d8650abe81a9fe7c8687c0c
 :END:
 
 #+begin_src emacs-lisp :tangle no
-  (load-file "~/Emacs/archive-with-ancestors.el")
+  (load-file "~/Emacs/lisp/archive-with-ancestors.el")
   ;; Set the function to use for org-archive-default  (C-c C-x C-a)
   ;;(setq org-archive-location (concat org-directory "/Archive/%s_archive::* Archived"))
 
@@ -1493,7 +1493,7 @@ To help debug, use this before running things:
     :ensure t)
   (use-package request-deferred
     :ensure t)
-  (load-file "~/Emacs/org-gtasks.el")
+  (load-file "~/Emacs/lisp/org-gtasks.el")
 
   ;; Helper to sync all task lists for an account
   (defun paf/org-gtasks-sync (account_name)
@@ -1591,7 +1591,7 @@ All keys prefixed with =C-c n=
   ;;  :after org-roam)
 
   (use-package org-roam-extras
-    :load-path "~/Emacs/org-roam-extras.el"
+    :load-path "~/Emacs/lisp/org-roam-extras.el"
     :after org-roam
     :config
     (setq roam-extras-todo-tag-name "project")
@@ -1699,7 +1699,7 @@ Make the display of images a simple key-stroke away.
 *** Properties collector
 Collect properties into tables. See documentation in the file.
 #+begin_src emacs-lisp
-(load-file "~/Emacs/org-collector.el")
+(load-file "~/Emacs/lisp/org-collector.el")
 #+end_src
 
 ** My Setup
@@ -1834,7 +1834,7 @@ This lets one write links as e.g. [ [b:123457] ]
 This is my version of the org-secretary
 #+begin_src emacs-lisp
     (use-package paf-secretary
-      :load-path "~/Emacs"
+      :load-path "~/Emacs/lisp"
       :bind (("\C-cw" . paf-sec-set-with)
              ("\C-cW" . paf-sec-set-where)
              ("\C-cj" . paf-sec-tag-entry))
@@ -2266,5 +2266,5 @@ This is a note-taking packages inspired by the principles of the [[https://zette
 Update the version by downloading the latest version here:
 
 #+begin_src bash :tangle no
-wget https://raw.githubusercontent.com/EFLS/zetteldeft/master/zetteldeft.el -O ~/Emacs/zetteldeft.el
+wget https://raw.githubusercontent.com/EFLS/zetteldeft/master/zetteldeft.el -O ~/Emacs/lisp/zetteldeft.el
 #+end_src
