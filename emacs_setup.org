@@ -27,7 +27,11 @@ because nothing is set in the =org-agenda-files=
 *** TODO maybe complain when org-directory is not set to an existing directory
 :LOGBOOK:
 - State "TODO"       from              [2021-02-03 Wed 16:53]
-:
+:END:
+*** TODO Avoid showing the welcome screen if a file was requested on cmdline
+:LOGBOOK:
+- State "TODO"       from              [2021-06-04 Fri 23:41]
+:END:
 
 * One-time Initial Setup
 I have my config in directory =~/Emacs= which is where I clone this repository. The config setup is maintained purely in the =~/Emacs/emacs_setup.org= file.
@@ -189,6 +193,16 @@ Just to add a little information in the tangled file.
 ;; ===== this file was auto-tangled, only edit the emacs_setup.org =====
 #+end_src
 
+** This config directory
+A variable so we can refer to this all over the place.
+
+Maybe there is a way to aut-detect this and generate it with literate programming or such.
+#+begin_src emacs-lisp
+  (setq emacs-config-directory "~/Emacs")
+  (setq paf-lisp-directory (expand-file-name "lisp" emacs-config-directory))
+  (setq paf-emacs-init (expand-file-name "emacs_setup.el" emacs-config-directory))
+#+end_src
+
 ** melpa
 Make sure we have the package system initialized before we load anything.
 #+begin_src emacs-lisp
@@ -225,24 +239,26 @@ First, make sure it gets installed if it is not there yet.
 ** tangle-this-config
 I set this up to tangle the init org-mode file into the actual Emacs init file as soon as I save it.
 #+begin_src emacs-lisp
-(defun tangle-init ()
-  "If the current buffer is 'init.org' the code-blocks are
-  tangled, and the tangled file is compiled."
-  (when (equal (buffer-file-name)
-               (expand-file-name "~/Emacs/emacs_setup.org"))
-    ;; Avoid running hooks when tangling.
-    (let ((prog-mode-hook nil))
-      (org-babel-tangle)
-      (byte-compile-file "~/Emacs/emacs_setup.el"))))
+  (defun tangle-init ()
+    "If the current buffer is 'init.org' the code-blocks are
+    tangled, and the tangled file is compiled."
+    (when (equal (buffer-file-name)
+                 (expand-file-name "emacs_setup.org" emacs-config-directory))
+      ;; Avoid running hooks when tangling.
+      (let ((prog-mode-hook nil))
+        (org-babel-tangle)
+        (byte-compile-file paf-emacs-init))))
 
-(add-hook 'after-save-hook 'tangle-init)
+  (add-hook 'after-save-hook 'tangle-init)
 #+end_src
+
 ** Detect System
 Some hints about how to do this are [[http://ergoemacs.org/emacs/elisp_determine_OS_version.html][here]].
 
 #+begin_src emacs-lisp
 ;; Detect the current system and capabilities
 #+end_src
+
 * Personal Initialization
 ** Clear =C-p= so I can use it as a prefix
 Remove =C-p= that I want to use for *me* personally as a prefix.
@@ -255,12 +271,15 @@ Remove =C-p= that I want to use for *me* personally as a prefix.
 #+end_src
 ** Splash screen
 #+begin_src emacs-lisp
+  (defun get-resource (name)
+    (let* ((resource-dir (expand-file-name "Resources" emacs-config-directory)))
+      (expand-file-name name resource-dir)))
   (if window-system
       (progn
-        (setq initial-buffer-choice "~/Emacs/Resources/welcome.org")
-        (setq fancy-splash-image "~/Emacs/Resources/paf_emacs.svg")
-        (setq org-startup-with-inline-images t))
-    (setq initial-buffer-choice "~/Emacs/Resources/welcome_nox.org"))
+	(setq initial-buffer-choice (get-resource "welcome.org"))
+	(setq fancy-splash-image (get-resource "paf_emacs.svg"))
+	(setq org-startup-with-inline-images t))
+    (setq initial-buffer-choice (get-resource "welcome_nox.org")))
 #+end_src
 
 * Helper Functions
@@ -302,17 +321,20 @@ Use instead of add-hook to run it a single time.
 
   ;; (setq paf-tests/truncate (paf/truncate-string "Here is some long text" 10))
 #+end_src
+
 * Environment
 ** Browser default
 #+begin_src emacs-lisp
 (setq browse-url-generic-program (executable-find "google-chrome")
   browse-url-browser-function 'browse-url-generic)
 #+end_src
+
 ** Setup server
 Start the background server, so we can use emacsclient.
 #+begin_src emacs-lisp :tangle no
 (server-start)
 #+end_src
+
 ** UTF-8
  Make Emacs request UTF-8 first when pasting stuff.
 #+begin_src emacs-lisp
@@ -322,6 +344,7 @@ Start the background server, so we can use emacsclient.
   (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
 (set-language-environment "UTF-8")
 #+end_src
+
 ** Newline (only Unix wanted)
 This should automatically convert any files with dos or Mac line endings into Unix style ones. Code found [[https://www.emacswiki.org/emacs/EndOfLineTips][here]].
 #+begin_src emacs-lisp
@@ -332,6 +355,7 @@ This should automatically convert any files with dos or Mac line endings into Un
 
   (add-hook 'find-file-hook 'no-junk-please-we-are-unixish)
 #+end_src
+
 ** auto revert
 Use =auto-revert=, which reloads a file if it's updated on disk
 and not modified in the buffer.
@@ -365,6 +389,7 @@ Enables =winner-mode=. Navigate buffer-window configs with =C-c left= and =C-c r
 #+begin_src emacs-lisp
 (winner-mode 1)
 #+end_src
+
 ** popper.el: deal with popup windows
 A minor-mode to dal with lots of popup windows and bring some order in them.
 See [[https://github.com/karthink/popper][github:popper]] for more informatin.
@@ -444,12 +469,14 @@ This gets the font coloring switched on for all buffers.
 #+begin_src emacs-lisp
 (global-font-lock-mode t)
 #+end_src
+
 ** In terminal mode
 #+begin_src emacs-lisp
 (when (display-graphic-p)
   (set-background-color "#ffffff")
   (set-foreground-color "#141312"))
 #+end_src
+
 ** In X11 mode: mouse and window title
 #+begin_src emacs-lisp
 (setq frame-title-format "emacs @ %b - %f")
@@ -457,12 +484,14 @@ This gets the font coloring switched on for all buffers.
   (mouse-wheel-mode)  ;; enable wheelmouse support by default
   (set-selection-coding-system 'compound-text-with-extensions))
 #+end_src
+
 ** Look: buffer naming
 #+begin_src emacs-lisp
 (use-package uniquify
   :init
   (setq uniquify-buffer-name-style 'post-forward-angle-brackets))
 #+end_src
+
 ** Buffer Decorations
 Setup the visual cues about the current editing buffer
 #+begin_src emacs-lisp
@@ -471,12 +500,14 @@ Setup the visual cues about the current editing buffer
 (setq scroll-step 1)
 (setq-default transient-mark-mode t)  ;; highlight selection
 #+end_src
+
 ** nyan-mode
 #+begin_src emacs-lisp
 (use-package nyan-mode
   :ensure t
   :bind ("C-p n" . 'nyan-mode))
 #+end_src
+
 ** dynamic cursor colors
 The cursor is displayed in different colors, depending on overwrite or insert mode.
 #+begin_src emacs-lisp
@@ -498,6 +529,7 @@ The cursor is displayed in different colors, depending on overwrite or insert mo
 
 (add-hook 'post-command-hook 'hcz-set-cursor-color-according-to-mode)
 #+end_src
+
 ** theme / faces
 I really like the high-contract Zenburn theme.
 #+begin_src emacs-lisp
@@ -517,11 +549,13 @@ Package to remove some info from the mode-line for minor-modes.
   (use-package delight
     :ensure t)
 #+end_src
+
 ** remove some modelines
 #+begin_src emacs-lisp
   (use-package eldoc
     :delight)
 #+end_src
+
 * Key Mappings
 ** alternate key mappings
 Letting one enter chars that are otherwise difficult in e.g. the minibuffer.
@@ -531,27 +565,32 @@ Letting one enter chars that are otherwise difficult in e.g. the minibuffer.
 (global-set-key [delete] 'delete-char)
 (global-set-key [kp-delete] 'delete-char)
 #+end_src
+
 ** home and end
 #+begin_src emacs-lisp
   (global-set-key (kbd "<home>") 'beginning-of-line)
   (global-set-key (kbd "<end>") 'end-of-line)
 #+end_src
+
 ** Macros
 #+begin_src emacs-lisp
 (global-set-key [f3] 'start-kbd-macro)
 (global-set-key [f4] 'end-kbd-macro)
 (global-set-key [f5] 'call-last-kbd-macro)
 #+end_src
+
 ** Text size
 Increase/decrease text size
 #+begin_src emacs-lisp
 (define-key global-map (kbd "C-+") 'text-scale-increase)
 (define-key global-map (kbd "C--") 'text-scale-decrease)
 #+end_src
+
 ** multiple regions
 #+begin_src emacs-lisp
 (global-set-key (kbd "C-M-i") 'iedit-mode)
 #+end_src
+
 ** Moving around buffers
 #+begin_src emacs-lisp
 (global-set-key (kbd "C-c <C-left>")  'windmove-left)
@@ -560,6 +599,7 @@ Increase/decrease text size
 (global-set-key (kbd "C-c <C-down>")  'windmove-down)
 (global-set-key (kbd "C-c C-g") 'goto-line)
 #+end_src
+
 ** multiple-cursors
 Configure the shortcuts for multiple cursors
 #+begin_src emacs-lisp
@@ -570,6 +610,7 @@ Configure the shortcuts for multiple cursors
          ("C-<" . 'mc/mark-previous-like-this)
          ("C-c C->" . 'mc/mark-all-like-this)))
 #+end_src
+
 ** ace-jump-mode
 Let's one jump around text
 #+begin_src emacs-lisp
@@ -578,11 +619,13 @@ Let's one jump around text
   :bind (("C-c C-SPC" . 'ace-jump-mode)
          ("C-c C-DEL" . 'ace-jump-mode-pop-mark)))
 #+end_src
+
 ** Hydra
 #+begin_src emacs-lisp
   (use-package hydra
     :ensure t)
 #+end_src
+
 * Editing Style
 ** No tabs, ever. No trailing spaces either.
 #+begin_src emacs-lisp
@@ -591,6 +634,7 @@ Let's one jump around text
 (setq next-line-add-newlines nil)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 #+end_src
+
 ** Mark the 80 cols boundary
 #+begin_src emacs-lisp
   (use-package column-enforce-mode
@@ -600,6 +644,7 @@ Let's one jump around text
     :bind ("C-c m" . 'column-enforce-mode))
   ;; column-enforce-face
 #+end_src
+
 ** Better kill ring
 Seen demonstrated by [[https://www.youtube.com/watch?v=LFXA089Tx38][Uncle Dave]]
 #+begin_src emacs-lisp
@@ -607,6 +652,7 @@ Seen demonstrated by [[https://www.youtube.com/watch?v=LFXA089Tx38][Uncle Dave]]
     :ensure t
     :bind ("M-y" . popup-kill-ring))
 #+end_src
+
 * Cool Packages
 ** annotate-mode
 The file-annotations are store externally. Seems to fail with =args-out-of-range= and then Emacs is confused. (filed issue for this)
@@ -641,6 +687,7 @@ web-mode with config for Polymer editing
   (setq web-mode-css-indent-offset 2)
   (setq web-mode-code-indent-offset 2))
 #+end_src
+
 ** typescript-mode
 #+begin_src emacs-lisp
   (use-package typescript-mode
@@ -658,6 +705,7 @@ mode to edit CSV files.
     :ensure t
     :mode "\\.csv\\'")
 #+end_src
+
 ** protobuf-mode
 Mode for Google protocol buffer mode
 #+begin_src emacs-lisp
@@ -665,11 +713,13 @@ Mode for Google protocol buffer mode
     :ensure t
     :mode "\\.proto\\'")
 #+end_src
+
 ** Helm (list completion)
 Trying out Helm instead of icicles, as it is available on ELPA.
 
 I just took over the config described in this [[https://tuhdo.github.io/helm-intro.html][helm intro]].
 
+IND
 #+begin_src emacs-lisp
   (use-package helm
    :ensure t
@@ -725,14 +775,16 @@ I just took over the config described in this [[https://tuhdo.github.io/helm-int
 Useful abbreviations when coding in HTML.
 #+begin_src emacs-lisp
 (use-package emmet-mode
-:ensure t)
+  :ensure t)
 #+end_src
+
 ** rainbow-mode
 Colorize color names and codes in the correct color.
 #+begin_src emacs-lisp
 (use-package rainbow-mode
-:ensure t)
+  :ensure t)
 #+end_src
+
 ** taskjuggler-mode (tj3-mode)
 #+begin_src emacs-lisp
   (use-package ox-taskjuggler
@@ -855,21 +907,22 @@ Once more it shows that the most powerful things are not always the most visible
                        :foreground "dark gray"))) t))
     (require 'hyperbole)
     (load-file "~/Emacs/lisp/hyperbole-systems.el"))
-
-
 #+end_src
+
 ** [[https://github.com/fourier/ztree#ztree][ztree]]
 A tree-view navigation of files, with diff tool for directories.
 #+begin_src emacs-lisp :tangle no
   (use-package ztree
     :ensure t)
 #+end_src
+
 ** demo-it
 Do quite powerful demos, see one [[https://www.youtube.com/watch?v=WZVZXp-i7jQ][here]] by the author.
 #+begin_src emacs-lisp
     (use-package demo-it
       :ensure t)
 #+end_src
+
 ** Emacs Application Framework
 Tried it, but it fails often. too fiddly.
 #+begin_src emacs-lisp :tangle no
@@ -1009,6 +1062,7 @@ Switch from header to implementation file quickly.
           (lambda ()
             (local-set-key  (kbd "C-c o") 'ff-find-other-file)))
 #+end_src
+
 ** no indentation of namespaces in C++
 Essentially, use the Google C++ style formatting.
 #+begin_src emacs-lisp
@@ -1021,6 +1075,7 @@ Essentially, use the Google C++ style formatting.
   ;;(use-package flymake-google-cpplint
   ;;  :ensure t)
 #+end_src
+
 ** ripgrep
 This enables searching recursively in projects.
 #+begin_src bash :tangle install_deps.sh
@@ -1094,8 +1149,8 @@ Some of the keys are listed here. The prefix is =C-c &=
     :ensure t
     :delight yas-minor-mode
     :config
-    (setq yas-snippet-dirs '("~/Emacs/Yasnippets/"
-                             "~/Yasnippets/"))
+    (setq yas-snippet-dirs
+          (list (expand-file-name "Yasnippets" emacs-config-directory)))
     (yas-global-mode 1))
 
   (use-package auto-yasnippet
@@ -1133,6 +1188,7 @@ Will fold all text indented more than the position of the cursor at the time the
 
 (global-set-key "\C-x$" 'set-selective-display-dlw)
 #+end_src
+
 ** Info in the gutter
 *** Line numbers
 #+begin_src emacs-lisp
@@ -1140,6 +1196,7 @@ Will fold all text indented more than the position of the cursor at the time the
   (setq-default display-line-number-width 3)
   (global-set-key (kbd "C-p l") 'display-line-numbers-mode)
 #+end_src
+
 *** git informations
 #+begin_src emacs-lisp
 (use-package git-gutter-fringe+
@@ -1148,12 +1205,14 @@ Will fold all text indented more than the position of the cursor at the time the
   :if window-system
   :bind ("C-p g" . 'git-gutter+-mode))
 #+end_src
+
 ** Speedup VCS
 Regexp matching directory names that are not under VC's control. The default regexp prevents fruitless and time-consuming attempts to determine the VC status in directories in which filenames are interpreted as hostnames.
 #+begin_src emacs-lisp
 (defvar locate-dominating-stop-dir-regexp
   "\\`\\(?:[\\/][\\/][^\\/]+\\|/\\(?:net\\|afs\\|\\.\\.\\.\\)/\\)\\'")
 #+end_src
+
 ** Dealing with numbers
 Simple way to increase/decrease a number in code.
 #+begin_src emacs-lisp
@@ -1162,6 +1221,7 @@ Simple way to increase/decrease a number in code.
     :bind (("M-+" . shift-number-up)
            ("M-_" . shift-number-down)))
 #+end_src
+
 ** GDB with many windows
 *** TODO Make it so that the source frame placement is forced only when using gdb.
 
@@ -1288,6 +1348,7 @@ All prefixed with =C-x C-a=
   fi
   EOF
 #+end_src
+
 ** bazel
 Adding support for Bazel
 #+begin_src emacs-lisp
@@ -1324,12 +1385,14 @@ Let other tools use emacs client to interact
 #+begin_src emacs-lisp
 (require 'org-protocol)
 #+end_src
+
 *** Org-relative file helper function
 #+begin_src emacs-lisp
 (defun org-relative (filename)
   "Compute an expanded absolute file path for org files"
   (expand-file-name filename org-directory))
 #+end_src
+
 *** Adjust tags on the right
 Dynamically adjust tag position
 [[https://orgmode.org/worg/org-hacks.html#org0560357][source on worg]]
@@ -1413,7 +1476,8 @@ This is found on [[https://gist.github.com/edgimar/072d99d8650abe81a9fe7c8687c0c
 :END:
 
 #+begin_src emacs-lisp :tangle no
-  (load-file "~/Emacs/lisp/archive-with-ancestors.el")
+  (load-file (expand-file-name "archive-with-ancestors.el"
+                               paf-lisp-directory)
   ;; Set the function to use for org-archive-default  (C-c C-x C-a)
   ;;(setq org-archive-location (concat org-directory "/Archive/%s_archive::* Archived"))
 
@@ -1435,6 +1499,7 @@ There are two functions that supposedly do the same.
       (when agenda-window
         (with-selected-window agenda-window (org-agenda-redo)))))
 #+end_src
+
 *** Display Agenda when idle
 Show the agenda when emacs left idle.
 [[https://orgmode.org/worg/org-hacks.html#orgaea636d][source on worg]]
@@ -1462,6 +1527,7 @@ Show the agenda when emacs left idle.
   ;;    (org-agenda-goto-calendar)))
   )
 #+end_src
+
 *** Display location in agenda
 From some help on [[https://emacs.stackexchange.com/questions/26249/customize-text-after-task-in-custom-org-agenda-view][this page]] I think this could work:
 #+begin_src emacs-lisp
@@ -1493,7 +1559,7 @@ To help debug, use this before running things:
     :ensure t)
   (use-package request-deferred
     :ensure t)
-  (load-file "~/Emacs/lisp/org-gtasks.el")
+  (load-file (expand-file-name "org-gtasks.el" paf-lisp-directory))
 
   ;; Helper to sync all task lists for an account
   (defun paf/org-gtasks-sync (account_name)
@@ -1551,6 +1617,7 @@ This enables a more fine-grained filtering of the agenda items.
     :config
     (org-super-agenda-mode t))
 #+end_src
+
 *** org-roam
 My cheat sheet for =org-roam=
 
@@ -1591,7 +1658,7 @@ All keys prefixed with =C-c n=
   ;;  :after org-roam)
 
   (use-package org-roam-extras
-    :load-path "~/Emacs/lisp/org-roam-extras.el"
+    :load-path (lambda () (expand-file-name "org-roam-extras.el" paf-lisp-directory))
     :after org-roam
     :config
     (setq roam-extras-todo-tag-name "project")
@@ -1632,11 +1699,13 @@ EmacSQL will need to get its C-binary compiled, and needs supporting tools. Note
              ("[" . org-clock-convenience-fill-gap)
              ("]" . org-clock-convenience-fill-gap-both)))
 #+end_src
+
 *** org-kanban
 #+begin_src emacs-lisp
   ;;(use-package org-kanban
   ;;  :ensure t)
 #+end_src
+
 *** org-board
 Archive entire sites locally with `wget`.
 #+begin_src emacs-lisp
@@ -1696,10 +1765,11 @@ Make the display of images a simple key-stroke away.
                                (local-set-key "\M-I" 'paf/org-toggle-iimage-in-org)
                               )))
 #+end_src
+
 *** Properties collector
 Collect properties into tables. See documentation in the file.
 #+begin_src emacs-lisp
-(load-file "~/Emacs/lisp/org-collector.el")
+(load-file (expand-file-name "org-collector.el" paf-lisp-directory))
 #+end_src
 
 ** My Setup
@@ -1740,12 +1810,22 @@ Then you can use the keyboard shortcut to open that dir.
               (local-set-key (kbd "C-c C-l") 'org-insert-link)))
 #+end_src
 
+*** Colors and faces
+This colors the code blocks a bit more visibly.
+#+begin_src emacs-lisp
+  (custom-set-faces
+   '(org-block-begin-line ((t (:inherit org-meta-line :extend t :background "color-238"))))
+   '(org-block-end-line ((t (:inherit org-block-begin-line :extend t :background "color-238"))))
+   '(org-block-background ((t (:inherit shadow :background "color-237")))))
+#+end_src
+
 *** Links by ID
 #+begin_src emacs-lisp
   (setq org-id-link-to-org-use-id 'create-if-interactive)
 #+end_src
+
 *** Display settings
-Some config for display.
+my config for display.
 #+begin_src emacs-lisp
   (setq org-hide-leading-stars 't)
   (setq org-log-done 't)
@@ -1780,10 +1860,12 @@ Some config for display.
   (setq org-habit-following-days 10)
   (setq org-habit-show-habits-only-for-today nil))
 #+end_src
+
 *** bash command
 #+begin_src emacs-lisp
 (setq org-babel-sh-command "bash")
 #+end_src
+
 *** org-clock properties
 clock stuff into a drawer.
 #+begin_src emacs-lisp
@@ -1791,6 +1873,7 @@ clock stuff into a drawer.
 (setq org-log-into-drawer t)
 (setq org-clock-int-drawer "CLOCK")
 #+end_src
+
 *** open first agenda file
 F12 open the first agenda file
 #+begin_src emacs-lisp
@@ -1807,6 +1890,7 @@ F12 open the first agenda file
   ; F12 on Mac OSX displays the dashboard, so add Control F12
   (global-set-key [C-f12] 'org-get-first-agenda-file)
 #+end_src
+
 *** org-ehtml [localhost:55555]
 This will start serving the org files through the emacs-based webbrowser when pressing =M-f12= (on localhost:55555)
 #+begin_src emacs-lisp :tangle no
@@ -1822,6 +1906,7 @@ This will start serving the org files through the emacs-based webbrowser when pr
   (ws-start org-ehtml-handler 55555))
 (global-set-key (kbd "<M-f12>") 'paf/start-web-server)
 #+end_src
+
 *** org-link-abbrev
 This lets one write links as e.g. [ [b:123457] ]
 #+begin_src emacs-lisp
@@ -1830,11 +1915,12 @@ This lets one write links as e.g. [ [b:123457] ]
         ("go" . "http://go/")
         ("cl" . "http://cr/")))
 #+end_src
+
 *** org-secretary
 This is my version of the org-secretary
 #+begin_src emacs-lisp
     (use-package paf-secretary
-      :load-path "~/Emacs/lisp"
+      :load-path paf-lisp-directory
       :bind (("\C-cw" . paf-sec-set-with)
              ("\C-cW" . paf-sec-set-where)
              ("\C-cj" . paf-sec-tag-entry))
@@ -1847,12 +1933,14 @@ This is my version of the org-secretary
                             ("HOME" . ?h)
                             ("VC" . ?v))))
 #+end_src
+
 *** task tracking
 Track task dependencies, and dim them in the agenda.
 #+begin_src emacs-lisp
 (setq org-enforce-todo-dependencies t)
 (setq org-agenda-dim-blocked-tasks 'invisible)
 #+end_src
+
 *** effort & columns mode
 #+begin_src emacs-lisp
 (setq org-global-properties
@@ -1860,6 +1948,7 @@ Track task dependencies, and dim them in the agenda.
 (setq org-columns-default-format
       "%TODO %30ITEM %3PRIORITY %6Effort{:} %10DEADLINE")
 #+end_src
+
 *** org-todo keywords
 #+begin_src emacs-lisp
   (setq org-todo-keywords
@@ -1899,6 +1988,7 @@ Track task dependencies, and dim them in the agenda.
           ("ACTIVE" . (:foreground "darkgreen" :weight bold))
           ))
 #+end_src
+
 *** org-agenda
 **** views
 #+begin_src emacs-lisp
@@ -2035,6 +2125,7 @@ That's the export function to update the agenda view.
           )
     (org-duration-set-regexps))
 #+end_src
+
 *** Capture & refile
 Capture and refile stuff, with some templates that I think are useful.
 
@@ -2096,6 +2187,7 @@ Very nice post on how to get capture templats from a file: [[https://joshrollins
 
   (setq org-refile-target-verify-function 'bh/verify-refile-target)
 #+end_src
+
 *** OrgRoam templates
 #+begin_src emacs-lisp
   (setq org-roam-capture-templates
@@ -2115,6 +2207,7 @@ Very nice post on how to get capture templats from a file: [[https://joshrollins
            :head "#+title: ${title}\n#+roam_tags: reference\n\n"
            )))
 #+end_src
+
 *** org-babel
 What kind of code block languages do I need
 #+begin_src emacs-lisp
@@ -2134,6 +2227,7 @@ What kind of code block languages do I need
    (shell . t)
   ))
 #+end_src
+
 *** org-export
 Add a few formats to the export functionality of org-mode.
 
@@ -2145,6 +2239,7 @@ Add a few formats to the export functionality of org-mode.
   (use-package ox-impress-js
     :defer)
 #+end_src
+
 *** plant-uml
 Tell where PlantUML is to be found. This needs to be downloaded and installed separately, see the [[http://plantuml.com/][PlantUML website]].
 
@@ -2266,5 +2361,5 @@ This is a note-taking packages inspired by the principles of the [[https://zette
 Update the version by downloading the latest version here:
 
 #+begin_src bash :tangle no
-wget https://raw.githubusercontent.com/EFLS/zetteldeft/master/zetteldeft.el -O ~/Emacs/lisp/zetteldeft.el
+wget https://raw.githubusercontent.com/EFLS/zetteldeft/master/zetteldeft.el -O ${PAF_LISP_DIRECTORY}/zetteldeft.el
 #+end_src
