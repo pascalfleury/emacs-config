@@ -9,3 +9,5 @@ readonly HS_REPOS="${HOME}/.homesick/repos"
 export homeshick="${HS_REPOS}/homeshick/home/.homeshick"
 $homeshick clone https://github.com/pascalfleury/dotfiles.git
 $homeshick clone https://github.com/pascalfleury/shelltoys.git
+
+$homeshick link
