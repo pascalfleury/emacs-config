@@ -1316,16 +1316,20 @@ All prefixed with =C-x C-a=
 |------------+----------------------+---------|
 ** vterm
 #+begin_src emacs-lisp
-  (if (not (string-equal system-type "darwin"))
-      (if (not (eq module-file-suffix nil))
-          (use-package vterm
-            :ensure t
-            :init
-            (setq vterm-always-compile-module t)
-            :config
-            (setq vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no")
-            (define-key vterm-mode-map (kbd "<C-backspace>")
-              (lambda () (interactive) (vterm-send-key (kbd "C-w")))))))
+  (use-package vterm
+    :ensure t
+    :unless (string-equal system-type "darwin")
+    :init
+    (setq vterm-always-compile-module t)
+    :config
+    (setq vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no")
+    (define-key vterm-mode-map (kbd "<C-backspace>")
+      (lambda () (interactive) (vterm-send-key (kbd "C-w")))))
+
+  (use-package vterm-toggle
+    :ensure t
+    :unless (string-equal system-type "darwin")
+    :after vterm)
 #+end_src
 
 #+begin_src bash :tangle install_deps.sh

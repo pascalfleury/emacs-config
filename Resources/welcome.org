@@ -1,5 +1,5 @@
 
-            [[file:~/Emacs/paf_emacs_500x90.png]]
+            [[file:paf_emacs_500x90.png]]
 
   *Welcome to PAF's Emacs*                         /Press {M-Ret} on selection/
 
