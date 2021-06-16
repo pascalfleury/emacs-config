@@ -20,8 +20,8 @@
 (defun short-link-bounds-of-thing-at-point ()
   "Find constructs that are identifiers for short links, go/... or goto/..."
   (save-excursion
-    (skip-chars-backward "0123456789/abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_/?#$=,;.&")
-    (if (looking-at "got?o?/[^ \t\n]+")
+    (skip-chars-backward "0123456789/abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_/?#$=,;.&-")
+    (if (looking-at "got?o?/[[:alnum:]_-]+\([?/#][^ \t\n]*\)?")
         (cons (point) (match-end 0))
       nil)))
 
@@ -58,6 +58,7 @@
           (link (thing-at-point 'systems-link))
           (short (thing-at-point 'short-link))
           (ldap (thing-at-point 'systems-ldap))
+          (mid (thing-at-point 'mid))
           topic)
       (cond (mid (progn (ibut:label-set mid)
                         (hact 'www-url (concat "http://lexistore" mid))))
@@ -66,4 +67,6 @@
             (link (progn (ibut:label-set link)
                          (hact 'www-url (concat "http://" link))))
             (ldap (progn (ibut:label-set ldap)
-                         (hact 'www-url (concat "http://who/" ldap))))))))
+                         (hact 'www-url (concat "http://who/" ldap))))
+            (mid (progn (ibut:label-set mid)
+                         (hact 'www-url (concat "http://hume" mid))))))))
