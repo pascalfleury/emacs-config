@@ -221,6 +221,7 @@ Adding my choice of packages repositories.
                          ; ("marmalade" . "https://marmalade-repo.org/packages/")
                         ))
 #+end_src
+
 ** use-package
 I use =use-package= for most configuration, and that needs to be at the top of the file.  =use-package= verifies the presence of the requested package, otherwise installs it, and presents convenient sections for configs of variables, key bindings etc. that happen only if the package is actually loaded.
 
@@ -265,10 +266,12 @@ Remove =C-p= that I want to use for *me* personally as a prefix.
 #+begin_src emacs-lisp
 (global-set-key (kbd "C-p") nil) ;; was 'previous-line'
 #+end_src
+
 ** Initial scratch content
 #+begin_src emacs-lisp
 (setq initial-scratch-message "; Paf's unsaved ramblings and tests...\n")
 #+end_src
+
 ** Splash screen
 #+begin_src emacs-lisp
   (defun get-resource (name)
@@ -331,7 +334,7 @@ Use instead of add-hook to run it a single time.
 
 ** Setup server
 Start the background server, so we can use emacsclient.
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
 (server-start)
 #+end_src
 
@@ -459,6 +462,7 @@ Map it to a key.
 #+begin_src emacs-lisp
 (global-set-key [M-f8] 'toggle-maximize-buffer)
 #+end_src
+
 * Colors and Look
 ** Fontlock
 This gets the font coloring switched on for all buffers.
@@ -840,6 +844,7 @@ Colorize color names and codes in the correct color.
   (ledger-mode-clean-buffer)
   (ledger-sort-buffer))
 #+end_src
+
 *** Compute formatted sum of region
 It actually computes the entire arithmetic expression that is selected, and replaces it with the numerical result.
 #+begin_src emacs-lisp
@@ -877,6 +882,7 @@ It actually computes the entire arithmetic expression that is selected, and repl
 
   (global-set-key (kbd "C-p S") 'paf/sum-amount-of-region)
 #+end_src
+
 *** Setup
 #+begin_src emacs-lisp
   (use-package ledger-mode
@@ -891,6 +897,7 @@ It actually computes the entire arithmetic expression that is selected, and repl
                 (setq-local completion-cycle-threshold t)
                 (setq-local ledger-complete-in-steps t))))
 #+end_src
+
 ** [[http://www.gnu.org/software/hyperbole/][hyperbole]]
 I found some gems that explain a bit better what hyperbole is trying to solve. See John Wiegley's [[https://www.reddit.com/r/emacs/comments/7daneo/announce_gnu_hyperbole_7_aka_the_git_ready_for/dpx5sxw/][Using hyperbole: a motivation]]
 Once more it shows that the most powerful things are not always the most visible nor the easiest to explain.
@@ -987,6 +994,7 @@ Add the powerful Magit
     :ensure t
     :defer)
 #+end_src
+
 *** monky
 Add the Magit-copy for Mercurial 'monky'
 #+begin_src emacs-lisp
@@ -995,6 +1003,7 @@ Add the Magit-copy for Mercurial 'monky'
     :defer
     :bind ("C-x m" . 'monky-status))
 #+end_src
+
 *** Global caller
 Have a single binding to call the most appropriate tool given the repository.
 #+begin_src emacs-lisp
@@ -1398,6 +1407,12 @@ Let other tools use emacs client to interact
 #+end_src
 
 *** Adjust tags on the right
+
+#+begin_src emacs-lisp
+  (setq org-auto-align-tags t)
+  (setq org-tags-column 75)
+#+end_src
+
 Dynamically adjust tag position
 [[https://orgmode.org/worg/org-hacks.html#org0560357][source on worg]]
 
@@ -1549,6 +1564,7 @@ Also, to set this after org-mode has loaded ([[https://emacs.stackexchange.com/q
     (add-to-list 'org-agenda-prefix-format
                  '(agenda . "  %-12:c%?-12t %(paf/org-agenda-get-location)% s"))
 #+end_src
+
 *** org-gtasks
 Should follow this git repo: [[https://github.com/JulienMasson/org-gtasks][org-gtasks]]
 I have copied a version of the file here, it's not yet available on MELPA.
@@ -1602,6 +1618,7 @@ Make sure that =org-ql= is installed after =helm-org=, otherwise it may be the c
     (require 'org-ql-search) ;; workaround for https://github.com/alphapapa/org-ql/issues/53
     )
 #+end_src
+
 **** org-rifle
 [[https://github.com/alphapapa/org-rifle][org-rifle]] is the swiss-army knife for searching in an org-file.
 
@@ -1817,10 +1834,20 @@ Then you can use the keyboard shortcut to open that dir.
 *** Colors and faces
 This colors the code blocks a bit more visibly.
 #+begin_src emacs-lisp
-  (custom-set-faces
-   '(org-block-begin-line ((t (:inherit org-meta-line :extend t :background "color-238"))))
-   '(org-block-end-line ((t (:inherit org-block-begin-line :extend t :background "color-238"))))
-   '(org-block-background ((t (:inherit shadow :background "color-237")))))
+  ;; (require 'color)
+  ;; (set-face-attribute 'org-block-begin-line nil :background
+  ;;                     (color-darken-name
+  ;;                      (face-attribute 'default :background) 1))
+  ;; (set-face-attribute 'org-block nil :background
+  ;;                     (color-darken-name
+  ;;                      (face-attribute 'default :background) 1))
+  ;; (set-face-attribute 'org-block-end-line nil :background
+  ;;                     (color-darken-name
+  ;;                      (face-attribute 'default :background) 1))
+
+  (set-face-attribute 'org-block-begin-line nil :background "gray22")
+  (set-face-attribute 'org-block            nil :background "gray22")
+  (set-face-attribute 'org-block-end-line   nil :background "gray22")
 #+end_src
 
 *** Links by ID
@@ -1854,6 +1881,7 @@ my config for display.
     :custom
     (org-indent-indentation-per-level 2))
 #+end_src
+
 *** org-habit
 #+begin_src emacs-lisp
 (use-package org-habit
@@ -2042,6 +2070,7 @@ Track task dependencies, and dim them in the agenda.
 
   (setq org-agenda-skip-deadline-prewarning-if-scheduled 2)
 #+end_src
+
 **** text formatting
 These are some improved rendering of the calendar view.
 
@@ -2072,6 +2101,7 @@ Displaying a grid of 3 hours seems better, as show by AbstProcDo's [[https://www
 #+begin_src emacs-lisp
 (delight 'org-agenda-mode)
 #+end_src
+
 **** colors and faces
 Make the calendar day info a bit more visible and contrasted.
 #+begin_src emacs-lisp
@@ -2081,11 +2111,13 @@ Make the calendar day info a bit more visible and contrasted.
  '(org-agenda-date ((t (:inherit org-agenda-structure :background "pale green" :foreground "black" :weight bold))))
  '(org-agenda-date-weekend ((t (:inherit org-agenda-date :background "light blue" :weight bold)))))
 #+end_src
+
 **** now marker
 A more visible current-time marker in the agenda
 #+begin_src emacs-lisp
 (setq org-agenda-current-time-string ">>>>>>>>>> NOW <<<<<<<<<<")
 #+end_src
+
 **** auto-refresh
 #+begin_src emacs-lisp
   ;; will refresh it only if already visible
@@ -2098,6 +2130,7 @@ This will save them regularly when the idle for more than a minute.
 (add-hook 'org-mode-hook
     (lambda () (run-with-idle-timer 600 t 'org-save-all-org-buffers)))
 #+end_src
+
 **** export
 That's the export function to update the agenda view.
 #+begin_src emacs-lisp :tangle no
@@ -2115,6 +2148,7 @@ That's the export function to update the agenda view.
         (org-agenda-list)
         (org-agenda-write file)))))
 #+end_src
+
 *** org-duration
 #+begin_src emacs-lisp
   (use-package org-duration
