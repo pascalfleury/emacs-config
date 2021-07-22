@@ -13,6 +13,35 @@
   "Keeps the original org-agenda-files while it tweaks it."
   :type 'sexp)
 
+(defun roam-extras/extract-agenda-category ()
+  "Get category of item at point for agenda.
+
+Category is defined by one of the following items:
+
+- CATEGORY property
+- TITLE keyword
+- TITLE property
+- filename without directory and extension
+
+Usage example:
+
+  (setq org-agenda-prefix-format
+        '((agenda . \" %(roam-extras/extract-agenda-category) %?-12t %12s\")))
+
+Refer to `org-agenda-prefix-format' for more information."
+  (let* ((file-name (when buffer-file-name
+                      (file-name-sans-extension
+                       (file-name-nondirectory buffer-file-name))))
+         ;; TODO: this does not extract the title anymore.
+         (title) ;; (car-safe (org-roam--extract-titles-title)))
+         (category (org-get-category)))
+    (or (if (and
+             title
+             (string-equal category file-name))
+            title
+          category)
+        "")))
+
 (defun roam-extras/todo-p ()
   "Return non-nil if current buffer has any TODO entry.
 
@@ -66,33 +95,5 @@ tasks."
 (defun roam-extras/restore-todo-files (&rest _)
   "Extends the value of `org-agenda-files' with relevant org-roam files."
   (setq org-agenda-files roam-extras-org-agenda-files-cache))
-
-(defun roam-extras/extract-agenda-category ()
-  "Get category of item at point for agenda.
-
-Category is defined by one of the following items:
-
-- CATEGORY property
-- TITLE keyword
-- TITLE property
-- filename without directory and extension
-
-Usage example:
-
-  (setq org-agenda-prefix-format
-        '((agenda . \" %(roam-extras/extract-agenda-category) %?-12t %12s\")))
-
-Refer to `org-agenda-prefix-format' for more information."
-  (let* ((file-name (when buffer-file-name
-                      (file-name-sans-extension
-                       (file-name-nondirectory buffer-file-name))))
-         (title) ;; (car-safe (org-roam--extract-titles-title)))
-         (category (org-get-category)))
-    (or (if (and
-             title
-             (string-equal category file-name))
-            title
-          category)
-        "")))
 
 (provide 'org-roam-extras)
