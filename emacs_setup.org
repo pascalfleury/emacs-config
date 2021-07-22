@@ -1662,18 +1662,25 @@ All keys prefixed with =C-c n=
   ;;(use-package company-org-roam
   ;;  :ensure t
   ;;  :after org-roam)
+#+end_src
 
+These are some extensions to make org-agenda find info in roma files in a reasonable time.
+**** TODO This is currently broken as OrgRoam V2 has changed in a non-backwards-compatible way...
+:LOGBOOK:
+- State "TODO"       from              [2021-07-22 Thu 16:09]
+:END:
+#+begin_src emacs-lisp
   (use-package org-roam-extras
     :load-path (lambda () (expand-file-name "org-roam-extras.el" paf-lisp-directory))
     :after org-roam
     :config
     (setq roam-extras-todo-tag-name "project")
     ;; set the todo tag to roam fiels when they contain tasks
-    (add-hook 'org-roam-file-setup-hook #'roam-extras/update-todo-tag)
-    (add-hook 'before-save-hook #'roam-extras/update-todo-tag)
+    ;;;(add-hook 'org-roam-file-setup-hook #'roam-extras/update-todo-tag)
+    ;;;(add-hook 'before-save-hook #'roam-extras/update-todo-tag)
     ;; update the agenda-files just before constructing the agenda
-    (advice-add 'org-agenda :before #'roam-extras/add-todo-files)
-    (advice-add 'org-agenda :after #'roam-extras/restore-todo-files)
+    ;;;(advice-add 'org-agenda :before #'roam-extras/add-todo-files)
+    ;;;(advice-add 'org-agenda :after #'roam-extras/restore-todo-files)
     )
 
 #+end_src

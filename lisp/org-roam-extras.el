@@ -1,6 +1,10 @@
 ;; Some functions to use GTD withint org-roam files without
 ;; taxing the org-agenda too much.
 
+;; TODO: org-roam has changed, and there are no org-roam--* functions anymore.
+;;       need to find otu how to implement this functionality here, or
+;;       ditch org-roam.
+
 (defcustom roam-extras-todo-tag-name "todo"
   "The tag to use to mark files containing org-mode todo items."
   :type '(string))
@@ -36,7 +40,7 @@ tasks."
         (setq tags (remove roam-extras-todo-tag-name tags)))
       (unless (equal prop-tags tags)
         (org-roam--set-global-prop
-         "roam_tags"
+         "filetags"
          (combine-and-quote-strings tags))))))
 
 (defun roam-extras/todo-files ()
@@ -82,7 +86,7 @@ Refer to `org-agenda-prefix-format' for more information."
   (let* ((file-name (when buffer-file-name
                       (file-name-sans-extension
                        (file-name-nondirectory buffer-file-name))))
-         (title (car-safe (org-roam--extract-titles-title)))
+         (title) ;; (car-safe (org-roam--extract-titles-title)))
          (category (org-get-category)))
     (or (if (and
              title
