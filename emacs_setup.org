@@ -401,7 +401,7 @@ Enables =winner-mode=. Navigate buffer-window configs with =C-c left= and =C-c r
 #+end_src
 
 ** popper.el: deal with popup windows
-A minor-mode to dal with lots of popup windows and bring some order in them.
+A minor-mode to deal with lots of popup windows and bring some order in them.
 See [[https://github.com/karthink/popper][github:popper]] for more information.
 #+begin_src emacs-lisp
   (use-package popper
@@ -422,7 +422,7 @@ See [[https://github.com/karthink/popper][github:popper]] for more information.
 #+end_src
 
 ** [[https://github.com/nex3/perspective-el][perspective]]
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
   (use-package perspective
     :ensure t
     :bind
@@ -899,12 +899,6 @@ A tree-view navigation of files, with diff tool for directories.
     :ensure t)
 #+end_src
 
-** demo-it
-Do quite powerful demos, see one [[https://www.youtube.com/watch?v=WZVZXp-i7jQ][here]] by the author.
-#+begin_src emacs-lisp
-    (use-package demo-it
-      :ensure t)
-#+end_src
 
 * Coding
 ** VCS
@@ -932,12 +926,13 @@ Start using projectile. It has the documentation [[https://docs.projectile.mx/en
     :ensure t
     :config
     (projectile-mode 1)
+    (setq projectile-sort-order 'modification-time)
     (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
     (add-hook 'find-file-hook 'paf/projectile-relative-buf-name))
 
   (use-package helm-projectile
     :ensure t
-    :after projectile
+    :after (projectile helm)
     :requires projectile
     :config
     (helm-projectile-on))
