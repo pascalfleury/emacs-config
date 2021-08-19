@@ -214,12 +214,12 @@ Make sure we have the package system initialized before we load anything.
 Adding my choice of packages repositories.
 #+NAME melpa-setup
 #+begin_src emacs-lisp
-(setq package-archives '(("org" . "https://orgmode.org/elpa/")
-                         ("melpa" . "https://melpa.org/packages/")
-                         ("stable-melpa" . "https://stable.melpa.org/packages/")
-                         ("gnu" . "https://elpa.gnu.org/packages/")
-                         ; ("marmalade" . "https://marmalade-repo.org/packages/")
-                        ))
+  (setq package-archives '(("org" . "https://orgmode.org/elpa/")
+                           ("melpa" . "https://melpa.org/packages/")
+                           ("stable-melpa" . "https://stable.melpa.org/packages/")
+                           ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+                           ("gnu" . "https://elpa.gnu.org/packages/")
+                          ))
 #+end_src
 
 ** use-package
@@ -335,7 +335,9 @@ Use instead of add-hook to run it a single time.
 ** Setup server
 Start the background server, so we can use emacsclient.
 #+begin_src emacs-lisp
-(server-start)
+  (if (and (fboundp 'server-running-p)
+           (not (server-running-p)))
+      (server-start))
 #+end_src
 
 ** UTF-8
@@ -395,11 +397,11 @@ Enables =winner-mode=. Navigate buffer-window configs with =C-c left= and =C-c r
 
 ** popper.el: deal with popup windows
 A minor-mode to dal with lots of popup windows and bring some order in them.
-See [[https://github.com/karthink/popper][github:popper]] for more informatin.
+See [[https://github.com/karthink/popper][github:popper]] for more information.
 #+begin_src emacs-lisp
   (use-package popper
     :ensure t
-    :after projectil
+    :after projectile
     :bind (("<C-tab>"   . popper-toggle-latest)
            ("<C-S-tab>" . popper-cycle)
            ("<C-M-tab>" . popper-toggle-type))
@@ -418,7 +420,7 @@ See [[https://github.com/karthink/popper][github:popper]] for more informatin.
 Helping listing and switching buffers easily.
 From our very own =alphapapa= on [[https://github.com/alphapapa/bufler.el][github:bufler.el]]
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (use-package bufler
     :ensure t)
 #+end_src
@@ -430,7 +432,8 @@ From our very own =alphapapa= on [[https://github.com/alphapapa/bufler.el][githu
     :bind
     (("C-x C-b" . persp-list-buffers)
      ("C-x b" . persp-switch-to-buffer*)
-     ("C-x k" . persp-kill-buffer*))
+     ;;("C-x k" . persp-kill-buffer*)
+     )
     :hook (kill-emacs-hook . persp-state-save)
     :config
     (persp-mode)
@@ -763,9 +766,8 @@ IND
     (setq helm-autoresize-min-height 20)
     (helm-autoresize-mode 1)
 
-    (helm-mode 1)
-
-    (global-set-key (kbd "M-x") 'helm-M-x))
+    (global-set-key (kbd "M-x") 'helm-M-x)
+    (helm-mode 1))
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
