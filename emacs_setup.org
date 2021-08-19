@@ -2,7 +2,6 @@
 #+AUTHOR: Pascal Fleury
 #+BABEL: :cache yes
 #+PROPERTY: header-args :tangle yes
-#+FILETAGS: project todo
 
 This is my Emacs config. You need to tangle this into a file that then gets loaded by Emacs: =C-c C-v t= [org-babel-tangle]. Below, I also explain how this tangling is automated.
 
@@ -13,7 +12,6 @@ I regularly try out new packages, this is my current list of things being evalua
 They usually live temporarily in my =~/.emacs= until I am happy, in which case I move their config into this file so that it gets replicated on all machines I work on with Emacs.
 
 ** Currently under review
-  - [[https://github.com/Kungsgeten/yankpad][yankpad]]
   - [[https://github.com/yjwen/org-reveal][ox-reveal]] (see [[https://github.com/yjwen/org-reveal#set-the-location-of-revealjs][installation]])
 
 ** Make the config work fine when initially installed
@@ -24,13 +22,19 @@ CLOSED: [2021-06-04 Fri 22:36]
 - State "TODO"       from              [2021-02-03 Wed 16:52]
 :END:
 because nothing is set in the =org-agenda-files=
-*** TODO maybe complain when org-directory is not set to an existing directory
+*** DONE maybe complain when org-directory is not set to an existing directory
+CLOSED: [2021-08-19 Thu 16:45]
 :LOGBOOK:
+- State "DONE"       from "TODO"       [2021-08-19 Thu 16:45]
 - State "TODO"       from              [2021-02-03 Wed 16:53]
 :END:
 *** TODO Avoid showing the welcome screen if a file was requested on cmdline
 :LOGBOOK:
 - State "TODO"       from              [2021-06-04 Fri 23:41]
+:END:
+*** TODO Tangle the config file into =~/.emacs.d/personal.el= and have =~/.emacs.d/init.el= load that.
+:LOGBOOK:
+- State "TODO"       from              [2021-08-19 Thu 16:46]
 :END:
 
 * One-time Initial Setup
@@ -196,14 +200,14 @@ Just to add a little information in the tangled file.
 ** This config directory
 A variable so we can refer to this all over the place.
 
-Maybe there is a way to aut-detect this and generate it with literate programming or such.
+Maybe there is a way to auto-detect this and generate it with literate programming or such.
 #+begin_src emacs-lisp
   (setq emacs-config-directory "~/Emacs")
   (setq paf-lisp-directory (expand-file-name "lisp" emacs-config-directory))
   (setq paf-emacs-init (expand-file-name "emacs_setup.el" emacs-config-directory))
 #+end_src
 
-** melpa
+** MELPA
 Make sure we have the package system initialized before we load anything.
 #+begin_src emacs-lisp
 (require 'package)
@@ -369,7 +373,8 @@ and not modified in the buffer.
 #+end_src
 
 ** enable upcase- and downcase-region and narrowing
-these got diabled in Emacs 19 (!) because they were considered confusing.
+these got disabled in Emacs 19 (!) because they were considered confusing.
+Re-enabling them here.
 Use =C-x C-u= and =C-x C-l= to effect them.
 
 #+begin_src emacs-lisp
@@ -416,23 +421,14 @@ See [[https://github.com/karthink/popper][github:popper]] for more information.
     (popper-mode +1))
 #+end_src
 
-** bufler.el: list/switch buffers
-Helping listing and switching buffers easily.
-From our very own =alphapapa= on [[https://github.com/alphapapa/bufler.el][github:bufler.el]]
-
-#+begin_src emacs-lisp :tangle no
-  (use-package bufler
-    :ensure t)
-#+end_src
-
 ** [[https://github.com/nex3/perspective-el][perspective]]
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (use-package perspective
     :ensure t
     :bind
     (("C-x C-b" . persp-list-buffers)
      ("C-x b" . persp-switch-to-buffer*)
-     ;;("C-x k" . persp-kill-buffer*)
+     ("C-x k" . persp-kill-buffer*)
      )
     :hook (kill-emacs-hook . persp-state-save)
     :config
@@ -441,29 +437,19 @@ From our very own =alphapapa= on [[https://github.com/alphapapa/bufler.el][githu
           (expand-file-name "perspective.save" user-emacs-directory)))
 #+end_src
 
-** eyebrowse (layout managing)
-This is supposed to be a better window manager.
-#+begin_src emacs-lisp :tangle no
-(use-package eyebrowse
-  :ensure t)
-#+end_src
-
 ** toggle-maximize-buffer
 Temporarily maximize a buffer.
 [[https://gist.github.com/mads379/3402786][found here]]
 #+begin_src emacs-lisp
-(defun toggle-maximize-buffer () "Maximize buffer"
-  (interactive)
-  (if (= 1 (length (window-list)))
-      (jump-to-register '_)
-    (progn
-      (window-configuration-to-register '_)
-      (delete-other-windows))))
-#+end_src
-
-Map it to a key.
-#+begin_src emacs-lisp
-(global-set-key [M-f8] 'toggle-maximize-buffer)
+  (defun toggle-maximize-buffer () "Maximize buffer"
+         (interactive)
+         (if (= 1 (length (window-list)))
+             (jump-to-register '_)
+           (progn
+             (window-configuration-to-register '_)
+             (delete-other-windows))))
+  ;;Map it to a key.
+  (global-set-key (kbd "M-<f8>") 'toggle-maximize-buffer)
 #+end_src
 
 * Colors and Look
@@ -548,19 +534,6 @@ I really like the high-contract Zenburn theme.
   (custom-set-faces
    '(highlight ((t (:background "forest green"))))
    '(region ((t (:background "forest green")))))
-#+end_src
-
-** delight
-Package to remove some info from the mode-line for minor-modes.
-#+begin_src emacs-lisp
-  (use-package delight
-    :ensure t)
-#+end_src
-
-** remove some modelines
-#+begin_src emacs-lisp
-  (use-package eldoc
-    :delight)
 #+end_src
 
 * Key Mappings
@@ -739,7 +712,6 @@ IND
 #+begin_src emacs-lisp
   (use-package helm
    :ensure t
-   :delight helm-mode
    :config
     (require 'helm-config)
     ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
@@ -784,13 +756,6 @@ IND
 
 (add-hook 'helm-minibuffer-set-up-hook
           'spacemacs//helm-hide-minibuffer-maybe)
-#+end_src
-
-** [[https://github.com/smihica/emmet-mode][emmet-mode]]
-Useful abbreviations when coding in HTML.
-#+begin_src emacs-lisp
-(use-package emmet-mode
-  :ensure t)
 #+end_src
 
 ** rainbow-mode
@@ -941,57 +906,6 @@ Do quite powerful demos, see one [[https://www.youtube.com/watch?v=WZVZXp-i7jQ][
       :ensure t)
 #+end_src
 
-** Emacs Application Framework
-Tried it, but it fails often. too fiddly.
-#+begin_src emacs-lisp :tangle no
-  (if (string-equal system-type "gnu/linux")
-      (use-package eaf
-        :load-path "~/.emacs.d/site-lisp/emacs-application-framework"
-        :custom
-        (eaf-find-alternate-file-in-dired t)
-        :config
-        (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
-        (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
-        (eaf-bind-key take_photo "p" eaf-camera-keybinding)))
-#+end_src
-
-#+begin_src bash :tangle install_deps.sh
-  if [[ $(uname -m) == 'x86_64' ]]; then
-    # Get the application framework
-    install_pkg -x git git
-    LISPDIR="${HOME}/.emacs.d/site-lisp"
-    REPOS="https://github.com/manateelazycat/emacs-application-framework.git"
-    [[ -d "${LISPDIR}" ]] || mkdir -p "${LISPDIR}"
-    # try initial checkout if not dir yet
-    (cd "${LISPDIR}" && [[ -d "emacs-application-framework" ]] || git clone "${REPOS}" --depth=1)
-    # otherwise try to update the framework
-    (cd "${LISPDIR}/emacs-application-framework" && git pull --rebase)
-    # Install dependencies
-    install_pkg nodejs
-    install_pkg python3-pyqt5
-    install_pkg python3-pyqt5.qtwebengine
-    install_pkg python3-dbus
-    install_pkg wmctrl
-    # Install some needed Python packages
-    install_pkg -x /usr/bin/pip3 python3-pip
-    /usr/bin/pip3 install pymupdf qrcode pynotify qtconsole
-  fi
-#+end_src
-
-#+begin_src bash :tangle install_deps.sh
-  cat >> "${HOME}/.profile" <<EOF
-
-  # Emacs Application Framework:
-  # Make sure D-Bus is getting started when logging in.
-  ## Test for an existing bus daemon, just to be safe
-  if test -z "\$DBUS_SESSION_BUS_ADDRESS" ; then
-      ## if not found, launch a new one
-      eval \`dbus-launch --sh-syntax --exit-with-session\`
-      echo "D-Bus per-session daemon address is: \$DBUS_SESSION_BUS_ADDRESS"
-  fi
-  EOF
-#+end_src
-
 * Coding
 ** VCS
 *** magit
@@ -1004,27 +918,6 @@ Add the powerful Magit
   (use-package magit-todos
     :ensure t
     :defer)
-#+end_src
-
-*** monky
-Add the Magit-copy for Mercurial 'monky'
-#+begin_src emacs-lisp
-  (use-package monky
-    :ensure t
-    :defer
-    :bind ("C-x m" . 'monky-status))
-#+end_src
-
-*** Global caller
-Have a single binding to call the most appropriate tool given the repository.
-#+begin_src emacs-lisp
-  (defun paf/vcs-status ()
-       (interactive)
-       (condition-case nil
-           (magit-status-setup-buffer)
-         (error (monky-status))))
-
-  (global-set-key (kbd "C-p v") 'paf/vcs-status)
 #+end_src
 
 ** Projectile
@@ -1046,7 +939,6 @@ Start using projectile. It has the documentation [[https://docs.projectile.mx/en
     :ensure t
     :after projectile
     :requires projectile
-    :delight projectile-mode
     :config
     (helm-projectile-on))
 
@@ -1111,13 +1003,6 @@ install_pkg -x rg ripgrep
     :requires (ripgrep projectile))
 #+end_src
 
-** commenting out
-Easy commenting out of lines.
-#+begin_src emacs-lisp
-(autoload 'comment-out-region "comment" nil t)
-(global-set-key (kbd "C-c q") 'comment-out-region)
-#+end_src
-
 ** Deduplicate and sort
 Help cleanup the includes and using lists.
 [[http://www.emacswiki.org/emacs/DuplicateLines][found here]]
@@ -1167,7 +1052,6 @@ Some of the keys are listed here. The prefix is =C-c &=
 #+begin_src emacs-lisp
   (use-package yasnippet
     :ensure t
-    :delight yas-minor-mode
     :config
     (setq yas-snippet-dirs
           (list (expand-file-name "Yasnippets" emacs-config-directory)))
@@ -1187,7 +1071,6 @@ To add an abbrev after one has typed something wrong, just use =C-x a i g= (add 
 
 #+begin_src emacs-lisp
   (use-package abbrev
-    :delight abbrev-mode
     :config
     (setq abbrev-file-name "~/.emacs.d/abbrev_defs")
     (setq save-abbrevs 'silent)
@@ -1206,7 +1089,7 @@ Will fold all text indented more than the position of the cursor at the time the
   (interactive "P")
   (set-selective-display (or level (current-column))))
 
-(global-set-key "\C-x$" 'set-selective-display-dlw)
+(global-set-key (kbd "C-x $") 'set-selective-display-dlw)
 #+end_src
 
 ** Info in the gutter
@@ -1382,9 +1265,6 @@ If variable =org-directory= is not set yet, map it to my home's files. You may s
 #+begin_src emacs-lisp
     (use-package org
       :ensure nil
-      :delight
-      (org-mode)
-      (visual-line-mode)
       :config
       (if (not (boundp 'org-directory))
           (setq org-directory "~/OrgFiles"))
@@ -1584,24 +1464,6 @@ I have this currently in my `~/.emacs`:
      :client-secret "XXX"))
 #+end_src
 *** Search in org
-**** org-ql
-A powerful query language for Org mode: https://github.com/alphapapa/org-ql
-
-Make sure that =org-ql= is installed after =helm-org=, otherwise it may be the case that =helm-org-ql= is not working according to [[https://github.com/alphapapa/org-ql][this comment]].
-#+begin_src emacs-lisp
-  (use-package helm-org
-    :ensure t
-    :config
-    (add-to-list 'helm-completing-read-handlers-alist '(org-capture . helm-org-completing-read-tags))
-    (add-to-list 'helm-completing-read-handlers-alist '(org-set-tags . helm-org-completing-read-tags)))
-
-  (use-package org-ql
-    :ensure t
-    :config
-    (require 'org-ql-search) ;; workaround for https://github.com/alphapapa/org-ql/issues/53
-    )
-#+end_src
-
 **** org-rifle
 [[https://github.com/alphapapa/org-rifle][org-rifle]] is the swiss-army knife for searching in an org-file.
 
@@ -1788,34 +1650,13 @@ Collect properties into tables. See documentation in the file.
 
 ** My Setup
 These are mostly org-config specific to me, myself and I.
-*** Open remote org dir
-In your =.emacs= just add this to configure the location:
-
-#+begin_src emacs-lisp :tangle no
-(setq remote-org-directory "/ssh:fleury@my.hostname.com:OrgFiles")
-#+end_src
-
-Then you can use the keyboard shortcut to open that dir.
-
-#+begin_src emacs-lisp
-    (defcustom remote-org-directory "~/OrgFiles"
-      "Location of remove OrgFile directory, should you have one."
-      :type 'string
-      :group 'paf)
-    (defun paf/open-remote-org-directory ()
-      (interactive)
-      (find-file remote-org-directory))
-
-    (global-set-key (kbd "C-p r o") 'paf/open-remote-org-directory)
-#+end_src
-
 *** Key mappings
 #+begin_src emacs-lisp
   (global-set-key (kbd "C-c l") 'org-store-link)
   (global-set-key (kbd "C-c c") 'org-capture)
   (global-set-key (kbd "C-c a") 'org-agenda)
   (global-set-key (kbd "C-c b") 'org-iswitchb)
-
+  ;; added because on Chromoting/i3, Alt-<up> and Alt-<down> are changin window focus.
   (add-hook 'org-mode-hook
             (lambda ()
               (local-set-key (kbd "C-<up>") 'org-move-subtree-up)
@@ -1827,17 +1668,6 @@ Then you can use the keyboard shortcut to open that dir.
 *** Colors and faces
 This colors the code blocks a bit more visibly.
 #+begin_src emacs-lisp
-  ;; (require 'color)
-  ;; (set-face-attribute 'org-block-begin-line nil :background
-  ;;                     (color-darken-name
-  ;;                      (face-attribute 'default :background) 1))
-  ;; (set-face-attribute 'org-block nil :background
-  ;;                     (color-darken-name
-  ;;                      (face-attribute 'default :background) 1))
-  ;; (set-face-attribute 'org-block-end-line nil :background
-  ;;                     (color-darken-name
-  ;;                      (face-attribute 'default :background) 1))
-
   (set-face-attribute 'org-block-begin-line nil :background "gray22")
   (set-face-attribute 'org-block            nil :background "gray22")
   (set-face-attribute 'org-block-end-line   nil :background "gray22")
@@ -1870,7 +1700,6 @@ my config for display.
 #+begin_src emacs-lisp
   (use-package org-indent
     :ensure nil
-    :delight
     :custom
     (org-indent-indentation-per-level 2))
 #+end_src
@@ -1878,7 +1707,6 @@ my config for display.
 *** org-habit
 #+begin_src emacs-lisp
 (use-package org-habit
-  :delight
   :config
   (setq org-habit-graph-column 38)
   (setq org-habit-preceding-days 35)
@@ -1914,31 +1742,6 @@ F12 open the first agenda file
 
   ; F12 on Mac OSX displays the dashboard, so add Control F12
   (global-set-key [C-f12] 'org-get-first-agenda-file)
-#+end_src
-
-*** org-ehtml [localhost:55555]
-This will start serving the org files through the emacs-based webbrowser when pressing =M-f12= (on localhost:55555)
-#+begin_src emacs-lisp :tangle no
-(use-package org-ehtml
-  :ensure t
-  :config
-  (setq org-ehtml-docroot (expand-file-name org-directory))
-  (setq org-ehtml-everything-editable t)
-  (setq org-ehtml-allow-agenda t))
-
-(defun paf/start-web-server ()
-  (interactive)
-  (ws-start org-ehtml-handler 55555))
-(global-set-key (kbd "<M-f12>") 'paf/start-web-server)
-#+end_src
-
-*** org-link-abbrev
-This lets one write links as e.g. [ [b:123457] ]
-#+begin_src emacs-lisp
-(setq org-link-abbrev-alist
-      '(("b" . "http://b/")
-        ("go" . "http://go/")
-        ("cl" . "http://cr/")))
 #+end_src
 
 *** org-secretary
@@ -1995,15 +1798,14 @@ Track task dependencies, and dim them in the agenda.
           ("NEXT" . (:foreground "red" :weight bold))
           ("STARTED" . (:foreground "green" :weight bold))
           ("WAITING" . (:foreground "orange" :weight bold))
-          ("FLAG_GATED" . (:foreground "orange" :weight bold))
           ("SOMEDAY" . (:foreground "steelblue" :weight bold))
+          ("REFILED" . (:foreground "gray"))
           ("MAYBE" . (:foreground "steelblue" :weight bold))
           ("AI" . (:foreground "red" :weight bold))
           ("NEW" . (:foreground "orange" :weight bold))
           ("RUNNING" . (:foreground "orange" :weight bold))
           ("WORKED" . (:foreground "green" :weight bold))
           ("FAILED" . (:foreground "red" :weight bold))
-          ("REFILED" . (:foreground "gray"))
           ;; For publications
           ("APPLIED" . (:foreground "orange" :weight bold))
           ("ACCEPTED" . (:foreground "orange" :weight bold))
@@ -2011,6 +1813,7 @@ Track task dependencies, and dim them in the agenda.
           ("PUBLISHED" . (:foreground "green" :weight bold))
           ;; Other stuff
           ("ACTIVE" . (:foreground "darkgreen" :weight bold))
+          ("FLAG_GATED" . (:foreground "orange" :weight bold))
           ))
 #+end_src
 
@@ -2107,11 +1910,6 @@ Displaying a grid of 3 hours seems better, as show by AbstProcDo's [[https://www
                 " ……………"
                 "" ;; ———————————————"
                 )))
-#+end_src
-
-**** delight
-#+begin_src emacs-lisp
-(delight 'org-agenda-mode)
 #+end_src
 
 **** colors and faces
@@ -2324,41 +2122,6 @@ You could install the PlantUML JAR file with this snippet:
   (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode)))
 #+end_src
 
-*** PDF-Tools
-A bit difficult to find the docs of how to use it, but it seems quite useful.
-
-Disabled, as it causes only trouble to me, and I am not really using it anyway.
-#+begin_src emacs-lisp :tangle no
-  (use-package pdf-tools
-    :if (and (eq system-type 'gnu/linux)  ;; Set it up on Linux
-             (not (string-prefix-p "aarch64" system-configuration)))  ;; but not mobile devices
-    :pin manual  ;; update only manually
-    :config
-    ;; initialize
-    (pdf-tools-install)
-    (setq-default pdf-view-display-size 'fit-page)           ;; Fit to page when opening
-    (add-hook 'pdf-view-mode-hook (lambda () (cua-mode 0)))  ;; turn off cua so copy works
-    (setq pdf-view-resize-factor 1.1)                        ;; more fine-grained zoom control
-    ;; keyboard shortcuts
-    (define-key pdf-view-mode-map (kbd "h") 'pdf-annot-add-highlight-markup-annotation)
-    (define-key pdf-view-mode-map (kbd "t") 'pdf-annot-add-text-annotation)
-    (define-key pdf-view-mode-map (kbd "D") 'pdf-annot-delete))
-
-  (use-package org-pdfview
-    :after (pdf-tools)
-    :init
-    (add-to-list 'org-file-apps '("\\.pdf\\'" . org-pdfview-open))
-    (add-to-list 'org-file-apps '("\\.pdf::\\([[:digit:]]+\\)\\'" . org-pdfview-open)))
-#+end_src
-
-#+begin_src bash :tangle no :var dummy=install_deps.sh
-# For all the native apps related to PDF tools
-# I did not sintall it on Max OSX yet.
-if [[ "$(uname -m)" == "x86_64" ]]; then
-  install_pkg elpa-pdf-tools elpa-pdf-tools-server
-fi
-#+end_src
-
 *** yankpad
 Check out the [[https://kungsgeten.github.io/yankpad.html][blog post]] (and the [[https://kungsgeten.github.io/yankpad13.html][follow-up]]) and the [[https://github.com/Kungsgeten/yankpad][package docs]].
 #+begin_src emacs-lisp
@@ -2370,46 +2133,4 @@ Check out the [[https://kungsgeten.github.io/yankpad.html][blog post]] (and the 
     :config
     (bind-key "C-p y m" 'yankpad-map)
     (bind-key "C-p y e" 'yankpad-expand))
-#+end_src
-
-*** [[https://www.eliasstorms.net/zetteldeft/][Zetteldeft]]
-This is a note-taking packages inspired by the principles of the [[https://zettelkasten.de/][Zettelkasten]]
-#+begin_src emacs-lisp
-  (use-package deft
-    :ensure t)
-  (use-package avy
-    :ensure t)
-
-  (use-package zetteldeft
-    :ensure t
-    :after (org deft avy)
-
-    :config
-    (setq deft-extensions '("org" "md" "txt"))
-    (setq deft-directory (org-relative "Zettelkasten"))
-    (setq deft-recursive t)
-
-    :bind (("C-c z d" . deft)
-           ("C-c z D" . zetteldeft-deft-new-search)
-           ("C-c z R" . deft-refresh)
-           ("C-c z s" . zetteldeft-search-at-point)
-           ("C-c z c" . zetteldeft-search-current-id)
-           ("C-c z f" . zetteldeft-follow-link)
-           ("C-c z F" . zetteldeft-avy-file-search-ace-window)
-           ("C-c z l" . zetteldeft-avy-link-search)
-           ("C-c z t" . zetteldeft-avy-tag-search)
-           ("C-c z T" . zetteldeft-tag-buffer)
-           ("C-c z i" . zetteldeft-find-file-id-insert)
-           ("C-c z I" . zetteldeft-find-file-full-title-insert)
-           ("C-c z o" . zetteldeft-find-file)
-           ("C-c z n" . zetteldeft-new-file)
-           ("C-c z N" . zetteldeft-new-file-and-link)
-           ("C-c z r" . zetteldeft-file-rename))
-  )
-#+end_src
-
-Update the version by downloading the latest version here:
-
-#+begin_src bash :tangle no
-wget https://raw.githubusercontent.com/EFLS/zetteldeft/master/zetteldeft.el -O ${PAF_LISP_DIRECTORY}/zetteldeft.el
 #+end_src
