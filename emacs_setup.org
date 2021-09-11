@@ -1996,47 +1996,22 @@ Implement my own =AI= refiling.
   =TODO=."
     (interactive)
     (let ((orig-marker (save-excursion
-                         (org-back-to-heading)
-                         (point-marker)))
-          ;; make sure the to-be-filed entry has an ID
-          (orig-id (org-id-get-create)))
+			 (org-back-to-heading)
+			 (point-marker)))
+	  ;; make sure the to-be-filed entry has an ID
+	  (orig-id (org-id-get-create)))
       (progn
-        ;;;(let ((org-refile-keep t))
-        ;;;  (org-refile nil nil nil "Move AI"))
-        ;; Now go to the refiled-orig and force change the ID
-        ;; (as it has been copied)
-        (org-id-get-create t) ;; force change
-        (let ((orig-link (org-store-link nil)))
-          (save-excursion
-            (org-refile-goto-last-stored)
-            (org-todo "TODO")
-            (insert (concat orig-link "\n")))
-          (org-todo 'done)))))
-
-  (defun paf/old-refile-ai-targets ()
-    "Does an org-refile-copy of an AI, with some linking and side-effects.
-
-  This does add a link to the original =AI= in the new task, as
-  well as mark the =AI= as done, and change the refiled target to a
-  =TODO=."
-    (interactive)
-    (let* ((orig-marker (save-excursion
-                          (org-back-to-heading)
-                          (point-marker)))
-           (orig-id (org-id-get-create))
-           (orig-link (org-store-link nil)))
-      (progn
-        (org-refile-copy)
-        ;; now go and tweak the entries
-        ;; first the newly created
-        (org-refile-goto-last-stored)
-        (org-todo "TODO")
-        ;; Now insert the link to the original AI.
-        (insert (concat orig-link "\n"))
-        ;; Now the old entry
-        ;; Also mark the original AI as done.
-        (goto-char orig-marker)
-        (org-todo 'done))))
+	(let ((org-refile-keep t))
+	  (org-refile nil nil nil "Move AI"))
+	;; Now go to the refiled-orig and force change the ID
+	;; (as it has been copied)
+	(org-id-get-create t) ;; force change
+	(org-todo 'done)
+	(let ((orig-link (org-store-link nil)))
+	  (save-excursion
+	    (org-refile-goto-last-stored)
+	    (org-todo "TODO")
+	    (org-entry-put (point) "FROM_AI" orig-link))))))
 #+end_src
 
 *** org-babel
