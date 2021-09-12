@@ -1981,23 +1981,20 @@ Implement my own =AI= refiling.
   well as mark the =AI= as done, and change the refiled target to a
   =TODO=."
     (interactive)
-    (let ((orig-marker (save-excursion
-			 (org-back-to-heading)
-			 (point-marker)))
-	  ;; make sure the to-be-filed entry has an ID
-	  (orig-id (org-id-get-create)))
-      (progn
-	(let ((org-refile-keep t))
-	  (org-refile nil nil nil "Move AI"))
-	;; Now go to the refiled-orig and force change the ID
-	;; (as it has been copied)
-	(org-id-get-create t) ;; force change
-	(org-todo 'done)
-	(let ((orig-link (org-store-link nil)))
-	  (save-excursion
-	    (org-refile-goto-last-stored)
-	    (org-todo "TODO")
-	    (org-entry-put (point) "FROM_AI" orig-link))))))
+    (let (;; make sure the to-be-filed entry has an ID
+          (orig-id (org-id-get-create)))
+      (org-back-to-heading)
+      (save-excursion
+        (let ((org-refile-keep t))
+          (org-refile nil nil nil "Move AI"))
+        ;; Now go to the refiled-orig and force change the ID
+        ;; (as it has been copied)
+        (org-id-get-create t) ;; force change
+        (org-todo 'done)
+        (let ((orig-link (org-store-link nil)))
+          (org-refile-goto-last-stored)
+          (org-todo "TODO")
+          (org-entry-put (point) "FROM_AI" orig-link)))))
 #+end_src
 
 *** org-babel
