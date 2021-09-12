@@ -1350,6 +1350,7 @@ There are two functions that supposedly do the same.
                                    (expand-file-name "Auto" org-directory))))
 
   (defun org-get-first-agenda-file ()
+    (interactive)
     (let* ((num-files (length org-agenda-files))
            (the-file (if (eq num-files 0)
                          org-directory
@@ -1981,10 +1982,12 @@ Implement my own =AI= refiling.
   well as mark the =AI= as done, and change the refiled target to a
   =TODO=."
     (interactive)
-    (let (;; make sure the to-be-filed entry has an ID
+    (let ((orig-marker (progn
+                         (org-back-to-heading)
+                         (point-marker)))
+          ;; make sure the to-be-filed entry has an ID
           (orig-id (org-id-get-create)))
-      (org-back-to-heading)
-      (save-excursion
+      (progn
         (let ((org-refile-keep t))
           (org-refile nil nil nil "Move AI"))
         ;; Now go to the refiled-orig and force change the ID
@@ -1994,7 +1997,9 @@ Implement my own =AI= refiling.
         (let ((orig-link (org-store-link nil)))
           (org-refile-goto-last-stored)
           (org-todo "TODO")
-          (org-entry-put (point) "FROM_AI" orig-link)))))
+          (org-entry-put (point) "AI" orig-link)))
+      ;; Now move back to where we started
+      (hypb:goto-marker orig-marker)))
 #+end_src
 
 *** org-babel
