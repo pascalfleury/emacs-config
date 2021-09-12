@@ -218,13 +218,25 @@ Make sure we have the package system initialized before we load anything.
 Adding my choice of packages repositories.
 #+NAME melpa-setup
 #+begin_src emacs-lisp
-  (setq package-archives '(("org" . "https://orgmode.org/elpa/")
-                           ("melpa" . "https://melpa.org/packages/")
-                           ("stable-melpa" . "https://stable.melpa.org/packages/")
-                           ("nongnu" . "https://elpa.nongnu.org/nongnu/")
-                           ("gnu" . "https://elpa.gnu.org/packages/")
-                          ))
+    (setq package-archives '(
+                             ;;("org" . "https://orgmode.org/elpa/")
+                             ("melpa" . "https://melpa.org/packages/")
+                             ("stable-melpa" . "https://stable.melpa.org/packages/")
+                             ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+                             ("gnu" . "https://elpa.gnu.org/packages/")
+                            ))
 #+end_src
+
+Note that 'melpa' is needed for these:
+ - hc-zenburn-theme
+ - column-enforce-mode
+ - popup-kill-ring
+ - tj3-mode
+ - google-c-style
+ - git-gutter-fringe+
+ - bazel
+ - org-clock-convenience
+ - ox-reveal
 
 ** use-package
 I use =use-package= for most configuration, and that needs to be at the top of the file.  =use-package= verifies the presence of the requested package, otherwise installs it, and presents convenient sections for configs of variables, key bindings etc. that happen only if the package is actually loaded.
@@ -1330,32 +1342,19 @@ There are two functions that supposedly do the same.
         (with-selected-window agenda-window (org-agenda-redo)))))
 #+end_src
 
-*** Display Agenda when idle
-Show the agenda when emacs left idle.
-[[https://orgmode.org/worg/org-hacks.html#orgaea636d][source on worg]]
+*** Agenda Files
 #+begin_src emacs-lisp
-(defun jump-to-org-agenda ()
-  (interactive)
-  (let ((buf (get-buffer "*Org Agenda*"))
-        wind)
-    (if buf
-        (if (setq wind (get-buffer-window buf))
-            (select-window wind)
-          (if (called-interactively-p 'any)
-              (progn
-                (select-window (display-buffer buf t t))
-                (org-fit-window-to-buffer)
-                (org-agenda-redo)
-                )
-            (with-selected-window (display-buffer buf)
-              (org-fit-window-to-buffer)
-              ;;(org-agenda-redo)
-              )))
-      (call-interactively 'org-agenda-list)))
-  ;;(let ((buf (get-buffer "*Calendar*")))
-  ;;  (unless (get-buffer-window buf)
-  ;;    (org-agenda-goto-calendar)))
-  )
+  ;; Make sure org-agenda-files is defined.
+  (if (not (boundp 'org-agenda-files))
+      (setq org-agenda-files (list (expand-file-name org-directory)
+                                   (expand-file-name "Auto" org-directory))))
+
+  (defun org-get-first-agenda-file ()
+    (let* ((num-files (length org-agenda-files))
+           (the-file (if (eq num-files 0)
+                         org-directory
+                       (elt org-agenda-files 0))))
+      (find-file the-file)))
 #+end_src
 
 *** org-gtasks
@@ -1620,11 +1619,6 @@ my config for display.
 
   (setq org-time-stamp-formats '("<%Y-%m-%d %a>" . "<%Y-%m-%d %a %H:%M>"))
   (setq org-time-stamp-custom-formats '("<%Y-%m-%d %a>" . "<%Y-%m-%d %a %H:%M>"))
-
-  ; Don't really like the new bullets though.
-  ;;(use-package 'org-bullets
-  ;;  :config
-  ;;  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1660,16 +1654,7 @@ clock stuff into a drawer.
 *** open first agenda file
 F12 open the first agenda file
 #+begin_src emacs-lisp
-  (defun org-get-first-agenda-file ()
-    (interactive)
-    (let* ((num-files (length org-agenda-files))
-           (the-file (if (eq num-files 0)
-                         org-directory
-                       (elt org-agenda-files 0))))
-      (find-file the-file)))
-
   (global-set-key [f12] 'org-get-first-agenda-file)
-
   ; F12 on Mac OSX displays the dashboard, so add Control F12
   (global-set-key [C-f12] 'org-get-first-agenda-file)
 #+end_src
@@ -1677,19 +1662,20 @@ F12 open the first agenda file
 *** org-secretary
 This is my version of the org-secretary
 #+begin_src emacs-lisp
-    (use-package paf-secretary
-      :load-path paf-lisp-directory
-      :bind (("\C-cw" . paf-sec-set-with)
-             ("\C-cW" . paf-sec-set-where)
-             ("\C-cj" . paf-sec-tag-entry))
-      :config
-      (setq paf-sec-me "paf")
-      (setq org-tag-alist '(("PRJ" . ?p)
-                            ("DESIGNDOC" . ?D)
-                            ("Milestone" . ?m)
-                            ("DESK" . ?d)
-                            ("HOME" . ?h)
-                            ("VC" . ?v))))
+  (use-package paf-secretary
+    :load-path paf-lisp-directory
+    :bind (("\C-cw" . paf-sec-set-with)
+	   ("\C-cW" . paf-sec-set-where)
+	   ("\C-cj" . paf-sec-tag-entry))
+    :config
+    (setq paf-sec-me "paf"))
+
+    (setq org-tag-alist '(("PRJ" . ?p)
+			  ("DESIGNDOC" . ?D)
+			  ("Milestone" . ?m)
+			  ("DESK" . ?d)
+			  ("HOME" . ?h)
+			  ("VC" . ?v)))
 #+end_src
 
 *** task tracking
