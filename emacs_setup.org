@@ -2024,6 +2024,9 @@ Very nice post on how to get capture templats from a file: [[https://joshrollins
           (org-entry-put (point) "AI" orig-link)))
       ;; Now move back to where we started
       (hypb:goto-marker orig-marker)))
+
+(with-eval-after-load 'org
+  (bind-key "C-p a" #'paf/refile-ai-targets org-mode-map))
 #+end_src
 
 *** org-babel
