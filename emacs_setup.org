@@ -1560,6 +1560,14 @@ fi
     :ensure t)
 #+end_src
 
+*** org-crypt
+#+begin_src emacs-lisp
+  (use-package org-crypt
+    :config
+    (org-crypt-use-before-save-magic)
+    (setq org-tags-exclude-from-inheritance '("crypt")))
+#+end_src
+
 *** iimage (M-I)
 Make the display of images a simple key-stroke away.
 #+begin_src emacs-lisp
