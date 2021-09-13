@@ -2003,31 +2003,34 @@ Very nice post on how to get capture templats from a file: [[https://joshrollins
   (defun paf/refile-ai-targets ()
     "Does an org-refile-copy of an AI, with some linking and side-effects.
 
-  This does add a link to the original =AI= in the new task, as
-  well as mark the =AI= as done, and change the refiled target to a
-  =TODO=."
+    This does add a link to the original =AI= in the new task, as
+    well as mark the =AI= as done, and change the refiled target to a
+    =TODO=."
     (interactive)
-    (let ((orig-marker (progn
-                         (org-back-to-heading)
-                         (point-marker)))
-          ;; make sure the to-be-filed entry has an ID
-          (orig-id (org-id-get-create)))
+    (let* ((orig-marker (save-excursion
+                          (org-back-to-heading)
+                          (point-marker)))
+           ;; make sure the to-be-filed entry has an ID
+           (orig-id (org-id-get-create)))
       (progn
         (let ((org-refile-keep t))
           (org-refile nil nil nil "Move AI"))
-        ;; Now go to the refiled-orig and force change the ID
+        ;; Now we are back at the orig location, so force change the ID
         ;; (as it has been copied)
-        (org-id-get-create t) ;; force change
+        (org-id-get-create t) ;; t => force change
         (org-todo 'done)
+        ;; Now take a link with the new forced ID,
+        ;; go to the refiled location, and modify the
+        ;; refiled entry.
         (let ((orig-link (org-store-link nil)))
           (org-refile-goto-last-stored)
           (org-todo "TODO")
           (org-entry-put (point) "AI" orig-link)))
-      ;; Now move back to where we started
+      ;; Now move back to where we started to not jar the user
       (hypb:goto-marker orig-marker)))
 
-(with-eval-after-load 'org
-  (bind-key "C-p a" #'paf/refile-ai-targets org-mode-map))
+  (with-eval-after-load 'org
+    (bind-key "C-p a" #'paf/refile-ai-targets org-mode-map))
 #+end_src
 
 *** org-babel
