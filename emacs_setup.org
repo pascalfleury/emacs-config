@@ -1357,7 +1357,7 @@ There are two functions that supposedly do the same.
 *** Agenda Files
 #+begin_src emacs-lisp
   ;; Make sure org-agenda-files is defined.
-  (if (not (boundp 'org-agenda-files))
+  (if (eq 0 (length org-agenda-files))
       (setq org-agenda-files (list (expand-file-name org-directory)
                                    (expand-file-name "Auto" org-directory))))
 
@@ -1686,17 +1686,17 @@ This is my version of the org-secretary
   (use-package paf-secretary
     :load-path paf-lisp-directory
     :bind (("\C-cw" . paf-sec-set-with)
-	   ("\C-cW" . paf-sec-set-where)
-	   ("\C-cj" . paf-sec-tag-entry))
+           ("\C-cW" . paf-sec-set-where)
+           ("\C-cj" . paf-sec-tag-entry))
     :config
     (setq paf-sec-me "paf"))
 
-    (setq org-tag-alist '(("PRJ" . ?p)
-			  ("DESIGNDOC" . ?D)
-			  ("Milestone" . ?m)
-			  ("DESK" . ?d)
-			  ("HOME" . ?h)
-			  ("VC" . ?v)))
+  (setq org-tag-alist '(("PRJ" . ?p)
+                        ("DESIGNDOC" . ?D)
+                        ("Milestone" . ?m)
+                        ("DESK" . ?d)
+                        ("HOME" . ?h)
+                        ("VC" . ?v)))
 #+end_src
 
 *** task tracking
@@ -1934,6 +1934,7 @@ That's the export function to update the agenda view.
 *** Capture & refile
 Capture and refile stuff, with some templates that I think are useful.
 
+**** Capture
 Very nice post on how to get capture templats from a file: [[https://joshrollinswrites.com/help-desk-head-desk/org-capture-in-files/][Org-capture in Files]].
 
 #+begin_src emacs-lisp
@@ -1979,7 +1980,10 @@ Very nice post on how to get capture templats from a file: [[https://joshrollins
            :clock-in t
            :clock-resume t
            :kill-buffer t)))
+#+end_src
 
+**** Refile
+#+begin_src emacs-lisp
   ;; show up to 2 levels for refile targets, in all agenda files
   (setq org-refile-targets '((org-agenda-files :maxlevel . 2)))
   (setq org-log-refile t)  ;; will add timestamp when refiled.
@@ -1993,7 +1997,7 @@ Very nice post on how to get capture templats from a file: [[https://joshrollins
   (setq org-refile-target-verify-function 'bh/verify-refile-target)
 #+end_src
 
-Implement my own =AI= refiling.
+***** Implement my own =AI= refiling.
 #+begin_src emacs-lisp
   (defun paf/refile-ai-targets ()
     "Does an org-refile-copy of an AI, with some linking and side-effects.
