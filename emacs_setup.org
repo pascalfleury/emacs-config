@@ -484,10 +484,11 @@ Temporarily maximize a buffer.
 ** Buffer Decorations
 Setup the visual cues about the current editing buffer
 #+begin_src emacs-lisp
-(column-number-mode t)
-(setq visible-bell t)
-(setq scroll-step 1)
-(setq-default transient-mark-mode t)  ;; highlight selection
+  (column-number-mode t)
+  (setq visible-bell t)
+  (setq scroll-step 1)
+  (setq tool-bar-mode nil)
+  (setq-default transient-mark-mode t)  ;; highlight selection
 #+end_src
 
 ** nyan-mode
@@ -1976,16 +1977,15 @@ Very nice post on how to get capture templats from a file: [[https://joshrollins
   (defun paf/refile-ai-targets ()
     "Does an org-refile-copy of an AI, with some linking and side-effects.
 
-    This does add a link to the original =AI= in the new task, as
-    well as mark the =AI= as done, and change the refiled target to a
-    =TODO=."
+      This does add a link to the original =AI= in the new task, as
+      well as mark the =AI= as done, and change the refiled target to a
+      =TODO=."
     (interactive)
-    (let* ((orig-marker (save-excursion
-                          (org-back-to-heading)
-                          (point-marker)))
+    (org-back-to-heading)
+    (let* ((orig-marker (point-marker))
            ;; make sure the to-be-filed entry has an ID
            (orig-id (org-id-get-create)))
-      (progn
+      (save-window-excursion
         (let ((org-refile-keep t))
           (org-refile nil nil nil "Move AI"))
         ;; Now we are back at the orig location, so force change the ID
@@ -1998,9 +1998,7 @@ Very nice post on how to get capture templats from a file: [[https://joshrollins
         (let ((orig-link (org-store-link nil)))
           (org-refile-goto-last-stored)
           (org-todo "TODO")
-          (org-entry-put (point) "AI" orig-link)))
-      ;; Now move back to where we started to not jar the user
-      (hypb:goto-marker orig-marker)))
+          (org-entry-put (point) "AI" orig-link)))))
 
   (with-eval-after-load 'org
     (bind-key "C-p a" #'paf/refile-ai-targets org-mode-map))
