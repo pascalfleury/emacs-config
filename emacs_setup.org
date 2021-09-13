@@ -529,7 +529,7 @@ Also, it seems to interfere with colorful modes like =magit= or =org-agenda-mode
   :ensure t
   :bind ("C-c C-A" . 'annotate-annotate)  ;; for ledger-mode, as 'C-c C-a' is taken there.
   :config
-  (add-hook 'org-mode 'annotate-mode)
+  ;;(add-hook 'org-mode 'annotate-mode)
   (add-hook 'csv-mode 'annotate-mode)
   (add-hook 'c-mode 'annotate-mode)
   (add-hook 'c++-mode 'annotate-mode)
@@ -608,7 +608,7 @@ IND
           helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
           helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
           helm-ff-file-name-history-use-recentf t
-          helm-echo-input-in-header-line t)
+          helm-echo-input-in-header-line nil)
 
     (setq helm-autoresize-max-height 0)
     (setq helm-autoresize-min-height 20)
@@ -1021,7 +1021,7 @@ Found on [[https://stackoverflow.com/questions/39762833/emacsgdb-customization-h
               (derived-mode-p buf 'c++-mode 'c-mode)))))
 #+end_src
 
-This was the longer and fault version...
+This was the longer and faulty version...
 #+begin_src emacs-lisp :tangle no
   ; This unfortunately also messes up the regular frame navigation of source code.
   (add-to-list 'display-buffer-alist
@@ -1132,6 +1132,8 @@ If variable =org-directory= is not set yet, map it to my home's files. You may s
 :LOGBOOK:
 - State "NEXT"       from              [2019-06-24 Mon 10:10]
 :END:
+
+*** Set up org itself
 #+begin_src emacs-lisp
   (if (not (boundp 'org-directory))
       (setq org-directory "~/OrgFiles"))
@@ -1520,9 +1522,8 @@ my config for display.
 *** org-clock properties
 clock stuff into a drawer.
 #+begin_src emacs-lisp
-(setq org-clock-into-drawer t)
-(setq org-log-into-drawer t)
-(setq org-clock-int-drawer "CLOCK")
+  (setq org-log-into-drawer t)
+  (setq org-clock-into-drawer "CLOCK")
 #+end_src
 
 *** open first agenda file
