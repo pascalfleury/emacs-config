@@ -32,8 +32,10 @@ CLOSED: [2021-08-19 Thu 16:45]
 :LOGBOOK:
 - State "TODO"       from              [2021-06-04 Fri 23:41]
 :END:
-*** TODO Tangle the config file into =~/.emacs.d/personal.el= and have =~/.emacs.d/init.el= load that.
+*** DONE Tangle the config file into =~/.emacs.d/personal.el= and have =~/.emacs.d/init.el= load that.
+CLOSED: [2021-09-13 Mon 23:16]
 :LOGBOOK:
+- State "DONE"       from "TODO"       [2021-09-13 Mon 23:16]
 - State "TODO"       from              [2021-08-19 Thu 16:46]
 :END:
 
