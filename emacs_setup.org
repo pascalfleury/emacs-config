@@ -218,13 +218,25 @@ Make sure we have the package system initialized before we load anything.
 Adding my choice of packages repositories.
 #+NAME melpa-setup
 #+begin_src emacs-lisp
-  (setq package-archives '(("org" . "https://orgmode.org/elpa/")
-                           ("melpa" . "https://melpa.org/packages/")
-                           ("stable-melpa" . "https://stable.melpa.org/packages/")
-                           ("nongnu" . "https://elpa.nongnu.org/nongnu/")
-                           ("gnu" . "https://elpa.gnu.org/packages/")
-                          ))
+    (setq package-archives '(
+                             ;;("org" . "https://orgmode.org/elpa/")
+                             ("melpa" . "https://melpa.org/packages/")
+                             ("stable-melpa" . "https://stable.melpa.org/packages/")
+                             ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+                             ("gnu" . "https://elpa.gnu.org/packages/")
+                            ))
 #+end_src
+
+Note that 'melpa' is needed for these:
+ - hc-zenburn-theme
+ - column-enforce-mode
+ - popup-kill-ring
+ - tj3-mode
+ - google-c-style
+ - git-gutter-fringe+
+ - bazel
+ - org-clock-convenience
+ - ox-reveal
 
 ** use-package
 I use =use-package= for most configuration, and that needs to be at the top of the file.  =use-package= verifies the presence of the requested package, otherwise installs it, and presents convenient sections for configs of variables, key bindings etc. that happen only if the package is actually loaded.
@@ -1320,6 +1332,22 @@ There are two functions that supposedly do the same.
         (with-selected-window agenda-window (org-agenda-redo)))))
 #+end_src
 
+*** Agenda Files
+#+begin_src emacs-lisp
+  ;; Make sure org-agenda-files is defined.
+  (if (not (boundp 'org-agenda-files))
+      (setq org-agenda-files (list (expand-file-name org-directory)
+                                   (expand-file-name "Auto" org-directory))))
+
+  (defun org-get-first-agenda-file ()
+    (interactive)
+    (let* ((num-files (length org-agenda-files))
+           (the-file (if (eq num-files 0)
+                         org-directory
+                       (elt org-agenda-files 0))))
+      (find-file the-file)))
+#+end_src
+
 *** org-gtasks
 Should follow this git repo: [[https://github.com/JulienMasson/org-gtasks][org-gtasks]]
 I have copied a version of the file here, it's not yet available on MELPA.
@@ -1617,16 +1645,7 @@ clock stuff into a drawer.
 *** open first agenda file
 F12 open the first agenda file
 #+begin_src emacs-lisp
-  (defun org-get-first-agenda-file ()
-    (interactive)
-    (let* ((num-files (length org-agenda-files))
-           (the-file (if (eq num-files 0)
-                         org-directory
-                       (elt org-agenda-files 0))))
-      (find-file the-file)))
-
   (global-set-key [f12] 'org-get-first-agenda-file)
-
   ; F12 on Mac OSX displays the dashboard, so add Control F12
   (global-set-key [C-f12] 'org-get-first-agenda-file)
 #+end_src
@@ -1634,19 +1653,20 @@ F12 open the first agenda file
 *** org-secretary
 This is my version of the org-secretary
 #+begin_src emacs-lisp
-    (use-package paf-secretary
-      :load-path paf-lisp-directory
-      :bind (("\C-cw" . paf-sec-set-with)
-             ("\C-cW" . paf-sec-set-where)
-             ("\C-cj" . paf-sec-tag-entry))
-      :config
-      (setq paf-sec-me "paf")
-      (setq org-tag-alist '(("PRJ" . ?p)
-                            ("DESIGNDOC" . ?D)
-                            ("Milestone" . ?m)
-                            ("DESK" . ?d)
-                            ("HOME" . ?h)
-                            ("VC" . ?v))))
+  (use-package paf-secretary
+    :load-path paf-lisp-directory
+    :bind (("\C-cw" . paf-sec-set-with)
+	   ("\C-cW" . paf-sec-set-where)
+	   ("\C-cj" . paf-sec-tag-entry))
+    :config
+    (setq paf-sec-me "paf"))
+
+    (setq org-tag-alist '(("PRJ" . ?p)
+			  ("DESIGNDOC" . ?D)
+			  ("Milestone" . ?m)
+			  ("DESK" . ?d)
+			  ("HOME" . ?h)
+			  ("VC" . ?v)))
 #+end_src
 
 *** task tracking
@@ -1952,23 +1972,24 @@ Implement my own =AI= refiling.
   well as mark the =AI= as done, and change the refiled target to a
   =TODO=."
     (interactive)
-    (let ((orig-marker (save-excursion
-			 (org-back-to-heading)
-			 (point-marker)))
-	  ;; make sure the to-be-filed entry has an ID
-	  (orig-id (org-id-get-create)))
+    (let ((orig-marker (progn
+                         (org-back-to-heading)
+                         (point-marker)))
+          ;; make sure the to-be-filed entry has an ID
+          (orig-id (org-id-get-create)))
       (progn
-	(let ((org-refile-keep t))
-	  (org-refile nil nil nil "Move AI"))
-	;; Now go to the refiled-orig and force change the ID
-	;; (as it has been copied)
-	(org-id-get-create t) ;; force change
-	(org-todo 'done)
-	(let ((orig-link (org-store-link nil)))
-	  (save-excursion
-	    (org-refile-goto-last-stored)
-	    (org-todo "TODO")
-	    (org-entry-put (point) "FROM_AI" orig-link))))))
+        (let ((org-refile-keep t))
+          (org-refile nil nil nil "Move AI"))
+        ;; Now go to the refiled-orig and force change the ID
+        ;; (as it has been copied)
+        (org-id-get-create t) ;; force change
+        (org-todo 'done)
+        (let ((orig-link (org-store-link nil)))
+          (org-refile-goto-last-stored)
+          (org-todo "TODO")
+          (org-entry-put (point) "AI" orig-link)))
+      ;; Now move back to where we started
+      (hypb:goto-marker orig-marker)))
 #+end_src
 
 *** org-babel
