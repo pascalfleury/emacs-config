@@ -1281,14 +1281,15 @@ If variable =org-directory= is not set yet, map it to my home's files. You may s
 - State "NEXT"       from              [2019-06-24 Mon 10:10]
 :END:
 #+begin_src emacs-lisp
-    (use-package org
-      :ensure nil
-      :config
-      (if (not (boundp 'org-directory))
-          (setq org-directory "~/OrgFiles"))
-      (add-hook 'org-mode-hook #'(lambda ()
-                                   (visual-line-mode)
-                                   (org-indent-mode))))
+  (if (not (boundp 'org-directory))
+      (setq org-directory "~/OrgFiles"))
+
+  (use-package org
+    :ensure nil
+    :config
+    (add-hook 'org-mode-hook #'(lambda ()
+                                 (visual-line-mode)
+                                 (org-indent-mode))))
 #+end_src
 
 ** Packages / Helper Functions / Tools found on the web / worg
