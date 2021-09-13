@@ -198,7 +198,7 @@ Just to add a little information in the tangled file.
   ;; (profiler-start 'cpu)
 #+end_src
 
-** This config directory
+** Diverse paths
 A variable so we can refer to this all over the place.
 
 Maybe there is a way to auto-detect this and generate it with literate programming or such.
@@ -206,6 +206,7 @@ Maybe there is a way to auto-detect this and generate it with literate programmi
   (setq emacs-config-directory "~/Emacs")
   (setq paf-lisp-directory (expand-file-name "lisp" emacs-config-directory))
   (setq paf-emacs-init (expand-file-name "emacs_setup.el" emacs-config-directory))
+  (setq custom-file "~/.emacs.d/custom.el")
 #+end_src
 
 ** MELPA
@@ -555,7 +556,8 @@ I really like the high-contract Zenburn theme.
   ;; faces for general region highlighting zenburn is too low-key.
   (custom-set-faces
    '(highlight ((t (:background "forest green"))))
-   '(region ((t (:background "forest green")))))
+   '(region ((t (:background "forest green"))))
+   '(default ((t (:family "JetBrains Mono" :foundry "JB" :slant normal :weight extra-light :height 130 :width normal)))))
 #+end_src
 
 * Key Mappings
@@ -2101,7 +2103,8 @@ Check out the [[https://kungsgeten.github.io/yankpad.html][blog post]] (and the 
 
 * The End
 #+begin_src emacs-lisp
-  ;; ============ end of emacs_setup.org ====================
+(load-file custom-file)
+;; ============ end of emacs_setup.org ====================
 ;;  (profiler-stop)
 ;;  (profiler-report)
 #+end_src
