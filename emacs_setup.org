@@ -1,7 +1,7 @@
 #+TITLE: Paf's portable Emacs configuration
 #+AUTHOR: Pascal Fleury
 #+BABEL: :cache yes
-#+PROPERTY: header-args :tangle yes
+#+PROPERTY: header-args :tangle "~/.emacs.d/init.el" :comments link
 
 This is my Emacs config. You need to tangle this into a file that then gets loaded by Emacs: =C-c C-v t= [org-babel-tangle]. Below, I also explain how this tangling is automated.
 
@@ -40,64 +40,30 @@ CLOSED: [2021-08-19 Thu 16:45]
 * One-time Initial Setup
 I have my config in directory =~/Emacs= which is where I clone this repository. The config setup is maintained purely in the =~/Emacs/emacs_setup.org= file.
 
+To bootstrap the process on a new machine, all you need is to run
+
+#+begin_src bash :tangle no
+  cd <dir-where-you-expanded-the-git-repository>
+  bash ./onetime_setup.sh
+#+end_src
+
 In your =~/.emacs= file, all you need to add is
 
 #+NAME: emacs_bootstrap
 #+BEGIN_SRC emacs-lisp :tangle dot_emacs.el
+  ;; Setup your Org directory
+  (setq org-directory "~/OrgFiles")
 
-;; Setup your Org directory
-(setq org-directory "~/OrgFiles")
-
-;; Loads PAF's emacs setup with bootstrap
-(load-file "~/Emacs/emacs_setup.el")
+  (load-file "~/.emacs.d/init.el")
 #+end_src
-
-** Bootstrap
-Initially when cloning this repository, you have the =emacs_setup.org= file, that contains the config that you adapt to your specific setup, and an =emacs_setup.el= with a bootstrap content that will tangle and compile the org file, /and replace itself/. This is useful the very first time.
-
-After that, the config itself should have the hook to re-tangle and re-compile the setup at each save.
-
-Therefore my setup is very easy to install, and it needs these steps:
-
-1. clone this repo into =~/Emacs=
-2. add the one line in you =~/.emacs=
-3. make sure Emacs re-interprets its init (you could restart it)
-
-It may be that [[https://github.com/jwiegley/use-package][use-package]] is not installed on your setup, so it will first try to install that. After that step, it will also start installing any package that is marked as needed in this config automatically.
-
-The original content of the =emacs_setup.el= is as follows:
-
-#+begin_src emacs-lisp :tangle (expand-file-name "emacs_setup.el" temporary-file-directory)
-;; This is the initial state of the file to be loaded.
-;; It will replace itself with the actual configuration at first run.
-
-(require 'org) ; We can't tangle without org!
-
-(setq config_base (expand-file-name "emacs_setup"
-				    (file-name-directory
-				     (or load-file-name buffer-file-name))))
-(find-file (concat config_base ".org"))        ; Open the configuration
-(org-babel-tangle)                             ; tangle it
-(load-file (concat config_base ".el"))         ; load it
-(byte-compile-file (concat config_base ".el")) ; finally byte-compile it
-#+end_src
-
-** Recompile all packages
-This will force-recompile everything in =~/.emacs.d/elpa/...= Just run =M-:= and then enter this:
-#+begin_src emacs-lisp :tangle no
-(byte-recompile-directory package-user-dir nil 'force)
-#+end_src
-or simply =C-x C-e= at the end of that line.
-
-** One-time configure
-To preserve the original state of this file when updating the git repos with new config settings, execute the following block once (=C-c C-c=):
 
 *** TODO detect the system better
 :LOGBOOK:
 - State "TODO"       from              [2021-02-03 Wed 16:57]
 :END:
-currently it does not a good job of figuring out the diff between OSX, Linux, Termux (android) and Windows.
+currently it does not a good job of figuring out the diff between OSX, Linux, Termux (Android) and Windows.
 
+*** Script to bootstrap the whole thing on a new system
 #+begin_src bash :noweb yes :tangle onetime_setup.sh
   #!/bin/bash
   # Make git ignore the tangled & updated emacs_setup.el
@@ -111,28 +77,27 @@ currently it does not a good job of figuring out the diff between OSX, Linux, Te
   fi
 
   GIT_ROOT=$(dirname $0)
-  (cd ${GIT_ROOT} && git update-index --skip-worktree emacs_setup.el)
 
   # Maybe this is a new install, .emacs does not exist
   test -e ~/.emacs || touch ~/.emacs
 
   # Initial tangle of files, saying no to vterm compilation
-  emacs --batch --load ${GIT_ROOT}/emacs_setup.el
+  emacs --batch --load "${GIT_ROOT}/lisp/first_time_tangle.el"
 
   # Add the load-file as the first thing in the user's ~/.emacs
   # If not yet added.
   declare lines=$(grep ';; dot_emacs.el' ~/.emacs | wc -l)
   if (( lines < 1 )); then
-    echo "Added loading the config in your ~/.emacs"
     echo ";; dot_emacs.el" > ~/.emacs.new
-    cat ${GIT_ROOT}/dot_emacs.el >> ~/.emacs.new
+    cat "${GIT_ROOT}/dot_emacs.el" >> ~/.emacs.new
     cat ~/.emacs >> ~/.emacs.new
     mv ~/.emacs.new ~/.emacs
+    echo "Added loading the config in your ~/.emacs"
   else
     echo "Config in your ~/.emacs already set up!"
   fi
 
-  # Install system dependencies
+  # Install system dependencies from the tangled script
   echo "Installing dependencies"
   bash ${GIT_ROOT}/install_deps.sh
 
@@ -189,6 +154,13 @@ This script is then used to install the needed packages on the system.
   }
 #+end_src
 
+** Recompile all packages
+This will force-recompile everything in =~/.emacs.d/elpa/...= Just run =M-:= and then enter this:
+#+begin_src emacs-lisp :tangle no
+(byte-recompile-directory package-user-dir nil 'force)
+#+end_src
+or simply =C-x C-e= at the end of that line.
+
 * Initialize Emacs
 This section sets up Emacs so it can tangle the config, find =use-package=, and find the ELPA repositories where to get the new packes from.
 ** Info header
@@ -205,7 +177,7 @@ Maybe there is a way to auto-detect this and generate it with literate programmi
 #+begin_src emacs-lisp
   (setq emacs-config-directory "~/Emacs")
   (setq paf-lisp-directory (expand-file-name "lisp" emacs-config-directory))
-  (setq paf-emacs-init (expand-file-name "emacs_setup.el" emacs-config-directory))
+  (setq paf-emacs-init "~/.emacs.d/init.el")
   (setq custom-file "~/.emacs.d/custom.el")
 #+end_src
 
@@ -218,6 +190,7 @@ Make sure we have the package system initialized before we load anything.
 #+end_src
 
 Adding my choice of packages repositories.
+
 #+NAME melpa-setup
 #+begin_src emacs-lisp
     (setq package-archives '(
@@ -241,7 +214,7 @@ Note that 'melpa' is needed for these:
  - ox-reveal
 
 ** use-package
-I use =use-package= for most configuration, and that needs to be at the top of the file.  =use-package= verifies the presence of the requested package, otherwise installs it, and presents convenient sections for configs of variables, key bindings etc. that happen only if the package is actually loaded.
+I use =use-package= for most configuration, and that needs to be at the top of the file. =use-package= verifies the presence of the requested package, otherwise installs it, and presents convenient sections for configs of variables, key bindings etc. that happen only if the package is actually loaded.
 
 First, make sure it gets installed if it is not there yet.
 #+begin_src emacs-lisp
