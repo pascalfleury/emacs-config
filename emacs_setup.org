@@ -1,7 +1,7 @@
 #+TITLE: Paf's portable Emacs configuration
 #+AUTHOR: Pascal Fleury
 #+BABEL: :cache yes
-#+PROPERTY: header-args :tangle "~/.emacs.d/init.el" :comments link
+#+PROPERTY: header-args :tangle "~/.emacs.d/init.el"
 
 This is my Emacs config. You need to tangle this into a file that then gets loaded by Emacs: =C-c C-v t= [org-babel-tangle]. Below, I also explain how this tangling is automated.
 
@@ -765,7 +765,7 @@ Colorize color names and hexadecimal codes in the correct color.
 ** taskjuggler-mode (tj3-mode)
 #+begin_src emacs-lisp
   (use-package ox-taskjuggler
-    :load-path paf-lisp-directory
+    :load-path (lambda () (expand-file-name paf-lisp-directory)))
 
   (use-package tj3-mode
     :ensure t
@@ -886,7 +886,7 @@ Once more it shows that the most powerful things are not always the most visible
      '(hbut-flash ((t (:background "green yellow"
                        :foreground "dark gray"))) t))
     (require 'hyperbole)
-    (load-file (expand-file "hyperbole-systems.el" paf-lisp-directory)))
+    (load-file (expand-file-name "hyperbole-systems.el" paf-lisp-directory)))
 #+end_src
 
 ** [[https://github.com/fourier/ztree#ztree][ztree]]

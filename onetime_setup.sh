@@ -1,4 +1,3 @@
-# [[file:emacs_setup.org::*Script to bootstrap the whole thing on a new system][Script to bootstrap the whole thing on a new system:1]]
 #!/bin/bash
 # Make git ignore the tangled & updated emacs_setup.el
 if [[ -z "$(which git)" ]]; then
@@ -38,4 +37,3 @@ bash ${GIT_ROOT}/install_deps.sh
 echo "Cleanup"
 rm ${GIT_ROOT}/dot_emacs.el
 rm ${GIT_ROOT}/install_deps.sh
-# Script to bootstrap the whole thing on a new system:1 ends here
