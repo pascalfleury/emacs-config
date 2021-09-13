@@ -1853,14 +1853,18 @@ Very nice post on how to get capture templats from a file: [[https://joshrollins
 
 ***** Implement my own =AI= refiling.
 #+begin_src emacs-lisp
+  (require 'bookmark)
+
   (defun paf/refile-ai-targets ()
     "Does an org-refile-copy of an AI, with some linking and side-effects.
 
-      This does add a link to the original =AI= in the new task, as
-      well as mark the =AI= as done, and change the refiled target to a
-      =TODO=."
+          This does add a link to the original =AI= in the new task, as
+          well as mark the =AI= as done, and change the refiled target to a
+          =TODO=."
     (interactive)
     (org-back-to-heading)
+    ;; without this, org-refile fails to setup bookmarks... go figure.
+    (bookmark-maybe-load-default-file)
     (let* ((orig-marker (point-marker))
            ;; make sure the to-be-filed entry has an ID
            (orig-id (org-id-get-create)))
