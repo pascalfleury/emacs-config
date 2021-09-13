@@ -194,7 +194,8 @@ This section sets up Emacs so it can tangle the config, find =use-package=, and 
 ** Info header
 Just to add a little information in the tangled file.
 #+begin_src emacs-lisp
-;; ===== this file was auto-tangled, only edit the emacs_setup.org =====
+  ;; ===== this file was auto-tangled, only edit the emacs_setup.org =====
+  ;; (profiler-start 'cpu)
 #+end_src
 
 ** This config directory
@@ -2069,4 +2070,11 @@ Check out the [[https://kungsgeten.github.io/yankpad.html][blog post]] (and the 
     :config
     (bind-key "C-p y m" 'yankpad-map)
     (bind-key "C-p y e" 'yankpad-expand))
+#+end_src
+
+* The End
+#+begin_src emacs-lisp
+  ;; ============ end of emacs_setup.org ====================
+;;  (profiler-stop)
+;;  (profiler-report)
 #+end_src
