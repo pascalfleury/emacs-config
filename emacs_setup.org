@@ -453,16 +453,6 @@ Temporarily maximize a buffer.
 #+end_src
 
 * Colors and Look
-** Fontlock
-This gets the font coloring switched on for all buffers.
-*** TODO Note: this should be the default, maybe this can go ?
-:LOGBOOK:
-- State "TODO"       from              [2018-11-07 Wed 22:29]
-:END:
-#+begin_src emacs-lisp
-(global-font-lock-mode t)
-#+end_src
-
 ** In terminal mode
 #+begin_src emacs-lisp
 (when (display-graphic-p)
@@ -759,7 +749,7 @@ IND
 #+end_src
 
 ** rainbow-mode
-Colorize color names and codes in the correct color.
+Colorize color names and hexadecimal codes in the correct color.
 #+begin_src emacs-lisp
 (use-package rainbow-mode
   :ensure t)
@@ -1330,34 +1320,6 @@ There are two functions that supposedly do the same.
         (with-selected-window agenda-window (org-agenda-redo)))))
 #+end_src
 
-*** Display Agenda when idle
-Show the agenda when emacs left idle.
-[[https://orgmode.org/worg/org-hacks.html#orgaea636d][source on worg]]
-#+begin_src emacs-lisp
-(defun jump-to-org-agenda ()
-  (interactive)
-  (let ((buf (get-buffer "*Org Agenda*"))
-        wind)
-    (if buf
-        (if (setq wind (get-buffer-window buf))
-            (select-window wind)
-          (if (called-interactively-p 'any)
-              (progn
-                (select-window (display-buffer buf t t))
-                (org-fit-window-to-buffer)
-                (org-agenda-redo)
-                )
-            (with-selected-window (display-buffer buf)
-              (org-fit-window-to-buffer)
-              ;;(org-agenda-redo)
-              )))
-      (call-interactively 'org-agenda-list)))
-  ;;(let ((buf (get-buffer "*Calendar*")))
-  ;;  (unless (get-buffer-window buf)
-  ;;    (org-agenda-goto-calendar)))
-  )
-#+end_src
-
 *** org-gtasks
 Should follow this git repo: [[https://github.com/JulienMasson/org-gtasks][org-gtasks]]
 I have copied a version of the file here, it's not yet available on MELPA.
@@ -1620,11 +1582,6 @@ my config for display.
 
   (setq org-time-stamp-formats '("<%Y-%m-%d %a>" . "<%Y-%m-%d %a %H:%M>"))
   (setq org-time-stamp-custom-formats '("<%Y-%m-%d %a>" . "<%Y-%m-%d %a %H:%M>"))
-
-  ; Don't really like the new bullets though.
-  ;;(use-package 'org-bullets
-  ;;  :config
-  ;;  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 #+end_src
 
 #+begin_src emacs-lisp
