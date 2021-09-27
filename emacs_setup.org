@@ -57,6 +57,7 @@ Maybe there is a way to auto-detect this and generate it with literate programmi
   (setq paf-lisp-directory (expand-file-name "lisp" emacs-config-directory))
   (setq paf-emacs-init "~/.emacs.d/init.el")
   (setq custom-file "~/.emacs.d/custom.el")
+  (setq paf-roam-directory (expand-file-name "OrgRoam" org-directory))
 #+end_src
 
 ** MELPA
@@ -1223,8 +1224,10 @@ There are two functions that supposedly do the same.
 #+begin_src emacs-lisp
   ;; Make sure org-agenda-files is defined.
   (if (eq 0 (length org-agenda-files))
-      (setq org-agenda-files (list (expand-file-name org-directory)
-                                   (expand-file-name "Auto" org-directory))))
+      (setq org-agenda-files
+            (list (expand-file-name org-directory)
+                  (expand-file-name "Auto" org-directory)
+                  (expand-file-name "Meeting" paf-roam-directory))))
 
   (defun org-get-first-agenda-file ()
     (interactive)
@@ -1315,7 +1318,7 @@ All keys prefixed with =C-c n=
   (use-package org-roam
     :ensure t
     :custom
-    (org-roam-directory (file-truename (org-relative "OrgRoam")))
+    (org-roam-directory (file-truename paf-roam-directory))
     :init (setq org-roam-v2-ack t)
     :bind (("C-c n l" . org-roam-buffer-toggle)
            ("C-c n b" . org-roam-switch-to-buffer)
