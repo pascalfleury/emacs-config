@@ -42,6 +42,26 @@ Refer to `org-agenda-prefix-format' for more information."
           category)
         "")))
 
+;; Layer to get the roam tags as lists. Note that Magnus uses space
+;; but #+filetags: are ':' separated actually.
+(defun roam-extras/get-filetags ()
+  (split-string (or (org-roam-get-keyword "filetags") "") "[ :]+" t))
+
+(defun roam-extras/set-filetags (tags)
+  (let* ((tags-str (combine-and-quote-strings tags ":"))
+         (filetags (if (= (length tags-str) 0)
+                     ""
+                     (concat ":" tags-str ":"))))
+    (org-roam-set-keyword "filetags" filetags)))
+
+(defun roam-extras/add-filetag (tag)
+  (let* ((new-tags (cons tag (roam-extras/get-filetags))))
+    (roam-extras/set-filetags new-tags)))
+
+(defun roam-extras/del-filetag (tag)
+  (let* ((new-tags (seq-difference (roam-extras/get-filetags) `(,tag))))
+    (roam-extras/set-filetags new-tags)))
+
 (defun roam-extras/todo-p ()
   "Return non-nil if current buffer has any TODO entry.
 
@@ -59,28 +79,22 @@ tasks."
 (defun roam-extras/update-todo-tag ()
   "Update TODO tag in the current buffer."
   (when (and (not (active-minibuffer-window))
-             (org-roam--org-file-p buffer-file-name))
-    (let* ((file (buffer-file-name (buffer-base-buffer)))
-           (all-tags (org-roam--extract-tags file))
-           (prop-tags (org-roam--extract-tags-prop file))
-           (tags prop-tags))
-      (if (roam-extras/todo-p)
-          (setq tags (seq-uniq (cons roam-extras-todo-tag-name tags)))
-        (setq tags (remove roam-extras-todo-tag-name tags)))
-      (unless (equal prop-tags tags)
-        (org-roam--set-global-prop
-         "filetags"
-         (combine-and-quote-strings tags))))))
+             (org-roam-file-p))
+    (org-with-point-at 1
+      (let* ((tags (roam-extras/get-filetags))
+             (is-todo (roam-extras/todo-p)))
+        (cond ((and is-todo (not (seq-contains-p tags roam-extras-todo-tag-name)))
+               (roam-extras/add-filetag roam-extras-todo-tag-name))
+              ((and (not is-todo) (seq-contains-p tags roam-extras-todo-tag-name))
+               (roam-extras/del-filetag roam-extras-todo-tag-name)))))))
 
 (defun roam-extras/todo-files ()
-  "Return a list of note files containing todo tag."
-  (let* ((search-tag (concatenate 'string "%\"" roam-extras-todo-tag-name "\"%")))
-    (seq-map
-     #'car
-     (org-roam-db-query
-      [:select file
-               :from tags
-               :where (like tags (quote search-tag))]))))
+  "Return a list of roam files containing todo tag."
+  (org-roam-db-sync)
+  (let ((todo-nodes (seq-filter (lambda (n)
+                                  (seq-contains-p (org-roam-node-tags n) roam-extras-todo-tag-name))
+                                 (org-roam-node-list))))
+    (seq-uniq (seq-map #'org-roam-node-file todo-nodes))))
 
 (defun roam-extras/update-todo-files (&rest _)
   "Sets the value of `org-agenda-files' to only relevant org-roam files."
