@@ -1437,11 +1437,8 @@ fi
 #+begin_src emacs-lisp
   (use-package org-crypt
     :config
-    (require 'epa-file)
-    (epa-file-enable)
     (org-crypt-use-before-save-magic)
-    (setq org-tags-exclude-from-inheritance '("crypt"))
-    (setq org-crypt-key nil))
+    (setq org-tags-exclude-from-inheritance '("crypt")))
 #+end_src
 
 *** iimage (M-I)
