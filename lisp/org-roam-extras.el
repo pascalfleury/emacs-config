@@ -43,15 +43,19 @@ Refer to `org-agenda-prefix-format' for more information."
         "")))
 
 ;; Layer to get the roam tags as lists. Note that Magnus uses space
-;; but #+filetags: are ':' separated actually.
+;; but #+filetags: are sometimes ':' separated actually. So I split them
+;; leniently, and assemble them with space.
 (defun roam-extras/get-filetags ()
   (split-string (or (org-roam-get-keyword "filetags") "") "[ :]+" t))
 
 (defun roam-extras/set-filetags (tags)
-  (let* ((tags-str (combine-and-quote-strings tags ":"))
+  (let* ((sep " ")  ;; assembling with space
+         (tags-str (combine-and-quote-strings tags sep))
          (filetags (if (= (length tags-str) 0)
                      ""
-                     (concat ":" tags-str ":"))))
+                     (if (string= sep " ")
+                         tags-str
+                         (concat sep tags-str sep)))))
     (org-roam-set-keyword "filetags" filetags)))
 
 (defun roam-extras/add-filetag (tag)

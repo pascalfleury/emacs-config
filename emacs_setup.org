@@ -1353,7 +1353,8 @@ CLOSED: [2021-09-27 Mon 20:42]
     (add-hook 'find-file-hook #'roam-extras/update-todo-tag)
     (add-hook 'before-save-hook #'roam-extras/update-todo-tag)
     ;; update the agenda-files just before constructing the agenda
-    (advice-add 'org-agenda :before #'roam-extras/update-todo-files)
+    (advice-add 'org-agenda :before #'roam-extras/add-todo-files)
+    (advice-add 'org-agenda :after #'roam-extras/restore-todo-files)
     )
 #+end_src
 
