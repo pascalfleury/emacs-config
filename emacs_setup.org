@@ -1494,6 +1494,13 @@ This colors the code blocks a bit more visibly.
   (set-face-attribute 'org-block-end-line   nil :background "gray22")
 #+end_src
 
+This makes the all-day events stand-out and be displayed before the calendar.
+#+begin_src emacs-lisp
+  (set-face-attribute 'org-agenda-calendar-sexp nil
+                      :foreground "dark orange")
+  (setq org-sort-agenda-notime-is-late nil)
+#+end_src
+
 *** Links by ID
 #+begin_src emacs-lisp
   (setq org-id-link-to-org-use-id 'create-if-interactive)
@@ -1627,20 +1634,39 @@ Track task dependencies, and dim them in the agenda.
 *** org-agenda
 **** views
 #+begin_src emacs-lisp
+  (setq org-agenda-block-separator #x2500)
   (setq org-agenda-custom-commands
-        '(("t" "Hot Today" ((agenda "" ((org-agenda-span 'day)))
-                            (tags-todo "-with={.+}/WAITING")
-                            (tags-todo "-with={.+}+TODO=\"STARTED\"")
-                            (tags-todo "/NEXT")))
+        '(("t" "Hot Today" ((agenda "Hey!" ((org-agenda-span 'day)
+                                        (org-agenda-skip-function
+                                         '(org-agenda-skip-entry-if 'deadline))
+                                        ))
+                            (agenda nil
+                                    ((org-agenda-entry-types '(:deadline))
+                                     (org-agenda-span 'day)
+                                     (org-agenda-time-grid nil)
+                                     (org-agenda-show-all-dates nil)
+                                     (org-agenda-format-date "")
+                                     (org-deadline-warning-days 7)
+                                     (org-agenda-overriding-header "  Deadlines")))
+                            (tags-todo "-with={.+}/WAITING"
+                                       ((org-agenda-overriding-header "  Waiting")))
+                            (tags-todo "-with={.+}+TODO=\"STARTED\""
+                                       ((org-agenda-overriding-header "  Ongoing")))
+                            (tags-todo "/NEXT"
+                                       ((org-agenda-overriding-header "  Upcoming")))))
           ("T" "Team Today" ((agenda "" ((org-agenda-span 'day)))
                              (tags-todo "with={.+}"
                                       ((org-super-agenda-groups
                                         '((:auto-property "with"))))
                                       )))
-          ("r" "Recurring" ((tags "REGULAR")
-                            (tags-todo "/WAITING")
-                            (tags-todo "TODO=\"STARTED\"")
-                            (tags-todo "/NEXT")))
+          ("r" "Recurring" ((tags "REGULAR"
+                                  ((org-agenda-overriding-header "\nRecurring\n")))
+                            (tags-todo "/WAITING"
+                                       ((org-agenda-overriding-header "\nWaiting\n")))
+                            (tags-todo "TODO=\"STARTED\""
+                                       ((org-agenda-overriding-header "\Ongoing\n")))
+                            (tags-todo "/NEXT"
+                                       ((org-agenda-overriding-header "\nUpcoming\n")))))
           ("n" "Agenda and all TODO's" ((agenda "")
                                         (alltodo "")))
           ("N" "Next actions" tags-todo "-dowith={.+}/!-TASK-TODO"
