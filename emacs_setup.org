@@ -1654,9 +1654,9 @@ Track task dependencies, and dim them in the agenda.
                                      (org-agenda-format-date "")
                                      (org-deadline-warning-days 7)
                                      (org-agenda-overriding-header "  Deadlines")))
-                            (tags-todo "-with={.+}/WAITING"
+                            (tags-todo "/WAITING"
                                        ((org-agenda-overriding-header "  Waiting")))
-                            (tags-todo "-with={.+}+TODO=\"STARTED\""
+                            (tags-todo "/STARTED"
                                        ((org-agenda-overriding-header "  Ongoing")))
                             (tags-todo "/NEXT"
                                        ((org-agenda-overriding-header "  Upcoming")))))
