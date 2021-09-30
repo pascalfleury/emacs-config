@@ -1815,10 +1815,10 @@ That's the export function to update the agenda view.
       :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
                          "#+title: ${title}\n#+filetags: draft\n\n\n")
       :unnarrowed t)
-     ("m" "Meeting" entry
-      "* %?\n%U\n%^{with}\n"
+     ("m" "Meeting Collection" entry
+      "* %?%^{type}\n"
       :if-new (file+head "Meeting/%<%Y%m%d%H%M%S>-${slug}.org"
-                         "#+title: ${title}\n#+filetags: %^{with}\n\n\n")
+                         "#+title: ${title}\n#+filetags: meeting\n\n\n")
       :unnarrowed t)
      ("r" "Reference" entry
       "* %?\n%U\n\n"
