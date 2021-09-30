@@ -1472,6 +1472,33 @@ Collect properties into tables. See documentation in the file.
 (load-file (expand-file-name "org-collector.el" paf-lisp-directory))
 #+end_src
 
+*** Set date as header for org-gcal event
+#+begin_src emacs-lisp
+  (defun paf/replace-current-heading (new-text)
+    "Replace heading at point by a new text."
+    (interactive "sNew Title: ")
+    (when (org-at-heading-p)
+      (let ((hl-text (nth 4 (org-heading-components))))
+        (unless (or (null hl-text)
+                    (org-string-match-p "^[ \t]*:[^:]+:$" hl-text))
+          (beginning-of-line)
+          (search-forward hl-text (point-at-eol))
+          (replace-string hl-text new-text
+           nil (- (point) (length hl-text)) (point))))))
+
+  (defun paf/org-gcal-date-as-heading ()
+    "This will get the org-gcal date and replace the heading with it."
+    (interactive)
+    (save-excursion
+      (let* ((time-desc (org-gcal--get-time-and-desc))
+             (start-date (plist-get time-desc :start))
+             (formatted-date (org-gcal--format-iso2org start-date org-gcal-local-timezone)))
+        (org-back-to-heading)
+        (paf/replace-current-heading (format "[%s]"
+                                             (substring formatted-date 1 (- (length formatted-date) 1)))))
+      ))
+#+end_src
+
 ** My Setup
 These are mostly org-config specific to me, myself and I.
 *** Key mappings
