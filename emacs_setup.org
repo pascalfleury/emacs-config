@@ -1179,8 +1179,11 @@ Let other tools use emacs client to interact
   (setq org-tags-column 75)
 #+end_src
 
-**** TODO Update =org-set-tags-to=
+**** CANCELLED Update =org-set-tags-to=
+CLOSED: [2021-09-30 Thu 10:37]
 :LOGBOOK:
+- State "CANCELLED"  from "TODO"       [2021-09-30 Thu 10:37] \\
+  I use the built-in stuff now.
 - State "TODO"       from              [2019-01-12 Sat 12:08]
 :END:
 [[https://orgmode.org/worg/doc.html#org-set-tags-to][=org-set-tags-to=]] is gone, and =org-set-tags= with > 1 args is not working.
@@ -1390,14 +1393,14 @@ EmacSQL will need to get its C-binary compiled, and needs supporting tools. Note
 #+end_src
 
 *** org-kanban
-#+begin_src emacs-lisp
-  ;;(use-package org-kanban
-  ;;  :ensure t)
+#+begin_src emacs-lisp :tangle no
+  (use-package org-kanban
+    :ensure t)
 #+end_src
 
 *** org-board
 Archive entire sites locally with `wget`.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (use-package org-board
     :ensure t
     :config
@@ -1558,8 +1561,9 @@ F12 open the first agenda file
 #+end_src
 
 *** org-secretary
-This is my version of the org-secretary
-#+begin_src emacs-lisp
+This is my version of the org-secretary.
+I don't use it anymore.
+#+begin_src emacs-lisp :tangle no
   (use-package paf-secretary
     :load-path paf-lisp-directory
     :bind (("\C-cw" . paf-sec-set-with)
@@ -1593,42 +1597,44 @@ Track task dependencies, and dim them in the agenda.
 
 *** org-todo keywords
 #+begin_src emacs-lisp
-  (setq org-todo-keywords
-        '((sequence "TODO(t!)" "NEXT(n!)" "STARTED(s!)" "WAITING(w!)" "AI(a!)" "|" "DONE(d!)" "CANCELLED(C@)" "DEFERRED(D@)" "SOMEDAY(S!)" "FAILED(F!)" "REFILED(R!)")
-          (sequence "APPLIED(A!)" "WAITING(w!)" "ACCEPTED" "|" "REJECTED" "PUBLISHED")
-          (sequence "TASK(m!)" "ACTIVE" "|" "DONE(d!)" "CANCELLED(C@)" )))
+    (setq org-todo-keywords '(
+       (sequence "TODO(t!)" "NEXT(n!)" "STARTED(s!)" "WAITING(w!)" "AI(a!)" "|" "DONE(d!)" "CANCELLED(C@)" "DEFERRED(D@)" "SOMEDAY(S!)" "FAILED(F!)" "REFILED(R!)")
+       ;; For publications
+       (sequence "APPLIED(A!)" "WAITING(w!)" "ACCEPTED" "|" "REJECTED" "PUBLISHED")
+       ;; For tracking other's tasks
+       (sequence "TASK(m!)" "ACTIVE" "|" "DONE(d!)" "CANCELLED(C@)" )
+    ))
 
-  (setq org-tags-exclude-from-inheritance '("PRJ" "REGULAR")
-        org-use-property-inheritance '("PRIORITY")
-        org-stuck-projects '("+PRJ/-DONE-CANCELLED"
-                             ;; it is considered stuck if there is no next action
-                             (;"TODO"
-                              "NEXT" "STARTED" "TASK") ()))
+    (setq org-tags-exclude-from-inheritance '("PRJ" "REGULAR")
+          org-use-property-inheritance '("PRIORITY")
+          org-stuck-projects '("+PRJ/-DONE-CANCELLED"
+                               ;; it is considered stuck if there is no next action
+                               ("NEXT" "STARTED" "TASK") ()))
 
-  (setq org-todo-keyword-faces
-        '(
-          ("TODO" . (:foreground "purple" :weight bold))
-          ("TASK" . (:foreground "steelblue" :weight bold))
-          ("NEXT" . (:foreground "red" :weight bold))
-          ("STARTED" . (:foreground "green" :weight bold))
-          ("WAITING" . (:foreground "orange" :weight bold))
-          ("SOMEDAY" . (:foreground "steelblue" :weight bold))
-          ("REFILED" . (:foreground "gray"))
-          ("MAYBE" . (:foreground "steelblue" :weight bold))
-          ("AI" . (:foreground "red" :weight bold))
-          ("NEW" . (:foreground "orange" :weight bold))
-          ("RUNNING" . (:foreground "orange" :weight bold))
-          ("WORKED" . (:foreground "green" :weight bold))
-          ("FAILED" . (:foreground "red" :weight bold))
-          ;; For publications
-          ("APPLIED" . (:foreground "orange" :weight bold))
-          ("ACCEPTED" . (:foreground "orange" :weight bold))
-          ("REJECTED" . (:foreground "red" :weight bold))
-          ("PUBLISHED" . (:foreground "green" :weight bold))
-          ;; Other stuff
-          ("ACTIVE" . (:foreground "darkgreen" :weight bold))
-          ("FLAG_GATED" . (:foreground "orange" :weight bold))
-          ))
+    (setq org-todo-keyword-faces
+          '(
+            ("TODO" . (:foreground "purple" :weight bold))
+            ("TASK" . (:foreground "steelblue" :weight bold))
+            ("NEXT" . (:foreground "red" :weight bold))
+            ("STARTED" . (:foreground "green" :weight bold))
+            ("WAITING" . (:foreground "orange" :weight bold))
+            ("SOMEDAY" . (:foreground "steelblue" :weight bold))
+            ("REFILED" . (:foreground "gray"))
+            ("MAYBE" . (:foreground "steelblue" :weight bold))
+            ("AI" . (:foreground "red" :weight bold))
+            ("NEW" . (:foreground "orange" :weight bold))
+            ("RUNNING" . (:foreground "orange" :weight bold))
+            ("WORKED" . (:foreground "green" :weight bold))
+            ("FAILED" . (:foreground "red" :weight bold))
+            ;; For publications
+            ("APPLIED" . (:foreground "orange" :weight bold))
+            ("ACCEPTED" . (:foreground "orange" :weight bold))
+            ("REJECTED" . (:foreground "red" :weight bold))
+            ("PUBLISHED" . (:foreground "green" :weight bold))
+            ;; Other stuff
+            ("ACTIVE" . (:foreground "darkgreen" :weight bold))
+            ("FLAG_GATED" . (:foreground "orange" :weight bold))
+            ))
 #+end_src
 
 *** org-agenda
@@ -1636,7 +1642,7 @@ Track task dependencies, and dim them in the agenda.
 #+begin_src emacs-lisp
   (setq org-agenda-block-separator #x2500)
   (setq org-agenda-custom-commands
-        '(("t" "Hot Today" ((agenda "Hey!" ((org-agenda-span 'day)
+        '(("t" "Hot Today" ((agenda nil ((org-agenda-span 'day)
                                         (org-agenda-skip-function
                                          '(org-agenda-skip-entry-if 'deadline))
                                         ))
@@ -1657,7 +1663,8 @@ Track task dependencies, and dim them in the agenda.
           ("T" "Team Today" ((agenda "" ((org-agenda-span 'day)))
                              (tags-todo "with={.+}"
                                       ((org-super-agenda-groups
-                                        '((:auto-property "with"))))
+                                        '((:auto-property "with")))
+                                       (org-agenda-overriding-header "  Talking Points with:"))
                                       )))
           ("r" "Recurring" ((tags "REGULAR"
                                   ((org-agenda-overriding-header "\nRecurring\n")))
@@ -1868,7 +1875,7 @@ Very nice post on how to get capture templats from a file: [[https://joshrollins
           ;;
           ("p" "Talking Point"
            entry (file+headline ,(org-relative "refile.org") "Talking Points")
-           "* %?  :TALK:\n%U\n%^{dowith}p"
+           "* AI %?  :TALK:\n%U\n%^{with}p"
            :clock-keep t)
           ;;
           ("j" "Journal"
