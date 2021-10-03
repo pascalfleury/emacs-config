@@ -1626,9 +1626,16 @@ These are mostly org-config specific to me, myself and I.
 *** Colors and faces
 This colors the code blocks a bit more visibly.
 #+begin_src emacs-lisp
-  (set-face-attribute 'org-block-begin-line nil :background "gray22")
-  (set-face-attribute 'org-block            nil :background "gray22")
-  (set-face-attribute 'org-block-end-line   nil :background "gray22")
+  (set-face-attribute 'org-block-begin-line nil :background "gray17")
+  (set-face-attribute 'org-block            nil :background "gray23")
+  (set-face-attribute 'org-block-end-line   nil :background "gray17")
+#+end_src
+
+This renders property drawers less "in your face"
+#+begin_src emacs-lisp
+    (set-face-attribute 'org-drawer   nil
+                        :foreground "gray50" ;; "RoyalBlue3"
+                        :height 0.7)
 #+end_src
 
 This makes the all-day events stand-out and be displayed before the calendar.
