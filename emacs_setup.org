@@ -278,6 +278,62 @@ Use =C-x C-u= and =C-x C-l= to effect them.
   (setq calendar-week-start-day 1)
 #+end_src
 
+* Completion
+
+Added the completion framework [[https://github.com/minad/vertico][vertico]] as from the docs, I liked
+ 1. the writing quaqlity
+ 2. the fact that they re-use/integrate completely with the built-in completion
+ 3. the package seems quite orthogonal to other packages, i.e. no need to have a =<project>-vertico= package to be installed (like helm seems to need).
+
+#+begin_src emacs-lisp
+  ;; Enable vertico
+  (use-package vertico
+    :ensure t
+    :init
+    (vertico-mode)
+    ;; (setq vertico-resize t)  ;; Grow and shrink the Vertico minibuffer
+    (setq vertico-cycle t) ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
+    )
+
+  ;; Use the `orderless' completion style. Additionally enable
+  ;; `partial-completion' for file path expansion. `partial-completion' is
+  ;; important for wildcard support. Multiple files can be opened at once
+  ;; with `find-file' if you enter a wildcard. You may also give the
+  ;; `initials' completion style a try.
+  (use-package orderless
+    :ensure t
+    :init
+    (setq completion-styles '(orderless)
+          completion-category-defaults nil
+          completion-category-overrides '((file (styles partial-completion)))))
+
+  ;; Persist history over Emacs restarts. Vertico sorts by history position.
+  (use-package savehist
+    :init
+    (savehist-mode))
+
+  ;; A few more useful configurations...
+  (use-package emacs
+    :init
+    ;; Add prompt indicator to `completing-read-multiple'.
+    ;; Alternatively try `consult-completing-read-multiple'.
+    (defun crm-indicator (args)
+      (cons (concat "[CRM] " (car args)) (cdr args)))
+    (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+
+    ;; Do not allow the cursor in the minibuffer prompt
+    (setq minibuffer-prompt-properties
+          '(read-only t cursor-intangible t face minibuffer-prompt))
+    (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+
+    ;; Emacs 28: Hide commands in M-x which do not work in the current mode.
+    ;; Vertico commands are hidden in normal buffers.
+    ;; (setq read-extended-command-predicate
+    ;;       #'command-completion-default-include-p)
+
+    ;; Enable recursive minibuffers
+    (setq enable-recursive-minibuffers t))
+#+end_src
 * Managing Buffers
 ** winner-mode
 Enables =winner-mode=. Navigate buffer-window configs with =C-c left= and =C-c right=.
@@ -580,61 +636,6 @@ Mode for Google protocol buffer mode
     :mode "\\.proto\\'")
 #+end_src
 
-** Helm (list completion)
-Trying out Helm instead of icicles, as it is available on ELPA.
-
-I just took over the config described in this [[https://tuhdo.github.io/helm-intro.html][helm intro]].
-
-IND
-#+begin_src emacs-lisp
-  (use-package helm
-   :ensure t
-   :config
-    (require 'helm-config)
-    ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
-    ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
-    ;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
-    (global-set-key (kbd "C-c h") 'helm-command-prefix)
-    (global-unset-key (kbd "C-x c"))
-
-    (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
-    (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB work in terminal
-    (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
-
-    (when (executable-find "curl")
-      (setq helm-net-prefer-curl t))
-
-    (setq helm-split-window-inside-p            t ; open helm buffer inside current window, not occupy whole other window
-          helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
-          helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
-          helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
-          helm-ff-file-name-history-use-recentf t
-          helm-echo-input-in-header-line nil)
-
-    (setq helm-autoresize-max-height 0)
-    (setq helm-autoresize-min-height 20)
-    (helm-autoresize-mode 1)
-
-    (global-set-key (kbd "M-x") 'helm-M-x)
-    (helm-mode 1))
-#+end_src
-
-#+begin_src emacs-lisp :tangle no
-(defun spacemacs//helm-hide-minibuffer-maybe ()
-  "Hide minibuffer in Helm session if we use the header line as input field."
-  (when (with-helm-buffer helm-echo-input-in-header-line)
-    (let ((ov (make-overlay (point-min) (point-max) nil nil t)))
-      (overlay-put ov 'window (selected-window))
-      (overlay-put ov 'face
-                   (let ((bg-color (face-background 'default nil)))
-                     `(:background ,bg-color :foreground ,bg-color)))
-      (setq-local cursor-type nil))))
-
-
-(add-hook 'helm-minibuffer-set-up-hook
-          'spacemacs//helm-hide-minibuffer-maybe)
-#+end_src
-
 ** rainbow-mode
 Colorize color names and hexadecimal codes in the correct color.
 #+begin_src emacs-lisp
@@ -816,13 +817,6 @@ Start using projectile. It has the documentation [[https://docs.projectile.mx/en
     (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
     (add-hook 'find-file-hook 'paf/projectile-relative-buf-name))
 
-  (use-package helm-projectile
-    :ensure t
-    :after (projectile helm)
-    :requires projectile
-    :config
-    (helm-projectile-on))
-
   (use-package persp-projectile
     :ensure t
     :after (perspective projectile)
@@ -831,7 +825,6 @@ Start using projectile. It has the documentation [[https://docs.projectile.mx/en
 
 Also make sure we do have the faster [[https://github.com/ggreer/the_silver_searcher#the-silver-searcher][silver searcher]] version.  This may need you to install the corresponding tool for this, with the following snippet:
 #+begin_src bash :tangle install_deps.sh
-# helm-ag uses this for faster grepping
 if [[ "$(uname)" == "Darwin" ]]; then
   install_pkg -x ag the_silver_searcher
 else
@@ -843,9 +836,6 @@ Search the entire project with =C-c p s s= for a regexp. This let's you turn the
 
 #+begin_src emacs-lisp
   (use-package ag
-    :ensure t)
-
-  (use-package helm-ag
     :ensure t)
 #+end_src
 ** header/implementation toggle
@@ -872,7 +862,6 @@ Essentially, use the Google C++ style formatting.
 ** ripgrep
 This enables searching recursively in projects.
 #+begin_src bash :tangle install_deps.sh
-# This can be used by helm-ag for faster grepping
 install_pkg -x rg ripgrep
 #+end_src
 
@@ -1279,14 +1268,6 @@ I have this currently in my `~/.emacs`:
 *** Search in org
 **** org-rifle
 [[https://github.com/alphapapa/org-rifle][org-rifle]] is the swiss-army knife for searching in an org-file.
-
-#+begin_src emacs-lisp
-  (use-package helm-org-rifle
-    :ensure t
-    :defer 110
-    :after org
-    )
-#+end_src
 
 *** org-super-agenda
 This enables a more fine-grained filtering of the agenda items.
