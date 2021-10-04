@@ -784,7 +784,7 @@ Colorize color names and hexadecimal codes in the correct color.
      '(org-taskjuggler-project-tag "PRJ")))
 #+end_src
 
-#+begin_src bash :tangle install_deps.sh
+#+begin_src bash :tangle /tmp/install_deps.sh
 # Install TaskJuggler
   if [[ "$(uname -m)" == "x86_64" ]]; then
     install_pkg tj3
@@ -950,7 +950,7 @@ Start using projectile. It has the documentation [[https://docs.projectile.mx/en
 #+end_src
 
 Also make sure we do have the faster [[https://github.com/ggreer/the_silver_searcher#the-silver-searcher][silver searcher]] version.  This may need you to install the corresponding tool for this, with the following snippet:
-#+begin_src bash :tangle install_deps.sh
+#+begin_src bash :tangle /tmp/install_deps.sh
 if [[ "$(uname)" == "Darwin" ]]; then
   install_pkg -x ag the_silver_searcher
 else
@@ -987,7 +987,7 @@ Essentially, use the Google C++ style formatting.
 
 ** ripgrep
 This enables searching recursively in projects.
-#+begin_src bash :tangle install_deps.sh
+#+begin_src bash :tangle /tmp/install_deps.sh
 install_pkg -x rg ripgrep
 #+end_src
 
@@ -1221,7 +1221,7 @@ All prefixed with =C-x C-a=
           :after vterm)))
 #+end_src
 
-#+begin_src bash :tangle install_deps.sh
+#+begin_src bash :tangle /tmp/install_deps.sh
   # Needed to compile vterm first time
   if [[ "$(uname -o)" == "Android" ]]; then
     install_pkg -x libtool libtool
@@ -1472,7 +1472,7 @@ CLOSED: [2021-09-27 Mon 20:42]
 #+end_src
 
 EmacSQL will need to get its C-binary compiled, and needs supporting tools. Note that 'tcc' for Termux seems not complete enough for the job.
-#+begin_src bash :tangle install_deps.sh
+#+begin_src bash :tangle /tmp/install_deps.sh
   # org-roam needs this binary
   if [[ "$(uname -o)" == "Android" ]]; then
       install_pkg -x sqlite3 sqlite
@@ -1515,7 +1515,7 @@ Archive entire sites locally with `wget`.
 #+end_src
 
 This is the needed tool used to fetch a URL's content.
-#+begin_src bash :tangle install_deps.sh
+#+begin_src bash :tangle /tmp/install_deps.sh
 # wget used for org-board archiving.
 install_pkg -x wget wget
 #+end_src
@@ -1523,7 +1523,7 @@ install_pkg -x wget wget
 *** org-reveal
 This presentation generator is still under review (by me).
 
-#+begin_src bash :noweb yes :tangle install_deps.sh
+#+begin_src bash :noweb yes :tangle /tmp/install_deps.sh
 # Install reveal.js
 if [[ -d "${HOME}/reveal.js" ]]; then
   echo "Reveal already installed"
@@ -2113,7 +2113,7 @@ Add a few formats to the export functionality of org-mode.
 Tell where PlantUML is to be found. This needs to be downloaded and installed separately, see the [[http://plantuml.com/][PlantUML website]].
 
 You could install the PlantUML JAR file with this snippet:
-#+begin_src bash :tangle install_deps.sh
+#+begin_src bash :tangle /tmp/install_deps.sh
   # Get a version of the PlantUML jar file.
   install_pkg -x wget wget
 
@@ -2169,7 +2169,7 @@ To bootstrap the process on a new machine, all you need is to run
 In your =~/.emacs= file, all you need to add is
 
 #+NAME: emacs_bootstrap
-#+BEGIN_SRC emacs-lisp :tangle dot_emacs.el
+#+BEGIN_SRC emacs-lisp :tangle /tmp/dot_emacs.el
   ;; Setup your Org directory
   (setq org-directory "~/OrgFiles")
 
@@ -2226,7 +2226,7 @@ currently it does not a good job of figuring out the diff between OSX, Linux, Te
 #+end_src
 
 This script is then used to install the needed packages on the system.
-#+begin_src bash :noweb yes :tangle install_deps.sh
+#+begin_src bash :noweb yes :tangle /tmp/install_deps.sh
   #!/bin/bash
   set -e
 
