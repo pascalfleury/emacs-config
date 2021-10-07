@@ -595,7 +595,7 @@ I really like the high-contract Zenburn theme.
   (custom-set-faces
    '(highlight ((t (:background "forest green"))))
    '(region ((t (:background "forest green"))))
-   '(default ((t (:family "JetBrains Mono" :foundry "JB" :slant normal :weight extra-light :height 130 :width normal)))))
+   '(default ((t (:family "JetBrains Mono" :foundry "JB" :slant normal :weight extra-light :height 98 :width normal)))))
 #+end_src
 
 * Key Mappings
