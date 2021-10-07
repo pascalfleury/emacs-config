@@ -1251,6 +1251,20 @@ Adding support for Bazel
     :ensure t)
 #+end_src
 
+** Hiding zones
+This helps showing / hiding zones given a regexp.
+
+#+begin_src emacs-lisp
+  (use-package zones
+    :ensure t)
+
+  (use-package isearch+
+    :load-path (lambda () (expand-file-name paf-lisp-directory)))
+
+  ;;(use-package isearch-prop
+  ;;  :load-path (lambda () (expand-file-name paf-lisp-directory)))
+#+end_src
+
 * OrgMode
 Load all my org stuff, but first org-mode itself.
 ** Init
