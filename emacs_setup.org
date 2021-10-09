@@ -303,7 +303,7 @@ Added the completion framework [[https://github.com/minad/vertico][vertico]] as 
   (use-package orderless
     :ensure t
     :init
-    (setq completion-styles '(orderless)
+    (setq completion-styles '(substring orderless)
           completion-category-defaults nil
           completion-category-overrides '((file (styles partial-completion)))))
 
