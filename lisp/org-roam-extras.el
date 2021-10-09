@@ -32,8 +32,9 @@ Refer to `org-agenda-prefix-format' for more information."
   (let* ((file-name (when buffer-file-name
                       (file-name-sans-extension
                        (file-name-nondirectory buffer-file-name))))
-         ;; TODO: this does not extract the title anymore.
-         (title) ;; (car-safe (org-roam--extract-titles-title)))
+         (title (pcase (org-collect-keywords '("TITLE"))
+                  (`(("TITLE" . ,val))
+                   (car val))))
          (category (org-get-category)))
     (or (if (and
              title

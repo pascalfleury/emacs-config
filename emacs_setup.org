@@ -1872,8 +1872,9 @@ These are some improved rendering of the calendar view.
 First, d12frosted's [[https://d12frosted.io/posts/2020-06-24-task-management-with-roam-vol2.html][post]] handles the category length:
 #+begin_src emacs-lisp
   (defun paf/agenda-category (len)
-    (paf/truncate-string (or (org-get-category) "") len))
-    ;;(paf/truncate-string (roam-extras/extract-agenda-category) len))
+    (if (fboundp 'roam-extras/extract-agenda-category)
+        (paf/truncate-string (roam-extras/extract-agenda-category) len)
+      (paf/truncate-string (or (org-get-category) "") len)))
 
   (with-eval-after-load 'org-agenda
     (setq org-agenda-prefix-format
