@@ -1642,7 +1642,7 @@ This makes the all-day events stand-out and be displayed before the calendar.
 #+begin_src emacs-lisp
   (set-face-attribute 'org-agenda-calendar-sexp nil
                       :foreground "dark orange")
-  (setq org-sort-agenda-notime-is-late nil)
+  ;;(setq org-sort-agenda-notime-is-late nil)
 #+end_src
 
 *** Links by ID
