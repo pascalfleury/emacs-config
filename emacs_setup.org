@@ -1575,6 +1575,27 @@ Collect properties into tables. See documentation in the file.
 
 *** Set date as header for org-gcal event
 #+begin_src emacs-lisp
+  (defun paf/org-timestamp-in-entry ()
+    "Find the first timestamp in an entry.
+
+  Returns the timestamp or nil of none was found."
+    (interactive)
+    (let* ((org-elem (save-excursion
+                       (org-back-to-heading)
+                       (org-element-at-point)))
+           (org-heading (plist-get org-elem 'headline))
+           (elem-min (plist-get org-heading :begin))
+           (elem-max (plist-get org-heading :end))
+           (timestamp-re (org-re-timestamp 'all)))
+      (save-excursion
+        (goto-char elem-min)
+        (if (re-search-forward timestamp-re elem-max t)
+            (let ((match-pos (match-beginning 0)))
+              (goto-char match-pos)
+              (org-element-timestamp-parser)
+              ;;(plist-get (org-element-timestamp-parser) 'timestamp)
+              )))))
+
   (defun paf/replace-current-heading (new-text)
     "Replace heading at point by a new text."
     (interactive "sNew Title: ")
@@ -1593,7 +1614,11 @@ Collect properties into tables. See documentation in the file.
     (save-excursion
       (let* ((time-desc (org-gcal--get-time-and-desc))
              (start-date (plist-get time-desc :start))
-             (formatted-date (org-gcal--format-iso2org start-date org-gcal-local-timezone)))
+             (elem-timestamp (paf/org-timestamp-in-entry))
+             (formatted-date
+              (if start-date
+                  (org-gcal--format-iso2org start-date org-gcal-local-timezone)
+                (org-timestamp-format elem-timestamp (org-time-stamp-format t t)))))
         (org-back-to-heading)
         (paf/replace-current-heading (format "[%s]"
                                              (substring formatted-date 1 (- (length formatted-date) 1)))))
