@@ -276,6 +276,7 @@ Use =C-x C-u= and =C-x C-l= to effect them.
 #+begin_src emacs-lisp
   ;; Calendar starts on Monday
   (setq calendar-week-start-day 1)
+  (setq org-gcal-local-timezone "Europe/Zurich")
 #+end_src
 
 * Completion
