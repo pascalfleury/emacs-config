@@ -1320,20 +1320,20 @@ The Javascript bookmarklet should then be like this:
                    template: 'W',
                    url: location.href,
                    title: document.title,
-                   body: getSelection()})
+                   body: selection()})
 #+end_example
 
 #+name: plain_selection
 #+begin_example
-getSelection = function() {
+() => {
   return window.getSelection();
-};
+}
 #+end_example
 
 Store this following test as the URL part of a browser bookmark.
 #+name: minify
 #+begin_src bash :var urlexpr=bookmarklet_url :var jslib=plain_selection :results output verbatim
-  echo "javascript:location.href=(() => { ${jslib}; return ${urlexpr} })()" \
+  echo "javascript:location.href=(() => { var selection=${jslib}; return ${urlexpr} })()" \
         | sed -e 's,  //.*,,g' \
         | tr '\n' ' ' \
         | sed -e 's/  */ /g' -e 's/; *;/;/g' -e 's/: /:/g' -e 's/; *}/}/g' -e 's/ *\([({}=,\+;]\) */\1/g' \
@@ -1341,7 +1341,7 @@ Store this following test as the URL part of a browser bookmark.
 #+end_src
 
 #+RESULTS: minify
-: javascript:location.href=(()=>{getSelection=function(){return window.getSelection()};return 'org-protocol://capture?'+new URLSearchParams({template:'W',url:location.href,title:document.title,body:getSelection()})})();
+: javascript:location.href=(()=>{var selection=()=>{return window.getSelection()};return 'org-protocol://capture?'+new URLSearchParams({template:'W',url:location.href,title:document.title,body:selection()})})()
 
 ***** The capture templates
 This is only needed for the =capture= sub-protocol. You need to define a capture template that will be used to insert the blob from what was taken on the webpage.
@@ -1375,16 +1375,16 @@ Seems there is a way to get the selection HTML on [[https://snipplr.com/view/109
 
 #+name: html_selection
 #+begin_example
-getSelection = function () {
-  var userSelection;
+() => {
+  var userSelection, range;
   if (window.getSelection) {
     // W3C Ranges
     userSelection = window.getSelection ();
     // Get the range:
     if (userSelection.getRangeAt) {
-      var range = userSelection.getRangeAt (0);
+      range = userSelection.getRangeAt (0);
     } else {
-      var range = document.createRange ();
+      range = document.createRange ();
       range.setStart (userSelection.anchorNode, userSelection.anchorOffset);
       range.setEnd (userSelection.focusNode, userSelection.focusOffset);
     }
@@ -1400,13 +1400,13 @@ getSelection = function () {
   } else {
     return '';
   }
-};
+}
 #+end_example
 
 #+call: minify(urlexpr=bookmarklet_url, jslib=html_selection) :results output verbatim
 
 #+RESULTS:
-: javascript:location.href=(()=>{getSelection=function(){var u;if(window.getSelection){u=window.getSelection();if(u.getRangeAt){var r=u.getRangeAt(0)}else{var r=document.createRange();r.setStart(u.anchorNode,u.anchorOffset);r.setEnd(u.focusNode,u.focusOffset)}var c=r.cloneContents();var div=document.createElement('div');div.appendChild(c);return div.innerHTML}else if(document.selection){u=document.selection.createRange();return u.htmlText}else{return ''}};return 'org-protocol://capture?'+new URLSearchParams({template:'W',url:location.href,title:document.title,body:getSelection()})})();
+: javascript:location.href=(()=>{var selection=()=>{var u,r;if(window.getSelection){u=window.getSelection();if(u.getRangeAt){r=u.getRangeAt(0)}else{r=document.createRange();r.setStart(u.anchorNode,u.anchorOffset);r.setEnd(u.focusNode,u.focusOffset)}var c=r.cloneContents();var div=document.createElement('div');div.appendChild(c);return div.innerHTML}else if(document.selection){u=document.selection.createRange();return u.htmlText}else{return ''}};return 'org-protocol://capture?'+new URLSearchParams({template:'W',url:location.href,title:document.title,body:selection()})})()
 
 
 *** Org-relative file helper function
