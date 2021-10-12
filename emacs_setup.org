@@ -1313,15 +1313,35 @@ The best way is to craft a correct URL, and call emacsclient on the command line
 
 ***** Setup the bookmarklet
 The Javascript bookmarklet should then be like this:
-#+begin_src javascript :tangle no
-  javascript:location.href='org-protocol://capture?'+
+#+name: bookmarklet_url
+#+begin_example
+  'org-protocol://capture?'+
              new URLSearchParams({
                    template: 'W',
                    url: location.href,
                    title: document.title,
-                   body: window.getSelection()})
+                   body: getSelection()})
+#+end_example
+
+#+name: plain_selection
+#+begin_example
+getSelection = function() {
+  return window.getSelection();
+};
+#+end_example
+
+Store this following test as the URL part of a browser bookmark.
+#+name: minify
+#+begin_src bash :var urlexpr=bookmarklet_url :var jslib=plain_selection :results output verbatim
+  echo "javascript:location.href=(() => { ${jslib}; return ${urlexpr} })()" \
+        | sed -e 's,  //.*,,g' \
+        | tr '\n' ' ' \
+        | sed -e 's/  */ /g' -e 's/; *;/;/g' -e 's/: /:/g' -e 's/; *}/}/g' -e 's/ *\([({}=,\+;]\) */\1/g' \
+        | sed -e 's/userSelection/u/g' -e 's/clonedSelection/c/g' -e 's/range/r/g'
 #+end_src
-Store this as the URL part of a browser bookmark.
+
+#+RESULTS: minify
+: javascript:location.href=(()=>{getSelection=function(){return window.getSelection()};return 'org-protocol://capture?'+new URLSearchParams({template:'W',url:location.href,title:document.title,body:getSelection()})})();
 
 ***** The capture templates
 This is only needed for the =capture= sub-protocol. You need to define a capture template that will be used to insert the blob from what was taken on the webpage.
@@ -1349,11 +1369,45 @@ This defines a =W= template and accepts several parameters, which are just a map
 
 All the other org-mode placeholders are all usable, like =%U= that inserts an inactive timestamp.
 
-**** Setup on MacOS
-Latest information I found is from [[https://github.com/xuchunyang/setup-org-protocol-on-mac]] to install the =org-protocol= handling.
 
 **** Make it support HTML
 Seems there is a way to get the selection HTML on [[https://snipplr.com/view/10912/get-html-of-selection][Get HTML Of Selection]].
+
+#+name: html_selection
+#+begin_example
+getSelection = function () {
+  var userSelection;
+  if (window.getSelection) {
+    // W3C Ranges
+    userSelection = window.getSelection ();
+    // Get the range:
+    if (userSelection.getRangeAt) {
+      var range = userSelection.getRangeAt (0);
+    } else {
+      var range = document.createRange ();
+      range.setStart (userSelection.anchorNode, userSelection.anchorOffset);
+      range.setEnd (userSelection.focusNode, userSelection.focusOffset);
+    }
+    // And the HTML:
+    var clonedSelection = range.cloneContents ();
+    var div = document.createElement ('div');
+    div.appendChild (clonedSelection);
+    return div.innerHTML;
+  } else if (document.selection) {
+    // Explorer selection, return the HTML
+    userSelection = document.selection.createRange ();
+    return userSelection.htmlText;
+  } else {
+    return '';
+  }
+};
+#+end_example
+
+#+call: minify(urlexpr=bookmarklet_url, jslib=html_selection) :results output verbatim
+
+#+RESULTS:
+: javascript:location.href=(()=>{getSelection=function(){var u;if(window.getSelection){u=window.getSelection();if(u.getRangeAt){var r=u.getRangeAt(0)}else{var r=document.createRange();r.setStart(u.anchorNode,u.anchorOffset);r.setEnd(u.focusNode,u.focusOffset)}var c=r.cloneContents();var div=document.createElement('div');div.appendChild(c);return div.innerHTML}else if(document.selection){u=document.selection.createRange();return u.htmlText}else{return ''}};return 'org-protocol://capture?'+new URLSearchParams({template:'W',url:location.href,title:document.title,body:getSelection()})})();
+
 
 *** Org-relative file helper function
 #+begin_src emacs-lisp
