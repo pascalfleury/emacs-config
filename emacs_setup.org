@@ -1500,6 +1500,17 @@ This is a cleaned-up version of the new style capture.
            :function paf/org-protocol-html-capture)))
 #+end_src
 
+This is also a very crude way of doing it. Better would be to detect the presence of PanDoc, and then use that. An idea is [[https://stackoverflow.com/questions/20336581/paste-html-into-org-mode-as-org-mode-markup][here]], mostly this code:
+
+#+begin_src emacs-lisp :tangle no
+  (defun kdm/html2org-clipboard ()
+    "Convert clipboard contents from HTML to Org and then paste (yank)."
+    (interactive)
+    (setq cmd "osascript -e 'the clipboard as \"HTML\"' | perl -ne 'print chr foreach unpack(\"C*\",pack(\"H*\",substr($_,11,-3)))' | pandoc -f html -t json | pandoc -f json -t org")
+    (kill-new (shell-command-to-string cmd))
+    (yank))
+#+end_src
+
 *** Org-relative file helper function
 #+begin_src emacs-lisp
 (defun org-relative (filename)
