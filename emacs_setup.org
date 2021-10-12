@@ -1369,7 +1369,6 @@ This defines a =W= template and accepts several parameters, which are just a map
 
 All the other org-mode placeholders are all usable, like =%U= that inserts an inactive timestamp.
 
-
 **** Make it support HTML
 Seems there is a way to get the selection HTML on [[https://snipplr.com/view/10912/get-html-of-selection][Get HTML Of Selection]].
 
