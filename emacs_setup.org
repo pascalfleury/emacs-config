@@ -1274,10 +1274,82 @@ If variable =org-directory= is not set yet, map it to my home's files. You may s
 
 ** Packages / Helper Functions / Tools found on the web / worg
 *** org-protocol
-Let other tools use emacs client to interact
+Let other tools use emacs client to interact.
 #+begin_src emacs-lisp
 (require 'org-protocol)
 #+end_src
+
+**** Setup on Mac
+Lots of old and imprecise information found on the web. Here are the important bits done correctly (as of Oct 2021):
+***** Set up the system to handle org-protocol URLs.
+Making the system open =org-protocol= links with a personalized tool is done with a /Script/ saved as an /Application/ as described on [[https://github.com/xuchunyang/setup-org-protocol-on-mac#step-1-create-an-application][this page]].
+You need to find the path to =emacsclient= which is =/Applications/Emacs.app/Contents/MacOS/bin/emacsclient= if you install GNU Emacs for Max OSX.
+***** Format the URL to send to Emacs
+The browser needs to be instructed to call the given URL with some information abotu the page. This is done with a bookmarklet that consists of only Javascript. I had to inspect the source of =org-protocol= to find out that the current format (new-style) is a regular URL with query parameters:
+
+#+begin_example
+org-protocol:///capture?key1=value1&key2=value2
+#+end_example
+
+This consists of
+
+1. The /protocol/ bit =org-protocol://=
+2. The /path/ bit, which maps to a set of defined sub-protocols. Pre-defined ones are =store-link=, =capture=, =open-source=
+3. The /query args/, escaped properly to not interfere with URL structure.
+
+Each sub protocol handles a different set of query args:
+=capture= :: =url= (the /link/ to the web page), =title= (the /description/ of the webpage), =body= (the /initial/ highlighting on that page) and =template= (the org capture template key to use)
+=store-link= :: =url= and =title= (can then be inserted as regular link with =C-c C-l=)
+=open-source= :: =url= which points to the file to open in a URL format (file:///home/user/.bashrc)
+
+Should this be misformatted in some way, you might get the infamous and unfortunately unhelpful message
+#+begin_example
+Greedy org-protocol handler.  Killing client.
+No server buffers remain to edit.
+#+end_example
+
+The best way is to craft a correct URL, and call emacsclient on the command line, jsut to assert that this part is working. The browser gives absolutely no hint at what could have gone wrong.
+
+***** Setup the bookmarklet
+The Javascript bookmarklet should then be like this:
+#+begin_src javascript :tangle no
+  javascript:location.href='org-protocol://capture?'+
+             new URLSearchParams({
+                   template: 'W',
+                   url: location.href,
+                   title: document.title,
+                   body: window.getSelection()})
+#+end_src
+Store this as the URL part of a browser bookmark.
+
+***** The capture templates
+This is only needed for the =capture= sub-protocol. You need to define a capture template that will be used to insert the blob from what was taken on the webpage.
+#+begin_src emacs-lisp :tangle no
+  (setq org-capture-templates
+        `(("W" "Web Clips"
+           entry (file+headline ,(org-relative "Inbox.org") "Web Clips")
+           "* %:description\n%U\n[[%:link]]\n%:type %:query\n%?%:initial\n")
+        ;; possibly other templates
+        ))
+#+end_src
+This defines a =W= template and accepts several parameters, which are just a mapping from the ones passed to the URL. With the new style of URLs, this mapping is just an needless annoyance though.
+
+|---------------+--------------------|
+| URL query arg | template parameter |
+|---------------+--------------------|
+| url           | %:link             |
+| title         | %:description      |
+| body          | %:initial          |
+| template      | <not accessible>   |
+|---------------+--------------------|
+|               | %:type             |
+|               | %:orglink          |
+|---------------+--------------------|
+
+All the other org-mode placeholders are all usable, like =%U= that inserts an inactive timestamp.
+
+**** Setup on MacOS
+Latest information I found is from [[https://github.com/xuchunyang/setup-org-protocol-on-mac]] to install the =org-protocol= handling.
 
 *** Org-relative file helper function
 #+begin_src emacs-lisp
@@ -2011,7 +2083,7 @@ Very nice post on how to get capture templats from a file: [[https://joshrollins
            :clock-resume t)
           ;;
           ("p" "Talking Point"
-           entry (file+headline ,(org-relative "refile.org") "Talking Points")
+           entry (file+headline ,(org-relative "Inbox.org") "Talking Points")
            "* AI %?  :TALK:\n%U\n%^{with}p"
            :clock-keep t)
           ;;
@@ -2020,7 +2092,13 @@ Very nice post on how to get capture templats from a file: [[https://joshrollins
            "* %?\n%U"
            :clock-in t
            :clock-resume t
-           :kill-buffer t)))
+           :kill-buffer t)
+          ;;
+          ("W" "Web Clips"
+           entry (file+headline ,(org-relative "Inbox.org") "Web Clips")
+           "* %:description\n%U\n[[%:link]]\n%:type %:orglink\n%?%:initial\n")
+          ;;
+          ))
 #+end_src
 
 **** Refile
