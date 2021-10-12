@@ -1373,6 +1373,16 @@ All the other org-mode placeholders are all usable, like =%U= that inserts an in
 **** Make it support HTML
 Seems there is a way to get the selection HTML on [[https://snipplr.com/view/10912/get-html-of-selection][Get HTML Of Selection]].
 
+#+name: bookmarklet_html_url
+#+begin_example
+  'org-protocol://html-capture?'+
+             new URLSearchParams({
+                   template: 'H',
+                   url: location.href,
+                   title: document.title,
+                   body: selection()})
+#+end_example
+
 ***** Make the bookmarklet return HTML
 #+name: html_selection
 #+begin_example
@@ -1404,15 +1414,38 @@ Seems there is a way to get the selection HTML on [[https://snipplr.com/view/109
 }
 #+end_example
 
-#+call: minify(urlexpr=bookmarklet_url, jslib=html_selection) :results output verbatim
+#+call: minify(urlexpr=bookmarklet_html_url, jslib=html_selection) :results output verbatim
 
 #+RESULTS:
-: javascript:location.href=(()=>{var selection=()=>{var u,r;if(window.getSelection){u=window.getSelection();if(u.getRangeAt){r=u.getRangeAt(0)}else{r=document.createRange();r.setStart(u.anchorNode,u.anchorOffset);r.setEnd(u.focusNode,u.focusOffset)}var c=r.cloneContents();var div=document.createElement('div');div.appendChild(c);return div.innerHTML}else if(document.selection){u=document.selection.createRange();return u.htmlText}else{return ''}};return 'org-protocol://capture?'+new URLSearchParams({template:'W',url:location.href,title:document.title,body:selection()})})()
+: javascript:location.href=(()=>{var selection=()=>{var u,r;if(window.getSelection){u=window.getSelection();if(u.getRangeAt){r=u.getRangeAt(0)}else{r=document.createRange();r.setStart(u.anchorNode,u.anchorOffset);r.setEnd(u.focusNode,u.focusOffset)}var c=r.cloneContents();var div=document.createElement('div');div.appendChild(c);return div.innerHTML}else if(document.selection){u=document.selection.createRange();return u.htmlText}else{return ''}};return 'org-protocol://html-capture?'+new URLSearchParams({template:'H',url:location.href,title:document.title,body:selection()})})()
 
 ***** Handle the receiving side of the protocol
 This is a cleaned-up version of the new style capture.
 
 #+begin_src emacs-lisp
+  (defun paf/html-to-org-markup (html)
+    "Turns HTML markup into Org markup"
+    (let ((substitutions '(("+" . " ")
+                           ("\n" . " ")
+                           ("<p>" . "")
+                           ("</p>" . "\n")
+                           ("<br/?>" . "\n")
+                           ("<code>\\([^<]*\\)</code>" . "=\\1=")
+                           ("</?b>" . "*")
+                           ("</?i>" . "/")
+                           ;; ("" . "")
+                           ))
+          ;; Cleanup removes unwanted remaining markup.
+          (cleanup '(("</?[^>]*>" . " ")
+                     ("  *" . " "))))
+      (dolist (elt substitutions html)
+        (setq html (replace-regexp-in-string (car elt) (cdr elt) html)))
+      (dolist (elt cleanup html)
+        (setq html (replace-regexp-in-string (car elt) (cdr elt) html)))))
+
+  ;; An expression to test the above function
+  ;;  (paf/html-to-org-markup "<p>Some+<b>notes</b>+<pre><code>here</code></pre></p>Q")
+
   (defun paf/org-protocol-html-capture (info)
     "Process an org-protocol://html-capture style url with INFO.
 
@@ -1438,8 +1471,8 @@ This is a cleaned-up version of the new style capture.
            (type (and url
                       (string-match "^\\([a-z]+\\):" url)
                       (match-string 1 url)))
-           (title (or (plist-get parts :title) ""))
-           (body (or (plist-get parts :body) ""))
+           (title (or (paf/html-to-org-markup (plist-get parts :title)) ""))
+           (body (or (paf/html-to-org-markup (plist-get parts :body)) ""))
            (orglink
             (if (null url) title
               (org-link-make-string url (or (org-string-nw-p title) url))))
