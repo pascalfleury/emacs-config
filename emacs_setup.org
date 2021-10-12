@@ -1313,15 +1313,35 @@ The best way is to craft a correct URL, and call emacsclient on the command line
 
 ***** Setup the bookmarklet
 The Javascript bookmarklet should then be like this:
-#+begin_src javascript :tangle no
-  javascript:location.href='org-protocol://capture?'+
+#+name: bookmarklet_url
+#+begin_example
+  'org-protocol://capture?'+
              new URLSearchParams({
                    template: 'W',
                    url: location.href,
                    title: document.title,
-                   body: window.getSelection()})
+                   body: selection()})
+#+end_example
+
+#+name: plain_selection
+#+begin_example
+() => {
+  return window.getSelection();
+}
+#+end_example
+
+Store this following test as the URL part of a browser bookmark.
+#+name: minify
+#+begin_src bash :var urlexpr=bookmarklet_url :var jslib=plain_selection :results output verbatim
+  echo "javascript:location.href=(() => { var selection=${jslib}; return ${urlexpr} })()" \
+        | sed -e 's,  //.*,,g' \
+        | tr '\n' ' ' \
+        | sed -e 's/  */ /g' -e 's/; *;/;/g' -e 's/: /:/g' -e 's/; *}/}/g' -e 's/ *\([({}=,\+;]\) */\1/g' \
+        | sed -e 's/userSelection/u/g' -e 's/clonedSelection/c/g' -e 's/range/r/g'
 #+end_src
-Store this as the URL part of a browser bookmark.
+
+#+RESULTS: minify
+: javascript:location.href=(()=>{var selection=()=>{return window.getSelection()};return 'org-protocol://capture?'+new URLSearchParams({template:'W',url:location.href,title:document.title,body:selection()})})()
 
 ***** The capture templates
 This is only needed for the =capture= sub-protocol. You need to define a capture template that will be used to insert the blob from what was taken on the webpage.
@@ -1349,11 +1369,147 @@ This defines a =W= template and accepts several parameters, which are just a map
 
 All the other org-mode placeholders are all usable, like =%U= that inserts an inactive timestamp.
 
-**** Setup on MacOS
-Latest information I found is from [[https://github.com/xuchunyang/setup-org-protocol-on-mac]] to install the =org-protocol= handling.
 
 **** Make it support HTML
 Seems there is a way to get the selection HTML on [[https://snipplr.com/view/10912/get-html-of-selection][Get HTML Of Selection]].
+
+#+name: bookmarklet_html_url
+#+begin_example
+  'org-protocol://html-capture?'+
+             new URLSearchParams({
+                   template: 'H',
+                   url: location.href,
+                   title: document.title,
+                   body: selection()})
+#+end_example
+
+***** Make the bookmarklet return HTML
+#+name: html_selection
+#+begin_example
+() => {
+  var userSelection, range;
+  if (window.getSelection) {
+    // W3C Ranges
+    userSelection = window.getSelection ();
+    // Get the range:
+    if (userSelection.getRangeAt) {
+      range = userSelection.getRangeAt (0);
+    } else {
+      range = document.createRange ();
+      range.setStart (userSelection.anchorNode, userSelection.anchorOffset);
+      range.setEnd (userSelection.focusNode, userSelection.focusOffset);
+    }
+    // And the HTML:
+    var clonedSelection = range.cloneContents ();
+    var div = document.createElement ('div');
+    div.appendChild (clonedSelection);
+    return div.innerHTML;
+  } else if (document.selection) {
+    // Explorer selection, return the HTML
+    userSelection = document.selection.createRange ();
+    return userSelection.htmlText;
+  } else {
+    return '';
+  }
+}
+#+end_example
+
+#+call: minify(urlexpr=bookmarklet_html_url, jslib=html_selection) :results output verbatim
+
+#+RESULTS:
+: javascript:location.href=(()=>{var selection=()=>{var u,r;if(window.getSelection){u=window.getSelection();if(u.getRangeAt){r=u.getRangeAt(0)}else{r=document.createRange();r.setStart(u.anchorNode,u.anchorOffset);r.setEnd(u.focusNode,u.focusOffset)}var c=r.cloneContents();var div=document.createElement('div');div.appendChild(c);return div.innerHTML}else if(document.selection){u=document.selection.createRange();return u.htmlText}else{return ''}};return 'org-protocol://html-capture?'+new URLSearchParams({template:'H',url:location.href,title:document.title,body:selection()})})()
+
+***** Handle the receiving side of the protocol
+This is a cleaned-up version of the new style capture.
+
+#+begin_src emacs-lisp
+  (defun paf/html-to-org-markup (html)
+    "Turns HTML markup into Org markup"
+    (let ((substitutions '(("+" . " ")
+                           ("\n" . " ")
+                           ("<p>" . "")
+                           ("</p>" . "\n")
+                           ("<br/?>" . "\n")
+                           ("<code>\\([^<]*\\)</code>" . "=\\1=")
+                           ("</?b>" . "*")
+                           ("</?i>" . "/")
+                           ;; ("" . "")
+                           ))
+          ;; Cleanup removes unwanted remaining markup.
+          (cleanup '(("</?[^>]*>" . " ")
+                     ("  *" . " "))))
+      (dolist (elt substitutions html)
+        (setq html (replace-regexp-in-string (car elt) (cdr elt) html)))
+      (dolist (elt cleanup html)
+        (setq html (replace-regexp-in-string (car elt) (cdr elt) html)))))
+
+  ;; An expression to test the above function
+  ;;  (paf/html-to-org-markup "<p>Some+<b>notes</b>+<pre><code>here</code></pre></p>Q")
+
+  (defun paf/org-protocol-html-capture (info)
+    "Process an org-protocol://html-capture style url with INFO.
+
+  The sub-protocol used to reach this function is set in
+  `org-protocol-protocol-alist'.
+
+  This function detects an URL, with the following parameters:
+    javascript:location.href = 'org-protocol://html-capture?' +
+       new URLSearchParams({
+          template: 'W',
+          url:location.href,
+          title:document.title,
+          body:html_selection()})
+  "
+    (let* ((parts
+            (pcase (org-protocol-parse-parameters info)
+              ;; New style links are parsed as a plist.
+              ((let `(,(pred keywordp) . ,_) info) info)))
+           (template (or (plist-get parts :template)
+                         org-protocol-default-template-key))
+           (url (and (plist-get parts :url)
+                     (org-protocol-sanitize-uri (plist-get parts :url))))
+           (type (and url
+                      (string-match "^\\([a-z]+\\):" url)
+                      (match-string 1 url)))
+           (title (or (paf/html-to-org-markup (plist-get parts :title)) ""))
+           (body (or (paf/html-to-org-markup (plist-get parts :body)) ""))
+           (orglink
+            (if (null url) title
+              (org-link-make-string url (or (org-string-nw-p title) url))))
+           ;; Avoid call to `org-store-link'.
+           (org-capture-link-is-already-stored t))
+      ;; Only store link if there's a URL to insert later on.
+      (when url (push (list url title) org-stored-links))
+      (org-link-store-props :type type
+                            :url url
+                            :title title
+                            :orglink orglink
+                            :body body
+                            :query parts)
+      (raise-frame)
+      (org-capture nil template)
+      (message "HTML item captured.")
+      ;; Make sure we do not return a string, as `server-visit-files',
+      ;; through `server-edit', would interpret it as a file name.
+      nil))
+
+  ;; Register the new protocol
+  (setq org-protocol-protocol-alist
+        '(("html-capture"
+           :protocol "html-capture"
+           :function paf/org-protocol-html-capture)))
+#+end_src
+
+This is also a very crude way of doing it. Better would be to detect the presence of PanDoc, and then use that. An idea is [[https://stackoverflow.com/questions/20336581/paste-html-into-org-mode-as-org-mode-markup][here]], mostly this code:
+
+#+begin_src emacs-lisp :tangle no
+  (defun kdm/html2org-clipboard ()
+    "Convert clipboard contents from HTML to Org and then paste (yank)."
+    (interactive)
+    (setq cmd "osascript -e 'the clipboard as \"HTML\"' | perl -ne 'print chr foreach unpack(\"C*\",pack(\"H*\",substr($_,11,-3)))' | pandoc -f html -t json | pandoc -f json -t org")
+    (kill-new (shell-command-to-string cmd))
+    (yank))
+#+end_src
 
 *** Org-relative file helper function
 #+begin_src emacs-lisp
@@ -2126,6 +2282,10 @@ Very nice post on how to get capture templates from a file: [[https://joshrollin
           ("W" "Web Clips"
            entry (file+headline ,(org-relative "Inbox.org") "Web Clips")
            "* %:description\n%U\n[[%:link]]\n%:type %:orglink\n%?%:initial\n")
+          ;;
+          ("H" "HTML Clips"
+           entry (file+headline ,(org-relative "Inbox.org") "Web Clips")
+           "* %:title\n%U\n[[%:url]]\n%:type %:orglink\n%?%:body\n")
           ;;
           ))
 #+end_src
