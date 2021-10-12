@@ -224,6 +224,7 @@ Use instead of add-hook to run it a single time.
 ** Setup server
 Start the background server, so we can use emacsclient.
 #+begin_src emacs-lisp
+  (require 'server)
   (if (and (fboundp 'server-running-p)
            (not (server-running-p)))
       (server-start))
