@@ -1352,6 +1352,9 @@ All the other org-mode placeholders are all usable, like =%U= that inserts an in
 **** Setup on MacOS
 Latest information I found is from [[https://github.com/xuchunyang/setup-org-protocol-on-mac]] to install the =org-protocol= handling.
 
+**** Make it support HTML
+Seems there is a way to get the selection HTML on [[https://snipplr.com/view/10912/get-html-of-selection][Get HTML Of Selection]].
+
 *** Org-relative file helper function
 #+begin_src emacs-lisp
 (defun org-relative (filename)
