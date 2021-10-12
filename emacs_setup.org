@@ -2077,7 +2077,7 @@ That's the export function to update the agenda view.
 Capture and refile stuff, with some templates that I think are useful.
 
 **** Capture
-Very nice post on how to get capture templats from a file: [[https://joshrollinswrites.com/help-desk-head-desk/org-capture-in-files/][Org-capture in Files]].
+Very nice post on how to get capture templates from a file: [[https://joshrollinswrites.com/help-desk-head-desk/org-capture-in-files/][Org-capture in Files]].
 
 #+begin_src emacs-lisp
   (setq org-default-notes-file (org-relative "Inbox.org"))
