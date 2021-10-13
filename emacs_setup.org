@@ -1347,6 +1347,7 @@ Store this following test as the URL part of a browser bookmark.
 ***** The capture templates
 This is only needed for the =capture= sub-protocol. You need to define a capture template that will be used to insert the blob from what was taken on the webpage.
 #+begin_src emacs-lisp :tangle no
+  ;; Example capture for plain capture:
   (setq org-capture-templates
         `(("W" "Web Clips"
            entry (file+headline ,(org-relative "Inbox.org") "Web Clips")
@@ -1422,6 +1423,7 @@ Seems there is a way to get the selection HTML on [[https://snipplr.com/view/109
 ***** Handle the receiving side of the protocol
 This is a cleaned-up version of the new style capture.
 
+****** Code to process the html-capture protocol
 #+begin_src emacs-lisp
   (defun paf/html-to-org-markup (html)
     "Turns HTML markup into Org markup"
@@ -1510,6 +1512,35 @@ This is also a very crude way of doing it. Better would be to detect the presenc
     (kill-new (shell-command-to-string cmd))
     (yank))
 #+end_src
+
+****** Setup the capture template
+This new protocol can be handled with this capture template:
+#+begin_src emacs-lisp :tangle no
+  ;; Example capture for HTML capture:
+  (setq org-capture-templates
+        `(("H" "HTML Clips"
+           entry (file+headline "Inbox.org" "HTML Clips")
+           "* %:title\n%U\n[[%:url]]\n%:type %:query\n%?%:body\n")
+        ;; possibly other templates
+        ))
+#+end_src
+
+This defines a =H= template and accepts several parameters, which are just a mapping from the ones passed to the URL.
+This uses the new style URL, as well as no translation of the arguments.
+
+|---------------+--------------------|
+| URL query arg | template parameter |
+|---------------+--------------------|
+| url           | %:url              |
+| title         | %:title            |
+| body          | %:body             |
+| template      | <not accessible>   |
+|---------------+--------------------|
+|               | %:type             |
+|               | %:orglink          |
+|---------------+--------------------|
+
+All the other org-mode placeholders are all usable, e.g. =%U= that inserts an inactive timestamp.
 
 *** Org-relative file helper function
 #+begin_src emacs-lisp
