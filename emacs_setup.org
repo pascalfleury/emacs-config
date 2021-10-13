@@ -1316,9 +1316,9 @@ The best way is to craft a correct URL, and call emacsclient on the command line
 The Javascript bookmarklet should then be like this:
 #+name: bookmarklet_url
 #+begin_example
-  'org-protocol://capture?'+
+  "org-protocol://capture?" +
              new URLSearchParams({
-                   template: 'W',
+                   template: "W",
                    url: location.href,
                    title: document.title,
                    body: selection()})
@@ -1333,7 +1333,7 @@ The Javascript bookmarklet should then be like this:
 
 Store this following test as the URL part of a browser bookmark.
 #+name: minify
-#+begin_src bash :var urlexpr=bookmarklet_url :var jslib=plain_selection :results output verbatim
+#+begin_src bash :var urlexpr=bookmarklet_url :var jslib=plain_selection :results output verbatim :tangle no
   echo "javascript:location.href=(() => { var selection=${jslib}; return ${urlexpr} })()" \
         | sed -e 's,  //.*,,g' \
         | tr '\n' ' ' \
@@ -1342,7 +1342,7 @@ Store this following test as the URL part of a browser bookmark.
 #+end_src
 
 #+RESULTS: minify
-: javascript:location.href=(()=>{var selection=()=>{return window.getSelection()};return 'org-protocol://capture?'+new URLSearchParams({template:'W',url:location.href,title:document.title,body:selection()})})()
+: javascript:location.href=(()=>{var selection=()=>{return window.getSelection()};return "org-protocol://capture?"+new URLSearchParams({template:"W",url:location.href,title:document.title,body:selection()})})()
 
 ***** The capture templates
 This is only needed for the =capture= sub-protocol. You need to define a capture template that will be used to insert the blob from what was taken on the webpage.
@@ -1375,9 +1375,9 @@ Seems there is a way to get the selection HTML on [[https://snipplr.com/view/109
 
 #+name: bookmarklet_html_url
 #+begin_example
-  'org-protocol://html-capture?'+
+  "org-protocol://html-capture?" +
              new URLSearchParams({
-                   template: 'H',
+                   template: "H",
                    url: location.href,
                    title: document.title,
                    body: selection()})
@@ -1417,7 +1417,7 @@ Seems there is a way to get the selection HTML on [[https://snipplr.com/view/109
 #+call: minify(urlexpr=bookmarklet_html_url, jslib=html_selection) :results output verbatim
 
 #+RESULTS:
-: javascript:location.href=(()=>{var selection=()=>{var u,r;if(window.getSelection){u=window.getSelection();if(u.getRangeAt){r=u.getRangeAt(0)}else{r=document.createRange();r.setStart(u.anchorNode,u.anchorOffset);r.setEnd(u.focusNode,u.focusOffset)}var c=r.cloneContents();var div=document.createElement('div');div.appendChild(c);return div.innerHTML}else if(document.selection){u=document.selection.createRange();return u.htmlText}else{return ''}};return 'org-protocol://html-capture?'+new URLSearchParams({template:'H',url:location.href,title:document.title,body:selection()})})()
+: javascript:location.href=(()=>{var selection=()=>{var u,r;if(window.getSelection){u=window.getSelection();if(u.getRangeAt){r=u.getRangeAt(0)}else{r=document.createRange();r.setStart(u.anchorNode,u.anchorOffset);r.setEnd(u.focusNode,u.focusOffset)}var c=r.cloneContents();var div=document.createElement('div');div.appendChild(c);return div.innerHTML}else if(document.selection){u=document.selection.createRange();return u.htmlText}else{return ''}};return "org-protocol://html-capture?"+new URLSearchParams({template:"H",url:location.href,title:document.title,body:selection()})})()
 
 ***** Handle the receiving side of the protocol
 This is a cleaned-up version of the new style capture.
