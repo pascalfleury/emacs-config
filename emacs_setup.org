@@ -1448,6 +1448,9 @@ This is a cleaned-up version of the new style capture.
   ;; An expression to test the above function
   ;;  (paf/html-to-org-markup "<p>Some+<b>notes</b>+<pre><code>here</code></pre></p>Q")
 
+  (defun paf/html-cleanup (html)
+    (replace-regexp-in-string "+" " " html))
+
   (defun paf/org-protocol-html-capture (info)
     "Process an org-protocol://html-capture style url with INFO.
 
@@ -1474,6 +1477,7 @@ This is a cleaned-up version of the new style capture.
                       (string-match "^\\([a-z]+\\):" url)
                       (match-string 1 url)))
            (title (or (paf/html-to-org-markup (plist-get parts :title)) ""))
+           (html (or (paf/html-cleanup (plist-get parts :body)) ""))
            (body (or (paf/html-to-org-markup (plist-get parts :body)) ""))
            (orglink
             (if (null url) title
@@ -1487,6 +1491,7 @@ This is a cleaned-up version of the new style capture.
                             :title title
                             :orglink orglink
                             :body body
+                            :html html
                             :query parts)
       (raise-frame)
       (org-capture nil template)
@@ -1520,7 +1525,7 @@ This new protocol can be handled with this capture template:
   (setq org-capture-templates
         `(("H" "HTML Clips"
            entry (file+headline "Inbox.org" "HTML Clips")
-           "* %:title\n%U\n[[%:url]]\n%:type %:query\n%?%:body\n")
+           "* %:title\n%U\nurl: [[%:url]]\ntype: %:type\n****text\n?%:body\n**** html\n%:html")
         ;; possibly other templates
         ))
 #+end_src
@@ -1528,17 +1533,18 @@ This new protocol can be handled with this capture template:
 This defines a =H= template and accepts several parameters, which are just a mapping from the ones passed to the URL.
 This uses the new style URL, as well as no translation of the arguments.
 
-|---------------+--------------------|
-| URL query arg | template parameter |
-|---------------+--------------------|
-| url           | %:url              |
-| title         | %:title            |
-| body          | %:body             |
-| template      | <not accessible>   |
-|---------------+--------------------|
-|               | %:type             |
-|               | %:orglink          |
-|---------------+--------------------|
+|---------------+--------------------+----------------------------------------|
+| URL query arg | template parameter | What is it?                            |
+|---------------+--------------------+----------------------------------------|
+| url           | %:url              | The page's URL                         |
+| title         | %:title            | The page's title                       |
+| body          | %:body             | The selected part, as org text         |
+| html          | %:html             | The selected text, as original HTML    |
+| template      | <not accessible>   | The capture template to use            |
+|---------------+--------------------+----------------------------------------|
+|               | %:type             | The protocol type of the URL           |
+|               | %:orglink          | A ready-to-insert org link to the page |
+|---------------+--------------------+----------------------------------------|
 
 All the other org-mode placeholders are all usable, e.g. =%U= that inserts an inactive timestamp.
 
@@ -2316,7 +2322,7 @@ Very nice post on how to get capture templates from a file: [[https://joshrollin
           ;;
           ("H" "HTML Clips"
            entry (file+headline ,(org-relative "Inbox.org") "Web Clips")
-           "* %:title\n%U\n[[%:url]]\n%:type %:orglink\n%?%:body\n")
+           "* %:title\n%U\n%:orglink\n\n%?%:body\n")
           ;;
           ))
 #+end_src
