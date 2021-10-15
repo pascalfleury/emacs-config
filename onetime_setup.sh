@@ -17,7 +17,7 @@ for file in ~/.emacs ~/.emacs.d/init.el ~/.emacs.d/custom.el; do
 done
 
 # Initial tangle of files, saying no to vterm compilation
-emacs --batch --load "${GIT_ROOT}/lisp/first_time_tangle.el"
+(cd ${GIT_ROOT} && emacs --batch --load "lisp/first_time_tangle.el")
 
 # Add the load-file as the first thing in the user's ~/.emacs
 # If not yet added.
