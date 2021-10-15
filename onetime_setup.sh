@@ -12,7 +12,9 @@ fi
 GIT_ROOT=$(dirname $0)
 
 # Maybe this is a new install, .emacs does not exist
-test -e ~/.emacs || touch ~/.emacs
+for file in ~/.emacs ~/.emacs.d/init.el ~/.emacs.d/custom.el; do
+    test -e ${file} || touch ${file}
+done
 
 # Initial tangle of files, saying no to vterm compilation
 emacs --batch --load "${GIT_ROOT}/lisp/first_time_tangle.el"
