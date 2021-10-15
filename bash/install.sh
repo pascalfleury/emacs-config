@@ -1,4 +1,3 @@
-This script is then used to install the needed packages on the system.
 #!/bin/bash
 set -e
 
