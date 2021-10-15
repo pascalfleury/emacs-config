@@ -18,10 +18,12 @@ for file in ~/.emacs ~/.emacs.d/custom.el; do
 done
 
 # Initial tangle of files, saying no to vterm compilation
+echo "Initial tangling..."
 (cd ${GIT_ROOT} && emacs --batch --load "lisp/first_time_tangle.el")
 
 # Add the load-file as the first thing in the user's ~/.emacs
 # If not yet added.
+echo "Setup .emacs ..."
 declare lines=$(grep ';; lisp/dot_emacs.el' ~/.emacs | wc -l)
 if (( lines < 1 )); then
     echo ";; lisp/dot_emacs.el" > ~/.emacs.new
@@ -38,4 +40,5 @@ echo "Installing dependencies"
 bash ${GIT_ROOT}/bash/install_deps.sh
 
 # Load the init, let it install whatever is missing.
+echo "Get Emacs to load fist time..."
 emacs --batch --load "~/.emacs.d/init.el"
