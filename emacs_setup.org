@@ -41,11 +41,15 @@ CLOSED: [2021-09-13 Mon 23:16]
 
 * Initialize Emacs
 This section sets up Emacs so it can tangle the config, find =use-package=, and find the ELPA repositories where to get the new packes from.
-** Info header
+** Info header and startup
 Just to add a little information in the tangled file.
 #+begin_src emacs-lisp
   ;; ===== this file was auto-tangled, only edit the emacs_setup.org =====
   ;; (profiler-start 'cpu)
+#+end_src
+
+#+begin_src bash :tangle install_deps.sh :shebang "#!/bin/bash"
+  source ~/Emacs/bash/install.sh
 #+end_src
 
 ** Diverse paths
