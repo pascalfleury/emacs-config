@@ -8,4 +8,3 @@
 				     (or load-file-name buffer-file-name))))
 (find-file (concat config_base ".org"))  ; Open the configuration
 (org-babel-tangle)                       ; tangle it
-(load-file "~/.emacs.d/init.el")         ; load it

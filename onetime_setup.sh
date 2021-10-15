@@ -34,7 +34,7 @@ fi
 
 # Install system dependencies from the tangled script
 echo "Installing dependencies"
-bash ${GIT_ROOT}/install_deps.sh
+bash ${GIT_ROOT}/bash/install_deps.sh
 
-echo "Cleanup"
-rm -f ${GIT_ROOT}/install_deps.sh
+# Load the init, let it install whatever is missing.
+(cd ${GIT_ROOT} && emacs --batch --load "lisp/first_time_tangle.el")
