@@ -1,18 +1,19 @@
 #!/bin/bash
 # Make git ignore the tangled & updated emacs_setup.el
+GIT_ROOT=$(dirname $0)
+source ${GIT_ROOT}/bash/install.sh
+
 if [[ -z "$(which git)" ]]; then
-    echo "You will need 'git' to be installed !"
+    echo "You might need 'git' for this to work ! (how did you get here?)"
     exit 1
 fi
 if  [[ -z "$(which emacs)" ]]; then
-    echo "You might need 'emacs' for this to be useful !"
-    exit 1
+    echo "You might need 'emacs' for this to be useful ! Installing..."
+    install_pkg -x emacs emacs
 fi
 
-GIT_ROOT=$(dirname $0)
-
 # Maybe this is a new install, .emacs does not exist
-for file in ~/.emacs ~/.emacs.d/init.el ~/.emacs.d/custom.el; do
+for file in ~/.emacs ~/.emacs.d/custom.el; do
     test -e ${file} || mkdir -p $(dirname ${file}) && touch ${file}
 done
 
@@ -27,7 +28,7 @@ if (( lines < 1 )); then
     cat "${GIT_ROOT}/lisp/dot_emacs.el" >> ~/.emacs.new
     cat ~/.emacs >> ~/.emacs.new
     mv ~/.emacs.new ~/.emacs
-    echo "Added loading the config in your ~/.emacs"
+      echo "Added loading the config in your ~/.emacs"
 else
     echo "Config in your ~/.emacs already set up!"
 fi
@@ -37,4 +38,4 @@ echo "Installing dependencies"
 bash ${GIT_ROOT}/bash/install_deps.sh
 
 # Load the init, let it install whatever is missing.
-(cd ${GIT_ROOT} && emacs --batch --load "~/.emacs.d/init.el")
+emacs --batch --load "~/.emacs.d/init.el"
