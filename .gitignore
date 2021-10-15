@@ -1,6 +1,5 @@
 *~
 emacs_setup.el
 emacs_setup.elc
-dot_emacs.el
 install_deps.sh
 .DS_Store
