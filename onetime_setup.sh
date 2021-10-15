@@ -41,4 +41,4 @@ bash ${GIT_ROOT}/bash/install_deps.sh
 
 # Load the init, let it install whatever is missing.
 echo "Get Emacs to load fist time..."
-emacs --batch --load "~/.emacs.d/init.el"
+emacs --batch --load "~/.emacs"

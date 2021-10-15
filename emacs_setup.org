@@ -2540,7 +2540,7 @@ In your =~/.emacs= file, all you need to add is
 
   # Load the init, let it install whatever is missing.
   echo "Get Emacs to load fist time..."
-  emacs --batch --load "~/.emacs.d/init.el"
+  emacs --batch --load "~/.emacs"
 #+end_src
 
 This script is then used to install the needed packages on the system.
