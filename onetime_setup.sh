@@ -37,4 +37,4 @@ echo "Installing dependencies"
 bash ${GIT_ROOT}/bash/install_deps.sh
 
 # Load the init, let it install whatever is missing.
-(cd ${GIT_ROOT} && emacs --batch --load "lisp/first_time_tangle.el")
+(cd ${GIT_ROOT} && emacs --batch --load "~/.emacs.d/init.el")
