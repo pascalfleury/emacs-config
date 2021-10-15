@@ -994,7 +994,7 @@ Essentially, use the Google C++ style formatting.
 
 ** ripgrep
 This enables searching recursively in projects.
-#+begin_src bash :tangle install_deps.sh
+#+begin_src bash :tangle bash/install_deps.sh
 install_pkg -x rg ripgrep
 #+end_src
 

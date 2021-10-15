@@ -12,6 +12,8 @@ else
   install_pkg -x ag silversearcher-ag
 fi
 
+install_pkg -x rg ripgrep
+
 # Needed to compile vterm first time
 if [[ "$(uname -o)" == "Android" ]]; then
   install_pkg -x libtool libtool
