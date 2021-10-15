@@ -2429,8 +2429,8 @@ Tell where PlantUML is to be found. This needs to be downloaded and installed se
 You could install the PlantUML JAR file with this snippet:
 #+begin_src bash :tangle install_deps.sh
   # Get a version of the PlantUML jar file.
+  install_pkg -x dot graphviz  # for some diagrams
   install_pkg -x wget wget
-
   URL='http://sourceforge.net/projects/plantuml/files/plantuml.jar/download'
   DIR="${HOME}/Apps"
   if [[ ! -e "${DIR}/plantuml.jar" ]]; then
@@ -2444,17 +2444,19 @@ You could install the PlantUML JAR file with this snippet:
 : -rw-r--r--  1 fleury  primarygroup  178 Jun 14 14:22 /Users/fleury/Apps/plantuml.jar
 
 #+begin_src emacs-lisp
-(use-package plantuml-mode
- :ensure t
- :config
-  (setq plantuml-jar-path "~/Apps/plantuml.jar")
-  (setq org-plantuml-jar-path "~/Apps/plantuml.jar")
-  ;; Let us edit PlantUML snippets in plantuml-mode within orgmode
-  (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
-  ;; make it load this language (for export ?)
-  (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t)))
-  ;; Enable plantuml-mode for PlantUML files
-  (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode)))
+  (use-package plantuml-mode
+    :ensure t
+    :config
+    (setq plantuml-jar-path "~/Apps/plantuml.jar")
+    (setq org-plantuml-jar-path "~/Apps/plantuml.jar")
+    ;; Let us edit PlantUML snippets in plantuml-mode within orgmode
+    (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
+    ;; make it load this language (for export ?)
+    (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t)))
+    ;; and re-display images after update
+    (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
+    ;; Enable plantuml-mode for PlantUML files
+    (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode)))
 #+end_src
 
 *** yankpad
