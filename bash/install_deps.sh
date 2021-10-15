@@ -1,5 +1,5 @@
 #!/bin/bash
-source $(dirname $0)/bash/install.sh
+source $(dirname $0)/install.sh
 
 # Install TaskJuggler
   if [[ "$(uname -m)" == "x86_64" ]]; then

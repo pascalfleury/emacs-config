@@ -49,7 +49,7 @@ Just to add a little information in the tangled file.
 #+end_src
 
 #+begin_src bash :tangle bash/install_deps.sh :shebang "#!/bin/bash"
-  source $(dirname $0)/bash/install.sh
+  source $(dirname $0)/install.sh
 #+end_src
 
 ** Diverse paths
