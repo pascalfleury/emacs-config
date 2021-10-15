@@ -2497,16 +2497,15 @@ In your =~/.emacs= file, all you need to add is
 #+end_src
 
 *** Script to bootstrap the whole thing on a new system
-#+begin_src bash :noweb yes :tangle onetime_setup.sh
-  #!/bin/bash
+#+begin_src bash :noweb yes :tangle onetime_setup.sh :shebang "#!/bin/bash"
   # Make git ignore the tangled & updated emacs_setup.el
   if [[ -z "$(which git)" ]]; then
-    echo "You will need 'git' to be installed !"
-    exit 1
+      echo "You will need 'git' to be installed !"
+      exit 1
   fi
   if  [[ -z "$(which emacs)" ]]; then
-    echo "You might need 'emacs' for this to be useful !"
-    exit 1
+      echo "You might need 'emacs' for this to be useful !"
+      exit 1
   fi
 
   GIT_ROOT=$(dirname $0)
@@ -2523,13 +2522,13 @@ In your =~/.emacs= file, all you need to add is
   # If not yet added.
   declare lines=$(grep ';; lisp/dot_emacs.el' ~/.emacs | wc -l)
   if (( lines < 1 )); then
-    echo ";; lisp/dot_emacs.el" > ~/.emacs.new
-    cat "${GIT_ROOT}/lisp/dot_emacs.el" >> ~/.emacs.new
-    cat ~/.emacs >> ~/.emacs.new
-    mv ~/.emacs.new ~/.emacs
-    echo "Added loading the config in your ~/.emacs"
+      echo ";; lisp/dot_emacs.el" > ~/.emacs.new
+      cat "${GIT_ROOT}/lisp/dot_emacs.el" >> ~/.emacs.new
+      cat ~/.emacs >> ~/.emacs.new
+      mv ~/.emacs.new ~/.emacs
+      echo "Added loading the config in your ~/.emacs"
   else
-    echo "Config in your ~/.emacs already set up!"
+      echo "Config in your ~/.emacs already set up!"
   fi
 
   # Install system dependencies from the tangled script
@@ -2541,8 +2540,8 @@ In your =~/.emacs= file, all you need to add is
 #+end_src
 
 This script is then used to install the needed packages on the system.
-#+begin_src bash :noweb yes :tangle bash/install_deps.sh
-  #!/bin/bash
+
+#+begin_src bash :noweb yes :tangle bash/install_deps.sh :shebang "#!/bin/bash"
   set -e
 
   # Trick to make it work on Termux

@@ -63,7 +63,6 @@ if [[ ! -e "${DIR}/plantuml.jar" ]]; then
     ls -l "${DIR}/plantuml.jar"
 fi
 
-#!/bin/bash
 set -e
 
 # Trick to make it work on Termux
