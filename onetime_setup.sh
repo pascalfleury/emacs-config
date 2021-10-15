@@ -23,9 +23,9 @@ echo "Initial tangling..."
 
 # Add the load-file as the first thing in the user's ~/.emacs
 # If not yet added.
-echo "Setup .emacs ..."
 declare lines=$(grep ';; lisp/dot_emacs.el' ~/.emacs | wc -l)
 if (( lines < 1 )); then
+    echo "Setup .emacs ..."
     echo ";; lisp/dot_emacs.el" > ~/.emacs.new
     cat "${GIT_ROOT}/lisp/dot_emacs.el" >> ~/.emacs.new
     cat ~/.emacs >> ~/.emacs.new
@@ -36,7 +36,7 @@ else
 fi
 
 # Install system dependencies from the tangled script
-echo "Installing dependencies"
+echo "Checking dependencies"
 bash ${GIT_ROOT}/bash/install_deps.sh
 
 # Load the init, let it install whatever is missing.
