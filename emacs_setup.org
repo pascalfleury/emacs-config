@@ -49,7 +49,7 @@ Just to add a little information in the tangled file.
 #+end_src
 
 #+begin_src bash :tangle install_deps.sh :shebang "#!/bin/bash"
-  source ~/Emacs/bash/install.sh
+  source $(dirname $0)/bash/install.sh
 #+end_src
 
 ** Diverse paths
@@ -2489,7 +2489,7 @@ To bootstrap the process on a new machine, all you need is to run
 In your =~/.emacs= file, all you need to add is
 
 #+NAME: emacs_bootstrap
-#+BEGIN_SRC emacs-lisp :tangle dot_emacs.el
+#+BEGIN_SRC emacs-lisp :tangle lisp/dot_emacs.el
   ;; Setup your Org directory
   (setq org-directory "~/OrgFiles")
 
@@ -2521,10 +2521,10 @@ In your =~/.emacs= file, all you need to add is
 
   # Add the load-file as the first thing in the user's ~/.emacs
   # If not yet added.
-  declare lines=$(grep ';; dot_emacs.el' ~/.emacs | wc -l)
+  declare lines=$(grep ';; bash/dot_emacs.el' ~/.emacs | wc -l)
   if (( lines < 1 )); then
-    echo ";; dot_emacs.el" > ~/.emacs.new
-    cat "${GIT_ROOT}/dot_emacs.el" >> ~/.emacs.new
+    echo ";; bash/dot_emacs.el" > ~/.emacs.new
+    cat "${GIT_ROOT}/bash/dot_emacs.el" >> ~/.emacs.new
     cat ~/.emacs >> ~/.emacs.new
     mv ~/.emacs.new ~/.emacs
     echo "Added loading the config in your ~/.emacs"
@@ -2537,8 +2537,7 @@ In your =~/.emacs= file, all you need to add is
   bash ${GIT_ROOT}/install_deps.sh
 
   echo "Cleanup"
-  rm ${GIT_ROOT}/dot_emacs.el
-  rm ${GIT_ROOT}/install_deps.sh
+  rm -f ${GIT_ROOT}/install_deps.sh
 #+end_src
 
 This script is then used to install the needed packages on the system.

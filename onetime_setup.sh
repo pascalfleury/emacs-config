@@ -21,10 +21,10 @@ emacs --batch --load "${GIT_ROOT}/lisp/first_time_tangle.el"
 
 # Add the load-file as the first thing in the user's ~/.emacs
 # If not yet added.
-declare lines=$(grep ';; dot_emacs.el' ~/.emacs | wc -l)
+declare lines=$(grep ';; bash/dot_emacs.el' ~/.emacs | wc -l)
 if (( lines < 1 )); then
-  echo ";; dot_emacs.el" > ~/.emacs.new
-  cat "${GIT_ROOT}/dot_emacs.el" >> ~/.emacs.new
+  echo ";; bash/dot_emacs.el" > ~/.emacs.new
+  cat "${GIT_ROOT}/bash/dot_emacs.el" >> ~/.emacs.new
   cat ~/.emacs >> ~/.emacs.new
   mv ~/.emacs.new ~/.emacs
   echo "Added loading the config in your ~/.emacs"
@@ -37,5 +37,4 @@ echo "Installing dependencies"
 bash ${GIT_ROOT}/install_deps.sh
 
 echo "Cleanup"
-rm ${GIT_ROOT}/dot_emacs.el
-rm ${GIT_ROOT}/install_deps.sh
+rm -f ${GIT_ROOT}/install_deps.sh
