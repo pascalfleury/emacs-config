@@ -1296,7 +1296,8 @@ Adding support for Bazel
 ** Hiding zones
 This helps showing / hiding zones given a regexp.
 
-#+begin_src emacs-lisp
+The isearch+ is weird when interacting with it during incremental search.
+#+begin_src emacs-lisp :tangle no
   (use-package zones
     :ensure t)
 
