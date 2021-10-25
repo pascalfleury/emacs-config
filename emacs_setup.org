@@ -655,6 +655,13 @@ Increase/decrease text size
 (global-set-key (kbd "C-c C-g") 'goto-line)
 #+end_src
 
+** Moving tabs
+#+begin_src emacs-lisp
+  ;; These are PgUp (<prior>) and PgDown (<next>)
+  (global-set-key (kbd "C-<prior>")  'tab-bar-switch-to-prev-tab)
+  (global-set-key (kbd "C-<next>")  'tab-bar-switch-to-next-tab)
+#+end_src
+
 ** multiple-cursors
 Configure the shortcuts for multiple cursors
 #+begin_src emacs-lisp
