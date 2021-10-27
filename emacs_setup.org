@@ -2232,38 +2232,38 @@ Displaying a grid of 3 hours seems better, as show by AbstProcDo's [[https://www
 **** Display location in agenda
 From some help on [[https://emacs.stackexchange.com/questions/26249/customize-text-after-task-in-custom-org-agenda-view][this page]] I think this could work:
 #+begin_src emacs-lisp
-      (defun paf/replace-many-regexp-in-string (text substitutions)
-        "Replaces a set of regexps in the text"
-        (dolist (elt substitutions text)
-          (setq text (replace-regexp-in-string (car elt) (cdr elt) text))))
+  (defun paf/replace-many-regexp-in-string (text substitutions)
+    "Replaces a set of regexps in the text"
+    (dolist (elt substitutions text)
+      (setq text (replace-regexp-in-string (car elt) (cdr elt) text))))
 
-      (defcustom paf/my-location "ZRH"
-        "Location of the office, to filter agenda locations"
-        :type 'string
-        :group 'paf)
+  (defcustom paf/my-location "ZRH"
+    "Location of the office, to filter agenda locations"
+    :type 'string
+    :group 'paf)
 
-      (require 'seq)
-      (defun paf/cleanup-location (loc)
-        "Remove unneeded fluff around location"
-        (let* ((clean-loc (paf/replace-many-regexp-in-string loc '(("([^)]*)" . "")
-                                                                   ("\\[[^]]+\\]" . ""))))
-               (locs (seq-filter (lambda (e) (string-match-p (regexp-quote paf/my-location) e))
-                                 (split-string clean-loc ",")))
-               (full-loc (mapconcat (lambda (e) (string-trim e)) locs ", ")))
-          (paf/replace-many-regexp-in-string full-loc '(("CH-ZRH" . "ZRH")
-                                                        ("\\([0-9]+\\)-\\([[a-zA-Z]+]\\)" . "\\1\\2")
-                                                        (" *$" . "")))))
+  (require 'seq)
+  (defun paf/cleanup-location (loc)
+    "Remove unneeded fluff around location"
+    (let* ((clean-loc (paf/replace-many-regexp-in-string loc '(("([^)]*)" . "")
+                                                               ("\\[[^]]+\\]" . ""))))
+           (locs (seq-filter (lambda (e) (string-match-p (regexp-quote paf/my-location) e))
+                             (split-string clean-loc ",")))
+           (full-loc (mapconcat (lambda (e) (string-trim e)) locs ", ")))
+      (paf/replace-many-regexp-in-string full-loc '(("CH-ZRH" . "ZRH")
+                                                    ("\\([0-9]+\\)-\\([[a-zA-Z]+]\\)" . "\\1\\2")
+                                                    (" *$" . "")))))
 
-      ;; for testing
-      ;; (paf/cleanup-location "CH-ZRH-100-2-2-Riff Raff (2) [GVC, Phone], NYC-9TH-5-F - Packrat [GVC]")
+  ;; for testing
+  ;; (paf/cleanup-location "CH-ZRH-100-2-2-Riff Raff (2) [GVC, Phone], NYC-9TH-5-F - Packrat [GVC]")
 
-      (defun paf/org-agenda-get-location ()
-        "Gets the value of the LOCATION property"
-        (let* ((loc (org-entry-get (point) "LOCATION"))
-               (clean-loc (if loc (paf/cleanup-location loc) "")))
-          (if (> (length clean-loc) 0)
-              (concat "[" clean-loc "] ")
-            "")))
+  (defun paf/org-agenda-get-location (&optional suffix)
+    "Gets the value of the LOCATION property"
+    (let* ((loc (org-entry-get (point) "LOCATION"))
+           (clean-loc (if loc (paf/cleanup-location loc) "")))
+      (if (> (length clean-loc) 0)
+          (concat "[" clean-loc "]" suffix)
+        "")))
 #+end_src
 
 Also, to set this after org-mode has loaded ([[https://emacs.stackexchange.com/questions/19091/how-to-set-org-agenda-prefix-format-before-org-agenda-starts][see here]]):
