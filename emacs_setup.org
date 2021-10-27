@@ -2201,24 +2201,6 @@ Track task dependencies, and dim them in the agenda.
   (setq org-agenda-skip-deadline-prewarning-if-scheduled 2)
 #+end_src
 
-**** Display location in agenda
-From some help on [[https://emacs.stackexchange.com/questions/26249/customize-text-after-task-in-custom-org-agenda-view][this page]] I think this could work:
-#+begin_src emacs-lisp
-  (defun paf/org-agenda-get-location()
-    "Gets the value of the LOCATION property"
-    (let ((loc (org-entry-get (point) "LOCATION")))
-      (if (> (length loc) 0)
-          loc
-        "")))
-#+end_src
-
-Also, to set this after org-mode has loaded ([[https://emacs.stackexchange.com/questions/19091/how-to-set-org-agenda-prefix-format-before-org-agenda-starts][see here]]):
-#+begin_src emacs-lisp :tangle no
-  (with-eval-after-load 'org-agenda
-    (add-to-list 'org-agenda-prefix-format
-                 '(agenda . "  %-12:c%?-12t %(paf/org-agenda-get-location)% s"))
-#+end_src
-
 **** text formatting
 These are some improved rendering of the calendar view.
 
@@ -2245,6 +2227,50 @@ Displaying a grid of 3 hours seems better, as show by AbstProcDo's [[https://www
                 " ……………"
                 "" ;; ———————————————"
                 )))
+#+end_src
+
+**** Display location in agenda
+From some help on [[https://emacs.stackexchange.com/questions/26249/customize-text-after-task-in-custom-org-agenda-view][this page]] I think this could work:
+#+begin_src emacs-lisp
+      (defun paf/replace-many-regexp-in-string (text substitutions)
+        "Replaces a set of regexps in the text"
+        (dolist (elt substitutions text)
+          (setq text (replace-regexp-in-string (car elt) (cdr elt) text))))
+
+      (defcustom paf/my-location "ZRH"
+        "Location of the office, to filter agenda locations"
+        :type 'string
+        :group 'paf)
+
+      (require 'seq)
+      (defun paf/cleanup-location (loc)
+        "Remove unneeded fluff around location"
+        (let* ((clean-loc (paf/replace-many-regexp-in-string loc '(("([^)]*)" . "")
+                                                                   ("\\[[^]]+\\]" . ""))))
+               (locs (seq-filter (lambda (e) (string-match-p (regexp-quote paf/my-location) e))
+                                 (split-string clean-loc ",")))
+               (full-loc (mapconcat (lambda (e) (string-trim e)) locs ", ")))
+          (paf/replace-many-regexp-in-string full-loc '(("CH-ZRH" . "ZRH")
+                                                        ("\\([0-9]+\\)-\\([[a-zA-Z]+]\\)" . "\\1\\2")
+                                                        (" *$" . "")))))
+
+      ;; for testing
+      ;; (paf/cleanup-location "CH-ZRH-100-2-2-Riff Raff (2) [GVC, Phone], NYC-9TH-5-F - Packrat [GVC]")
+
+      (defun paf/org-agenda-get-location ()
+        "Gets the value of the LOCATION property"
+        (let* ((loc (org-entry-get (point) "LOCATION"))
+               (clean-loc (if loc (paf/cleanup-location loc) "")))
+          (if (> (length clean-loc) 0)
+              (concat "[" clean-loc "] ")
+            "")))
+#+end_src
+
+Also, to set this after org-mode has loaded ([[https://emacs.stackexchange.com/questions/19091/how-to-set-org-agenda-prefix-format-before-org-agenda-starts][see here]]):
+#+begin_src emacs-lisp :tangle no
+  (with-eval-after-load 'org-agenda
+    (add-to-list 'org-agenda-prefix-format
+                 '(agenda . "  %-12:c%?-12t%(paf/org-agenda-get-location)")))
 #+end_src
 
 **** colors and faces
