@@ -2204,53 +2204,6 @@ Track task dependencies, and dim them in the agenda.
 **** Display location in agenda
 From some help on [[https://emacs.stackexchange.com/questions/26249/customize-text-after-task-in-custom-org-agenda-view][this page]] I think this could work:
 #+begin_src emacs-lisp
-  (defun paf/org-agenda-get-location()
-    "Gets the value of the LOCATION property"
-    (let ((loc (org-entry-get (point) "LOCATION")))
-      (if (> (length loc) 0)
-          (replace-regexp-in-string " *([0-9]*) *" " "
-                                    (replace-regexp-in-string " *\\[[^]]+\\] *" " " loc))
-        "")))
-#+end_src
-
-Also, to set this after org-mode has loaded ([[https://emacs.stackexchange.com/questions/19091/how-to-set-org-agenda-prefix-format-before-org-agenda-starts][see here]]):
-#+begin_src emacs-lisp :tangle no
-  (with-eval-after-load 'org-agenda
-    (add-to-list 'org-agenda-prefix-format
-                 '(agenda . "  %-12:c%?-12t %(paf/org-agenda-get-location)% s")))
-#+end_src
-
-**** text formatting
-These are some improved rendering of the calendar view.
-
-First, d12frosted's [[https://d12frosted.io/posts/2020-06-24-task-management-with-roam-vol2.html][post]] handles the category length:
-#+begin_src emacs-lisp
-  (require 'org-roam-extras)
-  (defun paf/agenda-category (len)
-    (paf/truncate-string (roam-extras/extract-agenda-category) len))
-    ;;(paf/truncate-string (or (org-get-category) "") len))
-
-  (with-eval-after-load 'org-agenda
-    (setq org-agenda-prefix-format
-          '((agenda . " %i %-12(paf/agenda-category 12) %?-12t %(paf/org-agenda-get-location)")
-            (todo . " %i %-12(paf/agenda-category 12) ")
-            (tags . " %i %-12(paf/agenda-category 12) ")
-            (search . " %i %-12(paf/agenda-category 12) "))))
-#+end_src
-
-Displaying a grid of 3 hours seems better, as show by AbstProcDo's [[https://www.reddit.com/r/orgmode/comments/mbs4ia/my_agendatime_grid_segmented_by_3_hours/][post]]:
-#+begin_src emacs-lisp
-  (setq org-agenda-time-grid
-        (quote ((daily today remove-match)
-                (600 900 1200 1500 1800 2100)
-                " ……………"
-                "" ;; ———————————————"
-                )))
-#+end_src
-
-**** Display location in agenda
-From some help on [[https://emacs.stackexchange.com/questions/26249/customize-text-after-task-in-custom-org-agenda-view][this page]] I think this could work:
-#+begin_src emacs-lisp
   (defun paf/replace-many-regexp-in-string (text substitutions)
     "Replaces a set of regexps in the text"
     (dolist (elt substitutions text)
@@ -2276,13 +2229,14 @@ From some help on [[https://emacs.stackexchange.com/questions/26249/customize-te
   ;; for testing
   ;; (paf/cleanup-location "CH-ZRH-100-2-2-Riff Raff (2) [GVC, Phone], NYC-9TH-5-F - Packrat [GVC]")
 
-  (defun paf/org-agenda-get-location (&optional suffix)
+  (defun paf/org-agenda-get-location ()
     "Gets the value of the LOCATION property"
+    (interactive)
     (let* ((loc (org-entry-get (point) "LOCATION"))
            (clean-loc (if loc (paf/cleanup-location loc) "")))
       (if (> (length clean-loc) 0)
-          (concat "[" clean-loc "]" suffix)
-        "")))
+          (concat "[" clean-loc "] ")
+        "XXX")))
 #+end_src
 
 Also, to set this after org-mode has loaded ([[https://emacs.stackexchange.com/questions/19091/how-to-set-org-agenda-prefix-format-before-org-agenda-starts][see here]]):
@@ -2290,6 +2244,40 @@ Also, to set this after org-mode has loaded ([[https://emacs.stackexchange.com/q
   (with-eval-after-load 'org-agenda
     (add-to-list 'org-agenda-prefix-format
                  '(agenda . "  %-12:c%?-12t%(paf/org-agenda-get-location)")))
+#+end_src
+
+**** text formatting
+These are some improved rendering of the calendar view.
+
+First, d12frosted's [[https://d12frosted.io/posts/2020-06-24-task-management-with-roam-vol2.html][post]] handles the category length:
+#+begin_src emacs-lisp
+  (require 'org-roam-extras)
+  (defun paf/agenda-category (len)
+    (paf/truncate-string (roam-extras/extract-agenda-category) len))
+    ;;(paf/truncate-string (or (org-get-category) "") len))
+
+  (with-eval-after-load 'org-agenda
+    (setq org-agenda-prefix-format
+          '((agenda . " %i %-12(paf/agenda-category 12)%?-12t% s") ; %(paf/org-agenda-get-location)
+            (todo . " %i %-12(paf/agenda-category 12)")
+            (tags . " %i %-12(paf/agenda-category 12)")
+            (search . " %i %-12(paf/agenda-category 12)"))))
+#+end_src
+
+(setq org-agenda-prefix-format
+          '((agenda . " %i %-12(paf/agenda-category 12)%?-12t%(paf/org-agenda-get-location)% s")
+            (todo . " %i %-12(paf/agenda-category 12)")
+            (tags . " %i %-12(paf/agenda-category 12)")
+            (search . " %i %-12(paf/agenda-category 12)")))
+
+Displaying a grid of 3 hours seems better, as show by AbstProcDo's [[https://www.reddit.com/r/orgmode/comments/mbs4ia/my_agendatime_grid_segmented_by_3_hours/][post]]:
+#+begin_src emacs-lisp
+  (setq org-agenda-time-grid
+        (quote ((daily today remove-match)
+                (600 900 1200 1500 1800 2100)
+                " ……………"
+                "" ;; ———————————————"
+                )))
 #+end_src
 
 **** colors and faces
