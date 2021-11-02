@@ -2315,10 +2315,12 @@ A more visible current-time marker in the agenda
 #+end_src
 
 **** auto-save org files when idle
-This will save them regularly when the idle for more than a minute.
-#+begin_src emacs-lisp :tangle no
-(add-hook 'org-mode-hook
-    (lambda () (run-with-idle-timer 600 t 'org-save-all-org-buffers)))
+This will save them regularly when the idle for more than 10 minutes. It will also not run if when the lambda gets called the idle time is then less than 10 minutes.
+#+begin_src emacs-lisp
+  (add-hook 'org-mode-hook
+            (lambda () (run-with-idle-timer 600 t
+                                            (lambda () (if (> (current-idle-time) 600)
+                                                           'org-save-all-org-buffers)))))
 #+end_src
 
 **** export
