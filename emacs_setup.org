@@ -2231,12 +2231,17 @@ From some help on [[https://emacs.stackexchange.com/questions/26249/customize-te
 
   (defun paf/org-agenda-get-location ()
     "Gets the value of the LOCATION property"
-    (interactive)
     (let* ((loc (org-entry-get (point) "LOCATION"))
            (clean-loc (if loc (paf/cleanup-location loc) "")))
       (if (> (length clean-loc) 0)
           (concat "[" clean-loc "] ")
-        "XXX")))
+        "")))
+
+  (defun paf/org-agenda-get-location-print ()
+    "Just prints the value of the extracted location to the echo area.
+Used for debugging."
+    (interactive)
+    (message (concat "'" (paf/org-agenda-get-location) "'")))
 #+end_src
 
 Also, to set this after org-mode has loaded ([[https://emacs.stackexchange.com/questions/19091/how-to-set-org-agenda-prefix-format-before-org-agenda-starts][see here]]):
@@ -2258,7 +2263,7 @@ First, d12frosted's [[https://d12frosted.io/posts/2020-06-24-task-management-wit
 
   (with-eval-after-load 'org-agenda
     (setq org-agenda-prefix-format
-          '((agenda . " %i %-12(paf/agenda-category 12)%?-12t% s") ; %(paf/org-agenda-get-location)
+          '((agenda . " %i %-12(paf/agenda-category 12)%?-12t") ;%(paf/org-agenda-get-location)
             (todo . " %i %-12(paf/agenda-category 12)")
             (tags . " %i %-12(paf/agenda-category 12)")
             (search . " %i %-12(paf/agenda-category 12)"))))
