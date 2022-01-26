@@ -1120,7 +1120,7 @@ To add an abbrev after one has typed something wrong, just use =C-x a i g= (add 
 #+begin_src emacs-lisp
   (use-package abbrev
     :config
-    (setq abbrev-file-name "~/.emacs.d/abbrev_defs")
+    (setq abbrev-file-name (expand-file-name "abbrev_defs" emacs-config-directory))
     (setq save-abbrevs 'silent)
     (setq-default abbrev-mode t)
     (if (file-exists-p abbrev-file-name)
