@@ -917,6 +917,11 @@ A tree-view navigation of files, with diff tool for directories.
     :ensure t)
 #+end_src
 
+** graphviz mode
+#+begin_src emacs-lisp
+(use-package graphviz-dot-mode)
+#+end_src
+
 ** Google This!
 This package enables to get Google search results within Emacs itself. The default map is bound to =C-c /= so search for thing at point is =C-c / g=.
 
