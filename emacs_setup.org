@@ -178,6 +178,18 @@ Remove =C-p= that I want to use for *me* personally as a prefix.
     (setq initial-buffer-choice (get-resource "welcome_nox.org")))
 #+end_src
 
+** Initial screen position
+This configures where the initial window will appear on the screen.
+Search for "Window Frame Parameters" in the Elisp  Info manual.
+
+#+begin_src emacs-lisp :tangle "~/.emacs.d/early-init.el"
+  ;; Setup the initil frame to be right-aligned and full height.
+  (setq default-frame-alist
+         '((fullscreen . fullheight)
+           (left . (- 1))
+           (top . 0)))
+#+end_src
+
 * Helper Functions
 ** add-hook-run-once
 Use instead of add-hook to run it a single time.
@@ -599,7 +611,8 @@ I really like the high-contract Zenburn theme.
   (custom-set-faces
    '(highlight ((t (:background "forest green"))))
    '(region ((t (:background "forest green"))))
-   '(default ((t (:family "JetBrains Mono" :foundry "JB" :slant normal :weight extra-light :height 98 :width normal)))))
+   ;;'(default ((t (:family "JetBrains Mono" :foundry "JB" :slant normal :weight extra-light :height 98 :width normal))))
+   )
 #+end_src
 
 * Key Mappings
@@ -1125,7 +1138,7 @@ To add an abbrev after one has typed something wrong, just use =C-x a i g= (add 
 #+begin_src emacs-lisp
   (use-package abbrev
     :config
-    (setq abbrev-file-name "~/.emacs.d/abbrev_defs")
+    (setq abbrev-file-name (expand-file-name "abbrev_defs" emacs-config-directory))
     (setq save-abbrevs 'silent)
     (setq-default abbrev-mode t)
     (if (file-exists-p abbrev-file-name)
