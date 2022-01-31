@@ -1167,7 +1167,7 @@ Will fold all text indented more than the position of the cursor at the time the
 #+end_src
 
 *** git informations
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (use-package git-gutter-fringe+
   :ensure t
   :defer
