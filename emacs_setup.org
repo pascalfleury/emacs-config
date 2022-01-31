@@ -2042,6 +2042,13 @@ my config for display.
     (org-indent-indentation-per-level 2))
 #+end_src
 
+#+begin_src emacs-lisp
+  (defun paf/org-align-all-tags ()
+    "Align tags at the end of the line, or so."
+    (interactive)
+    (org-align-tags t))
+#+end_src
+
 *** org-habit
 #+begin_src emacs-lisp
 (use-package org-habit
