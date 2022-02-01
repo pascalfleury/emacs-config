@@ -1192,7 +1192,7 @@ Simple way to increase/decrease a number in code.
 #+end_src
 
 ** GDB with many windows
-*** TODO Make it so that the source frame placement is forced only when using gdb.
+*** Make it so that the source frame placement is forced only when using gdb.
 
 #+begin_src emacs-lisp
   (setq gdb-many-windows t)
@@ -1217,37 +1217,13 @@ Found on [[https://stackoverflow.com/questions/39762833/emacsgdb-customization-h
               (derived-mode-p buf 'c++-mode 'c-mode)))))
 #+end_src
 
-This was the longer and faulty version...
-#+begin_src emacs-lisp :tangle no
-  ; This unfortunately also messes up the regular frame navigation of source code.
-  (add-to-list 'display-buffer-alist
-               (cons 'cdb-source-code-buffer-p
-                     (cons 'display-source-code-buffer nil)))
+*** TODO Instrument / advice gdb for restoring layout
+:LOGBOOK:
+- State "TODO"       from              [2022-02-01 Tue 01:01]
+:END:
+https://stackoverflow.com/questions/3860028/customizing-emacs-gdb/41326527
 
-  (defun cdb-source-code-buffer-p (bufName action)
-    "Return whether BUFNAME is a source code buffer."
-    (let ((buf (get-buffer bufName)))
-      (and buf
-           (with-current-buffer buf
-             (derived-mode-p buf 'c++-mode 'c-mode 'csharp-mode 'nxml-mode)))))
-
-  (defun display-source-code-buffer (sourceBuf alist)
-    "Find a window with source code and set sourceBuf inside it."
-    (let* ((curbuf (current-buffer))
-           (wincurbuf (get-buffer-window curbuf))
-           (win (if (and wincurbuf
-                         (derived-mode-p sourceBuf 'c++-mode 'c-mode 'nxml-mode)
-                         (derived-mode-p (current-buffer) 'c++-mode 'c-mode 'nxml-mode))
-                    wincurbuf
-                  (get-window-with-predicate
-                   (lambda (window)
-                     (let ((bufName (buffer-name (window-buffer window))))
-                       (or (cdb-source-code-buffer-p bufName nil)
-                           (assoc bufName display-buffer-alist)
-                           ))))))) ;; derived-mode-p doesn't work inside this, don't know why...
-      (set-window-buffer win sourceBuf)
-      win))
-#+end_src
+*** Cheatsheet
 
 Here is my cheatsheet for the keyboard commands:
 
@@ -1273,6 +1249,7 @@ All prefixed with =C-x C-a=
 | (rarer)    | Single instruction   |    i    |
 |            | Jump to current line |    j    |
 |------------+----------------------+---------|
+
 ** vterm
 #+begin_src emacs-lisp
   (when (not (memq window-system '(mac ns)))
