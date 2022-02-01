@@ -1217,11 +1217,116 @@ Found on [[https://stackoverflow.com/questions/39762833/emacsgdb-customization-h
               (derived-mode-p buf 'c++-mode 'c-mode)))))
 #+end_src
 
+*** Highlight current line
+Solution see here: https://weilin2015.wordpress.com/2020/11/16/highlight-gdb-breakpoint-line-and-current-line/
+
+#+begin_src emacs-lisp
+  ;; highlight current line while debugging
+  (defface xwl-gdb-current-line-face
+    '((((class color))
+       (:background "dark green")))
+    "")
+
+  (setq xwl-gdb-current-line-overlay nil)
+  (defun xwl-gdb-highlight-current-line ()
+    (when gud-overlay-arrow-position
+      (with-current-buffer (marker-buffer gud-overlay-arrow-position)
+        (when xwl-gdb-current-line-overlay
+          (delete-overlay xwl-gdb-current-line-overlay))
+        (setq xwl-gdb-current-line-overlay (make-overlay gud-overlay-arrow-position (line-end-position)))
+        (overlay-put xwl-gdb-current-line-overlay 'face 'xwl-gdb-current-line-face))))
+
+  (defun xwl-gdb-unhighlight-current-line ()
+   (delete-overlay xwl-gdb-current-line-overlay))
+
+
+  ;; Highlight break points
+  (defface xwl-gdb-breakpoint-line-face
+    '((((class color))
+       (:background "IndianRed4")))
+    "")
+
+  (defun xwl-gdb-highlight-breakpoint-line (enabled bptno &optional line)
+    (let* ((bp-line (or line (line-number-at-pos)))
+           (points (gdb-line-posns bp-line))
+           (bp-overlay (make-overlay (car points) (cdr points))))
+      (overlay-put bp-overlay 'face 'xwl-gdb-breakpoint-line-face)))
+
+  (defun xwl-gdb-unhighlight-breakpoint-lines (start end &optional remove-margin)
+    (dolist (overlay (overlays-in start end))
+      (when (eq (overlay-get overlay 'face) 'xwl-gdb-breakpoint-line-face)
+        (delete-overlay overlay))))
+
+
+  (with-eval-after-load 'gdb-mi
+    (advice-add 'gdb-frame-handler :after 'xwl-gdb-highlight-current-line)
+    (advice-add 'gdb-reset :after 'xwl-gdb-unhighlight-current-line)
+    (advice-add 'gdb-put-breakpoint-icon :after 'xwl-gdb-highlight-breakpoint-line)
+    (advice-add 'gdb-remove-breakpoint-icons :after 'xwl-gdb-unhighlight-breakpoint-lines)
+    )
+#+end_src
+
 *** TODO Instrument / advice gdb for restoring layout
 :LOGBOOK:
 - State "TODO"       from              [2022-02-01 Tue 01:01]
 :END:
-https://stackoverflow.com/questions/3860028/customizing-emacs-gdb/41326527
+Information taken here: https://stackoverflow.com/questions/3860028/customizing-emacs-gdb/41326527
+
+#+begin_src emacs-lisp
+  (setq gdb-many-windows nil)
+
+  (defun set-gdb-layout(&optional c-buffer)
+    (if (not c-buffer)
+        (setq c-buffer (window-buffer (selected-window)))) ;; save current buffer
+
+    ;; from http://stackoverflow.com/q/39762833/846686
+    (set-window-dedicated-p (selected-window) nil) ;; unset dedicate state if needed
+    (switch-to-buffer gud-comint-buffer)
+    (delete-other-windows) ;; clean all
+
+    (let* (
+           (w-source (selected-window)) ;; left top
+           (w-gdb (split-window w-source nil 'right)) ;; right bottom
+           (w-locals (split-window w-gdb nil 'above)) ;; right middle bottom
+           (w-stack (split-window w-locals nil 'above)) ;; right middle top
+           (w-breakpoints (split-window w-stack nil 'above)) ;; right top
+           (w-io (split-window w-source (floor(* 0.9 (window-body-height)))
+                               'below)) ;; left bottom
+           )
+      (set-window-buffer w-io (gdb-get-buffer-create 'gdb-inferior-io))
+      (set-window-dedicated-p w-io t)
+      (set-window-buffer w-breakpoints (gdb-get-buffer-create 'gdb-breakpoints-buffer))
+      (set-window-dedicated-p w-breakpoints t)
+      (set-window-buffer w-locals (gdb-get-buffer-create 'gdb-locals-buffer))
+      (set-window-dedicated-p w-locals t)
+      (set-window-buffer w-stack (gdb-get-buffer-create 'gdb-stack-buffer))
+      (set-window-dedicated-p w-stack t)
+
+      (set-window-buffer w-gdb gud-comint-buffer)
+      (set-window-dedicated-p w-gdb t)
+
+      (select-window w-source)
+      (set-window-buffer w-source c-buffer)
+      ))
+
+  (defadvice gdb (around args activate)
+    "Change the way to gdb works."
+    (setq global-config-editing (current-window-configuration)) ;; to restore: (set-window-configuration c-editing)
+    ;;(setq global-toolbar-state tool-bar-mode)
+    (let (
+          (c-buffer (window-buffer (selected-window))) ;; save current buffer
+          )
+      ad-do-it
+      (tool-bar-mode 1)
+      (set-gdb-layout c-buffer))
+    )
+
+  (defadvice gdb-reset (around args activate)
+    "Change the way to gdb exit."
+    ad-do-it
+    (tool-bar-mode -1) ;;global-toolbar-state)
+    (set-window-configuration global-config-editing))
+#+end_src
 
 *** Cheatsheet
 
