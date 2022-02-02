@@ -1191,8 +1191,12 @@ Simple way to increase/decrease a number in code.
            ("M-_" . shift-number-down)))
 #+end_src
 
-** GDB with many windows
-*** Make it so that the source frame placement is forced only when using gdb.
+** Debugging
+*** GDB with many windows
+**** Make it so that the source frame placement is forced only when using gdb.
+:LOGBOOK:
+- State "TODO"       from              [2022-02-01 Tue 10:05]
+:END:
 
 #+begin_src emacs-lisp
   (setq gdb-many-windows t)
@@ -1218,7 +1222,7 @@ Found on [[https://stackoverflow.com/questions/39762833/emacsgdb-customization-h
               (derived-mode-p buf 'c++-mode 'c-mode)))))
 #+end_src
 
-*** Highlight current line
+**** Highlight current line
 Solution see here: https://weilin2015.wordpress.com/2020/11/16/highlight-gdb-breakpoint-line-and-current-line/
 
 #+begin_src emacs-lisp
@@ -1267,7 +1271,7 @@ Solution see here: https://weilin2015.wordpress.com/2020/11/16/highlight-gdb-bre
     )
 #+end_src
 
-*** TODO Instrument / advice gdb for restoring layout
+**** TODO Instrument / advice gdb for restoring layout
 :LOGBOOK:
 - State "TODO"       from              [2022-02-01 Tue 01:01]
 :END:
@@ -1310,6 +1314,8 @@ Information taken here: https://stackoverflow.com/questions/3860028/customizing-
       (set-window-buffer w-source c-buffer)
       ))
 
+  (defvar global-config-editing nil "Stores the window configuration before gdb changes it.")
+
   (defadvice gdb (around args activate)
     "Change the way to gdb works."
     (setq global-config-editing (current-window-configuration)) ;; to restore: (set-window-configuration c-editing)
@@ -1329,7 +1335,7 @@ Information taken here: https://stackoverflow.com/questions/3860028/customizing-
     (set-window-configuration global-config-editing))
 #+end_src
 
-*** Cheatsheet
+**** Cheatsheet
 
 Here is my cheatsheet for the keyboard commands:
 
@@ -1355,6 +1361,23 @@ All prefixed with =C-x C-a=
 | (rarer)    | Single instruction   |    i    |
 |            | Jump to current line |    j    |
 |------------+----------------------+---------|
+*** LLDB
+This seems to be the more modern way.
+Setup info found here: https://emacs-lsp.github.io/dap-mode/page/configuration/
+#+begin_src emacs-lisp
+  (use-package dap-mode
+    :ensure t
+    :config
+    (dap-mode 1)
+    (dap-tooltip-mode 1)
+    (dap-auto-configure-mode 1)
+    (dap-ui-controls-mode 1)
+    (setq dap-auto-configure-features '(sessions locals breakpoints expressions repl controls tooltip))
+    (add-hook 'dap-stopped-hook
+              (lambda (arg) (call-interactively #'dap-hydra)))
+    (require 'dap-gdb-lldb)
+    (dap-gdb-lldb-setup t))
+#+end_src
 
 ** vterm
 #+begin_src emacs-lisp
