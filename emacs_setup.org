@@ -1415,6 +1415,14 @@ The isearch+ is weird when interacting with it during incremental search.
   ;;  :load-path (lambda () (expand-file-name paf-lisp-directory)))
 #+end_src
 
+** PlatformIO
+Add the few commands to help with selecting boards etc.
+See mode documentation in the [[https://github.com/ZachMassia/platformio-mode][PlatformIO Mode github page]]
+#+begin_src emacs-lisp
+  (use-package platformio-mode
+    :ensure t)
+#+end_src
+
 * OrgMode
 Load all my org stuff, but first org-mode itself.
 ** Init
