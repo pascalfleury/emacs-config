@@ -938,7 +938,8 @@ A tree-view navigation of files, with diff tool for directories.
 
 ** graphviz mode
 #+begin_src emacs-lisp
-(use-package graphviz-dot-mode)
+  (use-package graphviz-dot-mode
+    :ensure t)
 #+end_src
 
 ** Google This!
