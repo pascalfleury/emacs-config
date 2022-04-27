@@ -899,6 +899,10 @@ It actually computes the entire arithmetic expression that is selected, and repl
 
 *** Setup
 #+begin_src emacs-lisp
+  ;; To get ob-ledger
+  (use-package org-contrib
+    :ensure t)
+
   (use-package ledger-mode
     :ensure t
     :bind ("<f6>" . 'paf/cleanup-ledger-buffer)
