@@ -2045,10 +2045,18 @@ Make the display of images a simple key-stroke away.
                               )))
 #+end_src
 
-*** Properties collector
-Collect properties into tables. See documentation in the file.
+*** org-collector
+Collect properties of Org structure items into tables. See documentation in the file.
 #+begin_src emacs-lisp
 (load-file (expand-file-name "org-collector.el" paf-lisp-directory))
+#+end_src
+
+*** orgtbl-aggregate
+Do some transformations of an org-table into another one.
+See the project's [[https://github.com/tbanel/orgaggregate][homepage]]
+#+begin_src bash
+  (use-package orgtbl-aggregate
+   :ensure t)
 #+end_src
 
 *** Set date as header for org-gcal event
