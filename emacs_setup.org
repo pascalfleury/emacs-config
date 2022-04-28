@@ -708,6 +708,15 @@ Let's one jump around text
     :ensure t)
 #+end_src
 
+** Accents
+This will enable a popup to add diacritics to a letter. See [[https://github.com/elias94/accent][accent]] on github.
+#+begin_src emacs-lisp
+  (use-package accent
+    :ensure t)
+
+  (global-set-key (kbd "C-x C-a") 'accent-menu)
+#+end_src
+
 * Editing Style
 ** No tabs, ever. No trailing spaces either.
 #+begin_src emacs-lisp
