@@ -719,7 +719,7 @@ This will enable a popup to add diacritics to a letter. See [[https://github.com
   (use-package accent
     :ensure t)
 
-  (global-set-key (kbd "C-x C-a") 'accent-menu)
+  (global-set-key (kbd "C-x C-'") 'accent-menu)
 #+end_src
 
 * Editing Style
