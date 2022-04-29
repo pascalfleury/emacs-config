@@ -11,6 +11,11 @@ Find extensive documentation about how to do this [[https://github.com/larstvei/
 I regularly try out new packages, this is my current list of things being evaluated.
 They usually live temporarily in my =~/.emacs= until I am happy, in which case I move their config into this file so that it gets replicated on all machines I work on with Emacs.
 
+** Plan to look at
+  - [[https://github.com/gsingh93/ob-bitfield][ob-bitfield]]
+  - [[https://github.com/Ice-Cube69/org-project-manager][org-project-manager]]
+  - [[https://github.com/arthurcgusmao/unmodified-buffer][unmodified-buffer]]
+
 ** Currently under review
   - [[https://github.com/yjwen/org-reveal][ox-reveal]] (see [[https://github.com/yjwen/org-reveal#set-the-location-of-revealjs][installation]])
 
