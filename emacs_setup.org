@@ -2072,6 +2072,12 @@ See the project's [[https://github.com/tbanel/orgaggregate][homepage]]
    :ensure t)
 #+end_src
 
+*** org-listcruncher
+A long sought after package to help plan scenarios.
+#+begin_src emacs-lisp
+  (use-package org-listcruncher
+    :ensure t)
+#+end_src
 *** Set date as header for org-gcal event
 #+begin_src emacs-lisp
   (defun paf/org-timestamp-in-entry ()
