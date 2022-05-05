@@ -523,16 +523,14 @@ See [[https://github.com/karthink/popper][github:popper]] for more information.
 #+begin_src emacs-lisp
   (use-package perspective
     :ensure t
-    :bind
-    (("C-x C-b" . persp-list-buffers)
-     ("C-x b" . persp-switch-to-buffer*)
-     ("C-x k" . persp-kill-buffer*)
-     )
-    :hook (kill-emacs-hook . persp-state-save)
-    :config
-    (persp-mode)
-    (setq persp-state-default-file
-          (expand-file-name "perspective.save" user-emacs-directory)))
+    :bind (("C-x C-b" . persp-list-buffers)
+           ("C-x b" . persp-switch-to-buffer*)
+           ("C-x k" . persp-kill-buffer*))
+    :custom (persp-mode-prefix-key (kbd "C-c M-p"))
+    :hook   (kill-emacs-hook . persp-state-save)
+    :init   (persp-mode)
+    :config (setq persp-state-default-file
+                  (expand-file-name "perspective.save" user-emacs-directory)))
 #+end_src
 
 ** toggle-maximize-buffer
