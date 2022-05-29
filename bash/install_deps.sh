@@ -33,6 +33,9 @@ if [[ "\${INSIDE_EMACS}" = 'vterm' ]] \\
 fi
 EOF
 
+# Install PanDoc
+install_pkg pandoc
+
 # org-roam needs this binary
 if [[ "$(uname -o)" == "Android" ]]; then
     install_pkg -x sqlite3 sqlite

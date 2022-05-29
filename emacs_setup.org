@@ -1728,6 +1728,11 @@ This is a cleaned-up version of the new style capture.
            :function paf/org-protocol-html-capture)))
 #+end_src
 
+#+begin_src bash :tangle bash/install_deps.sh
+  # Install PanDoc
+  install_pkg pandoc
+#+end_src
+
 This is also a very crude way of doing it. Better would be to detect the presence of PanDoc, and then use that. An idea is [[https://stackoverflow.com/questions/20336581/paste-html-into-org-mode-as-org-mode-markup][here]], mostly this code:
 
 #+begin_src emacs-lisp :tangle no
