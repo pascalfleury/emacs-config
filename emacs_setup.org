@@ -1062,9 +1062,11 @@ I went with the suggestion found on this [[https://www.juniordeveloperdiaries.co
 ** header/implementation toggle
 Switch from header to implementation file quickly.
 #+begin_src emacs-lisp
-(add-hook 'c-mode-common-hook
-          (lambda ()
-            (local-set-key  (kbd "C-c o") 'ff-find-other-file)))
+  (add-hook 'c-mode-common-hook
+            (lambda ()
+              (progn
+                (local-set-key  (kbd "C-c o") 'ff-find-other-file)
+                (local-set-key  (kbd "C-c f") 'find-file-at-point))))
 #+end_src
 
 ** no indentation of namespaces in C++
