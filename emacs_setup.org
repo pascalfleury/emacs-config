@@ -1887,15 +1887,6 @@ I have this currently in my `~/.emacs`:
 **** org-rifle
 [[https://github.com/alphapapa/org-rifle][org-rifle]] is the swiss-army knife for searching in an org-file.
 
-*** org-super-agenda
-This enables a more fine-grained filtering of the agenda items.
-#+begin_src emacs-lisp
-  (use-package org-super-agenda
-    :ensure t
-    :config
-    (org-super-agenda-mode t))
-#+end_src
-
 *** org-roam (v2)
 My cheat sheet for =org-roam=
 
@@ -2311,8 +2302,22 @@ Track task dependencies, and dim them in the agenda.
             ))
 #+end_src
 
+*** org-super-agenda
+This enables a more fine-grained filtering of the agenda items.
+#+begin_src emacs-lisp
+  (use-package org-super-agenda
+    :ensure t
+    :after org-habit
+    :config
+    (org-super-agenda-mode t))
+
+  (custom-set-faces
+   '(org-super-agenda-header ((t (:inherit org-agenda-structure :overline t :height 1.2)))))
+
+#+end_src
+
 *** org-agenda
-**** views
+**** Views
 #+begin_src emacs-lisp
   (setq org-agenda-block-separator #x2500)
   (setq org-agenda-custom-commands
