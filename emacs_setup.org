@@ -350,7 +350,7 @@ Added the completion framework [[https://github.com/minad/vertico][vertico]] as 
     ;; Alternatively try `consult-completing-read-multiple'.
     (defun crm-indicator (args)
       (cons (concat "[CRM] " (car args)) (cdr args)))
-    (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+    ;;(advice-add #'completing-read-multiple :filter-args #'crm-indicator)
 
     ;; Do not allow the cursor in the minibuffer prompt
     (setq minibuffer-prompt-properties
@@ -444,7 +444,7 @@ This package brings some commands based on build-in search. See [[https://github
     (advice-add #'register-preview :override #'consult-register-window)
 
     ;; Optionally replace `completing-read-multiple' with an enhanced version.
-    (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
+    ;;(advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
 
     ;; Use Consult to select xref locations with preview
     (setq xref-show-xrefs-function #'consult-xref
