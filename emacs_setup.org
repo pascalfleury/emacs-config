@@ -2321,30 +2321,52 @@ This enables a more fine-grained filtering of the agenda items.
 #+begin_src emacs-lisp
   (setq org-agenda-block-separator #x2500)
   (setq org-agenda-custom-commands
-        '(("t" "Hot Today" ((agenda nil ((org-agenda-span 'day)
-                                        (org-agenda-skip-function
-                                         '(org-agenda-skip-entry-if 'deadline))
-                                        ))
-                            (agenda nil
-                                    ((org-agenda-entry-types '(:deadline))
-                                     (org-agenda-span 'day)
-                                     (org-agenda-time-grid nil)
-                                     (org-agenda-show-all-dates nil)
-                                     (org-agenda-format-date "")
-                                     (org-deadline-warning-days 7)
-                                     (org-agenda-overriding-header "  Deadlines")))
-                            (tags-todo "/WAITING"
-                                       ((org-agenda-overriding-header "  Waiting")))
-                            (tags-todo "/STARTED"
-                                       ((org-agenda-overriding-header "  Ongoing")))
-                            (tags-todo "/NEXT"
-                                       ((org-agenda-overriding-header "  Upcoming")))))
-          ("T" "Team Today" ((agenda "" ((org-agenda-span 'day)))
-                             (tags-todo "with={.+}"
-                                      ((org-super-agenda-groups
-                                        '((:auto-property "with")))
-                                       (org-agenda-overriding-header "  Talking Points with:"))
-                                      )))
+        '(("T" "Hot Today"
+           ((agenda nil ((org-agenda-span 'day)
+                         (org-agenda-skip-function
+                          '(org-agenda-skip-entry-if 'deadline))
+                         ))
+            (agenda nil
+                    ((org-agenda-entry-types '(:deadline))
+                     (org-agenda-span 'day)
+                     (org-agenda-time-grid nil)
+                     (org-agenda-show-all-dates nil)
+                     (org-agenda-format-date "")
+                     (org-deadline-warning-days 7)
+                     (org-agenda-overriding-header "  Deadlines")))
+            (tags-todo "/WAITING"
+                       ((org-agenda-overriding-header "  Waiting")))
+            (tags-todo "/STARTED"
+                       ((org-agenda-overriding-header "  Ongoing")))
+            (tags-todo "/NEXT"
+                       ((org-agenda-overriding-header "  Upcoming")))))
+          ("t" "Landscape Today"
+           ((agenda nil ((org-agenda-span 'day)
+                         (org-super-agenda-groups
+                          '((:name none
+                                   :time-grid t
+                                   :date today
+                                   :scheduled today)
+                            (:discard (:category "Social"))))))
+            (alltodo nil ((org-agenda-overriding-header "")
+                          (org-super-agenda-groups
+                           '(  ;; Each group has an implicit boolean OR operator between its selectors
+                             (:name "Deadlines"
+                                    :habit t
+                                    :deadline t)
+                             (:name "Waiting"
+                                    :todo "WAITING")
+                             (:name "Working tasks"
+                                    :todo "STARTED"
+                                    :todo "NEXT")
+                             (:name "Meet and Re-greet"
+                                    :category "Social")
+                             (:name "AIs to sort out"
+                                    :take (10 :todo "AI"))
+                             (:discard (:anything))
+                             ;; After the last group, the agenda will display items that didn't
+                             ;; match any of these groups, with the default order position of 99
+                             ))))))
           ("r" "Recurring" ((tags "REGULAR"
                                   ((org-agenda-overriding-header "\nRecurring\n")))
                             (tags-todo "/WAITING"
@@ -2353,35 +2375,7 @@ This enables a more fine-grained filtering of the agenda items.
                                        ((org-agenda-overriding-header "\Ongoing\n")))
                             (tags-todo "/NEXT"
                                        ((org-agenda-overriding-header "\nUpcoming\n")))))
-          ("n" "Agenda and all TODO's" ((agenda "")
-                                        (alltodo "")))
-          ("N" "Next actions" tags-todo "-dowith={.+}/!-TASK-TODO"
-           ((org-agenda-todo-ignore-scheduled t)))
-          ("h" "Work todos" tags-todo "-dowith={.+}/!-TASK"
-           ((org-agenda-todo-ignore-scheduled t)))
-          ("H" "All work todos" tags-todo "-personal/!-TASK-CANCELLED"
-           ((org-agenda-todo-ignore-scheduled nil)))
-          ("A" "Work todos with doat or dowith" tags-todo
-           "dowith={.+}/!-TASK"
-           ((org-agenda-todo-ignore-scheduled nil)))
-
-          ("p" "Tasks with current WITH and WHERE"
-           ((tags-todo (paf-sec-replace-with-where "with={$WITH}" ".+")
-                       ((org-agenda-overriding-header
-                         (paf-sec-replace-with-where "Tasks with $WITH in $WHERE" "anyone" "any place"))
-                        (org-super-agenda-groups
-                         '((:name "" :pred paf-sec-limit-to-with-where)
-                           (:discard (:anything t)))))
-                       )))
-          ("j" "TODO dowith and TASK with"
-           ((org-sec-with-view "TODO dowith")
-            (org-sec-stuck-with-view "TALK with")
-            (org-sec-where-view "TODO doat")
-            (org-sec-assigned-with-view "TASK with")
-            (org-sec-stuck-with-view "STUCK with")
-            (todo "STARTED")))
-          ("J" "Interactive TODO dowith and TASK with"
-           ((org-sec-who-view "TODO dowith")))))
+          ))
 
   (setq org-agenda-skip-deadline-prewarning-if-scheduled 2)
 #+end_src
