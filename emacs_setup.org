@@ -2197,12 +2197,12 @@ my config for display.
 
 *** org-habit
 #+begin_src emacs-lisp
-(use-package org-habit
-  :config
-  (setq org-habit-graph-column 38)
-  (setq org-habit-preceding-days 35)
-  (setq org-habit-following-days 10)
-  (setq org-habit-show-habits-only-for-today nil))
+  (use-package org-habit
+    :config
+    (setq org-habit-graph-column 38)
+    (setq org-habit-preceding-days 35)
+    (setq org-habit-following-days 10)
+    (setq org-habit-show-habits-only-for-today nil))
 #+end_src
 
 *** bash command
