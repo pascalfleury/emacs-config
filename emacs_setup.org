@@ -2347,7 +2347,9 @@ This enables a more fine-grained filtering of the agenda items.
                                    :time-grid t
                                    :date today
                                    :scheduled today)
-                            (:discard (:category "Social"))))))
+                            (:discard (:category "Social"))
+                            (:discard (:deadline t))
+                            (:discard (:habit t))))))
             (alltodo nil ((org-agenda-overriding-header "")
                           (org-super-agenda-groups
                            '(  ;; Each group has an implicit boolean OR operator between its selectors
