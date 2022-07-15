@@ -183,9 +183,9 @@ Remove =C-p= that I want to use for *me* personally as a prefix.
       (expand-file-name name resource-dir)))
   (if window-system
       (progn
-	(setq initial-buffer-choice (get-resource "welcome.org"))
-	(setq fancy-splash-image (get-resource "paf_emacs.svg"))
-	(setq org-startup-with-inline-images t))
+        (setq initial-buffer-choice (get-resource "welcome.org"))
+        (setq fancy-splash-image (get-resource "paf_emacs.png"))
+        (setq org-startup-with-inline-images t))
     (setq initial-buffer-choice (get-resource "welcome_nox.org")))
 #+end_src
 
@@ -350,7 +350,7 @@ Added the completion framework [[https://github.com/minad/vertico][vertico]] as 
     ;; Alternatively try `consult-completing-read-multiple'.
     (defun crm-indicator (args)
       (cons (concat "[CRM] " (car args)) (cdr args)))
-    (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+    ;;(advice-add #'completing-read-multiple :filter-args #'crm-indicator)
 
     ;; Do not allow the cursor in the minibuffer prompt
     (setq minibuffer-prompt-properties
@@ -383,113 +383,113 @@ Also adding more info in the completion buffers with [[https://github.com/minad/
 ** Consult
 This package brings some commands based on build-in search. See [[https://github.com/minad/consult][consult homepage]] for more details.
 #+begin_src emacs-lisp
-   ;; Example configuration for Consult
-   (use-package consult
-     :ensure t
-     :bind (;; C-c bindings (mode-specific-map)
-            ("C-c h" . consult-history)
-            ("C-c m" . consult-mode-command)
-            ("C-c b" . consult-bookmark)
-            ("C-c k" . consult-kmacro)
-            ;; C-x bindings (ctl-x-map)
-            ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
-            ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
-            ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
-            ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
-            ;; Custom M-# bindings for fast register access
-            ("M-#" . consult-register-load)
-            ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
-            ("C-M-#" . consult-register)
-            ;; Other custom bindings
-            ("M-y" . consult-yank-pop)                ;; orig. yank-pop
-            ("<help> a" . consult-apropos)            ;; orig. apropos-command
-            ;; M-g bindings (goto-map)
-            ("M-g e" . consult-compile-error)
-            ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
-            ("M-g g" . consult-goto-line)             ;; orig. goto-line
-            ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
-            ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
-            ("M-g m" . consult-mark)
-            ("M-g k" . consult-global-mark)
-            ("M-g i" . consult-imenu)
-            ("M-g I" . consult-imenu-multi)
-            ;; M-s bindings (search-map)
-            ("M-s f" . consult-find)
-            ("M-s F" . consult-locate)
-            ("M-s g" . consult-grep)
-            ("M-s G" . consult-git-grep)
-            ("M-s r" . consult-ripgrep)
-            ("M-s l" . consult-line)
-            ("M-s L" . consult-line-multi)
-            ("M-s m" . consult-multi-occur)
-            ("M-s k" . consult-keep-lines)
-            ("M-s u" . consult-focus-lines)
-            ;; Isearch integration
-            ("M-s e" . consult-isearch)
-            :map isearch-mode-map
-            ("M-e" . consult-isearch)                 ;; orig. isearch-edit-string
-            ("M-s e" . consult-isearch)               ;; orig. isearch-edit-string
-            ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
-            ("M-s L" . consult-line-multi))           ;; needed by consult-line to detect isearch
+  ;; Example configuration for Consult
+  (use-package consult
+    :ensure t
+    :bind (;; C-c bindings (mode-specific-map)
+           ("C-c h" . consult-history)
+           ("C-c m" . consult-mode-command)
+           ("C-c b" . consult-bookmark)
+           ("C-c k" . consult-kmacro)
+           ;; C-x bindings (ctl-x-map)
+           ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
+           ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
+           ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
+           ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
+           ;; Custom M-# bindings for fast register access
+           ("M-#" . consult-register-load)
+           ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
+           ("C-M-#" . consult-register)
+           ;; Other custom bindings
+           ("M-y" . consult-yank-pop)                ;; orig. yank-pop
+           ("<help> a" . consult-apropos)            ;; orig. apropos-command
+           ;; M-g bindings (goto-map)
+           ("M-g e" . consult-compile-error)
+           ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
+           ("M-g g" . consult-goto-line)             ;; orig. goto-line
+           ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
+           ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
+           ("M-g m" . consult-mark)
+           ("M-g k" . consult-global-mark)
+           ("M-g i" . consult-imenu)
+           ("M-g I" . consult-imenu-multi)
+           ;; M-s bindings (search-map)
+           ("M-s f" . consult-find)
+           ("M-s F" . consult-locate)
+           ("M-s g" . consult-grep)
+           ("M-s G" . consult-git-grep)
+           ("M-s r" . consult-ripgrep)
+           ("M-s l" . consult-line)
+           ("M-s L" . consult-line-multi)
+           ("M-s m" . consult-multi-occur)
+           ("M-s k" . consult-keep-lines)
+           ("M-s u" . consult-focus-lines)
+           ;; Isearch integration
+           ("M-s e" . consult-isearch)
+           :map isearch-mode-map
+           ("M-e" . consult-isearch)                 ;; orig. isearch-edit-string
+           ("M-s e" . consult-isearch)               ;; orig. isearch-edit-string
+           ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
+           ("M-s L" . consult-line-multi))           ;; needed by consult-line to detect isearch
 
-     :init
-     ;; Optionally configure the register formatting. This improves the register
-     ;; preview for `consult-register', `consult-register-load',
-     ;; `consult-register-store' and the Emacs built-ins.
-     (setq register-preview-delay 0
-           register-preview-function #'consult-register-format)
+    :init
+    ;; Optionally configure the register formatting. This improves the register
+    ;; preview for `consult-register', `consult-register-load',
+    ;; `consult-register-store' and the Emacs built-ins.
+    (setq register-preview-delay 0
+          register-preview-function #'consult-register-format)
 
-     ;; Optionally tweak the register preview window.
-     ;; This adds thin lines, sorting and hides the mode line of the window.
-     (advice-add #'register-preview :override #'consult-register-window)
+    ;; Optionally tweak the register preview window.
+    ;; This adds thin lines, sorting and hides the mode line of the window.
+    (advice-add #'register-preview :override #'consult-register-window)
 
-     ;; Optionally replace `completing-read-multiple' with an enhanced version.
-     (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
+    ;; Optionally replace `completing-read-multiple' with an enhanced version.
+    ;;(advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
 
-     ;; Use Consult to select xref locations with preview
-     (setq xref-show-xrefs-function #'consult-xref
-           xref-show-definitions-function #'consult-xref)
+    ;; Use Consult to select xref locations with preview
+    (setq xref-show-xrefs-function #'consult-xref
+          xref-show-definitions-function #'consult-xref)
 
-     :config
-     ;; Optionally configure preview. The default value
-     ;; is 'any, such that any key triggers the preview.
-     ;; (setq consult-preview-key 'any)
-     ;; (setq consult-preview-key (kbd "M-."))
-     ;; (setq consult-preview-key (list (kbd "<S-down>") (kbd "<S-up>")))
-     ;; For some commands and buffer sources it is useful to configure the
-     ;; :preview-key on a per-command basis using the `consult-customize' macro.
-     (consult-customize
-      consult-theme
-      :preview-key '(:debounce 0.2 any)
-      consult-ripgrep consult-git-grep consult-grep
-      consult-bookmark consult-recent-file consult-xref
-      consult--source-bookmark consult--source-recent-file
-      consult--source-project-recent-file
-      :preview-key (kbd "M-."))
+    :config
+    ;; Optionally configure preview. The default value
+    ;; is 'any, such that any key triggers the preview.
+    ;; (setq consult-preview-key 'any)
+    ;; (setq consult-preview-key (kbd "M-."))
+    ;; (setq consult-preview-key (list (kbd "<S-down>") (kbd "<S-up>")))
+    ;; For some commands and buffer sources it is useful to configure the
+    ;; :preview-key on a per-command basis using the `consult-customize' macro.
+    (consult-customize
+     consult-theme
+     :preview-key '(:debounce 0.2 any)
+     consult-ripgrep consult-git-grep consult-grep
+     consult-bookmark consult-recent-file consult-xref
+     consult--source-bookmark consult--source-recent-file
+     consult--source-project-recent-file
+     :preview-key (kbd "M-."))
 
-     ;; Optionally configure the narrowing key.
-     ;; Both < and C-+ work reasonably well.
-     (setq consult-narrow-key "<") ;; (kbd "C-+")
+    ;; Optionally configure the narrowing key.
+    ;; Both < and C-+ work reasonably well.
+    (setq consult-narrow-key "<") ;; (kbd "C-+")
 
-     ;; Optionally make narrowing help available in the minibuffer.
-     ;; You may want to use `embark-prefix-help-command' or which-key instead.
-     ;; (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help)
+    ;; Optionally make narrowing help available in the minibuffer.
+    ;; You may want to use `embark-prefix-help-command' or which-key instead.
+    ;; (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help)
 
-     ;; Optionally configure a function which returns the project root directory.
-     ;; There are multiple reasonable alternatives to chose from.
-     ;;;; 1. project.el (project-roots)
-     ;;(setq consult-project-root-function
-     ;;      (lambda ()
-     ;;        (when-let (project (project-current))
-     ;;          (car (project-roots project)))))
-     ;; 2. projectile.el (projectile-project-root)
-     (autoload 'projectile-project-root "projectile")
-     (setq consult-project-root-function #'projectile-project-root)
-     ;;;; 3. vc.el (vc-root-dir)
-     ;; (setq consult-project-root-function #'vc-root-dir)
-     ;;;; 4. locate-dominating-file
-     ;; (setq consult-project-root-function (lambda () (locate-dominating-file "." ".git")))
-   )
+    ;; Optionally configure a function which returns the project root directory.
+    ;; There are multiple reasonable alternatives to chose from.
+    ;;;; 1. project.el (project-roots)
+    ;;(setq consult-project-root-function
+    ;;      (lambda ()
+    ;;        (when-let (project (project-current))
+    ;;          (car (project-roots project)))))
+    ;; 2. projectile.el (projectile-project-root)
+    (autoload 'projectile-project-root "projectile")
+    (setq consult-project-root-function #'projectile-project-root)
+    ;;;; 3. vc.el (vc-root-dir)
+    ;; (setq consult-project-root-function #'vc-root-dir)
+    ;;;; 4. locate-dominating-file
+    ;; (setq consult-project-root-function (lambda () (locate-dominating-file "." ".git")))
+  )
 #+end_src
 
 * Managing Buffers
@@ -1062,9 +1062,11 @@ I went with the suggestion found on this [[https://www.juniordeveloperdiaries.co
 ** header/implementation toggle
 Switch from header to implementation file quickly.
 #+begin_src emacs-lisp
-(add-hook 'c-mode-common-hook
-          (lambda ()
-            (local-set-key  (kbd "C-c o") 'ff-find-other-file)))
+  (add-hook 'c-mode-common-hook
+            (lambda ()
+              (progn
+                (local-set-key  (kbd "C-c o") 'ff-find-other-file)
+                (local-set-key  (kbd "C-c f") 'find-file-at-point))))
 #+end_src
 
 ** no indentation of namespaces in C++
@@ -1890,15 +1892,6 @@ I have this currently in my `~/.emacs`:
 **** org-rifle
 [[https://github.com/alphapapa/org-rifle][org-rifle]] is the swiss-army knife for searching in an org-file.
 
-*** org-super-agenda
-This enables a more fine-grained filtering of the agenda items.
-#+begin_src emacs-lisp
-  (use-package org-super-agenda
-    :ensure t
-    :config
-    (org-super-agenda-mode t))
-#+end_src
-
 *** org-roam (v2)
 My cheat sheet for =org-roam=
 
@@ -2209,12 +2202,12 @@ my config for display.
 
 *** org-habit
 #+begin_src emacs-lisp
-(use-package org-habit
-  :config
-  (setq org-habit-graph-column 38)
-  (setq org-habit-preceding-days 35)
-  (setq org-habit-following-days 10)
-  (setq org-habit-show-habits-only-for-today nil))
+  (use-package org-habit
+    :config
+    (setq org-habit-graph-column 38)
+    (setq org-habit-preceding-days 35)
+    (setq org-habit-following-days 10)
+    (setq org-habit-show-habits-only-for-today nil))
 #+end_src
 
 *** bash command
@@ -2314,35 +2307,73 @@ Track task dependencies, and dim them in the agenda.
             ))
 #+end_src
 
+*** org-super-agenda
+This enables a more fine-grained filtering of the agenda items.
+#+begin_src emacs-lisp
+  (use-package org-super-agenda
+    :ensure t
+    :after org-habit
+    :config
+    (org-super-agenda-mode t))
+
+  (custom-set-faces
+   '(org-super-agenda-header ((t (:inherit org-agenda-structure :overline t :height 1.2)))))
+
+#+end_src
+
 *** org-agenda
-**** views
+**** Views
 #+begin_src emacs-lisp
   (setq org-agenda-block-separator #x2500)
   (setq org-agenda-custom-commands
-        '(("t" "Hot Today" ((agenda nil ((org-agenda-span 'day)
-                                        (org-agenda-skip-function
-                                         '(org-agenda-skip-entry-if 'deadline))
-                                        ))
-                            (agenda nil
-                                    ((org-agenda-entry-types '(:deadline))
-                                     (org-agenda-span 'day)
-                                     (org-agenda-time-grid nil)
-                                     (org-agenda-show-all-dates nil)
-                                     (org-agenda-format-date "")
-                                     (org-deadline-warning-days 7)
-                                     (org-agenda-overriding-header "  Deadlines")))
-                            (tags-todo "/WAITING"
-                                       ((org-agenda-overriding-header "  Waiting")))
-                            (tags-todo "/STARTED"
-                                       ((org-agenda-overriding-header "  Ongoing")))
-                            (tags-todo "/NEXT"
-                                       ((org-agenda-overriding-header "  Upcoming")))))
-          ("T" "Team Today" ((agenda "" ((org-agenda-span 'day)))
-                             (tags-todo "with={.+}"
-                                      ((org-super-agenda-groups
-                                        '((:auto-property "with")))
-                                       (org-agenda-overriding-header "  Talking Points with:"))
-                                      )))
+        '(("T" "Hot Today"
+           ((agenda nil ((org-agenda-span 'day)
+                         (org-agenda-skip-function
+                          '(org-agenda-skip-entry-if 'deadline))
+                         ))
+            (agenda nil
+                    ((org-agenda-entry-types '(:deadline))
+                     (org-agenda-span 'day)
+                     (org-agenda-time-grid nil)
+                     (org-agenda-show-all-dates nil)
+                     (org-agenda-format-date "")
+                     (org-deadline-warning-days 7)
+                     (org-agenda-overriding-header "  Deadlines")))
+            (tags-todo "/WAITING"
+                       ((org-agenda-overriding-header "  Waiting")))
+            (tags-todo "/STARTED"
+                       ((org-agenda-overriding-header "  Ongoing")))
+            (tags-todo "/NEXT"
+                       ((org-agenda-overriding-header "  Upcoming")))))
+          ("t" "Landscape Today"
+           ((agenda nil ((org-agenda-span 'day)
+                         (org-super-agenda-groups
+                          '((:name none
+                                   :time-grid t
+                                   :date today
+                                   :scheduled today)
+                            (:discard (:category "Social"))
+                            (:discard (:deadline t))
+                            (:discard (:habit t))))))
+            (alltodo nil ((org-agenda-overriding-header "")
+                          (org-super-agenda-groups
+                           '(  ;; Each group has an implicit boolean OR operator between its selectors
+                             (:name "Deadlines"
+                                    :habit t
+                                    :deadline t)
+                             (:name "Waiting"
+                                    :todo "WAITING")
+                             (:name "Working tasks"
+                                    :todo "STARTED"
+                                    :todo "NEXT")
+                             (:name "Meet and Re-greet"
+                                    :category "Social")
+                             (:name "AIs to sort out"
+                                    :take (10 :todo "AI"))
+                             (:discard (:anything))
+                             ;; After the last group, the agenda will display items that didn't
+                             ;; match any of these groups, with the default order position of 99
+                             ))))))
           ("r" "Recurring" ((tags "REGULAR"
                                   ((org-agenda-overriding-header "\nRecurring\n")))
                             (tags-todo "/WAITING"
@@ -2351,35 +2382,7 @@ Track task dependencies, and dim them in the agenda.
                                        ((org-agenda-overriding-header "\Ongoing\n")))
                             (tags-todo "/NEXT"
                                        ((org-agenda-overriding-header "\nUpcoming\n")))))
-          ("n" "Agenda and all TODO's" ((agenda "")
-                                        (alltodo "")))
-          ("N" "Next actions" tags-todo "-dowith={.+}/!-TASK-TODO"
-           ((org-agenda-todo-ignore-scheduled t)))
-          ("h" "Work todos" tags-todo "-dowith={.+}/!-TASK"
-           ((org-agenda-todo-ignore-scheduled t)))
-          ("H" "All work todos" tags-todo "-personal/!-TASK-CANCELLED"
-           ((org-agenda-todo-ignore-scheduled nil)))
-          ("A" "Work todos with doat or dowith" tags-todo
-           "dowith={.+}/!-TASK"
-           ((org-agenda-todo-ignore-scheduled nil)))
-
-          ("p" "Tasks with current WITH and WHERE"
-           ((tags-todo (paf-sec-replace-with-where "with={$WITH}" ".+")
-                       ((org-agenda-overriding-header
-                         (paf-sec-replace-with-where "Tasks with $WITH in $WHERE" "anyone" "any place"))
-                        (org-super-agenda-groups
-                         '((:name "" :pred paf-sec-limit-to-with-where)
-                           (:discard (:anything t)))))
-                       )))
-          ("j" "TODO dowith and TASK with"
-           ((org-sec-with-view "TODO dowith")
-            (org-sec-stuck-with-view "TALK with")
-            (org-sec-where-view "TODO doat")
-            (org-sec-assigned-with-view "TASK with")
-            (org-sec-stuck-with-view "STUCK with")
-            (todo "STARTED")))
-          ("J" "Interactive TODO dowith and TASK with"
-           ((org-sec-who-view "TODO dowith")))))
+          ))
 
   (setq org-agenda-skip-deadline-prewarning-if-scheduled 2)
 #+end_src
