@@ -2374,7 +2374,20 @@ This enables a more fine-grained filtering of the agenda items.
                              ;; After the last group, the agenda will display items that didn't
                              ;; match any of these groups, with the default order position of 99
                              ))))))
-          ("r" "Recurring" ((tags "REGULAR"
+          ("r" "Recurring"
+           ((alltodo nil ((org-agenda-overriding-header "")
+                          (org-super-agenda-groups
+                           '(
+                             (:name "Recurring"
+                                    :tag "REGULAR")
+                             (:name "Deadlines"
+                                    :habit t
+                                    :deadline t)
+                             (:name "Working tasks"
+                                    :todo "STARTED"
+                                    :todo "NEXT")
+                             (:discard (:anything))))))))
+          ("R" "Recurring" ((tags "REGULAR"
                                   ((org-agenda-overriding-header "\nRecurring\n")))
                             (tags-todo "/WAITING"
                                        ((org-agenda-overriding-header "\nWaiting\n")))
