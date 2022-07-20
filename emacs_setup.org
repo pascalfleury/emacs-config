@@ -287,6 +287,11 @@ and not modified in the buffer. Also make it reload dired when new files are add
   (global-auto-revert-mode 1)
 #+end_src
 
+** Restore state
+#+begin_src emacs-lisp
+  (desktop-save-mode 1)
+#+end_src
+
 ** enable upcase- and downcase-region and narrowing
 these got disabled in Emacs 19 (!) because they were considered confusing.
 Re-enabling them here.
