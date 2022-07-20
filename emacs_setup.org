@@ -1224,17 +1224,22 @@ Simple way to increase/decrease a number in code.
 :LOGBOOK:
 - State "TODO"       from              [2022-02-01 Tue 10:05]
 :END:
+See =gnu.org=  [[https://www.gnu.org/software/emacs/manual/html_node/emacs/GDB-User-Interface-Layout.html][documentation of this feature]]
 
 #+begin_src emacs-lisp
   (setq gdb-many-windows t)
-  (setq gdb-show-main t)
   (setq gdb-use-separate-io-buffer t)
+  (setq gdb-restore-window-configuration-after-quit t)
+  (setq gdb-max-source-window-count t)
+  (setq gdb-show-main t)
+
+  (setq gdb-default-window-configuration-file "gdb.layout")
 #+end_src
 
 This should display the source code always in the same window when debugging.
 Found on [[https://stackoverflow.com/questions/39762833/emacsgdb-customization-how-to-display-source-buffer-in-one-window][Stack Overflow]].
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (add-to-list 'display-buffer-alist
                (cons 'gdb-source-code-buffer-p
                      (cons 'display-buffer-use-some-window nil)))
@@ -1304,7 +1309,7 @@ Solution see here: https://weilin2015.wordpress.com/2020/11/16/highlight-gdb-bre
 :END:
 Information taken here: https://stackoverflow.com/questions/3860028/customizing-emacs-gdb/41326527
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (setq gdb-many-windows nil)
 
   (defun set-gdb-layout(&optional c-buffer)
