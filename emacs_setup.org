@@ -2044,6 +2044,16 @@ fi
     (setq org-tags-exclude-from-inheritance '("crypt")))
 #+end_src
 
+#+begin_src emacs-lisp
+  (use-package sensitive-mode
+    :load-path (lambda () (expand-file-name paf-lisp-directory)))
+
+  (setq auto-mode-alist
+        (append '(("\\.gpg$" . sensitive-mode)
+                  ("\\.crypt\\.org$" . sensitive-mode))
+                auto-mode-alist))
+#+end_src
+
 *** iimage (M-I)
 Make the display of images a simple key-stroke away.
 #+begin_src emacs-lisp
