@@ -1,6 +1,14 @@
-;; Define a minor mode, code found here:
+;; sensitive-mode.el --- minor mode for sensitive info containing files.
+
+;; Copyright by the original author, code found here:
 ;; https://anirudhsasikumar.net/blog/2005.01.21.html
 
+;;; Commentary:
+
+;; Defines a minor mode that prevents auto-saving for files that
+;; contain sensitive data.
+
+;;;###autoload
 (define-minor-mode sensitive-mode
   "For sensitive files like password lists.
 It disables backup creation and auto saving.
