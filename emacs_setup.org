@@ -288,7 +288,7 @@ and not modified in the buffer. Also make it reload dired when new files are add
 #+end_src
 
 ** Restore state
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (desktop-save-mode 1)
 #+end_src
 
