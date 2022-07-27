@@ -1233,12 +1233,11 @@ See =gnu.org=  [[https://www.gnu.org/software/emacs/manual/html_node/emacs/GDB-U
 
 #+begin_src emacs-lisp
   (setq gdb-many-windows t)
-  (setq gdb-use-separate-io-buffer t)
+  (setq gdb-max-source-window-count 1)
+  ;; (setq gdb-show-main t)
   (setq gdb-restore-window-configuration-after-quit t)
-  (setq gdb-max-source-window-count t)
-  (setq gdb-show-main t)
 
-  (setq gdb-default-window-configuration-file "gdb.layout")
+  ;; (setq gdb-default-window-configuration-file "gdb.layout")
 #+end_src
 
 This should display the source code always in the same window when debugging.
