@@ -2346,6 +2346,15 @@ This enables a more fine-grained filtering of the agenda items.
 *** org-agenda
 **** Views
 #+begin_src emacs-lisp
+  (defun end-of-this-week ()
+    (let* ((now (decode-time nil nil t))
+           (dow (decoded-time-weekday now))
+           (delta-days (make-decoded-time :day (- 6 dow)))
+           ((sec min hours day month year dow dst utcoff) (decoded-time-add now delta-days)))
+      (format "%04d-%02d-%02d" year month day)))
+#+end_src
+
+#+begin_src emacs-lisp
   (setq org-agenda-block-separator #x2500)
   (setq org-agenda-custom-commands
         '(("T" "Hot Today"
