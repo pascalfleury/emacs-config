@@ -2399,9 +2399,7 @@ This enables a more fine-grained filtering of the agenda items.
                                     :todo "NEXT")
                              (:name "Meet and Re-greet"
                                     :and (:category "Social"
-                                                    :scheduled past)
-                                    :and (:category "Social"
-                                                    :scheduled today))
+                                          :scheduled (past today)))
                              (:name "AIs to sort out"
                                     :take (10 :todo "AI"))
                              (:discard (:anything))
