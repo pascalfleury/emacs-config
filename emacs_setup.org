@@ -1097,6 +1097,10 @@ install_pkg -x rg ripgrep
 #+end_src
 
 #+begin_src emacs-lisp
+  (use-package rg
+    :ensure t
+    :config
+    (rg-enable-menu))
   (use-package ripgrep
     :ensure t)
   (use-package projectile-ripgrep
