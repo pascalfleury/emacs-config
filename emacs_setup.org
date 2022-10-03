@@ -1748,7 +1748,9 @@ This is a cleaned-up version of the new style capture.
 
 #+begin_src bash :tangle bash/install_deps.sh
   # Install PanDoc
-  install_pkg pandoc
+  if [[ "$(uname -m)" == "x86_64" ]]; then
+    install_pkg pandoc
+  fi
 #+end_src
 
 This is also a very crude way of doing it. Better would be to detect the presence of PanDoc, and then use that. An idea is [[https://stackoverflow.com/questions/20336581/paste-html-into-org-mode-as-org-mode-markup][here]], mostly this code:
