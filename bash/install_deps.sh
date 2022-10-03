@@ -34,7 +34,9 @@ fi
 EOF
 
 # Install PanDoc
-install_pkg pandoc
+if [[ "$(uname -m)" == "x86_64" ]]; then
+  install_pkg pandoc
+fi
 
 # org-roam needs this binary
 if [[ "$(uname -o)" == "Android" ]]; then
