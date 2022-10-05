@@ -1033,6 +1033,7 @@ Search the entire project with =C-c p s s= for a regexp. This let's you turn the
 ** Code completion
 I went with the suggestion found on this [[https://www.juniordeveloperdiaries.com/emacs-intro/][Emacs intro]] guide.
 
+Both =eglot= and =lsp-mode= would need the =company= mode.
 #+begin_src emacs-lisp
   (use-package company
     :ensure t
@@ -1050,7 +1051,10 @@ I went with the suggestion found on this [[https://www.juniordeveloperdiaries.co
       (mapc (lambda (x) (define-key map (format "%d" x)
                           `(lambda () (interactive) (company-complete-number ,x))))
             (number-sequence 0 9))))
+#+end_src
 
+*** lsp-mode
+#+begin_src emacs-lisp :tangle no
   ;; Flycheck is the newer version of flymake and is needed to make lsp-mode not freak out.
   (use-package flycheck
     :ensure t
@@ -1065,6 +1069,17 @@ I went with the suggestion found on this [[https://www.juniordeveloperdiaries.co
     :config
     (setq lsp-prefer-flymake nil ;; Flymake is outdated
           lsp-headerline-breadcrumb-mode nil)) ;; I don't like the symbols on the header a-la-vscode, remove this if you like them.
+#+end_src
+
+*** eglot
+#+begin_src emacs-lisp
+  (use-package eglot
+    :ensure t
+    :bind (:map eglot-mode-map
+                ("C-c <tab>" . company-complete) ; initiate the completion manually
+                ("C-c e f n" . flymake-goto-next-error)
+                ("C-c e f p" . flymake-goto-prev-error)
+                ("C-c e r"   . eglot-rename)))
 #+end_src
 
 ** header/implementation toggle
