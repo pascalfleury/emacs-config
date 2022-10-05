@@ -543,7 +543,7 @@ See [[https://github.com/karthink/popper][github:popper]] for more information.
 Temporarily maximize a buffer.
 [[https://gist.github.com/mads379/3402786][found here]]
 #+begin_src emacs-lisp
-  (defun toggle-maximize-buffer () "Maximize buffer"
+  (defun paf/toggle-maximize-buffer () "Maximize buffer"
          (interactive)
          (if (= 1 (length (window-list)))
              (jump-to-register '_)
@@ -551,7 +551,8 @@ Temporarily maximize a buffer.
              (window-configuration-to-register '_)
              (delete-other-windows))))
   ;;Map it to a key.
-  (global-set-key (kbd "M-<f8>") 'toggle-maximize-buffer)
+  (global-set-key (kbd "M-<f8>") 'paf/toggle-maximize-buffer)
+  (global-set-key (kbd "C-F") 'paf/toggle-maximize-buffer)
 #+end_src
 
 * Colors and Look
