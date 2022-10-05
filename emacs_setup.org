@@ -1407,7 +1407,7 @@ All prefixed with =C-x C-a=
 *** LLDB
 This seems to be the more modern way.
 Setup info found here: https://emacs-lsp.github.io/dap-mode/page/configuration/
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (use-package dap-mode
     :ensure t
     :config
