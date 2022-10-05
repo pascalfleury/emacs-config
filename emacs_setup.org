@@ -945,13 +945,15 @@ Once more it shows that the most powerful things are not always the most visible
 #+begin_src emacs-lisp
   (use-package hyperbole
     :ensure t
+    :bind
+    ("C-c C-/" . hui-search-web)  ;; bind before calling require
+    :custom-face
+    (hbut       ((t (:foreground "green yellow"))))
+    (hbut-flash ((t (:foreground "dark gray" :background "green yellow"))))
     :config
-    (bind-key "C-c C-/" 'hui-search-web)  ;; bind before calling require
-    (custom-set-faces
-     '(hbut ((t (:foreground "green yellow"))) t)
-     '(hbut-flash ((t (:background "green yellow"
-                       :foreground "dark gray"))) t))
     (require 'hyperbole)
+    (setq hbmap:dir-user org-directory)
+    (setq hbmap:filename "personal-buttons.hypb")
     (load-file (expand-file-name "hyperbole-systems.el" paf-lisp-directory)))
 #+end_src
 
