@@ -1889,6 +1889,31 @@ There are two functions that supposedly do the same.
       (find-file the-file)))
 #+end_src
 
+*** calfw-org
+#+begin_src emacs-lisp
+  (use-package calfw
+    :ensure t
+    :config
+    (setq
+     calendar-month-name-array
+     ["Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec"]
+     calendar-day-name-array ["Sun" "Mon" "Tue" "Wed" "Thu" "Fri" "Sat"]
+     calendar-week-start-day 1 ; 0:Sunday, 1:Monday
+     cfw:fchar-junction ?┼
+     cfw:fchar-vertical-line ?│
+     cfw:fchar-horizontal-line ?─
+     cfw:fchar-left-junction ?├
+     cfw:fchar-right-junction ?┤
+     cfw:fchar-top-junction ?┬
+     cfw:fchar-top-left-corner ?┌
+     cfw:fchar-top-right-corner ?┐
+     ))
+
+  (use-package calfw-org
+    :ensure t
+    :after calfw)
+#+end_src
+
 *** org-gtasks
 Should follow this git repo: [[https://github.com/JulienMasson/org-gtasks][org-gtasks]]
 I have copied a version of the file here, it's not yet available on MELPA.
