@@ -83,7 +83,7 @@ Adding my choice of packages repositories.
 #+begin_src emacs-lisp
   (setq package-archives '(
                            ;;("org" . "https://orgmode.org/elpa/")
-                           ("melpa" . "https://melpa.org/packages/")
+                           ;;("melpa" . "https://melpa.org/packages/")
                            ("stable-melpa" . "https://stable.melpa.org/packages/")
                            ("nongnu" . "https://elpa.nongnu.org/nongnu/")
                            ("gnu" . "https://elpa.gnu.org/packages/")
@@ -980,6 +980,18 @@ This package enables to get Google search results within Emacs itself. The defau
     (setq google-this-browse-url-function 'eww-browse-url)
     (google-this-mode 1))
 #+end_src
+
+** PDF-Tools
+#+begin_src emacs-lisp :tangle no
+  (use-package pdf-tools
+    :ensure t
+    :config
+    (setenv "PKG_CONFIG_PATH" "/usr/local/opt/zlib/lib/pkgconfig:/usr/local/lib/pkgconfig:/usr/X11/lib/pkgconfig:/usr/local/Cellar/poppler/22.08.0/lib/pkgconfig:/opt/x11/share/pkgconfig")
+    (pdf-tools-install)
+    (custom-set-variables
+     '(pdf-tools-handle-upgrades t)))
+#+end_src
+
 * Coding
 ** VCS
 *** magit
