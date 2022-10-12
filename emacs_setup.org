@@ -2236,6 +2236,17 @@ This is following the excellent video from [[https://systemcrafters.net/emacs-ti
 
 #+end_src
 
+*** book-mode
+#+begin_src emacs-lisp
+    (use-package nano-theme
+      :ensure t)
+    (load-file (expand-file-name "book-mode.el" paf-lisp-directory))
+    ;;(use-package book-mode
+    ;;    :load-path paf-lisp-directory)
+#+end_src
+
+
+
 ** My Setup
 These are mostly org-config specific to me, myself and I.
 *** Key mappings
