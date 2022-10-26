@@ -570,7 +570,17 @@ Temporarily maximize a buffer.
     (set-selection-coding-system 'compound-text-with-extensions)
     ;; Let the desktop background show through
     (set-frame-parameter (selected-frame) 'alpha '(97 . 100))
-    (add-to-list 'default-frame-alist '(alpha . (90 . 90))))
+    (add-to-list 'default-frame-alist '(alpha . (90 . 90)))
+
+    (defun paf/toggle-transparency ()
+      (interactive)
+      (if (/=
+           (cadr (frame-parameter (selected-frame) 'alpha))
+           100)
+          (set-frame-parameter (selected-frame) 'alpha '(100 100))
+        (set-frame-parameter (selected-frame) 'alpha '(97 100))))
+
+    (global-set-key (kbd "C-x T") 'paf/toggle-transparency))
 #+end_src
 
 ** Look: buffer naming
