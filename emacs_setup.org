@@ -981,6 +981,17 @@ This package enables to get Google search results within Emacs itself. The defau
     (setq google-this-browse-url-function 'eww-browse-url)
     (google-this-mode 1))
 #+end_src
+
+** GnuPlot
+#+begin_src emacs-lisp
+  (use-package gnuplot
+    :ensure t)
+#+end_src
+
+#+begin_src bash
+install_pkg gnuplot
+#+end_src
+
 * Coding
 ** VCS
 *** magit
