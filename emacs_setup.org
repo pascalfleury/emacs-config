@@ -988,7 +988,7 @@ This package enables to get Google search results within Emacs itself. The defau
     :ensure t)
 #+end_src
 
-#+begin_src bash
+#+begin_src bash :tangle bash/install_deps.sh
 install_pkg gnuplot
 #+end_src
 

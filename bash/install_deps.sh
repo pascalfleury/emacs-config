@@ -6,6 +6,8 @@ source $(dirname $0)/install.sh
     install_pkg tj3
   fi
 
+install_pkg gnuplot
+
 if [[ "$(uname)" == "Darwin" ]]; then
   install_pkg -x ag the_silver_searcher
 else
