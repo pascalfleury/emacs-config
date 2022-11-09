@@ -967,10 +967,11 @@ Once more it shows that the most powerful things are not always the most visible
     (hbut       ((t (:foreground "green yellow"))))
     (hbut-flash ((t (:foreground "dark gray" :background "green yellow"))))
     :config
-    (require 'hyperbole)
     (setq hbmap:dir-user org-directory)
     (setq hbmap:filename "personal-buttons.hypb")
     (load-file (expand-file-name "hyperbole-systems.el" paf-lisp-directory)))
+
+    (require 'hyperbole)
 #+end_src
 
 ** [[https://github.com/fourier/ztree#ztree][ztree]]
