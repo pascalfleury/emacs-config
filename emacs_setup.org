@@ -241,6 +241,21 @@ Use instead of add-hook to run it a single time.
   ;; (setq paf-tests/truncate (paf/truncate-string "Here is some long text" 10))
 #+end_src
 
+** Kill an Emacs process
+#+begin_src emacs-lisp
+  (defun paf/delete-process-at-point ()
+    (interactive)
+    (let ((process (get-text-property (point) 'tabulated-list-id)))
+      (cond ((and process
+                  (processp process))
+             (delete-process process)
+             (revert-buffer))
+            (t
+             (error "no process at point!")))))
+
+  (define-key process-menu-mode-map (kbd "C-k") 'paf/delete-process-at-point)
+#+end_src
+
 * Environment
 ** Browser default
 #+begin_src emacs-lisp :tangle no
