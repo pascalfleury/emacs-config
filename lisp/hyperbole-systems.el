@@ -1,7 +1,11 @@
+;;; hyperbole-systems.el --- Some Hyperbole actions     -*- lexical-binding: t; -*-
+
 ;; These utilities help detecting things for internal systems.
 ;; Examples:
 ;;     go/somewhere-else
 ;;     b/123456789
+
+;;; Code:
 
 (require 'thingatpt)
 (require 'hyperbole)
@@ -70,3 +74,6 @@
                          (hact 'www-url (concat "http://who/" ldap))))
             (mid (progn (ibut:label-set mid)
                          (hact 'www-url (concat "http://hume" mid))))))))
+
+(provide 'hyperbole-systems)
+;;; hyperbole-systems.el ends here
