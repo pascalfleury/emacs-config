@@ -2256,19 +2256,7 @@ This is following the excellent video from [[https://systemcrafters.net/emacs-ti
     (add-hook 'org-present-mode-hook 'paf/org-present-start)
     (add-hook 'org-present-mode-quit-hook 'paf/org-present-end)
     (add-hook 'org-present-after-navigate-functions 'paf/org-present-prepare-slide))
-
 #+end_src
-
-*** book-mode
-#+begin_src emacs-lisp
-    (use-package nano-theme
-      :ensure t)
-    (load-file (expand-file-name "book-mode.el" paf-lisp-directory))
-    ;;(use-package book-mode
-    ;;    :load-path paf-lisp-directory)
-#+end_src
-
-
 
 ** My Setup
 These are mostly org-config specific to me, myself and I.
