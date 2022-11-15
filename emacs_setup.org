@@ -1898,7 +1898,8 @@ There are two functions that supposedly do the same.
   (if (eq 0 (length org-agenda-files))
       (setq org-agenda-files
             (list (expand-file-name org-directory)
-                  (expand-file-name "Auto" org-directory)
+                  ;; Having these fills the search results with less useful lines
+                  ;; (expand-file-name "Auto" org-directory)
                   (expand-file-name "Meeting" paf-roam-directory))))
 
   (defun org-get-first-agenda-file ()
