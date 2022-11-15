@@ -1550,6 +1550,7 @@ If variable =org-directory= is not set yet, map it to my home's files. You may s
   (use-package org
     :ensure nil
     :config
+    (add-to-list 'auto-mode-alist '("\\.org_archive\\'" . org-mode))
     (add-hook 'org-mode-hook #'(lambda ()
                                  (visual-line-mode)
                                  (org-indent-mode))))
