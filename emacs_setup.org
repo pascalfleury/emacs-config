@@ -2883,6 +2883,15 @@ Add a few formats to the export functionality of org-mode.
     :defer)
 #+end_src
 
+Also make the exported references nicer, using the title as a handle.
+
+#+begin_src emacs-lisp
+  (load-file (expand-file-name "org-export-nice-ids.el" paf-lisp-directory))
+  (use-package ox
+    :config
+    (advice-add #'org-export-get-reference :override #'alphapapa/org-export-get-reference))
+#+end_src
+
 *** plant-uml
 Tell where PlantUML is to be found. This needs to be downloaded and installed separately, see the [[http://plantuml.com/][PlantUML website]].
 
