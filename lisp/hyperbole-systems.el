@@ -12,7 +12,7 @@
     (skip-chars-backward "0-9a-zA-Z_/")
     (if (looking-at "[a-zA-Z_]+/[0-9a-zA-Z_-]+")
         (cons (point) (match-end 0))
-      nil))) ; not a systems thing
+      nil)))
 
 (put 'systems-link 'bounds-of-thing-at-point
      'systems-link-bounds-of-thing-at-point)
@@ -34,7 +34,7 @@
     (skip-chars-backward "a-zA-Z\.@")
     (if (looking-at "[a-zA-Z_\.]+@")
         (cons (point) (1- (match-end 0)))
-      nil))) ; not a systems username
+      nil)))
 
 (put 'systems-ldap 'bounds-of-thing-at-point
      'systems-ldap-bounds-of-thing-at-point)
@@ -45,7 +45,7 @@
     (skip-chars-backward "0-9a-zA-Z_/")
     (if (looking-at "/[mgtxpn]/[a-z0-9_]+")
         (cons (point) (match-end 0))
-      nil))) ; not a mid
+      nil)))
 
 (put 'mid 'bounds-of-thing-at-point
      'mid-bounds-of-thing-at-point)
@@ -56,7 +56,7 @@
     (skip-chars-backward "0-9a-zA-Z_/.-")
     (if (looking-at "//[[:alnum:]_/.-]+")
         (cons (+ (point) 2) (match-end 0)) ; remove one leading slashes
-      nil))) ; not a SrcFS path
+      nil)))
 
 (put 'srcfs 'bounds-of-thing-at-point
      'srcfs-path-of-thing-at-point)
@@ -67,10 +67,25 @@
     (skip-chars-backward "0-9a-zA-Z_/%=.-")
     (if (looking-at "/cns/[[:alnum:]_/%=\.-]+")
         (cons (point) (match-end 0))
-      nil))) ; not a CNS path
+      nil)))
 
 (put 'cns 'bounds-of-thing-at-point
      'cns-path-of-thing-at-point)
+
+;; https://cl-status.corp.google.com/#/summary/Boq%20genx-nlg-server/494699940
+;; cl-status:Boq%20genx-nlg-server/494699940
+(defun cl-status-of-thing-at-point ()
+  "Find cl-status of project at given CL."
+  (save-excursion
+    (skip-chars-backward "0-9a-zA-Z_/%=:.-")
+    (if (looking-at "cl\-status:[[:alnum:]_%\.-]+/[0-9]+")
+        ;(cons (match-beginning 1) (match-end 1))
+        (cons (+ (point) 10) (match-end 0))
+      nil)))
+
+(put 'cl-status 'bounds-of-thing-at-point
+     'cl-status-of-thing-at-point)
+
 
 (defib systems-stuff ()
   "Hyperbole implicit button for systems style things."
@@ -82,10 +97,13 @@
           (mid (thing-at-point 'mid))
           (srcfs (thing-at-point 'srcfs))
           (cns (thing-at-point 'cns))
+          (cl-status (thing-at-point 'cl-status))
           topic)
       (cond
        (cns (progn (ibut:label-set cns)
                    (hact 'www-url (concat "http://data.corp.google.com/cnsviewer/file?query=" cns))))
+       (cl-status (progn (ibut:label-set cl-status)
+                         (hact 'www-url (concat "https://cl-status.corp.google.com/#/summary/" cl-status))))
        (mid (progn (ibut:label-set mid)
                    (hact 'www-url (concat "http://lexistore" mid))))
        (short (progn (ibut:label-set short)
