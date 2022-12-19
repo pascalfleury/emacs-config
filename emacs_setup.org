@@ -655,7 +655,7 @@ I really like the high-contract Zenburn theme.
 
 ** Mode line
 check out [[https://www.google.com/search?q=emacs+customize+modeline&sxsrf=ALiCzsZLqzMitOYNvmM9wa96Xo1VkqGLgQ%3A1671223858806&ei=MtqcY-vUMLOMlQe9v5-wAg&oq=emacs+modeline&gs_lcp=Cgxnd3Mtd2l6LXNlcnAQARgCMgYIABAHEB4yBggAEAcQHjIGCAAQBxAeMgYIABAHEB4yBggAEAcQHjIGCAAQBxAeMgYIABAHEB4yBggAEAcQHjIGCAAQBxAeMgYIABAHEB46CggAEEcQ1gQQsAM6BwgjELACECc6CgghEMMEEAoQoAE6BQgAEKIESgQIQRgASgQIRhgAUMszWLpWYNNzaAFwAXgAgAHKAYgBsAWSAQU2LjAuMZgBAKABAcgBCMABAQ&sclient=gws-wiz-serp#fpstate=ive&vld=cid:26e96369,vid:lFrQ-PUgKHo][this video]] for a simple explanation and the [[https://occasionallycogent.com/custom_emacs_modeline/index.html][accompanying blogpost]].
-=
+
 ** Icons
 This is to get all the icons we want.
 #+begin_src emacs-lisp
