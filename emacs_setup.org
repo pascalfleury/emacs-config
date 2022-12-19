@@ -683,6 +683,42 @@ After reading this [[https://www.reddit.com/r/emacs/comments/aaa66z/treemacsicon
 ** Mode line
 check out [[https://www.google.com/search?q=emacs+customize+modeline&sxsrf=ALiCzsZLqzMitOYNvmM9wa96Xo1VkqGLgQ%3A1671223858806&ei=MtqcY-vUMLOMlQe9v5-wAg&oq=emacs+modeline&gs_lcp=Cgxnd3Mtd2l6LXNlcnAQARgCMgYIABAHEB4yBggAEAcQHjIGCAAQBxAeMgYIABAHEB4yBggAEAcQHjIGCAAQBxAeMgYIABAHEB4yBggAEAcQHjIGCAAQBxAeMgYIABAHEB46CggAEEcQ1gQQsAM6BwgjELACECc6CgghEMMEEAoQoAE6BQgAEKIESgQIQRgASgQIRhgAUMszWLpWYNNzaAFwAXgAgAHKAYgBsAWSAQU2LjAuMZgBAKABAcgBCMABAQ&sclient=gws-wiz-serp#fpstate=ive&vld=cid:26e96369,vid:lFrQ-PUgKHo][this video]] for a simple explanation and the [[https://occasionallycogent.com/custom_emacs_modeline/index.html][accompanying blogpost]].
 
+My attempt is to get a modeline that shows me the following:
+
+         1         2         3         4         5         6
+123456789012345678901234567890123456789012345678901234567890
+● [project] //p/t/file.cc     21% (126,23) UTF-8  master
+
+|   <c>    |     <c>      |                                                                                   |
+| position |   example    | description                                                                       |
+|----------+--------------+-----------------------------------------------------------------------------------|
+|          |              |                                                                                   |
+|    1     |              | misc info from emacs (pop windows, etc.)                                          |
+|    2     |              | info about emacsclient frames, remote buffers                                     |
+|    3     |      ●       | dot (green: r/w non-edited; red: r/w edited; grey: r/o)                           |
+|    4     |  [project]   | the project (dir in which the VCS is in)                                          |
+|    5     |      //      | hint at where this is (// -> in 'src', B: -> in build, R: -> in READONLY)         |
+|    6     | p/t/file.cc  | shortened file path (some known paths are shortened) with fill file path on hover |
+|    7     |             | major mode (hover to find out the minor ones)                                     |
+|    8     |              | <spacer here>                                                                     |
+|    9     | 21% (126,23) | position in file (mode-line-position)                                             |
+|    10    |    UTF-8     | file encoding                                                                     |
+|    11    |             | VCS, when available                                                               |
+|    12    |    master    | branch (git), bookmark (hg)                                                       |
+
+Envisioned faces:
+paf-line-read-only :: for the read-only file dot
+paf-line-read-write :: for the read-write and non-edited file dot
+paf-line-edited :: for read-write and edited mode (needs save!)
+paf-line-project :: to render the project part of the path
+paf-line-location-hint :: to render the location in the client
+paf-line-file-path :: for the path part of the file
+paf-line-file-name :: for the basename of the file
+paf-line-major-mode : for the major mode part
+paf-line-file-encoding :: for the file encoding...
+paf-line-vcs-type :: for the VCS, in case it's text
+paf-line-branch-name :: for the branch/bookmark of the VCS
+
 #+begin_src emacs-lisp :tangle no
   (defun custom-modeline-file-state ()
       ((let* (
