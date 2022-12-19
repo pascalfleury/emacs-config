@@ -659,11 +659,26 @@ This is to get all the icons we want.
   (use-package all-the-icons
     :if (display-graphic-p)
     :ensure t)
+#+end_src
 
+Also decorate the browsing of files.
+#+begin_src emacs-lisp
+  ;; not installed, as it is apparently much slower than treemacs.
   (use-package all-the-icons-dired
     :if (display-graphic-p)
     :ensure t
-    :after (all-the-icons))
+    :hook (dired-mode . all-the-icons-dired-mode)
+    :config
+    (setq all-the-icons-dired-monochrome nil))
+#+end_src
+
+After reading this [[https://www.reddit.com/r/emacs/comments/aaa66z/treemacsiconsdired_treemacs_file_icons_for_your/][reddit post]], I decided to try with treemacs. alas, the icons are not transparent, so they get a white frame. My dark theme does not like it...
+#+begin_src emacs-lisp :tangle no
+  (use-package treemacs-icons-dired
+    :ensure t
+    :after treemacs dired
+    :ensure t
+    :config (treemacs-icons-dired-mode))
 #+end_src
 
 * Key Mappings
