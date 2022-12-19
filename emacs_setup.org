@@ -181,7 +181,7 @@ Remove =C-p= that I want to use for *me* personally as a prefix.
   (defun get-resource (name)
     (let* ((resource-dir (expand-file-name "Resources" emacs-config-directory)))
       (expand-file-name name resource-dir)))
-  (if window-system
+  (if (display-graphic-p)
       (progn
         (setq initial-buffer-choice (get-resource "welcome.org"))
         (setq fancy-splash-image (get-resource "paf_emacs.png"))
@@ -581,7 +581,7 @@ Temporarily maximize a buffer.
 ** In X11 mode: mouse and window title
 #+begin_src emacs-lisp
   (setq frame-title-format "emacs @ %b - %f")
-  (when window-system
+  (when (display-graphic-p)
     (mouse-wheel-mode)  ;; enable wheelmouse support by default
     (set-selection-coding-system 'compound-text-with-extensions)
     ;; Let the desktop background show through
@@ -1286,7 +1286,7 @@ Will fold all text indented more than the position of the cursor at the time the
 (use-package git-gutter-fringe+
   :ensure t
   :defer
-  :if window-system
+  :if (display-graphic-p)
   :bind ("C-p g" . 'git-gutter+-mode))
 #+end_src
 
@@ -1500,19 +1500,20 @@ Setup info found here: https://emacs-lsp.github.io/dap-mode/page/configuration/
 
 ** vterm
 #+begin_src emacs-lisp
-  (when (not (memq window-system '(mac ns)))
-    (use-package vterm
-      :ensure t
-      :init
-      (setq vterm-always-compile-module t)
-      :config
-      (setq vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no")
-      (define-key vterm-mode-map (kbd "<C-backspace>")
-        (lambda () (interactive) (vterm-send-key (kbd "C-w")))))
+  (use-package vterm
+    :unless (macosx-p)
+    :ensure t
+    :init
+    (setq vterm-always-compile-module t)
+    :config
+    (setq vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no")
+    (define-key vterm-mode-map (kbd "<C-backspace>")
+      (lambda () (interactive) (vterm-send-key (kbd "C-w")))))
 
-    (use-package vterm-toggle
-      :ensure t
-      :after vterm))
+  (use-package vterm-toggle
+    :ensure t
+    :unless (macosx-p)
+    :after vterm))
 #+end_src
 
 #+begin_src bash :tangle bash/install_deps.sh
