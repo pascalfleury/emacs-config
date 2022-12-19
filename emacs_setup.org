@@ -161,7 +161,10 @@ I set this up to tangle the init org-mode file into the actual Emacs init file a
 Some hints about how to do this are [[http://ergoemacs.org/emacs/elisp_determine_OS_version.html][here]].
 
 #+begin_src emacs-lisp
-;; Detect the current system and capabilities
+  ;; Detect the current system and capabilities
+  (defun paf/macosx-p ()
+    "Return non-nil iff Emacs is running on macOS."
+    (string-match "apple-darwin" system-configuration))
 #+end_src
 
 * Personal Initialization
@@ -1501,7 +1504,7 @@ Setup info found here: https://emacs-lsp.github.io/dap-mode/page/configuration/
 ** vterm
 #+begin_src emacs-lisp
   (use-package vterm
-    :unless (macosx-p)
+    :unless (paf/macosx-p)
     :ensure t
     :init
     (setq vterm-always-compile-module t)
@@ -1512,8 +1515,8 @@ Setup info found here: https://emacs-lsp.github.io/dap-mode/page/configuration/
 
   (use-package vterm-toggle
     :ensure t
-    :unless (macosx-p)
-    :after vterm))
+    :unless (paf/macosx-p)
+    :after vterm)
 #+end_src
 
 #+begin_src bash :tangle bash/install_deps.sh
