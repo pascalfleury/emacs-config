@@ -684,7 +684,7 @@ After reading this [[https://www.reddit.com/r/emacs/comments/aaa66z/treemacsicon
 ** Mode line
 check out [[https://www.google.com/search?q=emacs+customize+modeline&sxsrf=ALiCzsZLqzMitOYNvmM9wa96Xo1VkqGLgQ%3A1671223858806&ei=MtqcY-vUMLOMlQe9v5-wAg&oq=emacs+modeline&gs_lcp=Cgxnd3Mtd2l6LXNlcnAQARgCMgYIABAHEB4yBggAEAcQHjIGCAAQBxAeMgYIABAHEB4yBggAEAcQHjIGCAAQBxAeMgYIABAHEB4yBggAEAcQHjIGCAAQBxAeMgYIABAHEB46CggAEEcQ1gQQsAM6BwgjELACECc6CgghEMMEEAoQoAE6BQgAEKIESgQIQRgASgQIRhgAUMszWLpWYNNzaAFwAXgAgAHKAYgBsAWSAQU2LjAuMZgBAKABAcgBCMABAQ&sclient=gws-wiz-serp#fpstate=ive&vld=cid:26e96369,vid:lFrQ-PUgKHo][this video]] for a simple explanation and the [[https://occasionallycogent.com/custom_emacs_modeline/index.html][accompanying blogpost]].
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (defun custom-modeline-file-state ()
       ((let* (
               (config-alist
@@ -765,32 +765,41 @@ check out [[https://www.google.com/search?q=emacs+customize+modeline&sxsrf=ALiCz
                                   (custom-modeline-flycheck-status)))))
 #+end_src
 
-** Icons
-This is to get all the icons we want.
-#+begin_src emacs-lisp
-  (use-package all-the-icons
-    :if (display-graphic-p)
-    :ensure t)
-#+end_src
+Also discovered SmartModeLine tht gets me quite a bit there.
+Note that you should *beware escaping hell!!!* What you see on the web page is not exactly what is in the file!!!
+There are many traps in this module, as it does some magic while you're not watching that totally gets in the way when you first try to play with this.
+The web-page examples *cannot be cut/pasted* as they are not escaped properly.
 
-Also decorate the browsing of files.
 #+begin_src emacs-lisp
-  ;; not installed, as it is apparently much slower than treemacs.
-  (use-package all-the-icons-dired
-    :if (display-graphic-p)
+  (defun paf/sml-shorten-filepath-setup ()
+    (setq sml/replacer-regexp-list '())
+    ;; (add-to-list 'sml/replacer-regexp-list '("^/usr/local/google/home/fleury/" "H/") t) ;; 🡇
+    (add-to-list 'sml/replacer-regexp-list
+                 '("^~/OrgFiles\\(-priv\\|-prof\\)?" "[Org]") t)
+    ;; This for most code editing tasks
+    (add-to-list 'sml/replacer-regexp-list
+                 '("^~/Projects/\\([^/]*\\)/\\(\\(fig\\|git.?\\|exp\\)-[^/]*\\)" "🡇[\\2]") t)
+    (add-to-list 'sml/replacer-regexp-list
+                 '("^/google/src/cloud/fleury/\\([^/]+\\)" "☁[\\1]") t)
+    ;; path simplifications
+    (add-to-list 'sml/replacer-regexp-list '("/google3/" " //") t)
+    (add-to-list 'sml/replacer-regexp-list '("/nlp/generation/" "/n/g/") t)
+    )
+
+  (use-package smart-mode-line
     :ensure t
-    :hook (dired-mode . all-the-icons-dired-mode)
     :config
-    (setq all-the-icons-dired-monochrome nil))
-#+end_src
+    (setq sml/theme 'respectful)
+    (paf/sml-shorten-filepath-setup)
+    (setq sml/no-confirm-load-theme t)
+    (setq sml/use-projectile-p 'after-prefixes)
+    (sml/setup))
 
-After reading this [[https://www.reddit.com/r/emacs/comments/aaa66z/treemacsiconsdired_treemacs_file_icons_for_your/][reddit post]], I decided to try with treemacs. alas, the icons are not transparent, so they get a white frame. My dark theme does not like it...
-#+begin_src emacs-lisp :tangle no
-  (use-package treemacs-icons-dired
+  (use-package rich-minority
     :ensure t
-    :after treemacs dired
-    :ensure t
-    :config (treemacs-icons-dired-mode))
+    :config
+    (setq rm-whitelist "^ Projectile.*$") ;; read the doc for what to set here!!
+    (rich-minority-mode 1))
 #+end_src
 
 * Key Mappings
