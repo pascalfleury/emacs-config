@@ -577,8 +577,8 @@ Temporarily maximize a buffer.
 ** In terminal mode
 #+begin_src emacs-lisp
 (unless (display-graphic-p)
-  (set-background-color "#ffffff")
-  (set-foreground-color "#141312"))
+  (set-background-color "#3f3f3f")
+  (set-foreground-color "#f0dfaf"))
 #+end_src
 
 ** In X11 mode: mouse and window title
