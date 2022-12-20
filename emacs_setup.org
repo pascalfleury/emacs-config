@@ -653,6 +653,34 @@ I really like the high-contract Zenburn theme.
    )
 #+end_src
 
+** Icons
+This is to get all the icons we want.
+#+begin_src emacs-lisp
+  (use-package all-the-icons
+    :if (display-graphic-p)
+    :ensure t)
+#+end_src
+
+Also decorate the browsing of files.
+#+begin_src emacs-lisp
+  ;; not installed, as it is apparently much slower than treemacs.
+  (use-package all-the-icons-dired
+    :if (display-graphic-p)
+    :ensure t
+    :hook (dired-mode . all-the-icons-dired-mode)
+    :config
+    (setq all-the-icons-dired-monochrome nil))
+#+end_src
+
+After reading this [[https://www.reddit.com/r/emacs/comments/aaa66z/treemacsiconsdired_treemacs_file_icons_for_your/][reddit post]], I decided to try with treemacs. alas, the icons are not transparent, so they get a white frame. My dark theme does not like it...
+#+begin_src emacs-lisp :tangle no
+  (use-package treemacs-icons-dired
+    :ensure t
+    :after treemacs dired
+    :ensure t
+    :config (treemacs-icons-dired-mode))
+#+end_src
+
 ** Mode line
 check out [[https://www.google.com/search?q=emacs+customize+modeline&sxsrf=ALiCzsZLqzMitOYNvmM9wa96Xo1VkqGLgQ%3A1671223858806&ei=MtqcY-vUMLOMlQe9v5-wAg&oq=emacs+modeline&gs_lcp=Cgxnd3Mtd2l6LXNlcnAQARgCMgYIABAHEB4yBggAEAcQHjIGCAAQBxAeMgYIABAHEB4yBggAEAcQHjIGCAAQBxAeMgYIABAHEB4yBggAEAcQHjIGCAAQBxAeMgYIABAHEB46CggAEEcQ1gQQsAM6BwgjELACECc6CgghEMMEEAoQoAE6BQgAEKIESgQIQRgASgQIRhgAUMszWLpWYNNzaAFwAXgAgAHKAYgBsAWSAQU2LjAuMZgBAKABAcgBCMABAQ&sclient=gws-wiz-serp#fpstate=ive&vld=cid:26e96369,vid:lFrQ-PUgKHo][this video]] for a simple explanation and the [[https://occasionallycogent.com/custom_emacs_modeline/index.html][accompanying blogpost]].
 
