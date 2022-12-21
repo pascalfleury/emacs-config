@@ -574,11 +574,10 @@ Temporarily maximize a buffer.
 #+end_src
 
 * Colors and Look
-** In terminal mode
+** Match theme color during startup as well.
 #+begin_src emacs-lisp
-(unless (display-graphic-p)
   (set-background-color "#3f3f3f")
-  (set-foreground-color "#f0dfaf"))
+  (set-foreground-color "#f0dfaf")
 #+end_src
 
 ** In X11 mode: mouse and window title
