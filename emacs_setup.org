@@ -604,7 +604,8 @@ Setup the visual cues about the current editing buffer
   (column-number-mode t)
   (setq visible-bell t)
   (setq scroll-step 1)
-  (setq tool-bar-mode nil)
+  (tool-bar-mode -1)
+  (menu-bar-mode -1)
   (setq-default transient-mark-mode t)  ;; highlight selection
 #+end_src
 
@@ -863,7 +864,7 @@ The web-page examples *cannot be cut/pasted* as they are not escaped properly.
     :config
     ;(setq rm-whitelist "^ Projectile.*$") ;; read the doc for what to set here!!
     (setq rm-whitelist "^none$") ;; this will match no minor mode
-    (rich-minority-mode 1))
+    )
 #+end_src
 
 * Key Mappings
