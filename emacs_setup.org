@@ -659,14 +659,28 @@ This is to get all the icons we want.
      :if (display-graphic-p)
      :ensure t
      :config
+     (defface all-the-icons-hidden
+       '((((background dark)) :foreground "#444444")
+         (((background light)) :foreground "#444444"))
+       "Face for hidden folders"
+       :group 'all-the-icons-faces)
      ;; for bazel 
      (add-to-list 'all-the-icons-icon-alist
-                  '("^BUILD$" all-the-icons-material "build" :height 1.0 :v-adjust 0.0 :face all-the-icons-blue))
+                  '("^BUILD$" all-the-icons-material "build" :face all-the-icons-blue))
      (add-to-list 'all-the-icons-icon-alist
-                  '("\\.bzl$" all-the-icons-material "build" :height 1.0 :v-adjust 0.0 :face all-the-icons-blue))
+                  '("^WORKSPACE$" all-the-icons-faicon "cube" :face all-the-icons-blue))
+     (add-to-list 'all-the-icons-icon-alist
+                  '("\\.bzl$" all-the-icons-material "build" :face all-the-icons-blue))
      ;; for protobufs
-     (add-to-list 'all-the-icons-icon-alist
-                  '("\\.proto$" all-the-icons-faicon "tags" :height 1.0 :v-adjust 0.0 :face all-the-icons-blue))
+     (add-to-list 'all-the-icons-extension-icon-alist
+                  '("proto" all-the-icons-faicon "tag" :face all-the-icons-blue))
+     (add-to-list 'all-the-icons-extension-icon-alist
+                  '("textpb" all-the-icons-faicon "tags" :face all-the-icons-blue))
+     ;; hidden directories
+     (add-to-list 'all-the-icons-dir-icon-alist
+                  '("^\\." all-the-icons-material "panorama_fish_eye" :face all-the-icons-hidden))
+     (add-to-list 'all-the-icons-dir-icon-alist
+                  '("^\\.hg" all-the-icons-fileicon "hg" :face all-the-icons-blue))
      )
   ;;
 #+end_src
