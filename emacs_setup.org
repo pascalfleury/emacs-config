@@ -813,19 +813,22 @@ The web-page examples *cannot be cut/pasted* as they are not escaped properly.
                  '("^~/OrgFiles\\(-priv\\|-prof\\)?" "[Org]") t)
     ;; This for most code editing tasks
     (add-to-list 'sml/replacer-regexp-list
-                 '("^~/Projects/\\([^/]*\\)/\\(\\(fig\\|git.?\\|exp\\)-[^/]*\\)" "🡇[\\2]") t)
+                 '("^~/Projects/\\([^/]*\\)/\\(\\(fig\\|git.?\\|exp\\)-[^/]*\\)" "[🡇\\2]") t)
     (add-to-list 'sml/replacer-regexp-list
-                 '("^/google/src/cloud/fleury/\\([^/]+\\)" "☁[\\1]") t)
+                 '("^/google/src/cloud/fleury/\\([^/]+\\)" "[☁\\1]") t)
     ;; path simplifications
     (add-to-list 'sml/replacer-regexp-list '("/google3/" " //") t)
     (add-to-list 'sml/replacer-regexp-list '("/nlp/generation/" "/n/g/") t)
-    )
+
+    (add-to-list 'sml/prefix-regexp "\\[[^]]*\\]")
+  )
 
   (use-package smart-mode-line
     :ensure t
     :config
     (setq sml/theme 'respectful)
     (paf/sml-shorten-filepath-setup)
+    (setq sml/name-width 60)
     (setq sml/no-confirm-load-theme t)
     (setq sml/use-projectile-p 'after-prefixes)
     (sml/setup))
@@ -833,7 +836,8 @@ The web-page examples *cannot be cut/pasted* as they are not escaped properly.
   (use-package rich-minority
     :ensure t
     :config
-    (setq rm-whitelist "^ Projectile.*$") ;; read the doc for what to set here!!
+    ;(setq rm-whitelist "^ Projectile.*$") ;; read the doc for what to set here!!
+    (setq rm-whitelist "^none$") ;; this will match no minor mode
     (rich-minority-mode 1))
 #+end_src
 
