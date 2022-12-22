@@ -2246,7 +2246,7 @@ CLOSED: [2021-09-27 Mon 20:42]
 
 #+begin_src emacs-lisp
   (use-package org-roam-extras
-    :load-path (lambda () (expand-file-name "org-roam-extras.el" paf-lisp-directory))
+    :load-path (lambda () (expand-file-name paf-lisp-directory))
     :after org-roam
     :config
     (setq roam-extras-todo-tag-name "project")
