@@ -2607,6 +2607,7 @@ F12 open the first agenda file
   ; F12 on Mac OSX displays the dashboard, so add Control F12
   (global-set-key [C-f12] 'org-get-first-agenda-file)
   ; On a Chromebook that has no F-keys
+  (global-set-key (kbd "C-<XF86Tools>") 'org-get-first-agenda-file)
   (global-set-key (kbd "C-p f") 'org-get-first-agenda-file)
 #+end_src
 
