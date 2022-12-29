@@ -277,13 +277,12 @@ Check by running =(server-running-p)=.
 #+end_src
 
 ** UTF-8
- Make Emacs request UTF-8 first when pasting stuff.
+ Make Emacs request UTF-8 first when pasting stuff, and in general simply use UTF-8. The rest is legacy anyway, see this chart: [[https://en.wikipedia.org/wiki/UTF-8#/media/File:Unicode_Web_growth.svg][UTF-8 Usage]].
+ This setting found in [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Recognize-Coding.html][this page]], albeit after quite some searching.
 #+begin_src emacs-lisp
-(use-package unicode-escape
-  :ensure t
-  :init
-  (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
-(set-language-environment "UTF-8")
+  (setq x-select-request-type nil) ; will use the default, that prefers UTF8_STRING
+  (prefer-coding-system 'utf-8)
+  (set-language-environment "UTF-8")
 #+end_src
 
 ** Newline (only Unix wanted)
