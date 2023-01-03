@@ -1252,7 +1252,17 @@ Start using projectile. It has the documentation [[https://docs.projectile.mx/en
     (projectile-mode 1)
     (setq projectile-sort-order 'modification-time)
     (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
-    (add-hook 'find-file-hook 'paf/projectile-relative-buf-name))
+    (add-hook 'find-file-hook 'paf/projectile-relative-buf-name)
+    ;; overwrite this function, see https://github.com/bbatsov/projectile/issues/1816
+    (defun projectile-expand-file-name-wildcard (name-pattern dir)
+      "overridden."
+      (let ((expanded (expand-file-name name-pattern dir)))
+        (or (if (string-match-p "[[*?]" name-pattern)
+                (car
+                 (ignore-errors
+                   (file-expand-wildcards expanded))))
+            expanded)))
+    )
 
   (use-package persp-projectile
     :ensure t
