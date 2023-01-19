@@ -45,7 +45,7 @@
 (defconst org-gtasks-token-url "https://www.googleapis.com/oauth2/v3/token"
   "Google OAuth2 server URL.")
 
-(defconst org-gtasks-auth-url "https://accounts.google.com/o/oauth2/auth"
+(defconst org-gtasks-auth-url "https://accounts.google.com/o/oauth2/v2/auth"
   "Google OAuth2 server URL.")
 
 (defconst org-gtasks-resource-url "https://www.googleapis.com/auth/tasks"
