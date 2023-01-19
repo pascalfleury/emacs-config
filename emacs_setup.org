@@ -2203,6 +2203,16 @@ I have this currently in my `~/.emacs`:
      :client-id "XXX"
      :client-secret "XXX"))
 #+end_src
+
+If you need to debug oauth2, then this will make the request/response be printed to the  *Messages* buffer:
+
+#+begin_src emacs-lisp :tangle no
+  (setenv "GPG_AGENT_INFO")
+  (custom-set-variables '(request-log-level 'blather)
+                        '(request-message-level 'blather))
+  (setq request-log-level 'debug)
+#+end_src
+
 *** Search in org
 **** org-rifle
 [[https://github.com/alphapapa/org-rifle][org-rifle]] is the swiss-army knife for searching in an org-file.
