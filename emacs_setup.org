@@ -2526,6 +2526,15 @@ This is following the excellent video from [[https://systemcrafters.net/emacs-ti
 
 #+end_src
 
+*** valign
+This enables aligining tables in a pixel-perfect way.
+#+begin_src emacs-lisp
+  (use-package valign
+    :ensure t
+    :config
+    (setq valign-fancy-bar t))
+#+end_src
+
 ** My Setup
 These are mostly org-config specific to me, myself and I.
 *** Key mappings
