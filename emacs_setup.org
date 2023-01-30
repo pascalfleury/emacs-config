@@ -3139,6 +3139,37 @@ Also make the exported references nicer, using the title as a handle.
     (advice-add #'org-export-get-reference :override #'alphapapa/org-export-get-reference))
 #+end_src
 
+*** org-publish
+
+#+begin_src emacs-lisp
+  (require 'ox-publish)
+
+  (setq status-directory "~/www/org-status/")
+
+  (setq org-publish-project-alist
+        '(
+          ("project-status"
+           :base-directory "~/OrgFiles/"
+           :base-extension "org"
+           ;;:select-tags "current"
+           :publishing-directory "~/www/org-status/"
+           :recursive nil
+           ;; :preparation-function org-run-source-blocks
+           :publishing-function org-html-publish-to-html
+           :headline-levels 6)
+
+          ("bigblow-theme"
+           :base-directory "~/Apps/org-html-themes/src/bigblow_theme/"
+           :base-extension "css\\|js\\|swf\\|png"
+           :recursive t
+           :publishing-directory "~/www/org-status/"
+           :publishing-function org-publish-attachment)
+
+          ("my-status"
+           :components ("project-status" "bigblow-theme"))
+          ))
+#+end_src
+
 *** plant-uml
 Tell where PlantUML is to be found. This needs to be downloaded and installed separately, see the [[http://plantuml.com/][PlantUML website]].
 
