@@ -3144,7 +3144,7 @@ Also make the exported references nicer, using the title as a handle.
 #+begin_src emacs-lisp
   (require 'ox-publish)
 
-  (setq status-directory "~/www/org-status/")
+  (setq paf-status-directory "~/www/org-status/")
 
   (setq org-publish-project-alist
         '(
