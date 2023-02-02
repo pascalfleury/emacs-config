@@ -3122,6 +3122,8 @@ What kind of code block languages do I need
 *** org-export
 Add a few formats to the export functionality of org-mode.
 
+content filtering is done by adding a filter function to =org-export-filter-body-functions= (in my =~/.emacs_*.el=)
+
 #+begin_src emacs-lisp
   (use-package ox-odt
     :defer)
