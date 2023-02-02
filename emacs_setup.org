@@ -2531,6 +2531,7 @@ This enables aligining tables in a pixel-perfect way.
 #+begin_src emacs-lisp
   (use-package valign
     :ensure t
+    :hook (org-mode-hook . valign-mode)
     :config
     (setq valign-fancy-bar t))
 #+end_src
