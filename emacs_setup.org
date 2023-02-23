@@ -2557,7 +2557,7 @@ These are mostly org-config specific to me, myself and I.
 This colors the code blocks a bit more visibly.
 #+begin_src emacs-lisp
   (set-face-attribute 'org-block-begin-line nil :background "gray17")
-  (set-face-attribute 'org-block            nil :background "gray23")
+  (set-face-attribute 'org-block            nil :background "gray22")
   (set-face-attribute 'org-block-end-line   nil :background "gray17")
 #+end_src
 
