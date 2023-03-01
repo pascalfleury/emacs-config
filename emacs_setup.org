@@ -654,6 +654,8 @@ I really like the high-contract Zenburn theme.
 
 ** Icons
 This is to get all the icons we want.
+Don't forget to run =all-the-icons-install-fonts= !
+
 #+begin_src emacs-lisp
    (use-package all-the-icons
      :if (display-graphic-p)
