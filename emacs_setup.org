@@ -2539,6 +2539,28 @@ This enables aligining tables in a pixel-perfect way.
     (setq valign-fancy-bar t))
 #+end_src
 
+*** easy-draw
+
+This is a nice package to draw diagrams directly in emacs. Coming from this github repos:
+[[https://github.com/misohena/el-easydraw][el-easydraw]].
+
+[[edraw:]]
+
+#+begin_src emacs-lisp
+  (use-package eieio
+    :ensure t)
+  (use-package svg
+    :ensure t)
+  (use-package widget-mvc
+    :ensure t)
+
+  (use-package edraw-org
+    :load-path (lambda () (expand-file-name "el-easydraw" paf-modules-directory))
+    :after (org)
+    :requires (svg)
+    :config (edraw-org-setup-default))
+#+end_src
+
 ** My Setup
 These are mostly org-config specific to me, myself and I.
 *** Key mappings
