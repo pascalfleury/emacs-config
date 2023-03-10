@@ -1,6 +1,8 @@
 #!/bin/bash
 # Make git ignore the tangled & updated emacs_setup.el
 GIT_ROOT=$(dirname $0)
+# Update the dependent modules.
+git submodule init && git submodule update
 source ${GIT_ROOT}/bash/install.sh
 
 if [[ -z "$(which git)" ]]; then
