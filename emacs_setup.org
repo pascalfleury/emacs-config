@@ -64,6 +64,7 @@ Maybe there is a way to auto-detect this and generate it with literate programmi
 #+begin_src emacs-lisp
   (setq emacs-config-directory "~/Emacs")
   (setq paf-lisp-directory (expand-file-name "lisp" emacs-config-directory))
+  (setq paf-modules-directory (expand-file-name "Modules" emacs-config-directory))
   (setq paf-emacs-init "~/.emacs.d/init.el")
   (setq custom-file "~/.emacs.d/custom.el")
   (setq paf-roam-directory (expand-file-name "OrgRoam" org-directory))
@@ -2172,7 +2173,7 @@ There are two functions that supposedly do the same.
 
 *** org-gtasks
 Should follow this git repo: [[https://github.com/JulienMasson/org-gtasks][org-gtasks]]
-I have copied a version of the file here, it's not yet available on MELPA.
+I have it as a submodule, as it's not yet available on MELPA.
 
 To help debug, use this before running things:
 =(setq request-log-level 'debug)=
@@ -2184,7 +2185,7 @@ To help debug, use this before running things:
     :ensure t)
   (use-package request-deferred
     :ensure t)
-  (load-file (expand-file-name "org-gtasks.el" paf-lisp-directory))
+  (load-file (expand-file-name "org-gtasks/org-gtasks.el" paf-modules-directory))
 
   ;; Helper to sync all task lists for an account
   (defun paf/org-gtasks-sync (account_name)
