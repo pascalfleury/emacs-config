@@ -279,11 +279,13 @@ Check by running =(server-running-p)=.
 ** UTF-8
  Make Emacs request UTF-8 first when pasting stuff.
 #+begin_src emacs-lisp
-(use-package unicode-escape
-  :ensure t
-  :init
-  (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
-(set-language-environment "UTF-8")
+  (use-package unicode-escape
+    :ensure t
+    :init
+    (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
+  (set-language-environment "UTF-8")
+  (setq selection-coding-system 'UTF8_STRING)
+  (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
 #+end_src
 
 ** Newline (only Unix wanted)
