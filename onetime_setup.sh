@@ -1,6 +1,10 @@
 #!/bin/bash
 # Make git ignore the tangled & updated emacs_setup.el
 GIT_ROOT=$(dirname $0)
+
+# Ensure modules are loaded.
+(cd ${GIT_ROOT} && git submodule init && git submodule update)
+
 source ${GIT_ROOT}/bash/install.sh
 
 if [[ -z "$(which git)" ]]; then
@@ -30,7 +34,7 @@ if (( lines < 1 )); then
     cat "${GIT_ROOT}/lisp/dot_emacs.el" >> ~/.emacs.new
     cat ~/.emacs >> ~/.emacs.new
     mv ~/.emacs.new ~/.emacs
-      echo "Added loading the config in your ~/.emacs"
+    echo "Added loading the config in your ~/.emacs"
 else
     echo "Config in your ~/.emacs already set up!"
 fi

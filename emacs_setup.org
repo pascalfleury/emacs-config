@@ -64,6 +64,7 @@ Maybe there is a way to auto-detect this and generate it with literate programmi
 #+begin_src emacs-lisp
   (setq emacs-config-directory "~/Emacs")
   (setq paf-lisp-directory (expand-file-name "lisp" emacs-config-directory))
+  (setq paf-modules-directory (expand-file-name "Modules" emacs-config-directory))
   (setq paf-emacs-init "~/.emacs.d/init.el")
   (setq custom-file "~/.emacs.d/custom.el")
   (setq paf-roam-directory (expand-file-name "OrgRoam" org-directory))
@@ -277,15 +278,20 @@ Check by running =(server-running-p)=.
 #+end_src
 
 ** UTF-8
- Make Emacs request UTF-8 first when pasting stuff.
+ Make Emacs request UTF-8 first when pasting stuff, and in general simply use UTF-8. The rest is legacy anyway, see this chart: [[https://en.wikipedia.org/wiki/UTF-8#/media/File:Unicode_Web_growth.svg][UTF-8 Usage]].
+ This setting found in [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Recognize-Coding.html][this page]], albeit after quite some searching.
 #+begin_src emacs-lisp
-  (use-package unicode-escape
-    :ensure t
-    :init
-    (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
+  ;(use-package unicode-escape
+  ;  :ensure t
+  ;  :init
+  ;  (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
+  ;(set-language-environment "UTF-8")
+  ;(setq selection-coding-system 'UTF8_STRING)
+  ;(setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
+
+  (setq x-select-request-type nil) ; will use the default, that prefers UTF8_STRING
+  (prefer-coding-system 'utf-8)
   (set-language-environment "UTF-8")
-  (setq selection-coding-system 'UTF8_STRING)
-  (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
 #+end_src
 
 ** Newline (only Unix wanted)
@@ -657,6 +663,8 @@ I really like the high-contract Zenburn theme.
 
 ** Icons
 This is to get all the icons we want.
+Don't forget to run =all-the-icons-install-fonts= !
+
 #+begin_src emacs-lisp
    (use-package all-the-icons
      :if (display-graphic-p)
@@ -1255,7 +1263,17 @@ Start using projectile. It has the documentation [[https://docs.projectile.mx/en
     (projectile-mode 1)
     (setq projectile-sort-order 'modification-time)
     (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
-    (add-hook 'find-file-hook 'paf/projectile-relative-buf-name))
+    (add-hook 'find-file-hook 'paf/projectile-relative-buf-name)
+    ;; overwrite this function, see https://github.com/bbatsov/projectile/issues/1816
+    (defun projectile-expand-file-name-wildcard (name-pattern dir)
+      "overridden."
+      (let ((expanded (expand-file-name name-pattern dir)))
+        (or (if (string-match-p "[[*?]" name-pattern)
+                (car
+                 (ignore-errors
+                   (file-expand-wildcards expanded))))
+            expanded)))
+    )
 
   (use-package persp-projectile
     :ensure t
@@ -2163,7 +2181,7 @@ There are two functions that supposedly do the same.
 
 *** org-gtasks
 Should follow this git repo: [[https://github.com/JulienMasson/org-gtasks][org-gtasks]]
-I have copied a version of the file here, it's not yet available on MELPA.
+I have it as a submodule, as it's not yet available on MELPA.
 
 To help debug, use this before running things:
 =(setq request-log-level 'debug)=
@@ -2175,7 +2193,7 @@ To help debug, use this before running things:
     :ensure t)
   (use-package request-deferred
     :ensure t)
-  (load-file (expand-file-name "org-gtasks.el" paf-lisp-directory))
+  (load-file (expand-file-name "org-gtasks/org-gtasks.el" paf-modules-directory))
 
   ;; Helper to sync all task lists for an account
   (defun paf/org-gtasks-sync (account_name)
@@ -2196,6 +2214,16 @@ I have this currently in my `~/.emacs`:
      :client-id "XXX"
      :client-secret "XXX"))
 #+end_src
+
+If you need to debug oauth2, then this will make the request/response be printed to the  *Messages* buffer:
+
+#+begin_src emacs-lisp :tangle no
+  (setenv "GPG_AGENT_INFO")
+  (custom-set-variables '(request-log-level 'blather)
+                        '(request-message-level 'blather))
+  (setq request-log-level 'debug)
+#+end_src
+
 *** Search in org
 **** org-rifle
 [[https://github.com/alphapapa/org-rifle][org-rifle]] is the swiss-army knife for searching in an org-file.
@@ -2509,6 +2537,38 @@ This is following the excellent video from [[https://systemcrafters.net/emacs-ti
 
 #+end_src
 
+*** valign
+This enables aligining tables in a pixel-perfect way.
+#+begin_src emacs-lisp
+  (use-package valign
+    :ensure t
+    :hook (org-mode-hook . valign-mode)
+    :config
+    (setq valign-fancy-bar t))
+#+end_src
+
+*** easy-draw
+
+This is a nice package to draw diagrams directly in emacs. Coming from this github repos:
+[[https://github.com/misohena/el-easydraw][el-easydraw]].
+
+[[edraw:data=H4sIAIcLC2QAA6WSzW6DMAzHXyVyr5QkQLtRES67bg/BmgARDKqQNfD28/jY2MQ0qT0klmX7/7OdJN21IE5LWwo4HBmQUumitAKiAJ2rMp1uGwHc50D6t7rpBJTWXk6UOud8F/qtKWjAGKMoNKec+lo31VYij+OYjlFIE6PO9m90LwDvYbxzXdcCdnmeA+msaSsloGkbBURLAUqazO1fs3NVmPa9kUBomhTrUCuHhfez3CCFI8AMk0U3mqifZu6NR6vejt/tMJbnD8FI25Cek6SUmxj+OHH4GnT8BbpJOWL/T4DCl8yWX8I7fJdltfu5KFpIExW3+cID5nF2d/0TP6ANGcEleDj0Ym/WDaOx/hlH92YZWuDBL5l+AGuIuO3hAgAA]]
+
+#+begin_src emacs-lisp
+  (use-package eieio
+    :ensure t)
+  (use-package svg
+    :ensure t)
+  (use-package widget-mvc
+    :ensure t)
+
+  (use-package edraw-org
+    :load-path (lambda () (expand-file-name "el-easydraw" paf-modules-directory))
+    :after (org)
+    :requires (svg)
+    :config (edraw-org-setup-default))
+#+end_src
+
 ** My Setup
 These are mostly org-config specific to me, myself and I.
 *** Key mappings
@@ -2530,7 +2590,7 @@ These are mostly org-config specific to me, myself and I.
 This colors the code blocks a bit more visibly.
 #+begin_src emacs-lisp
   (set-face-attribute 'org-block-begin-line nil :background "gray17")
-  (set-face-attribute 'org-block            nil :background "gray23")
+  (set-face-attribute 'org-block            nil :background "gray22")
   (set-face-attribute 'org-block-end-line   nil :background "gray17")
 #+end_src
 
@@ -2652,7 +2712,7 @@ Track task dependencies, and dim them in the agenda.
 *** org-todo keywords
 #+begin_src emacs-lisp
     (setq org-todo-keywords '(
-       (sequence "TODO(t!)" "NEXT(n!)" "STARTED(s!)" "WAITING(w!)" "AI(a!)" "|" "DONE(d!)" "CANCELLED(C@)" "DEFERRED(D@)" "SOMEDAY(S!)" "FAILED(F!)" "REFILED(R!)")
+       (sequence "TODO(t!)" "NEXT(n!)" "STARTED(s!)" "WAITING(w!)" "AI(a!)" "LIVE(l!)" "|" "DONE(d!)" "CANCELLED(C@)" "DEFERRED(D@)" "SOMEDAY(S!)" "FAILED(F!)" "REFILED(R!)")
        ;; For publications
        (sequence "APPLIED(A!)" "WAITING(w!)" "ACCEPTED" "|" "REJECTED" "PUBLISHED")
        ;; For tracking other's tasks
@@ -2676,6 +2736,7 @@ Track task dependencies, and dim them in the agenda.
             ("REFILED" . (:foreground "gray"))
             ("MAYBE" . (:foreground "steelblue" :weight bold))
             ("AI" . (:foreground "red" :weight bold))
+            ("LIVE" . (:foreground "green" :weight bold))
             ("NEW" . (:foreground "orange" :weight bold))
             ("RUNNING" . (:foreground "orange" :weight bold))
             ("WORKED" . (:foreground "green" :weight bold))
@@ -3095,6 +3156,8 @@ What kind of code block languages do I need
 *** org-export
 Add a few formats to the export functionality of org-mode.
 
+content filtering is done by adding a filter function to =org-export-filter-body-functions= (in my =~/.emacs_*.el=)
+
 #+begin_src emacs-lisp
   (use-package ox-odt
     :defer)
@@ -3111,6 +3174,37 @@ Also make the exported references nicer, using the title as a handle.
   (use-package ox
     :config
     (advice-add #'org-export-get-reference :override #'alphapapa/org-export-get-reference))
+#+end_src
+
+*** org-publish
+
+#+begin_src emacs-lisp
+  (require 'ox-publish)
+
+  (setq paf-status-directory "~/www/org-status/")
+
+  (setq org-publish-project-alist
+        '(
+          ("project-status"
+           :base-directory "~/OrgFiles/"
+           :base-extension "org"
+           ;;:select-tags "current"
+           :publishing-directory "~/www/org-status/"
+           :recursive nil
+           ;; :preparation-function org-run-source-blocks
+           :publishing-function org-html-publish-to-html
+           :headline-levels 6)
+
+          ("bigblow-theme"
+           :base-directory "~/Apps/org-html-themes/src/bigblow_theme/"
+           :base-extension "css\\|js\\|swf\\|png"
+           :recursive t
+           :publishing-directory "~/www/org-status/"
+           :publishing-function org-publish-attachment)
+
+          ("my-status"
+           :components ("project-status" "bigblow-theme"))
+          ))
 #+end_src
 
 *** plant-uml
@@ -3185,6 +3279,10 @@ In your =~/.emacs= file, all you need to add is
 #+begin_src bash :noweb yes :tangle onetime_setup.sh :shebang "#!/bin/bash"
   # Make git ignore the tangled & updated emacs_setup.el
   GIT_ROOT=$(dirname $0)
+
+  # Ensure modules are loaded.
+  (cd ${GIT_ROOT} && git submodule init && git submodule update)
+
   source ${GIT_ROOT}/bash/install.sh
 
   if [[ -z "$(which git)" ]]; then
@@ -3214,7 +3312,7 @@ In your =~/.emacs= file, all you need to add is
       cat "${GIT_ROOT}/lisp/dot_emacs.el" >> ~/.emacs.new
       cat ~/.emacs >> ~/.emacs.new
       mv ~/.emacs.new ~/.emacs
-        echo "Added loading the config in your ~/.emacs"
+      echo "Added loading the config in your ~/.emacs"
   else
       echo "Config in your ~/.emacs already set up!"
   fi
