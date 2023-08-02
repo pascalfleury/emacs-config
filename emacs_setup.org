@@ -2555,8 +2555,8 @@ This is a nice package to draw diagrams directly in emacs. Coming from this gith
 [[edraw:data=H4sIAIcLC2QAA6WSzW6DMAzHXyVyr5QkQLtRES67bg/BmgARDKqQNfD28/jY2MQ0qT0klmX7/7OdJN21IE5LWwo4HBmQUumitAKiAJ2rMp1uGwHc50D6t7rpBJTWXk6UOud8F/qtKWjAGKMoNKec+lo31VYij+OYjlFIE6PO9m90LwDvYbxzXdcCdnmeA+msaSsloGkbBURLAUqazO1fs3NVmPa9kUBomhTrUCuHhfez3CCFI8AMk0U3mqifZu6NR6vejt/tMJbnD8FI25Cek6SUmxj+OHH4GnT8BbpJOWL/T4DCl8yWX8I7fJdltfu5KFpIExW3+cID5nF2d/0TP6ANGcEleDj0Ym/WDaOx/hlH92YZWuDBL5l+AGuIuO3hAgAA]]
 
 #+begin_src emacs-lisp
-  (use-package eieio
-    :ensure t)
+  ;(use-package eieio
+  ;  :ensure t)
   (use-package svg
     :ensure t)
   (use-package widget-mvc
