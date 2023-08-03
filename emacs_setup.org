@@ -205,6 +205,12 @@ Search for "Window Frame Parameters" in the Elisp  Info manual.
            (top . 0)))
 #+end_src
 
+** Resize at pixel-level
+Otherwise resizing will round it at char width/height and not make it play well with the window manager.
+#+begin_src emacs-lisp :tangle "~/.emacs.d/early-init.el"
+  (setq frame-resize-pixelwise 't)
+#+end_src
+
 * Helper Functions
 ** add-hook-run-once
 Use instead of add-hook to run it a single time.
