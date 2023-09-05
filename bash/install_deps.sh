@@ -2,9 +2,14 @@
 source $(dirname $0)/install.sh
 
 # Install TaskJuggler
-  if [[ "$(uname -m)" == "x86_64" ]]; then
-    install_pkg tj3
+if [[ "$(uname -m)" == "x86_64" ]]; then
+  if [[ "$(which tj3)" == "" ]]; then
+    case "$(uname)" in
+      Darwin)  brew install ruby ; sudo gem install taskjuggler ;;
+      *)       install_pkg tj3 ;;
+    esac
   fi
+fi
 
 install_pkg gnuplot
 

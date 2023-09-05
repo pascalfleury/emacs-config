@@ -1089,9 +1089,14 @@ Colorize color names and hexadecimal codes in the correct color.
 #+end_src
 
 #+begin_src bash :tangle bash/install_deps.sh
-# Install TaskJuggler
+  # Install TaskJuggler
   if [[ "$(uname -m)" == "x86_64" ]]; then
-    install_pkg tj3
+    if [[ "$(which tj3)" == "" ]]; then
+      case "$(uname)" in
+        Darwin)  brew install ruby ; sudo gem install taskjuggler ;;
+        ,*)       install_pkg tj3 ;;
+      esac
+    fi
   fi
 #+end_src
 
