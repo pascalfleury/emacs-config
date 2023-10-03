@@ -18,10 +18,10 @@
      'systems-link-bounds-of-thing-at-point)
 
 (defun short-link-bounds-of-thing-at-point ()
-  "Find constructs that are identifiers for short links, go/... or goto/..."
+  "Find constructs that are identifiers for short links, g/to-a.group or go/a-link or goto/a-link"
   (save-excursion
     (skip-chars-backward "0-9a-zA-Z_/?#$=,;.&-")
-    (if (looking-at "got?o?/[[:alnum:]_-]+\([?/#][^ \t\n]*\)?")
+    (if (looking-at "go?t?o?/[a-zA-Z0-9_\\.-]+\\([?/#][^ \t\n]*\\)?")
         (cons (point) (match-end 0))
       nil)))
 
@@ -29,10 +29,10 @@
      'short-link-bounds-of-thing-at-point)
 
 (defun systems-ldap-bounds-of-thing-at-point ()
-  "Find constructs that are people usernames like john@ or jack@"
+  "Find constructs that are people usernames like john@ or jack.y@"
   (save-excursion
-    (skip-chars-backward "a-zA-Z\.@")
-    (if (looking-at "[a-zA-Z_\.]+@")
+    (skip-chars-backward "a-zA-Z\\.@")
+    (if (looking-at "[a-zA-Z_\\.]+@")
         (cons (point) (1- (match-end 0)))
       nil)))
 
@@ -50,22 +50,24 @@
 (put 'mid 'bounds-of-thing-at-point
      'mid-bounds-of-thing-at-point)
 
+;; //nlp/generation/tippex/BUILD
 (defun srcfs-path-of-thing-at-point ()
   "Find constructs that are paths to SrcFS."
   (save-excursion
-    (skip-chars-backward "0-9a-zA-Z_/.-")
-    (if (looking-at "//[[:alnum:]_/.-]+")
-        (cons (+ (point) 2) (match-end 0)) ; remove one leading slashes
+    (skip-chars-backward "[:alnum:]_/\\.-")
+    (if (looking-at "//[[:alnum:]_/\\.-]+")
+        (cons (+ (point) 2) (match-end 0)) ; remove leading slashes
       nil)))
 
 (put 'srcfs 'bounds-of-thing-at-point
      'srcfs-path-of-thing-at-point)
 
+;; /cns/ok-d/home/fleury/
 (defun cns-path-of-thing-at-point ()
   "Find constructs that are paths to CNS."
   (save-excursion
-    (skip-chars-backward "0-9a-zA-Z_/%=.-")
-    (if (looking-at "/cns/[[:alnum:]_/%=\.-]+")
+    (skip-chars-backward "[:alnum:]_/%=\\.-")
+    (if (looking-at "/cns/[[:alnum:]_/%=\\.-]+")
         (cons (point) (match-end 0))
       nil)))
 
@@ -77,8 +79,8 @@
 (defun cl-status-of-thing-at-point ()
   "Find cl-status of project at given CL."
   (save-excursion
-    (skip-chars-backward "0-9a-zA-Z_/%=:.-")
-    (if (looking-at "cl\-status:[[:alnum:]_%\.-]+/[0-9]+")
+    (skip-chars-backward "[:alnum:]_/%=:.-")
+    (if (looking-at "cl\\-status:[[:alnum:]_%\\.-]+/[0-9]+")
         ;(cons (match-beginning 1) (match-end 1))
         (cons (+ (point) 10) (match-end 0))
       nil)))
