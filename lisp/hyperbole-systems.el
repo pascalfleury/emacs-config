@@ -8,9 +8,10 @@
 
 (defun systems-link-bounds-of-thing-at-point ()
   "Find constructs that are identifiers for internal systems, e.g. b/12345 cr/12345678 guts/12345"
+  ;; b/12345 cr/12345678 guts/12345 mdb/fleury
   (save-excursion
-    (skip-chars-backward "0-9a-zA-Z_/")
-    (if (looking-at "[a-zA-Z_]+/[0-9a-zA-Z_-]+")
+    (skip-chars-backward "[:alnum:]_/.")
+    (if (looking-at "[[:alpha:]_]+/[[:alnum:]_\\.-]+")
         (cons (point) (match-end 0))
       nil)))
 
@@ -102,6 +103,7 @@
           (cl-status (thing-at-point 'cl-status))
           topic)
       (cond
+       ;; this order should be the most specific first.
        (cns (progn (ibut:label-set cns)
                    (hact 'www-url (concat "http://data.corp.google.com/cnsviewer/file?query=" cns))))
        (cl-status (progn (ibut:label-set cl-status)
