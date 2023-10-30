@@ -530,6 +530,15 @@ This package brings some commands based on build-in search. See [[https://github
 #+end_src
 
 * Managing Buffers
+** Resizing windows
+Easier shortcuts for resizing windows
+#+begin_src emacs-lisp
+  (global-set-key (kbd "S-C-<left>") 'shrink-window-horizontally)
+  (global-set-key (kbd "S-C-<right>") 'enlarge-window-horizontally)
+  (global-set-key (kbd "S-C-<down>") 'shrink-window)
+  (global-set-key (kbd "S-C-<up>") 'enlarge-window)
+#+end_src
+
 ** winner-mode
 Enables =winner-mode=. Navigate buffer-window configs with =C-c left= and =C-c right=.
 #+begin_src emacs-lisp
