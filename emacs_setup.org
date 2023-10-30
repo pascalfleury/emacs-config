@@ -1273,7 +1273,7 @@ Start using projectile. It has the documentation [[https://docs.projectile.mx/en
     :config
     (projectile-mode 1)
     (setq projectile-sort-order 'modification-time)
-    (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+    (define-key projectile-mode-map (kbd "C-S-p") 'projectile-command-map)
     (add-hook 'find-file-hook 'paf/projectile-relative-buf-name)
     ;; overwrite this function, see https://github.com/bbatsov/projectile/issues/1816
     (defun projectile-expand-file-name-wildcard (name-pattern dir)
