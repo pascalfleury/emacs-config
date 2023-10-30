@@ -1480,14 +1480,16 @@ To add an abbrev after one has typed something wrong, just use =C-x a i g= (add 
 ** Selective display
 Will fold all text indented more than the position of the cursor at the time the keys are pressed.
 #+begin_src emacs-lisp
-(defun set-selective-display-dlw (&optional level)
-  "Fold text indented more than the cursor.
-   If level is set, set the indent level to level.
-   0 displays the entire buffer."
-  (interactive "P")
-  (set-selective-display (or level (current-column))))
+  (defun set-selective-display-dlw (&optional level)
+    "Fold text indented more than the cursor.
+     If level is set, set the indent level to level.
+     0 displays the entire buffer."
+    (interactive "P")
+    (let* ((base-column (current-column))
+           (from-column (if (= base-column 0) 0 (1+ base-column))))
+      (set-selective-display (or level from-column))))
 
-(global-set-key (kbd "C-x $") 'set-selective-display-dlw)
+  (global-set-key (kbd "C-x $") 'set-selective-display-dlw)
 #+end_src
 
 ** Info in the gutter
