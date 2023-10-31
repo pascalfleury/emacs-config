@@ -6,6 +6,18 @@
 (require 'thingatpt)
 (require 'hyperbole)
 
+(defun systems-url-bounds-of-thing-at-point ()
+  "Find constructs that are identifiers for regular URLs"
+  ;; http://www.pafsoft.ch https://pafsoft.ch http://cl/12345
+  (save-excursion
+    (skip-chars-backward "[:alnum:]_/.:")
+    (if (looking-at "https?://[[:alnum:]_\\.-]+")
+        (cons (point) (match-end 0))
+      nil)))
+
+(put 'systems-url 'bounds-of-thing-at-point
+     'systems-url-bounds-of-thing-at-point)
+
 (defun systems-link-bounds-of-thing-at-point ()
   "Find constructs that are identifiers for internal systems, e.g. b/12345 cr/12345678 guts/12345"
   ;; b/12345 cr/12345678 guts/12345 mdb/fleury
@@ -93,7 +105,8 @@
 (defib systems-stuff ()
   "Hyperbole implicit button for systems style things."
   (save-excursion
-    (let ((mid (thing-at-point 'mid))
+    (let ((url (thing-at-point 'url))
+          (mid (thing-at-point 'mid))
           (link (thing-at-point 'systems-link))
           (short (thing-at-point 'short-link))
           (ldap (thing-at-point 'systems-ldap))
@@ -104,6 +117,8 @@
           topic)
       (cond
        ;; this order should be the most specific first.
+       (url (progn (ibut:label-set url)
+                   (hact 'www-url url)))
        (cns (progn (ibut:label-set cns)
                    (hact 'www-url (concat "http://data.corp.google.com/cnsviewer/file?query=" cns))))
        (cl-status (progn (ibut:label-set cl-status)
