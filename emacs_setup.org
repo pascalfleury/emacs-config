@@ -1734,10 +1734,11 @@ Setup info found here: https://emacs-lsp.github.io/dap-mode/page/configuration/
     :ensure t
     :init
     (setq vterm-always-compile-module t)
+    :bind (:map vterm-mode-map
+                ("<C-backspace>" . (lambda () (interactive) (vterm-send-key (kbd "C-w"))))
+                ("C-q" . vterm-send-next-key))
     :config
-    (setq vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no")
-    (define-key vterm-mode-map (kbd "<C-backspace>")
-      (lambda () (interactive) (vterm-send-key (kbd "C-w")))))
+    (setq vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no"))
 
   (use-package vterm-toggle
     :ensure t
