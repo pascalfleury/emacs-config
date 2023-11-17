@@ -119,6 +119,8 @@
        ;; this order should be the most specific first.
        (url (progn (ibut:label-set url)
                    (hact 'www-url url)))
+       (srcfs (progn (ibut:label-set srcfs)
+                     (hact 'www-url (concat "http://cs///depot/google3/" srcfs))))
        (cns (progn (ibut:label-set cns)
                    (hact 'www-url (concat "http://data.corp.google.com/cnsviewer/file?query=" cns))))
        (cl-status (progn (ibut:label-set cl-status)
@@ -133,6 +135,4 @@
                     (hact 'www-url (concat "http://who/" ldap))))
        (mid (progn (ibut:label-set mid)
                    (hact 'www-url (concat "http://hume" mid))))
-       (srcfs (progn (ibut:label-set srcfs)
-                     (hact 'www-url (concat "http://cs///depot/google3/" srcfs))))
        ))))
