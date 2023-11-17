@@ -344,6 +344,10 @@ Use =C-x C-u= and =C-x C-l= to effect them.
   ;; Calendar starts on Monday
   (setq calendar-week-start-day 1)
   (setq org-gcal-local-timezone "Europe/Zurich")
+
+  ;; org-gcal otherwise ask for a passphrase in a text popup.
+  (setenv "GPG_AGENT_INFO")
+  (setq plstore-cache-passphrase-for-symmetric-encryption 't)
 #+end_src
 
 * Completion
