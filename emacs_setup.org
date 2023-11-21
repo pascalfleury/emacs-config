@@ -977,6 +977,12 @@ Let's one jump around text
          ("C-c C-DEL" . 'ace-jump-mode-pop-mark)))
 #+end_src
 
+#+begin_src emacs-lisp
+  (use-package ace-window
+    :ensure t
+    :bind (("C-x w w" . 'ace-window)))
+#+end_src
+
 ** Hydra
 #+begin_src emacs-lisp
   (use-package hydra
