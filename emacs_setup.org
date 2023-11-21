@@ -600,6 +600,62 @@ Temporarily maximize a buffer.
   (global-set-key (kbd "C-F") 'paf/toggle-maximize-buffer)
 #+end_src
 
+*** display some buffer in a particulr location
+
+#+begin_src emacs-lisp
+  ;; make manual switching buffer behave the same as automatic display.
+  (setq switch-to-buffer-obey-display-actions t)
+
+  (defun paf/agenda-on-right-side ()
+    (interactive)
+    (let ((agenda (get-buffer "*Org Agenda*")))
+      (display-buffer-in-side-window
+       agenda `((side . right)
+                (slot . 0)
+                (window-width . 0.20)
+                (window-parameters . ((no-delete-other-windows . t)
+                                      (mode-line-format . (""))))))
+      (with-current-buffer agenda
+        (rename-buffer "Agenda"))))
+
+  (defun paf/display-buffer-at-bottom ()
+    "Move current buffer to bottom of the frame. Also removes it from the side window."
+    (interactive)
+    (let ((buffer (current-buffer)))
+      (with-current-buffer buffer
+        (delete-window)
+        (display-buffer-at-bottom
+         buffer `((window-parameters . ((mode-line-format. (" " "%b")))))))))
+
+  (defun paf/display-buffer-reset ()
+    "Re-display the buffer according to buffer-alist."
+    (interactive)
+    (let ((buffer (current-buffer)))
+      (with-current-buffer buffer
+        (delete-window)
+        (display-buffer buffer))))
+
+  (use-package window
+    :custom
+    (display-buffer-alist
+     '(("\\*vterm .*\\*"
+        (display-buffer-in-side-window)
+        (window-height . (body-lines . 15))
+        (side . bottom)
+        (slot . -1))
+       ("\\*Org Agenda\\*"
+        (display-buffer-in-side-window)
+        (window-width . (body-columns . 70))
+        (side . right)
+        (slot . 0)
+        (window-parameters . ((no-delete-other-windows . t)
+                              (mode-line-format . (""))))
+        )))
+    :bind (("C-x w s" . window-toggle-side-windows)
+           ("C-x w b" . paf/display-buffer-at-bottom)
+           ("C-x w r" . paf/display-buffer-reset)))
+#+end_src
+
 * Colors and Look
 ** Match theme color during startup as well.
 #+begin_src emacs-lisp
