@@ -33,7 +33,7 @@ install_pkg -x perl perl
 # Also amend the bash config
 cat >> ${HOME}/.bashrc <<EOF
 # Setup Emacs's VTerm communication
-if [[ "\${INSIDE_EMACS}" = 'vterm' ]] \\
+if [[ "\${INSIDE_EMACS}" =~ ^vterm ]] \\
     && [[ -n "\${EMACS_VTERM_PATH}" ]] \\
     && [[ -f "\${EMACS_VTERM_PATH}/etc/emacs-vterm-bash.sh" ]]; then
         source "\${EMACS_VTERM_PATH}/etc/emacs-vterm-bash.sh"

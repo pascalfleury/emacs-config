@@ -1800,16 +1800,22 @@ Setup info found here: https://emacs-lsp.github.io/dap-mode/page/configuration/
     :ensure t
     :init
     (setq vterm-always-compile-module t)
-    :bind (:map vterm-mode-map
-                ("<C-backspace>" . (lambda () (interactive) (vterm-send-key (kbd "C-w"))))
-                ("C-q" . vterm-send-next-key))
+    :bind
+    (:map vterm-mode-map
+          ("C-c q" . vterm-copy-mode)
+          ("<C-backspace>" . (lambda () (interactive) (vterm-send-key (kbd "C-w"))))
+          ("C-q" . vterm-send-next-key))
+    (:map vterm-copy-mode-map
+          ("C-c q" . vterm-copy-mode-done))
     :config
-    (setq vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no"))
+    (setq vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no")
+    (setq vterm-tramp-shells '(("docker" "sh") ("ssh" "'bash'"))))
 
   (use-package vterm-toggle
     :ensure t
     :unless (paf/macosx-p)
-    :after vterm)
+    :after vterm
+    :bind ("C-c t" . 'vterm-toggle))
 #+end_src
 
 #+begin_src bash :tangle bash/install_deps.sh
@@ -1825,7 +1831,7 @@ Setup info found here: https://emacs-lsp.github.io/dap-mode/page/configuration/
   # Also amend the bash config
   cat >> ${HOME}/.bashrc <<EOF
   # Setup Emacs's VTerm communication
-  if [[ "\${INSIDE_EMACS}" = 'vterm' ]] \\
+  if [[ "\${INSIDE_EMACS}" =~ ^vterm ]] \\
       && [[ -n "\${EMACS_VTERM_PATH}" ]] \\
       && [[ -f "\${EMACS_VTERM_PATH}/etc/emacs-vterm-bash.sh" ]]; then
           source "\${EMACS_VTERM_PATH}/etc/emacs-vterm-bash.sh"
