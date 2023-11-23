@@ -1863,6 +1863,14 @@ See mode documentation in the [[https://github.com/ZachMassia/platformio-mode][P
     :ensure t)
 #+end_src
 
+** ediff
+Setup ediff to not open a tiny separate frame for control, and make the windows be side-by-side in the main emacs frame.
+Taken from Prot's video: https://youtu.be/pSvsAutseO0?si=3eXYVh9rKIUdSsuj&t=874
+#+begin_src emacs-lisp
+  (setq ediff-split-window-function 'split-window-horizontally)
+  (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+#+end_src
+
 * OrgMode
 Load all my org stuff, but first org-mode itself.
 ** Init
