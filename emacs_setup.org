@@ -629,18 +629,6 @@ Temporarily maximize a buffer.
   ;; make manual switching buffer behave the same as automatic display.
   (setq switch-to-buffer-obey-display-actions t)
 
-  (defun paf/agenda-on-right-side ()
-    (interactive)
-    (let ((agenda (get-buffer "*Org Agenda*")))
-      (display-buffer-in-side-window
-       agenda `((side . right)
-                (slot . 0)
-                (window-width . 0.20)
-                (window-parameters . ((no-delete-other-windows . t)
-                                      (mode-line-format . (""))))))
-      (with-current-buffer agenda
-        (rename-buffer "Agenda"))))
-
   (defun paf/display-buffer-at-bottom ()
     "Move current buffer to bottom of the frame. Also removes it from the side window."
     (interactive)
@@ -677,6 +665,17 @@ Temporarily maximize a buffer.
     :bind (("C-x w s" . window-toggle-side-windows)
            ("C-x w b" . paf/display-buffer-at-bottom)
            ("C-x w r" . paf/display-buffer-reset)))
+
+  (defun paf/toggle-calendar-buffer ()
+    "Will show/hide the calendar on the side window"
+    (interactive)
+    (when-let ((agenda (get-buffer "*Org Agenda*")))
+      (if (get-buffer-window agenda 'visible)
+          (delete-windows-on agenda)
+        (pop-to-buffer agenda))))
+
+  (global-set-key (kbd "C-x w a") 'paf/toggle-calendar-buffer)
+  (global-set-key (kbd "C-<f3>") 'paf/toggle-calendar-buffer)
 #+end_src
 
 * Colors and Look
