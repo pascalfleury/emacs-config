@@ -1201,7 +1201,7 @@ Colorize color names and hexadecimal codes in the correct color.
 (use-package writeroom-mode
   :ensure t
   :init
-  (global-set-key (kbd "C-p w") 'writeroom-mode))
+  (global-set-key (kbd "C-p W") 'writeroom-mode))
 #+end_src
 
 ** wgrep-mode
