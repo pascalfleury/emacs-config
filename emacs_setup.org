@@ -43,17 +43,13 @@ CLOSED: [2021-09-13 Mon 23:16]
 - State "DONE"       from "TODO"       [2021-09-13 Mon 23:16]
 - State "TODO"       from              [2021-08-19 Thu 16:46]
 :END:
-*** NEXT Shortcuts to access VTerm directly (C-p w t)
+*** NEXT Shortcuts to access VTerm directly (C-p w t) and toggle it
 :LOGBOOK:
 - State "NEXT"       from              [2023-11-27 Mon 17:15]
 :END:
 Some information here:
 https://www.reddit.com/r/emacs/comments/tagvgb/how_can_i_create_a_command_to_always_move_focus/
 
-*** NEXT Shortcuts to hide VTerm if it is visible (toggle the preceding command)
-:LOGBOOK:
-- State "NEXT"       from              [2023-11-27 Mon 17:16]
-:END:
 *** NEXT Display the current machine name where the (TRAMP) terminal is running
 :LOGBOOK:
 - State "NEXT"       from              [2023-11-27 Mon 17:16]
