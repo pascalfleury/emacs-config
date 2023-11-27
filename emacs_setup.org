@@ -58,6 +58,11 @@ https://www.reddit.com/r/emacs/comments/tagvgb/how_can_i_create_a_command_to_alw
 :LOGBOOK:
 - State "NEXT"       from              [2023-11-27 Mon 17:16]
 :END:
+*** TODO Have Org be checked into git automatically
+:LOGBOOK:
+- State "TODO"       from              [2023-11-27 Mon 17:21]
+:END:
+See Karl Voit's setup.
 
 * Initialize Emacs
 This section sets up Emacs so it can tangle the config, find =use-package=, and find the ELPA repositories where to get the new packes from.
