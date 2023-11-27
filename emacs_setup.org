@@ -58,6 +58,9 @@ https://www.reddit.com/r/emacs/comments/tagvgb/how_can_i_create_a_command_to_alw
 :LOGBOOK:
 - State "NEXT"       from              [2023-11-27 Mon 17:16]
 :END:
+https://www.reddit.com/r/emacs/comments/utarza/help_getting_vterm_to_work_over_tramp/
+https://stackoverflow.com/questions/26630640/tramp-ignores-tramp-remote-path#26649558
+
 *** TODO Have Org be checked into git automatically
 :LOGBOOK:
 - State "TODO"       from              [2023-11-27 Mon 17:21]
