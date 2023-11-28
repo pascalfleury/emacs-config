@@ -671,7 +671,7 @@ Temporarily maximize a buffer.
           (if (get-buffer-window agenda 'visible)
               (delete-windows-on agenda)
             (pop-to-buffer agenda))
-        (message "Did not find buffer `%s'..." agenda-buffer-name))))
+        (org-agenda))))
 
   (global-set-key (kbd "C-x w a") 'paf/toggle-calendar-buffer)
   (global-set-key (kbd "C-<f3>") 'paf/toggle-calendar-buffer)
