@@ -2903,7 +2903,8 @@ This enables a more fine-grained filtering of the agenda items.
 #+end_src
 
 #+begin_src emacs-lisp
-  (setq org-agenda-block-separator #x2500)
+  ;(setq org-agenda-block-separator #x2500)
+  (setq org-agenda-block-separator " ")
   (setq org-agenda-custom-commands
         '(("T" "Hot Today"
            ((agenda nil ((org-agenda-span 'day)
