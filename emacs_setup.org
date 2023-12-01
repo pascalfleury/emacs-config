@@ -645,7 +645,7 @@ Temporarily maximize a buffer.
   (use-package window
     :custom
     (display-buffer-alist
-     '(("\\*vterm.*\\*"
+     '(("\\*\\(vterm\\|eat\\).*\\*"
         (display-buffer-in-side-window)
         (window-height . (body-lines . 15))
         (side . bottom)
