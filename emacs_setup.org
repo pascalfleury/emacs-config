@@ -635,6 +635,16 @@ Temporarily maximize a buffer.
         (display-buffer-at-bottom
          buffer `((window-parameters . ((mode-line-format. (" " "%b")))))))))
 
+  (defun paf/display-buffer-at-right ()
+    "Move current buffer to right side window."
+    (interactive)
+    (let ((buffer (current-buffer)))
+      (with-current-buffer buffer
+        (delete-window)
+        (display-buffer-in-side-window
+         buffer `((side . right)
+                  (window-parameters . ((mode-line-format. (" " "%b")))))))))
+
   (defun paf/display-buffer-reset ()
     "Re-display the buffer according to buffer-alist."
     (interactive)
@@ -658,17 +668,18 @@ Temporarily maximize a buffer.
         (slot . 0)
         (window-parameters . ((no-delete-other-windows . t)
                               (mode-line-format . ("")))))
-       ("\\.*.org"
-        (display-buffer-in-side-window)
-        (window-width . (body-columns . 70))
-        (side . right)
-        (slot . 1)
-        (window-parameters . ((no-delete-other-windows . t)
-                              (mode-line-format . ("")))))
+       ;(".*\\.org"
+       ; (display-buffer-in-side-window)
+       ; (window-width . (body-columns . 70))
+       ; (side . right)
+       ; (slot . 1)
+       ; (window-parameters . ((no-delete-other-windows . t)
+       ;                       (mode-line-format . ("")))))
        ))
     :bind (("C-x w s" . window-toggle-side-windows)
            ("C-x w b" . paf/display-buffer-at-bottom)
-           ("C-x w r" . paf/display-buffer-reset)))
+           ("C-x w r" . paf/display-buffer-at-right)
+           ("C-x w R" . paf/display-buffer-reset)))
 
   (defun paf/toggle-calendar-buffer ()
     "Will show/hide the calendar on the side window"
