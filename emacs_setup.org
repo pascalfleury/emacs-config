@@ -216,7 +216,8 @@ Remove =C-p= that I want to use for *me* personally as a prefix.
 This configures where the initial window will appear on the screen.
 Search for "Window Frame Parameters" in the Elisp  Info manual.
 
-#+begin_src emacs-lisp :tangle "~/.emacs.d/early-init.el"
+:tangle "~/.emacs.d/early-init.el"
+#+begin_src emacs-lisp :tangle no
   ;; Setup the initil frame to be right-aligned and full height.
   (setq default-frame-alist
          '((fullscreen . fullheight)
