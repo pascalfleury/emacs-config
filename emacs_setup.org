@@ -2513,7 +2513,7 @@ fi
   (use-package org-crypt
     :config
     (org-crypt-use-before-save-magic)
-    (setq org-crypt-key nil) ; to use symetric encryption
+    (setq org-crypt-key "") ; to use symetric encryption unless key specified
     (setq org-tags-exclude-from-inheritance '("crypt")))
 #+end_src
 
