@@ -1917,6 +1917,15 @@ Taken from Prot's video: https://youtu.be/pSvsAutseO0?si=3eXYVh9rKIUdSsuj&t=874
   (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 #+end_src
 
+** Vertical indent bars
+Displays vertical bars to show indentation visually.
+
+#+begin_src emacs-lisp
+  (use-package indent-bars
+    :load-path (lambda () (expand-file-name "indent-bars" paf-modules-directory))
+    :hook ((python-mode yaml-mode prog-mode) . indent-bars-mode))
+#+end_src
+
 * OrgMode
 Load all my org stuff, but first org-mode itself.
 ** Init
