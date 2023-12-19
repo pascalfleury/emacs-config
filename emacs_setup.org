@@ -2722,6 +2722,12 @@ This is a nice package to draw diagrams directly in emacs. Coming from this gith
     :config (edraw-org-setup-default))
 #+end_src
 
+*** org sticky headers
+Keeps the header visible even when it gets off the visible part of the buffer.
+#+begin_src emacs-lisp
+  (use-package org-sticky-header
+    :ensure t)
+#+end_src
 ** My Setup
 These are mostly org-config specific to me, myself and I.
 *** Key mappings
