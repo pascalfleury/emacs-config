@@ -2242,7 +2242,7 @@ All the other org-mode placeholders are all usable, e.g. =%U= that inserts an in
 #+begin_src emacs-lisp
   ;; Setting this to t makes org-refile not work...
   (setq org-auto-align-tags nil)
-  (setq org-tags-column 75)
+  (setq org-tags-column 65)
 #+end_src
 
 **** CANCELLED Update =org-set-tags-to=
