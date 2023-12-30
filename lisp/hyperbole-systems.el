@@ -22,7 +22,7 @@
   "Find constructs that are identifiers for internal systems, e.g. b/12345 cr/12345678 guts/12345"
   ;; b/12345 cr/12345678 guts/12345 mdb/fleury
   (save-excursion
-    (skip-chars-backward "[:alnum:]_/.")
+    (skip-chars-backward "[:alnum:]_/.-")
     (if (looking-at "[[:alpha:]_]+/[[:alnum:]_\\.-]+")
         (cons (point) (match-end 0))
       nil)))
