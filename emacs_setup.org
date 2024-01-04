@@ -671,22 +671,22 @@ Temporarily maximize a buffer.
     (display-buffer-alist
      '(("\\*\\(vterm\\|eat\\).*\\*"
         (display-buffer-in-side-window)
-        (window-height . (body-lines . 15))
         (side . bottom)
         (slot . -1)
+        (window-height . (body-lines . 15))
         (window-parameters . ((no-delete-other-windows . t))))
         ("\\*Org Agenda\\*"
          (display-buffer-in-side-window)
-         (window-width . (body-columns . 70))
          (side . right)
          (slot . 0)
+         (window-width . (body-columns . 70))
          (window-parameters . ((no-delete-other-windows . t)
                                (mode-line-format . ("")))))
         ;(".*\\.org"
         ; (display-buffer-in-side-window)
-        ; (window-width . (body-columns . 70))
         ; (side . right)
         ; (slot . 1)
+        ; (window-width . (body-columns . 70))
         ; (window-parameters . ((no-delete-other-windows . t)
         ;                       (mode-line-format . ("")))))
         ))
