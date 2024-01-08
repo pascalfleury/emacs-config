@@ -1343,6 +1343,9 @@ It actually computes the entire arithmetic expression that is selected, and repl
 I found some gems that explain a bit better what hyperbole is trying to solve. See John Wiegley's [[https://www.reddit.com/r/emacs/comments/7daneo/announce_gnu_hyperbole_7_aka_the_git_ready_for/dpx5sxw/][Using hyperbole: a motivation]]
 Once more it shows that the most powerful things are not always the most visible nor the easiest to explain.
 
+One needs to apply a patch to the 8.0.0 version to avoid the regexp issue ([[https://debbugs.gnu.org/cgi/bugreport.cgi?bug=66346][#66346]]): [[https://git.savannah.gnu.org/gitweb/?p=emacs/elpa.git;a=blobdiff;f=hpath.el;h=517d9d10fbd777ba1ee3c3f3840e46bb07435ca1;hp=b8c042c9923a5ce8a5b0d5172438507a8cca1e39;hb=e5130d49a15f85d0fd1910262ecb50664755548b;hpb=a36ca8020b3bba0892a9a2d76d87e785f4af930a][the diff]]
+
+
 *NOTE* assigns =hui-search-web= to =C-c C-/= to not clobber the later used =C-c /= from OrgMode (org-mode sparse trees). This works because hyperbole will first check if the function is already bound to some key before binding it to the coded default.
 #+begin_src emacs-lisp
   (use-package hyperbole
