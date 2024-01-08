@@ -101,18 +101,21 @@ Adding my choice of packages repositories.
 
 #+NAME melpa-setup
 #+begin_src emacs-lisp
-    (setq package-archives '(
-                             ;;("org" . "https://orgmode.org/elpa/")
-                             ("melpa-stable" . "https://stable.melpa.org/packages/")
-                             ("melpa" . "https://melpa.org/packages/")
-                             ("nongnu" . "https://elpa.nongnu.org/nongnu/")
-                             ("gnu" . "https://elpa.gnu.org/packages/")
-                             ))
-    (setq package-archive-priorities
+  (setq package-archives '(
+                           ;;("org" . "https://orgmode.org/elpa/")
+                           ("melpa-stable" . "https://stable.melpa.org/packages/")
+                           ("melpa" . "https://melpa.org/packages/")
+                           ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+                           ("gnu" . "https://elpa.gnu.org/packages/")
+                           ("elpa-devel" . "https://elpa.gnu.org/devel/")
+                           ))
+  (setq package-archive-priorities
         '(("melpa-stable" . 20)
           ("nongnu" . 20)
           ("gnu" . 10)
-          ("melpa" . -10) ; negative -> no automatic upgrade
+          ;; negative -> no automatic upgrade
+          ("melpa" . -5)
+          ("elpa-devel" . -6)
           ))
 #+end_src
 
