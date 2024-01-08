@@ -148,22 +148,6 @@ First, make sure it gets installed if it is not there yet.
 #+begin_src emacs-lisp
 (eval-when-compile (require 'use-package))
 #+end_src
-** tangle-this-config
-I set this up to tangle the init org-mode file into the actual Emacs init file as soon as I save it.
-#+begin_src emacs-lisp
-  (defun tangle-init ()
-    "If the current buffer is 'init.org' the code-blocks are
-    tangled, and the tangled file is compiled."
-    (when (equal (buffer-file-name)
-                 (expand-file-name "emacs_setup.org" emacs-config-directory))
-      ;; Avoid running hooks when tangling.
-      (let ((prog-mode-hook nil))
-        (org-babel-tangle)
-        ;; (byte-compile-file paf-emacs-init)
-        )))
-
-  (add-hook 'after-save-hook 'tangle-init)
-#+end_src
 ** Speedup startup time
 *** Temporarily disable GC
 #+begin_src emacs-lisp
@@ -183,14 +167,21 @@ I set this up to tangle the init org-mode file into the actual Emacs init file a
     :pin stable-melpa)
 #+end_src
 
-** Detect System
-Some hints about how to do this are [[http://ergoemacs.org/emacs/elisp_determine_OS_version.html][here]].
-
+** tangle-this-config
+I set this up to tangle the init org-mode file into the actual Emacs init file as soon as I save it.
 #+begin_src emacs-lisp
-  ;; Detect the current system and capabilities
-  (defun paf/macosx-p ()
-    "Return non-nil iff Emacs is running on macOS."
-    (string-match "apple-darwin" system-configuration))
+  (defun tangle-init ()
+    "If the current buffer is 'init.org' the code-blocks are
+    tangled, and the tangled file is compiled."
+    (when (equal (buffer-file-name)
+                 (expand-file-name "emacs_setup.org" emacs-config-directory))
+      ;; Avoid running hooks when tangling.
+      (let ((prog-mode-hook nil))
+        (org-babel-tangle)
+        ;; (byte-compile-file paf-emacs-init)
+        )))
+
+  (add-hook 'after-save-hook 'tangle-init)
 #+end_src
 
 * Personal Initialization
@@ -233,6 +224,7 @@ Search for "Window Frame Parameters" in the Elisp  Info manual.
 
 ** Resize at pixel-level
 Otherwise resizing will round it at char width/height and not make it play well with the window manager.
+
 #+begin_src emacs-lisp :tangle "~/.emacs.d/early-init.el"
   (setq frame-resize-pixelwise 't)
 #+end_src
@@ -377,8 +369,11 @@ Use =C-x C-u= and =C-x C-l= to effect them.
   ;; Calendar starts on Monday
   (setq calendar-week-start-day 1)
   (setq org-gcal-local-timezone "Europe/Zurich")
+#+end_src
 
-  ;; org-gcal otherwise ask for a passphrase in a text popup.
+** GPG store passphrase
+Otherwise =org-gcal= asks for a passphrase in a text popup.
+#+begin_src emacs-lisp
   (setenv "GPG_AGENT_INFO")
   (setq plstore-cache-passphrase-for-symmetric-encryption 't)
 #+end_src
@@ -603,6 +598,7 @@ See [[https://github.com/karthink/popper][github:popper]] for more information.
     :init
     (setq popper-reference-buffers
           '("\\*Messages\\*"
+            "*vterm*"
             "\\*Bufler\\*"
             "Output\\*$"
             help-mode
@@ -641,20 +637,26 @@ Temporarily maximize a buffer.
   (global-set-key (kbd "C-F") 'paf/toggle-maximize-buffer)
 #+end_src
 
-*** display some buffer in a particulr location
+** Balance window size automatically
+#+begin_src emacs-lisp
+  (use-package balanced-windows
+    :ensure t
+    :config
+    (balanced-windows-mode))
+#+end_src
+
+** display some buffer in a particular location
 
 #+begin_src emacs-lisp
-  ;; make manual switching buffer behave the same as automatic display.
-  (setq switch-to-buffer-obey-display-actions t)
-
   (defun paf/display-buffer-at-bottom ()
     "Move current buffer to bottom of the frame. Also removes it from the side window."
     (interactive)
     (let ((buffer (current-buffer)))
       (with-current-buffer buffer
         (delete-window)
-        (display-buffer-at-bottom
-         buffer `((window-parameters . ((mode-line-format. (" " "%b")))))))))
+        (display-buffer-in-side-window
+         buffer `((side . bottom)
+                  (window-parameters . ((mode-line-format. (" " "%b")))))))))
 
   (defun paf/display-buffer-at-right ()
     "Move current buffer to right side window."
@@ -673,31 +675,38 @@ Temporarily maximize a buffer.
       (with-current-buffer buffer
         (delete-window)
         (display-buffer buffer))))
+#+end_src
+
+
+#+begin_src emacs-lisp
+  ;; make manual switching buffer behave the same as automatic display.
+  (setq switch-to-buffer-obey-display-actions t)
 
   (use-package window
-    :custom
-    (display-buffer-alist
-     '(("\\*\\(vterm\\|eat\\).*\\*"
-        (display-buffer-in-side-window)
-        (side . bottom)
-        (slot . -1)
-        (window-height . (body-lines . 15))
-        (window-parameters . ((no-delete-other-windows . t))))
-        ("\\*Org Agenda\\*"
-         (display-buffer-in-side-window)
-         (side . right)
-         (slot . 0)
-         (window-width . (body-columns . 70))
-         (window-parameters . ((no-delete-other-windows . t)
-                               (mode-line-format . ("")))))
-        ;(".*\\.org"
-        ; (display-buffer-in-side-window)
-        ; (side . right)
-        ; (slot . 1)
-        ; (window-width . (body-columns . 70))
-        ; (window-parameters . ((no-delete-other-windows . t)
-        ;                       (mode-line-format . ("")))))
-        ))
+    :config
+    (add-to-list 'display-buffer-alist
+                 '("\\*\\(vterm\\|eat\\).*\\*"
+                   (display-buffer-in-side-window)
+                   (side . bottom)
+                   (slot . -1)
+                   (window-height . (body-lines . 15))
+                   (window-parameters . ((no-delete-other-windows . t)))))
+    (add-to-list 'display-buffer-alist
+                 '("\\*Org Agenda\\*"
+                   (display-buffer-in-side-window)
+                   (side . right)
+                   (slot . 0)
+                   (window-width . (body-columns . 70))
+                   (window-parameters . ((no-delete-other-windows . t)
+                                         (mode-line-format . (""))))))
+    ;(add-to-list 'display-buffer-alist
+    ;             '(".*\\.org"
+    ;               (display-buffer-in-side-window)
+    ;               (side . right)
+    ;               (slot . 1)
+    ;               (window-width . (body-columns . 70))
+    ;               (window-parameters . ((no-delete-other-windows . t)
+    ;                                     (mode-line-format . (""))))))
      :bind (("C-x w s" . window-toggle-side-windows)
             ("C-x w b" . paf/display-buffer-at-bottom)
             ("C-x w r" . paf/display-buffer-at-right)
@@ -719,24 +728,15 @@ Temporarily maximize a buffer.
 
 #+end_src
 
-** Balance window size automatically
-#+begin_src emacs-lisp
-  (use-package balanced-windows
-    :ensure t
-    :config
-    (balanced-windows-mode))
-#+end_src
-
 * Colors and Look
 ** Match theme color during startup as well.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle "~/.emacs.d/early-init.el"
   (set-background-color "#3f3f3f")
   (set-foreground-color "#f0dfaf")
 #+end_src
 
-** In X11 mode: mouse and window title
+** In X11 mode: support mouse
 #+begin_src emacs-lisp
-    (setq frame-title-format "emacs @ %b - %f")
     (when (display-graphic-p)
       (mouse-wheel-mode)  ;; enable wheelmouse support by default
       (set-selection-coding-system 'compound-text-with-extensions)
@@ -765,7 +765,7 @@ Setup the visual cues about the current editing buffer
 #+end_src
 
 ** nyan-mode
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (use-package nyan-mode
   :ensure t
   :bind ("C-p n" . 'nyan-mode))
@@ -1002,6 +1002,7 @@ The web-page examples *cannot be cut/pasted* as they are not escaped properly.
     ;; path simplifications
     (add-to-list 'sml/replacer-regexp-list '("/google3/" " //") t)
     (add-to-list 'sml/replacer-regexp-list '("/nlp/generation/" "/n/g/") t)
+    (add-to-list 'sml/replacer-regexp-list '("/commerce/transaction_safety/" "/c/ts/") t)
 
     (add-to-list 'sml/prefix-regexp "\\[[^]]*\\]")
   )
@@ -1118,7 +1119,7 @@ Let's one jump around text
 
 ** Accents
 This will enable a popup to add diacritics to a letter. See [[https://github.com/elias94/accent][accent]] on github.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (use-package accent
     :ensure t)
 
@@ -1248,7 +1249,7 @@ Colorize color names and hexadecimal codes in the correct color.
 #+end_src
 
 ** writeroom-mode
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (use-package writeroom-mode
   :ensure t
   :init
@@ -1846,6 +1847,7 @@ All prefixed with =C-x C-a=
 | (rarer)    | Single instruction   |    i    |
 |            | Jump to current line |    j    |
 |------------+----------------------+---------|
+
 *** LLDB
 This seems to be the more modern way.
 Setup info found here: https://emacs-lsp.github.io/dap-mode/page/configuration/
@@ -1867,7 +1869,6 @@ Setup info found here: https://emacs-lsp.github.io/dap-mode/page/configuration/
 ** vterm
 #+begin_src emacs-lisp
   (use-package vterm
-    :unless (paf/macosx-p)
     :ensure t
     :init
     (setq vterm-always-compile-module t)
@@ -1884,7 +1885,6 @@ Setup info found here: https://emacs-lsp.github.io/dap-mode/page/configuration/
 
   (use-package vterm-toggle
     :ensure t
-    :unless (paf/macosx-p)
     :after vterm
     :bind ("C-c t" . 'vterm-toggle))
 #+end_src
@@ -1915,21 +1915,6 @@ Adding support for Bazel
 #+begin_src emacs-lisp
   (use-package bazel
     :ensure t)
-#+end_src
-
-** Hiding zones
-This helps showing / hiding zones given a regexp.
-
-The isearch+ is weird when interacting with it during incremental search.
-#+begin_src emacs-lisp :tangle no
-  (use-package zones
-    :ensure t)
-
-  (use-package isearch+
-    :load-path (lambda () (expand-file-name paf-lisp-directory)))
-
-  ;;(use-package isearch-prop
-  ;;  :load-path (lambda () (expand-file-name paf-lisp-directory)))
 #+end_src
 
 ** PlatformIO
