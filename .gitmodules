@@ -6,7 +6,7 @@
 	url = https://github.com/JulienMasson/org-gtasks.git
 [submodule "Modules/org-html-themes"]
 	path = Modules/org-html-themes
-	url = https://github.com/fniessen/org-html-themes
+	url = https://github.com/fniessen/org-html-themes.git
 [submodule "Modules/indent-bars"]
 	path = Modules/indent-bars
 	url = https://github.com/jdtsmith/indent-bars.git
