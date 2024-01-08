@@ -383,6 +383,14 @@ Use =C-x C-u= and =C-x C-l= to effect them.
   (setq plstore-cache-passphrase-for-symmetric-encryption 't)
 #+end_src
 
+** Frame name
+This will set the frame name to something identifiable when running over exported Wayland session.
+#+begin_src emacs-lisp
+;; Set frame-title-format differently when invoked over SSH.
+(setq-default frame-title-format
+  (if (getenv "SSH_CONNECTION") "%U@%S" "GNU Emacs"))
+#+end_src
+
 * Completion
 ** Vertico
 Added the completion framework [[https://github.com/minad/vertico][vertico]] as from the docs, I liked
