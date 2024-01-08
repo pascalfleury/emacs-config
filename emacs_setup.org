@@ -2476,7 +2476,8 @@ EmacSQL will need to get its C-binary compiled, and needs supporting tools. Note
   [[ -n "$(which cc)" ]] || install_pkg -x cc clang
 #+end_src
 *** org-ref
-#+begin_src emacs-lisp
+This just broke too many things with my emacs 29.1 and I don't really use it.
+#+begin_src emacs-lisp :tangle no
   (use-package org-ref
     :ensure t)
 #+end_src
