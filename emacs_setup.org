@@ -1191,6 +1191,12 @@ web-mode with config for Polymer editing
   (setq web-mode-code-indent-offset 2))
 #+end_src
 
+** ini-mode
+#+begin_src emacs-lisp
+  (use-package ini-mode
+    :ensure t)
+#+end_src
+
 ** typescript-mode
 #+begin_src emacs-lisp
   (use-package typescript-mode
