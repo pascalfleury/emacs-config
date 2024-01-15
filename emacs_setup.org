@@ -1194,7 +1194,10 @@ web-mode with config for Polymer editing
 ** ini-mode
 #+begin_src emacs-lisp
   (use-package ini-mode
-    :ensure t)
+    :ensure t
+    :config
+    (add-to-list 'auto-mode-alist '("\\.ini\\'" . ini-mode))
+    (add-to-list 'auto-mode-alist '("\\..*rc\\'" . ini-mode)))
 #+end_src
 
 ** typescript-mode
