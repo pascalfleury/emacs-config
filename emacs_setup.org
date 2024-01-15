@@ -1197,7 +1197,7 @@ web-mode with config for Polymer editing
     :ensure t
     :config
     (add-to-list 'auto-mode-alist '("\\.ini\\'" . ini-mode))
-    (add-to-list 'auto-mode-alist '("\\..*rc\\'" . ini-mode)))
+    (add-to-list 'auto-mode-alist '("rc\\'" . ini-mode)))
 #+end_src
 
 ** typescript-mode
