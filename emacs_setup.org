@@ -1370,9 +1370,8 @@ One needs to apply a patch to the 8.0.0 version to avoid the regexp issue ([[htt
     :config
     (setq hbmap:dir-user org-directory)
     (setq hbmap:filename "personal-buttons.hypb")
-    (load-file (expand-file-name "hyperbole-systems.el" paf-lisp-directory)))
-
-    (require 'hyperbole)
+    (load-file (expand-file-name "hyperbole-systems.el" paf-lisp-directory))
+    (hyperbole-mode 1))
 #+end_src
 
 ** [[https://github.com/fourier/ztree#ztree][ztree]]
