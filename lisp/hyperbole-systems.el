@@ -67,8 +67,8 @@
 (defun srcfs-path-of-thing-at-point ()
   "Find constructs that are paths to SrcFS."
   (save-excursion
-    (skip-chars-backward "[:alnum:]_/\\.-")
-    (if (looking-at "//[[:alnum:]_/\\.-]+")
+    (skip-chars-backward "[:alnum:]_/\\.;-")
+    (if (looking-at "//[[:alnum:]_/\\.-]+\\(;l=[0-9-]+\\)?")
         (cons (+ (point) 2) (match-end 0)) ; remove leading slashes
       nil)))
 
