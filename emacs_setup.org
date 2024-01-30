@@ -320,7 +320,7 @@ Check by running =(server-running-p)=.
   (setq-default buffer-file-coding-system 'utf-8-unix)
   (prefer-coding-system 'utf-8)
   ;; Now do the same for cut/pasting across apps
-  (setq selection-coding-system 'UTF8_STRING)
+  (setq selection-coding-system 'utf-8)
   (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
 
   ;; Other things I found on internet that are documented as being a too big hammer.
