@@ -3,7 +3,7 @@
 #+BABEL: :cache yes
 #+PROPERTY: header-args :tangle "~/.emacs.d/init.el"
 
-This is my Emacs config. You need to tangle this into a file that then gets loaded by Emacs: =C-c C-v t= [org-babel-tangle]. Below, I also explain how this tangling is automated.
+This is my Emacs config. You need to tangle this into a file that then gets loaded by Emacs: ={C-c C-v t}= [org-babel-tangle]. Below, I also explain how this tangling is automated.
 
 Find extensive documentation about how to do this [[https://github.com/larstvei/dot-emacs][here]].
 
@@ -1367,7 +1367,7 @@ One needs to apply a patch to the 8.0.0 version to avoid the regexp issue ([[htt
     :custom-face
     (hbut       ((t (:foreground "green yellow"))))
     (hbut-flash ((t (:foreground "dark gray" :background "green yellow"))))
-    :config
+    :init
     (setq hbmap:dir-user org-directory)
     (setq hbmap:filename "personal-buttons.hypb")
     (load-file (expand-file-name "hyperbole-systems.el" paf-lisp-directory))
