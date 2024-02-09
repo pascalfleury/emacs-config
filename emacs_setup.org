@@ -1226,6 +1226,17 @@ Mode for Google protocol buffer mode
     :mode "\\.proto\\'")
 #+end_src
 
+** Turtle/N3 mode
+#+begin_src emacs-lisp
+  Helps with editing schema.org files.
+  (use-package ttl-mode
+    :ensure t
+    :config
+    (add-to-list 'auto-mode-alist '("\\.n3" . ttl-mode))
+    (add-to-list 'auto-mode-alist '("\\.ttl" . ttl-mode))
+    (add-hook 'ttl-mode-hook 'turn-on-font-lock))
+#+end_src
+
 ** rainbow-mode
 Colorize color names and hexadecimal codes in the correct color.
 #+begin_src emacs-lisp
