@@ -1227,8 +1227,8 @@ Mode for Google protocol buffer mode
 #+end_src
 
 ** Turtle/N3 mode
+Helps with editing schema.org files.
 #+begin_src emacs-lisp
-  Helps with editing schema.org files.
   (use-package ttl-mode
     :ensure t
     :config
