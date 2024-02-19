@@ -640,12 +640,11 @@ Temporarily maximize a buffer.
   (global-set-key (kbd "C-F") 'paf/toggle-maximize-buffer)
 #+end_src
 
-** Balance window size automatically
+** Balance window size
+Balance by areas, no use of tree hierarchy for me.
+(balanced-windows-mode nil)
 #+begin_src emacs-lisp
-  (use-package balanced-windows
-    :ensure t
-    :config
-    (balanced-windows-mode))
+  (global-set-key (kbd "C-x +") 'balance-windows-area)
 #+end_src
 
 ** display some buffer in a particular location
