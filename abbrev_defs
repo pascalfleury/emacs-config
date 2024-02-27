@@ -3,6 +3,7 @@
   '(
     ("DNS" "DO NOT SUBMIT" nil :count 1)
     ("cosnt" "const" nil :count 2)
+    ("cosntexpr" "constexpr" nil :count 3)
     ("coudl" "could" nil :count 1)
     ("optinos" "options" nil :count 1)
     ("shoudl" "should" nil :count 1)
