@@ -8,6 +8,7 @@
     ("optinos" "options" nil :count 1)
     ("shoudl" "should" nil :count 1)
     ("teh" "the" nil :count 1)
+    ("soem" "some" nil :count 1)
     ("tpx" "Tipp-Ex" nil :count 1)
    ))
 
@@ -15,4 +16,3 @@
   '(
     ("tpx" "Tipp-Ex" nil :count 6)
    ))
-
