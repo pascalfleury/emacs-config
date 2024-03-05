@@ -1890,8 +1890,9 @@ Setup info found here: https://emacs-lsp.github.io/dap-mode/page/configuration/
     (dap-gdb-lldb-setup t))
 #+end_src
 
-** vterm
-#+begin_src emacs-lisp
+** Terminals
+*** vterm
+#+begin_src emacs-lisp :tangle no
   (use-package vterm
     :ensure t
     :init
@@ -1932,6 +1933,12 @@ Setup info found here: https://emacs-lsp.github.io/dap-mode/page/configuration/
           source "\${EMACS_VTERM_PATH}/etc/emacs-vterm-bash.sh"
   fi
   EOF
+#+end_src
+
+*** eat
+#+begin_src emacs-lisp
+    (use-package eat
+      :ensure t)
 #+end_src
 
 ** bazel
