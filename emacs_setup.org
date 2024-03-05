@@ -1052,6 +1052,26 @@ Letting one enter chars that are otherwise difficult in e.g. the minibuffer.
   (global-set-key (kbd "<end>") 'end-of-line)
 #+end_src
 
+** Moving buffer
+Scrolling in-place info found here: https://stackoverflow.com/questions/8993183/emacs-scroll-buffer-not-point
+
+#+begin_src emacs-lisp
+  (defun scroll-down-in-place (n)
+    (interactive "p")
+    (previous-line n)
+    (unless (eq (window-start) (point-min))
+      (scroll-down n)))
+<
+  (defun scroll-up-in-place (n)
+    (interactive "p")
+    (next-line n)
+    (unless (eq (window-end) (point-max))
+      (scroll-up n)))
+
+  (define-key prog-mode-map (kbd "M-S-<down>") 'scroll-up-in-place)
+  (define-key prog-mode-map (kbd "M-S-<up>") 'scroll-down-in-place)
+#+end_src
+
 ** Macros
 #+begin_src emacs-lisp
 (global-set-key [f3] 'start-kbd-macro)
