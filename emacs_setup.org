@@ -1061,7 +1061,7 @@ Scrolling in-place info found here: https://stackoverflow.com/questions/8993183/
     (previous-line n)
     (unless (eq (window-start) (point-min))
       (scroll-down n)))
-<
+
   (defun scroll-up-in-place (n)
     (interactive "p")
     (next-line n)
