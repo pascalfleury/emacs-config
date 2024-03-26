@@ -7,12 +7,14 @@
     ("coudl" "could" nil :count 1)
     ("optinos" "options" nil :count 1)
     ("shoudl" "should" nil :count 1)
-    ("teh" "the" nil :count 1)
     ("soem" "some" nil :count 1)
-    ("tpx" "Tipp-Ex" nil :count 1)
+    ("teh" "the" nil :count 1)
    ))
 
-(define-abbrev-table 'org-mode-abbrev-table
+(define-abbrev-table 'prog-mode-abbrev-table
   '(
-    ("tpx" "Tipp-Ex" nil :count 6)
+    ("DNS" "DO NOT SUBMIT" nil :count 1)
+    ("ccpl" "commerce/compliance" nil :count 3)
+    ("cosnt" "const" nil :count 2)
+    ("cosntexpr" "constexpr" nil :count 3)
    ))
