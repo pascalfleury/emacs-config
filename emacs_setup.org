@@ -687,14 +687,15 @@ Balance by areas, no use of tree hierarchy for me.
   (use-package window
     :config
     (add-to-list 'display-buffer-alist
-                 '("\\*\\(vterm\\|eat\\).*\\*<[0-9]+>"
+                 '("\\*\\(vterm\\|eat\\)\\*<[:digit:]+>"
                    (display-buffer-in-side-window)
                    (side . bottom)
                    (slot . 1)  ;; secondary terminals are in slot 1
                    (window-height . (body-lines . 15))
+                   ;(window-width . (body-columns . 75))
                    (window-parameters . ((no-delete-other-windows . t)))))
     (add-to-list 'display-buffer-alist
-                 '("\\*\\(vterm\\|eat\\).*\\*"
+                 '("\\*\\(vterm\\|eat\\)\\*\\'"
                    (display-buffer-in-side-window)
                    (side . bottom)
                    (slot . -1)
@@ -1966,8 +1967,13 @@ Setup info found here: https://emacs-lsp.github.io/dap-mode/page/configuration/
 
 *** eat
 #+begin_src emacs-lisp
-    (use-package eat
-      :ensure t)
+  (use-package eat
+    :ensure t
+    :config
+    ;; (delete [C-left] eat-semi-char-non-bound-keys)
+    ;; (delete [C-right] eat-semi-char-non-bound-keys)
+    ;; (eat-update-semi-char-mode-map)
+    )
 #+end_src
 
 ** bazel
