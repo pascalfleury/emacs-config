@@ -992,7 +992,7 @@ paf-line-branch-name :: for the branch/bookmark of the VCS
                                   (custom-modeline-flycheck-status)))))
 #+end_src
 
-Also discovered SmartModeLine tht gets me quite a bit there.
+Also discovered SmartModeLine that gets me quite a bit there.
 Note that you should *beware escaping hell!!!* What you see on the web page is not exactly what is in the file!!!
 There are many traps in this module, as it does some magic while you're not watching that totally gets in the way when you first try to play with this.
 The web-page examples *cannot be cut/pasted* as they are not escaped properly.
@@ -1007,11 +1007,13 @@ The web-page examples *cannot be cut/pasted* as they are not escaped properly.
     (add-to-list 'sml/replacer-regexp-list
                  '("^~/Projects/\\([^/]*\\)/\\(\\(fig\\|git.?\\|exp\\)-[^/]*\\)" "[🡇\\2]") t)
     (add-to-list 'sml/replacer-regexp-list
-                 '("^/google/src/cloud/fleury/\\([^/]+\\)" "[☁\\1]") t)
+                 '("^/google/src/cloud/fleury/\\([^/]+\\)" "[⛅\\1]") t)
     ;; path simplifications
     (add-to-list 'sml/replacer-regexp-list '("/google3/" " //") t)
     (add-to-list 'sml/replacer-regexp-list '("/nlp/generation/" "/n/g/") t)
     (add-to-list 'sml/replacer-regexp-list '("/commerce/transaction_safety/" "/c/ts/") t)
+    (add-to-list 'sml/replacer-regexp-list '("/commerce/compliance/orca/" "/🐟/") t)
+    (add-to-list 'sml/replacer-regexp-list '("/commerce/compliance/" "/🛒/") t)
 
     (add-to-list 'sml/prefix-regexp "\\[[^]]*\\]")
   )
