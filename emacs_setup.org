@@ -1970,9 +1970,10 @@ Setup info found here: https://emacs-lsp.github.io/dap-mode/page/configuration/
   (use-package eat
     :ensure t
     :config
-    ;; (delete [C-left] eat-semi-char-non-bound-keys)
-    ;; (delete [C-right] eat-semi-char-non-bound-keys)
-    ;; (eat-update-semi-char-mode-map)
+    (delete [C-left] eat-semi-char-non-bound-keys)
+    (delete [C-right] eat-semi-char-non-bound-keys)
+    (eat-update-semi-char-mode-map)
+    (eat-reload)
     )
 #+end_src
 
