@@ -3035,7 +3035,7 @@ This enables a more fine-grained filtering of the agenda items.
   ;(setq org-agenda-block-separator #x2500)
   (setq org-agenda-block-separator " ")
   (setq org-agenda-custom-commands
-        '(("T" "Hot Today"
+        '(("H" "Hot Today"
            ((agenda nil ((org-agenda-span 'day)
                          (org-agenda-skip-function
                           '(org-agenda-skip-entry-if 'deadline))
