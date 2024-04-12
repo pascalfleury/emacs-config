@@ -1090,10 +1090,34 @@ Scrolling in-place info found here: https://stackoverflow.com/questions/8993183/
 #+end_src
 
 ** Text size
-Increase/decrease text size
+Increase/decrease text size in an entire frame.
+This is heavily inspired from this [[https://stackoverflow.com/questions/24705984/increase-decrease-font-size-in-an-emacs-frame-not-just-buffer][stackoverflow]] post.
 #+begin_src emacs-lisp
-(define-key global-map (kbd "C-+") 'text-scale-increase)
-(define-key global-map (kbd "C--") 'text-scale-decrease)
+  (defun paf/frame-text-size-adjust (amount &optional frame)
+    "Change font size by amount in the entire frame. Defaults to
+  selected frame if FRAME is nil."
+    (interactive "p")
+    (let* ((current-frame (or frame (selected-frame)))
+           (font (face-attribute 'default :font current-frame))
+           (font-size (font-get font :size))
+           (new-font-size (+ font-size amount)))
+      (set-frame-font (font-spec :size new-font-size) t `(,current-frame))))
+
+  (defun paf/frame-text-scale-increase (&optional amount frame)
+    "Adjust frame font size by amount or 1 if not specified."
+    (interactive "p")
+    (paf/frame-text-size-adjust (or amount 1) frame))
+
+  (defun paf/frame-text-scale-decrease (&optional amount frame)
+    "Adjust frame font size by -amount or -1 if not specified."
+    (interactive "p")
+    (paf/frame-text-size-adjust (- (or amount 1)) frame))
+
+
+  (define-key global-map (kbd "C-+") 'text-scale-increase)
+  (define-key global-map (kbd "C--") 'text-scale-decrease)
+  (global-set-key (kbd "C-x C-+") 'paf/frame-text-scale-increase)
+  (global-set-key (kbd "C-x C--") 'paf/frame-text-scale-decrease)
 #+end_src
 
 ** multiple regions
