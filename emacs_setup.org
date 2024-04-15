@@ -1997,6 +1997,7 @@ Setup info found here: https://emacs-lsp.github.io/dap-mode/page/configuration/
     (delete [C-left] eat-semi-char-non-bound-keys)
     (delete [C-right] eat-semi-char-non-bound-keys)
     (eat-update-semi-char-mode-map)
+    (setq eat-line-input-ring-size 10000)
     (eat-reload)
     )
 #+end_src
