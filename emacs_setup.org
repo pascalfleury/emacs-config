@@ -582,6 +582,37 @@ Easier shortcuts for resizing windows
   (global-set-key (kbd "S-C-<up>") 'enlarge-window)
 #+end_src
 
+** Moving windows (seamless with i3)
+See the documentation: https://sqrtminusone.xyz/posts/2021-10-04-emacs-i3/
+
+*** TODO Implement this in my config!
+:LOGBOOK:
+- State "TODO"       from              [2024-04-23 Tue 13:44]
+:END:
+
+** toggle-maximize-buffer
+Temporarily maximize a buffer.
+[[https://gist.github.com/mads379/3402786][found here]]
+#+begin_src emacs-lisp
+  (defun paf/toggle-maximize-buffer () "Maximize buffer"
+         (interactive)
+         (if (= 1 (length (window-list)))
+             (jump-to-register '_)
+           (progn
+             (window-configuration-to-register '_)
+             (delete-other-windows))))
+  ;;Map it to a key.
+  (global-set-key (kbd "M-<f8>") 'paf/toggle-maximize-buffer)
+  (global-set-key (kbd "C-F") 'paf/toggle-maximize-buffer)
+#+end_src
+
+** Balance window size
+Balance by areas, no use of tree hierarchy for me.
+(balanced-windows-mode nil)
+#+begin_src emacs-lisp
+  (global-set-key (kbd "C-x +") 'balance-windows-area)
+#+end_src
+
 ** winner-mode
 Enables =winner-mode=. Navigate buffer-window configs with =C-c left= and =C-c right=.
 #+begin_src emacs-lisp
@@ -622,29 +653,6 @@ See [[https://github.com/karthink/popper][github:popper]] for more information.
     :init   (persp-mode)
     :config (setq persp-state-default-file
                   (expand-file-name "perspective.save" user-emacs-directory)))
-#+end_src
-
-** toggle-maximize-buffer
-Temporarily maximize a buffer.
-[[https://gist.github.com/mads379/3402786][found here]]
-#+begin_src emacs-lisp
-  (defun paf/toggle-maximize-buffer () "Maximize buffer"
-         (interactive)
-         (if (= 1 (length (window-list)))
-             (jump-to-register '_)
-           (progn
-             (window-configuration-to-register '_)
-             (delete-other-windows))))
-  ;;Map it to a key.
-  (global-set-key (kbd "M-<f8>") 'paf/toggle-maximize-buffer)
-  (global-set-key (kbd "C-F") 'paf/toggle-maximize-buffer)
-#+end_src
-
-** Balance window size
-Balance by areas, no use of tree hierarchy for me.
-(balanced-windows-mode nil)
-#+begin_src emacs-lisp
-  (global-set-key (kbd "C-x +") 'balance-windows-area)
 #+end_src
 
 ** display some buffer in a particular location
