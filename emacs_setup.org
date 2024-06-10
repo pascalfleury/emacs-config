@@ -1598,7 +1598,31 @@ Both =eglot= and =lsp-mode= would need the =company= mode.
                 ("C-c <tab>" . company-complete) ; initiate the completion manually
                 ("C-c e f n" . flymake-goto-next-error)
                 ("C-c e f p" . flymake-goto-prev-error)
-                ("C-c e r"   . eglot-rename)))
+                ("C-c e r"   . eglot-rename)
+                ("C-p a"     . eglot-inlay-hints-mode)))
+
+  ;(customize-set-variable 'eglot-ignored-server-capabilities
+  ;                        '(:hoverProvider
+  ;                        ;; :completionProvider
+  ;                        :signatureHelpProvider
+  ;                        ;; :definitionProvider
+  ;                        ;; :typeDefinitionProvider
+  ;                        ;; :implementationProvider
+  ;                        ;; :referencesProvider
+  ;                        :documentHighlightProvider
+  ;                        :documentSymbolProvider
+  ;                        :workspaceSymbolProvider
+  ;                        :codeActionProvider
+  ;                        :codeLensProvider
+  ;                        :documentFormattingProvider
+  ;                        :documentRangeFormattingProvider
+  ;                        :documentOnTypeFormattingProvider
+  ;                        :renameProvider
+  ;                        :documentLinkProvider
+  ;                        :colorProvider
+  ;                        :foldingRangeProvider
+  ;                        :executeCommandProvider
+  ;                        :inlayHintProvider))
 #+end_src
 
 ** header/implementation toggle
