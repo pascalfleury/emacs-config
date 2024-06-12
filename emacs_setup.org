@@ -1045,6 +1045,14 @@ The web-page examples *cannot be cut/pasted* as they are not escaped properly.
     )
 #+end_src
 
+** dired file type colors
+#+begin_src emacs-lisp
+  (use-package dired-rainbow
+    :ensure t
+    :config
+    (dired-rainbow-define archive "#555555" ("org_archive" "archive")))
+#+end_src
+
 * Key Mappings
 ** which-key
 This will show the list of the possible completion keys during a longer key sequence.
@@ -1250,6 +1258,48 @@ web-mode with config for Polymer editing
   (setq web-mode-markup-indent-offset 2)
   (setq web-mode-css-indent-offset 2)
   (setq web-mode-code-indent-offset 2))
+#+end_src
+
+** dired-mode (tweaks)
+#+begin_src emacs-lisp
+  (use-package dired-hide-dotfiles
+    :ensure t
+    :bind
+    (:map dired-mode-map ("." . dired-hide-dotfiles-mode)))
+#+end_src
+
+The following only respects the project's =.gitignore= file.
+#+begin_src emacs-lisp
+  (use-package dired-gitignore
+    :ensure t
+    :bind
+    (:map dired-mode-map ("C-." . dired-gitignore-mode)))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package dired-preview
+    :ensure t
+    :bind
+    (:map dired-mode-map ("P" . dired-preview-mode))
+    ; :config
+    ; (setq dired-preview-ignored-extensions-regexp)
+    )
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package dired-git
+    :ensure t
+    :hook (dired-mode . dired-git-mode))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package dired-git-info
+    :ensure t
+    :bind
+    (:map dired-mode-map (")" . dired-git-info-mode))
+    ; :config
+    ; (setq dired-preview-ignored-extensions-regexp)
+    )
 #+end_src
 
 ** ini-mode
