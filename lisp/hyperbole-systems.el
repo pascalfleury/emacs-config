@@ -87,6 +87,18 @@
 (put 'cns 'bounds-of-thing-at-point
      'cns-path-of-thing-at-point)
 
+;; mpm:ephemeral/gbash/diskless:1-b2d818a0_0cd22096_98ea5734_8e70527a_efb08073
+(defun mpm-path-of-thing-at-point ()
+  "Find constructs that are paths to CNS."
+  (save-excursion
+    (skip-chars-backward "[:alnum:]_/%=\\.:-")
+    (if (looking-at "mpm:\\([[:alnum:]_/%=\\.:-]+\\)")
+        (cons (match-beginning 1) (match-end 1))
+      nil)))
+
+(put 'mpm 'bounds-of-thing-at-point
+     'mpm-path-of-thing-at-point)
+
 ;; https://cl-status.corp.google.com/#/summary/Boq%20genx-nlg-server/494699940
 ;; cl-status:Boq%20genx-nlg-server/494699940
 (defun cl-status-of-thing-at-point ()
@@ -113,6 +125,7 @@
           (mid (thing-at-point 'mid))
           (srcfs (thing-at-point 'srcfs))
           (cns (thing-at-point 'cns))
+          (mpm (thing-at-point 'mpm))
           (cl-status (thing-at-point 'cl-status))
           topic)
       (cond
@@ -123,6 +136,8 @@
                      (hact 'www-url (concat "http://cs///depot/google3/" srcfs))))
        (cns (progn (ibut:label-set cns)
                    (hact 'www-url (concat "http://data.corp.google.com/cnsviewer/file?query=" cns))))
+       (mpm (progn (ibut:label-set mpm)
+                   (hact 'www-url (concat "http://mpmbrowse/package/" mpm "#1"))))
        (cl-status (progn (ibut:label-set cl-status)
                          (hact 'www-url (concat "https://cl-status.corp.google.com/#/summary/" cl-status))))
        (mid (progn (ibut:label-set mid)
