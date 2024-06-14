@@ -1286,7 +1286,7 @@ The following only respects the project's =.gitignore= file.
     )
 #+end_src
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (use-package dired-git
     :ensure t
     :hook (dired-mode . dired-git-mode))
