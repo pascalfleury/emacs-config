@@ -2588,19 +2588,19 @@ My cheat sheet for =org-roam=
 
 All keys prefixed with =C-c n=
 
-|-------------------+---------------|
+|-------------------+-------------|
 | Function          | =C-c n <key>= |
-| <l>               |      <c>      |
-|-------------------+---------------|
-| Toggle side panel |       l       |
-|-------------------+---------------|
-| Find/create       |       f       |
-| Insert link       |       i       |
-| Capture           |       c       |
-|-------------------+---------------|
-| Graph             |       g       |
-| Switch to buffer  |       b       |
-|-------------------+---------------|
+| <l>               |     <c>     |
+|-------------------+-------------|
+| Toggle side panel |      l      |
+|-------------------+-------------|
+| Find/create       |      f      |
+| Insert link       |      i      |
+| Capture           |      c      |
+|-------------------+-------------|
+| Graph             |      g      |
+| Switch to buffer  |      b      |
+|-------------------+-------------|
 
 
 #+begin_src emacs-lisp
