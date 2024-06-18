@@ -1269,7 +1269,7 @@ web-mode with config for Polymer editing
 #+end_src
 
 The following only respects the project's =.gitignore= file.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (use-package dired-gitignore
     :ensure t
     :bind
