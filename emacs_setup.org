@@ -3190,11 +3190,11 @@ This enables a more fine-grained filtering of the agenda items.
                              (:name "Working tasks"
                                     :todo "STARTED"
                                     :todo "NEXT")
+                             (:name "AIs to sort out"
+                                    :take (10 (:todo "AI")))
                              (:name "Meet and Re-greet"
                                     :and (:category "Social"
                                           :scheduled (past today)))
-                             (:name "AIs to sort out"
-                                    :take (10 (:todo "AI")))
                              (:discard (:anything))
                              ;; After the last group, the agenda will display items that didn't
                              ;; match any of these groups, with the default order position of 99
