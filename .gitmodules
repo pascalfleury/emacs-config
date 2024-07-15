@@ -1,0 +1,12 @@
+[submodule "Modules/org-html-themes"]
+	path = Modules/org-html-themes
+	url = https://github.com/fniessen/org-html-themes.git
+[submodule "Modules/el-easydraw"]
+	path = Modules/el-easydraw
+	url = https://github.com/misohena/el-easydraw.git
+[submodule "Modules/org-gtasks"]
+	path = Modules/org-gtasks
+	url = https://github.com/JulienMasson/org-gtasks.git
+[submodule "Modules/indent-bars"]
+	path = Modules/indent-bars
+	url = https://github.com/jdtsmith/indent-bars.git
