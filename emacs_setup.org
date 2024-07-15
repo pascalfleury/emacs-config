@@ -2122,13 +2122,17 @@ Displays vertical bars to show indentation visually.
   (use-package indent-bars
     :load-path (lambda () (expand-file-name "indent-bars" paf-modules-directory))
     :hook ((python-mode yaml-mode prog-mode) . indent-bars-mode)
+    :config
+    (require 'indent-bars-ts)
     :custom
+    (indent-bars-treesit-support t)
     (indent-bars-width-frac 0.05)
     (indent-bars-pad-frac 0.4)
     (indent-bars-pattern "  .  .")
-    (indent-bars-treesit-support t))
+    (indent-bars-treesit-ignore-blank-lines-types '("module")))
 #+end_src
 
+***
 * OrgMode
 Load all my org stuff, but first org-mode itself.
 ** Init
