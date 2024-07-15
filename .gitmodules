@@ -10,3 +10,4 @@
 [submodule "Modules/indent-bars"]
 	path = Modules/indent-bars
 	url = https://github.com/jdtsmith/indent-bars.git
+	branch = main
