@@ -1462,6 +1462,7 @@ It actually computes the entire arithmetic expression that is selected, and repl
 
   (use-package ledger-mode
     :ensure t
+    :pin melpa
     :bind ("<f6>" . 'paf/cleanup-ledger-buffer)
     :config
     (setq ledger-reconcile-default-commodity "CHF")
