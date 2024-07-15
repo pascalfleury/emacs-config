@@ -187,6 +187,13 @@ I set this up to tangle the init org-mode file into the actual Emacs init file a
   (add-hook 'after-save-hook 'tangle-init)
 #+end_src
 
+* Some bandaid
+compat needs to be up-to-date, at verion 30.0+
+#+begin_src emacs-lisp
+  (use-package compat
+    :ensure t
+    :pin gnu)
+#+end_src
 * Personal Initialization
 ** Clear =C-p= so I can use it as a prefix
 Remove =C-p= that I want to use for *me* personally as a prefix.
