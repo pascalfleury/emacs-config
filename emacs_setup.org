@@ -82,11 +82,11 @@ A variable so we can refer to this all over the place.
 Maybe there is a way to auto-detect this and generate it with literate programming or such.
 #+begin_src emacs-lisp
   (setq emacs-config-directory "~/Emacs")
-  (setq paf-lisp-directory (expand-file-name "lisp" emacs-config-directory))
-  (setq paf-modules-directory (expand-file-name "Modules" emacs-config-directory))
-  (setq paf-emacs-init "~/.emacs.d/init.el")
-  (setq custom-file "~/.emacs.d/custom.el")
-  (setq paf-roam-directory (expand-file-name "OrgRoam" org-directory))
+  (setq paf-lisp-directory    (expand-file-name "lisp"      emacs-config-directory))
+  (setq paf-modules-directory (expand-file-name "Modules"   emacs-config-directory))
+  (setq paf-emacs-init        (expand-file-name "init.el"   user-emacs-directory))
+  (setq custom-file           (expand-file-name "custom.el" user-emacs-directory))
+  (setq paf-roam-directory    (expand-file-name "OrgRoam"   org-directory))
 #+end_src
 
 ** MELPA
