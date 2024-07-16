@@ -384,8 +384,9 @@ Use =C-x C-u= and =C-x C-l= to effect them.
 ** GPG store passphrase
 Otherwise =org-gcal= asks for a passphrase in a text popup.
 #+begin_src emacs-lisp
-  (setenv "GPG_AGENT_INFO")
-  (setq plstore-cache-passphrase-for-symmetric-encryption 't)
+    (setenv "GPG_AGENT_INFO")
+    (setq plstore-cache-passphrase-for-symmetric-encryption 't)
+    (setq package-gnupghome-dir (expand-file-name "gnupg" user-emacs-directory))
 #+end_src
 
 ** Frame name
