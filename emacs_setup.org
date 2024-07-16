@@ -1275,6 +1275,14 @@ web-mode with config for Polymer editing
     (:map dired-mode-map ("." . dired-hide-dotfiles-mode)))
 #+end_src
 
+This makes the =S= as a hydra sort of the files.
+#+begin_src emacs-lisp
+  (use-package dired-quick-sort
+    :ensure t
+    :config
+    (dired-quick-sort-setup))
+  #+end_src
+
 The following only respects the project's =.gitignore= file.
 #+begin_src emacs-lisp :tangle no
   (use-package dired-gitignore
