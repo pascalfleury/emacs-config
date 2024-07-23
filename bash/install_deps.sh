@@ -1,6 +1,9 @@
 #!/bin/bash
 source $(dirname $0)/install.sh
 
+APPDIR=${HOME}/Apps
+[[ -d "${APPDIR}" ]] || mkdir -p "${APPDIR}"
+
 # Install TaskJuggler
 if [[ "$(uname -m)" == "x86_64" ]]; then
   if [[ "$(which tj3)" == "" ]]; then
@@ -21,25 +24,6 @@ fi
 
 install_pkg -x rg ripgrep
 
-# Needed to compile vterm first time
-if [[ "$(uname -o)" == "Android" ]]; then
-  install_pkg -x libtool libtool
-else
-  install_pkg -x libtool libtool-bin
-fi
-install_pkg -x cmake cmake
-install_pkg -x perl perl
-
-# Also amend the bash config
-cat >> ${HOME}/.bashrc <<EOF
-# Setup Emacs's VTerm communication
-if [[ "\${INSIDE_EMACS}" =~ ^vterm ]] \\
-    && [[ -n "\${EMACS_VTERM_PATH}" ]] \\
-    && [[ -f "\${EMACS_VTERM_PATH}/etc/emacs-vterm-bash.sh" ]]; then
-        source "\${EMACS_VTERM_PATH}/etc/emacs-vterm-bash.sh"
-fi
-EOF
-
 # Install PanDoc
 if [[ "$(uname -m)" == "x86_64" ]]; then
   install_pkg pandoc
@@ -54,25 +38,20 @@ fi
 # Make sure there is a C compiler for emacsql-sqlite
 [[ -n "$(which cc)" ]] || install_pkg -x cc clang
 
-# wget used for org-board archiving.
-install_pkg -x wget wget
-
 # Install reveal.js
-if [[ -d "${HOME}/reveal.js" ]]; then
+if [[ -d "${APPDIR}/reveal.js" ]]; then
   echo "Reveal already installed"
 else
-  (cd ~/ && git clone https://github.com/hakimel/reveal.js.git)
+  (cd ${APPDIR} && git clone https://github.com/hakimel/reveal.js.git)
 fi
 
 # Get a version of the PlantUML jar file.
 install_pkg -x dot graphviz  # for some diagrams
 install_pkg -x wget wget
 URL='http://sourceforge.net/projects/plantuml/files/plantuml.jar/download'
-DIR="${HOME}/Apps"
-if [[ ! -e "${DIR}/plantuml.jar" ]]; then
-    [[ -d "${DIR}" ]] || mkdir -p "${DIR}"
-    (cd "${DIR}" && wget -O plantuml.jar "${URL}")
-    ls -l "${DIR}/plantuml.jar"
+if [[ ! -e "${APPDIR}/plantuml.jar" ]]; then
+    (cd "${APPDIR}" && wget -O plantuml.jar "${URL}")
+    ls -l "${APPDIR}/plantuml.jar"
 fi
 
 set -e
