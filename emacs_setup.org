@@ -1994,9 +1994,10 @@ Using =srefactor= for C/C++. Let's see...
 Taken straight from the doc of =srefactor= at https://github.com/emacsmirror/srefactor
 #+begin_src emacs-lisp
   (use-package srefactor
-    :bind
-    (:map c-mode-map ((kbd "C-p S-r") . 'srefactor-refactor-at-point))
-    (:map c++-mode-map ((kbd "C-p S-r") . 'srefactor-refactor-at-point))
+    :bind (:map c-mode-map
+           ("C-p S-r" . 'srefactor-refactor-at-point)
+           :map c++-mode-map
+           ("C-p S-r" . 'srefactor-refactor-at-point))
     :config
     (semantic-mode 1))
 #+end_src
