@@ -1498,8 +1498,8 @@ Add the powerful Magit
 #+begin_src emacs-lisp
   (use-package magit
     :bind ("C-x g" . 'magit-status))
-  (use-package magit-todos
-    :defer)
+  ;(use-package magit-todos
+  ;  :defer)
 #+end_src
 ** Tree-sitter
 
