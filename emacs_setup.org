@@ -2020,6 +2020,10 @@ Taken from Prot's video: https://youtu.be/pSvsAutseO0?si=3eXYVh9rKIUdSsuj&t=874
 
   (setq ediff-split-window-function 'split-window-horizontally)
   (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+
+  ;; Always expand org buffers in ediff mode.
+  (with-eval-after-load 'outline
+   (add-hook 'ediff-prepare-buffer-hook #'org-show-all))
 #+end_src
 
 *** Compare to clipboard
