@@ -384,6 +384,15 @@ This will set the frame name to something identifiable when running over exporte
   (if (getenv "SSH_CONNECTION") "%U@%S" "GNU Emacs"))
 #+end_src
 
+** Saving history in session
+#+begin_src emacs-lisp
+  ;; Persist history over Emacs restarts.
+  (use-package savehist
+    :init
+    (setq savehist-additional-variables '(register-alist kill-ring))
+    (savehist-mode 1))
+#+end_src
+
 * Completion
 ** Vertico
 Added the completion framework [[https://github.com/minad/vertico][vertico]] as from the docs, I liked
@@ -410,11 +419,6 @@ Added the completion framework [[https://github.com/minad/vertico][vertico]] as 
     (setq completion-styles '(substring orderless)
           completion-category-defaults nil
           completion-category-overrides '((file (styles partial-completion)))))
-
-  ;; Persist history over Emacs restarts. Vertico sorts by history position.
-  (use-package savehist
-    :init
-    (savehist-mode))
 
   ;; A few more useful configurations...
   (use-package emacs
