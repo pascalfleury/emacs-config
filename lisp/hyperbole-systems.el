@@ -19,7 +19,8 @@
      'systems-url-bounds-of-thing-at-point)
 
 (defun systems-link-bounds-of-thing-at-point ()
-  "Find constructs that are identifiers for internal systems, e.g. b/12345 cr/12345678 guts/12345"
+  "Find constructs that are identifiers for internal systems,
+   e.g. b/12345 cr/12345678 guts/12345"
   ;; b/12345 cr/12345678 guts/12345 mdb/fleury
   (save-excursion
     (skip-chars-backward "[:alnum:]_/.-")
@@ -31,7 +32,8 @@
      'systems-link-bounds-of-thing-at-point)
 
 (defun short-link-bounds-of-thing-at-point ()
-  "Find constructs that are identifiers for short links, g/to-a.group or go/a-link or goto/a-link"
+  "Find constructs that are identifiers for short links,
+   g/to-a.group or go/a-link or goto/a-link"
   (save-excursion
     (skip-chars-backward "0-9a-zA-Z_/?#$=,;.&-")
     (if (looking-at "go?t?o?/[a-zA-Z0-9_\\.-]+\\([?/#][^ \t\n]*\\)?")

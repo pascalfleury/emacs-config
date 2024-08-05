@@ -4,13 +4,13 @@
 ;; Description: Search text-property or overlay-property contexts.
 ;; Author: Drew Adams
 ;; Maintainer: Drew Adams (concat "drew.adams" "@" "oracle" ".com")
-;; Copyright (C) 2011-2018, Drew Adams, all rights reserved.
+;; Copyright (C) 2011-2023, Drew Adams, all rights reserved.
 ;; Created: Sun Sep  8 11:51:41 2013 (-0700)
 ;; Version: 0
 ;; Package-Requires: ()
-;; Last-Updated: Tue Apr 30 16:24:52 2019 (-0700)
+;; Last-Updated: Fri Dec 30 09:36:38 2022 (-0800)
 ;;           By: dradams
-;;     Update #: 1505
+;;     Update #: 1515
 ;; URL: https://www.emacswiki.org/emacs/download/isearch-prop.el
 ;; Doc URL: https://www.emacswiki.org/emacs/IsearchPlus
 ;; Keywords: search, matching, invisible, thing, help
@@ -165,7 +165,7 @@
 ;;  `isearch.el'.  So, in your `~/.emacs' file, do this:
 ;;
 ;;  (eval-after-load "isearch" '(require 'isearch-prop))
- 
+
 ;;(@* "Overview of Features")
 ;;
 ;;; Overview of Features ---------------------------------------------
@@ -352,11 +352,15 @@
 ;;    (command `isearchp-toggle-hiding-comments').  You can toggle
 ;;    ignoring comments during Isearch, using `C-M-;' (command
 ;;    `isearchp-toggle-ignoring-comments').
- 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;; Change Log:
 ;;
+;; 2022/12/30 dadams
+;;     Added defalias for condition-case-no-debug to support Emacs 23, as Emacs 29+ removed it.
+;;     isearchp-add-prop-to-other-prop-zones, isearchp-(regexp|thing)-scan:
+;;       Use condition-case-unless-debug, not condition-case-no-debug.
 ;; 2019/04/30 dadams
 ;;     isearchp-add/remove-dim-overlay: Act only on isearchp-dimmed-overlays that are in current buffer.
 ;; 2018/11/22 dadams
@@ -583,6 +587,11 @@
 
 (eval-when-compile (require 'cl)) ;; case
 
+;; Emacs 23 doesn't yet have `condition-case-unless-debug'.  Emacs 29+ removed `condition-case-no-debug'.
+(eval-when-compile
+  (when (and (fboundp 'condition-case-no-debug)  (not (fboundp 'condition-case-unless-debug)))
+    (defalias 'condition-case-unless-debug 'condition-case-no-debug)))
+
 (if (fboundp 'color-name-to-rgb)
     (require 'color)                    ; Emacs 24+
   (require 'hexrgb nil t)) ;; (no error if not found): hexrgb-increment-value
@@ -591,11 +600,13 @@
 (require 'zones nil t) ;; (no error if not found):
  ;; zz-izone-limits, zz-izones-var, zz-read-any-variable, zz-some, zz-zones-complement, zz-zone-union
 
+
 ;; Quiet the byte-compiler.
+(defvar icicle-WYSIWYG-Completions-flag) ;; In `icicles-opt.el'.
 (defvar isearchp-reg-beg) ;; In `isearch+.el'.
 (defvar isearchp-reg-end) ;; In `isearch+.el'.
 (defvar comment-end-skip) ;; In `newcomment.el' (Emacs 24+).
- 
+
 ;;(@* "Macros")
 
 ;;; Macros ----------------------------------------------
@@ -624,7 +635,7 @@ comments."
                                   ,@body))
          (when isearchp-ignore-comments-flag (isearchp-hide/show-comments 'show ,ostart ,oend))
          ,result))))
- 
+
 ;;(@* "Options")
 
 ;;; Options ----------------------------------------------------------
@@ -687,7 +698,7 @@ This has the effect that comments are ignored for searching."
   "Non-nil means limit query-replacing to the zones of `zz-izones-var'.
 This option has no effect if you do not use library `zones.el'."
   :type 'boolean :group 'isearch-plus)
- 
+
 ;;(@* "Internal Variables")
 
 ;;; Internal Variables -----------------------------------------------
@@ -750,7 +761,7 @@ Possible values are `text', `overlay', and nil, meaning both.")
 
 (defvar isearchp-zone-limits-function 'isearchp-zone-limits-izones
   "Function used to return limits of current search zones.")
- 
+
 ;;(@* "Keys")
 
 ;;; Keys -------------------------------------------------------------
@@ -766,7 +777,7 @@ Possible values are `text', `overlay', and nil, meaning both.")
 
 (eval-after-load "zones"
   '(define-key isearch-mode-map (kbd "S-SPC")     'isearchp-narrow-to-matching-zones))
- 
+
 ;;(@* "General Search-Property Commands")
 
 ;;; General Search-Property Commands ---------------------------------
@@ -1207,7 +1218,7 @@ non-contexts.  (You can use `\\[isearchp-remove-dimming]' to remove the dimming.
           isearchp-property-type    'text
           isearchp-property-values  (list (cons regexp predicate)))
     (when msgp (message (if matches-p "Scanning for regexp matches...done" "NO MATCH for regexp")))))
-   
+
 ;;(@* "General Non-Interactive Functions")
 
 ;;; General Non-Interactive Search-Property Functions ----------------
@@ -1504,7 +1515,7 @@ options `lazy-highlight-cleanup' and `lazy-highlight-max-at-a-time'.
 Remember that you can use `\\<isearch-mode-map>\\[isearchp-cleanup]' to remove lazy-highlighting and
 artifacts from property searching.  This includes dimming and all
 `isearchp-' properties."
-  (interactive 
+  (interactive
    (list (if (and transient-mark-mode  mark-active) (region-beginning) (point-min))
          (if (and transient-mark-mode  mark-active) (region-end) (point-max))
          current-prefix-arg))
@@ -1657,7 +1668,7 @@ Returns non-nil if the property was added, nil if not."
       (isearchp-with-comments-hidden
        start end
        (restore-buffer-modified-p nil)
-       (condition-case-no-debug add-prop-to-zones-with-other-prop
+       (condition-case-unless-debug add-prop-to-zones-with-other-prop
            (save-excursion
              (goto-char (setq last-beg  start))
              (while (and last-beg  (< last-beg end))
@@ -1824,7 +1835,7 @@ See `isearchp-add-regexp-as-property' for the parameter descriptions."
         (added-prop-p  nil)
         (found         nil))
     (with-silent-modifications
-      (condition-case-no-debug isearchp-regexp-scan
+      (condition-case-unless-debug isearchp-regexp-scan
           (save-excursion
             (restore-buffer-modified-p nil)
             (goto-char (setq last-beg  beg))
@@ -1910,12 +1921,12 @@ See `make-hash-table' for possible values of TEST."
        unless (gethash elt htable)
        do     (puthash elt elt htable)
        finally return (loop for i being the hash-values in htable collect i))))
- 
+
 ;;(@* "Search-Zones Commands and Functions")
 
 ;;; Search-Zones Commands and Functions ------------------------------
 
-(eval-after-load "zones" 
+(eval-after-load "zones"
   '(progn
     (defun isearchp-zones-forward (&optional variable)
       "Search forward within the zones of izones variable VARIABLE.
@@ -2214,7 +2225,7 @@ Non-interactively:
              (when msgp (message "Showing only ANTI-zones now")))))
 
     ))
- 
+
 ;;(@* "Imenu Commands and Functions")
 
 ;;; Imenu Commands and Functions -------------------------------------
@@ -2356,7 +2367,7 @@ Non-nil REGEXP-P means use regexp search (otherwise, literal search)."
   (let ((result  ()))
     (dolist (x xs) (when (funcall pred x) (push x result)))
     (nreverse result)))
- 
+
 ;;(@* "THING Commands and Functions")
 
 ;;; THING Commands and Functions" ------------------------------------
@@ -2641,7 +2652,7 @@ This function respects both `isearchp-search-complement-domain-p' and
       (isearchp-with-comments-hidden
        beg end
        (restore-buffer-modified-p nil)
-       (condition-case-no-debug isearchp-thing-scan
+       (condition-case-unless-debug isearchp-thing-scan
            (save-excursion
              (goto-char (setq last-beg  beg)) ; `isearchp-next-visible-thing-and-bounds' uses point.
              (while (and last-beg  (< last-beg end))

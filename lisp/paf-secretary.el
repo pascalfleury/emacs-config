@@ -104,13 +104,19 @@
 (require 'org)
 
 (defcustom paf-sec-me nil
-  "Tag that defines TASK todo entries associated to me")
+  "Tag that defines TASK todo entries associated to me"
+  :type 'string
+  :group 'paf-secretary)
 
 (defcustom paf-sec-with-property "with"
-  "Name of the property used to store who you are with.")
+  "Name of the property used to store who you are with."
+  :type 'string
+  :group 'paf-secretary)
 
 (defcustom paf-sec-where-property "where"
-  "Name of the property used to store where a task should be done.")
+  "Name of the property used to store where a task should be done."
+  :type 'string
+  :group 'paf-secretary)
 
 ;; ===== state variables
 (defvar paf-sec-with nil

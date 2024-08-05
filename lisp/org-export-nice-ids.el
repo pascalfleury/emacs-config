@@ -9,7 +9,8 @@
     (url-hexify-string simpler-text)))
 
 (defun alphapapa/org-export-get-reference (datum info)
-  "Like `org-export-get-reference', except uses heading titles instead of random numbers."
+  "Like `org-export-get-reference', except uses heading titles
+   instead of random numbers."
   (let ((cache (plist-get info :internal-references)))
     (or (car (rassq datum cache))
         (let* ((crossrefs (plist-get info :crossrefs))

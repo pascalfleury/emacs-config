@@ -9,6 +9,7 @@
 ;; contain sensitive data.
 
 ;;;###autoload
+
 (define-minor-mode sensitive-mode
   "For sensitive files like password lists.
 It disables backup creation and auto saving.
@@ -16,12 +17,10 @@ It disables backup creation and auto saving.
 With no argument, this command toggles the mode.
 Non-null prefix argument turns on the mode.
 Null prefix argument turns off the mode."
-  ;; The initial value.
-  nil
-  ;; The indicator for the mode line.
-  " Sensitive"
-  ;; The minor mode bindings.
-  nil
+  :init-value nil
+  :lighter " Sensitive"
+  :keymap nil
+  :after-hook
   (if (symbol-value sensitive-mode)
       (progn
 	;; disable backups

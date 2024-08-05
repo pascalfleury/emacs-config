@@ -5,13 +5,17 @@
 ;;       need to find otu how to implement this functionality here, or
 ;;       ditch org-roam.
 
+(require 'org-roam)
+
 (defcustom roam-extras-todo-tag-name "todo"
   "The tag to use to mark files containing org-mode todo items."
-  :type '(string))
+  :type '(string)
+  :group 'org-roam-extras)
 
 (defcustom roam-extras-org-agenda-files-cache nil
   "Keeps the original org-agenda-files while it tweaks it."
-  :type 'sexp)
+  :type 'sexp
+  :group 'org-roam-extras)
 
 (defun roam-extras/extract-agenda-category ()
   "Get category of item at point for agenda.
@@ -26,9 +30,9 @@ Category is defined by one of the following items:
 Usage example:
 
   (setq org-agenda-prefix-format
-        '((agenda . \" %(roam-extras/extract-agenda-category) %?-12t %12s\")))
+        \='((agenda . \" %(roam-extras/extract-agenda-category) %?-12t %12s\")))
 
-Refer to `org-agenda-prefix-format' for more information."
+Refer to \=`org-agenda-prefix-format\=' for more information."
   (let* ((file-name (when buffer-file-name
                       (file-name-sans-extension
                        (file-name-nondirectory buffer-file-name))))
@@ -47,6 +51,8 @@ Refer to `org-agenda-prefix-format' for more information."
 ;; but #+filetags: are sometimes ':' separated actually. So I split them
 ;; leniently, and assemble them with space.
 (defun roam-extras/get-filetags ()
+  ; should use org-collect-keywords
+  ; that returns an alist (KEYWORDS . LIST-OF-VALUES)
   (split-string (or (org-roam-get-keyword "filetags") "") "[ :]+" t))
 
 (defun roam-extras/set-filetags (tags)

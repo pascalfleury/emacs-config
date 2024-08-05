@@ -1,6 +1,6 @@
 ;;; ox-taskjuggler.el --- TaskJuggler Back-End for Org Export Engine
 ;;
-;; Copyright (C) 2007-2014 Free Software Foundation, Inc.
+;; Copyright (C) 2007-2021 Free Software Foundation, Inc.
 ;;
 ;; Emacs Lisp Archive Entry
 ;; Filename: ox-taskjuggler.el
@@ -23,7 +23,7 @@
 ;; GNU General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;; Commentary:
 ;;
@@ -64,7 +64,7 @@
 ;; should end up with something similar to the example by Peter Jones
 ;; in:
 ;;
-;;   http://www.devalot.com/assets/articles/2008/07/project-planning/project-planning.org.
+;;   https://www.devalot.com/assets/articles/2008/07/project-planning/project-planning.org.
 ;;
 ;; Now mark the top node of your tasks with a tag named
 ;; "taskjuggler_project" (or whatever you customized
@@ -137,7 +137,7 @@
 ;;   :END:
 ;;
 ;;;; * TODO
-;;   - Look at org-file-properties, org-global-properties and
+;;   - Look at org-keyword-properties, org-global-properties and
 ;;     org-global-properties-fixed
 ;;   - What about property inheritance and org-property-inherit-p?
 ;;   - Use TYPE_TODO as an way to assign resources
@@ -173,6 +173,13 @@ the project."
 (defcustom org-taskjuggler-resource-tag "taskjuggler_resource"
   "Tag marking project's resources.
 This tag is used to find the tree containing all the resources
+for the project."
+  :group 'org-export-taskjuggler
+  :type 'string)
+
+(defcustom org-taskjuggler-account-tag "taskjuggler_account"
+  "Tag marking project's accounts.
+This tag is used to find the tree containing all the accounts
 for the project."
   :group 'org-export-taskjuggler
   :type 'string)
@@ -311,7 +318,8 @@ exported with the corresponding task.
 
 Note that multiline properties are not supported, so attributes
 like note or journalentry have to be on a single line."
-  :group 'org-export-taskjuggler)
+  :group 'org-export-taskjuggler
+  :type '(list 'string))
 
 (defcustom org-taskjuggler-valid-project-attributes
   '(timingresolution timezone alertlevels currency currencyformat
@@ -322,25 +330,36 @@ like note or journalentry have to be on a single line."
   "Valid attributes for Taskjuggler project.
 If one of these appears as a property for a headline that is a
 project definition, it will be exported with the corresponding
-task. Attribute 'timingresolution' should be the first in the
+task. Attribute \='timingresolution\=' should be the first in the
 list."
-  :group 'org-export-taskjuggler)
+  :group 'org-export-taskjuggler
+  :type '(list 'string))
 
 (defcustom org-taskjuggler-valid-resource-attributes
   '(limits vacation shift booking efficiency journalentry rate
-	   workinghours flags)
+	   workinghours flags chargeset)
   "Valid attributes for Taskjuggler resources.
 If one of these appears as a property for a headline, it will be
 exported with the corresponding resource."
-  :group 'org-export-taskjuggler)
+  :group 'org-export-taskjuggler
+  :type '(list 'string))
+
+(defcustom org-taskjuggler-valid-account-attributes
+  '(aggregate credits flags)
+  "Valid attributes for Taskjuggler accounts.
+If one of these appears as a property for a headline, it will be
+exported with the corresponding account."
+  :group 'org-export-taskjuggler
+  :type '(list 'string))
 
 (defcustom org-taskjuggler-valid-report-attributes
-  '(headline columns definitions timeformat hideresource hidetask
-	     loadunit sorttasks formats period)
+  '(headline columns definitions timeformat hideaccount hideresource hidetask
+	     loadunit sorttasks formats period start end)
   "Valid attributes for Taskjuggler reports.
 If one of these appears as a property for a headline, it will be
 exported with the corresponding report."
-  :group 'org-export-taskjuggler)
+  :group 'org-export-taskjuggler
+  :type '(list 'string))
 
 (defcustom org-taskjuggler-process-command
   "tj3 --silent --no-color --output-dir %o %f"
@@ -352,7 +371,8 @@ full file name, \"%o\" by the reports directory (see
 
 If you are targeting Taskjuggler 2.4 (see
 `org-taskjuggler-target-version') this setting is ignored."
-  :group 'org-export-taskjuggler)
+  :group 'org-export-taskjuggler
+  :type 'string)
 
 (defcustom org-taskjuggler-reports-directory "reports"
   "Default directory to generate the Taskjuggler reports in.
@@ -365,7 +385,8 @@ doesn't exist.
 
 If you are targeting Taskjuggler 2.4 (see
 `org-taskjuggler-target-version') this setting is ignored."
-  :group 'org-export-taskjuggler)
+  :group 'org-export-taskjuggler
+  :type 'string)
 
 (defcustom org-taskjuggler-keep-project-as-task t
   "Non-nil keeps the project headline as an umbrella task for all tasks.
@@ -440,6 +461,19 @@ headlines and their associated ID."
           (cons resource id)))
       info)))
 
+(defun org-taskjuggler-assign-account-ids (accounts info)
+  "Assign a unique ID to each account within ACCOUNTS.
+ACCOUNTS is a list of headlines.  INFO is a plist used as a
+communication channel.  Return value is an alist between
+headlines and their associated ID."
+  (let (ids)
+    (org-element-map accounts 'headline
+      (lambda (account)
+        (let ((id (org-taskjuggler--build-unique-id account ids)))
+          (push id ids)
+          (cons account id)))
+      info)))
+
 
 
 ;;; Accessors
@@ -478,7 +512,7 @@ ITEM is a headline.  Return value is a string or nil if ITEM
 doesn't have any start date defined."
   (let ((scheduled (org-element-property :scheduled item)))
     (or
-     (and scheduled (org-timestamp-format scheduled "%Y-%02m-%02d"))
+     (and scheduled (org-format-timestamp scheduled "%Y-%02m-%02d"))
      (and (memq 'start org-taskjuggler-valid-task-attributes)
 	  (org-element-property :START item)))))
 
@@ -487,7 +521,10 @@ doesn't have any start date defined."
 ITEM is a headline.  Return value is a string or nil if ITEM
 doesn't have any end date defined."
   (let ((deadline (org-element-property :deadline item)))
-    (and deadline (org-timestamp-format deadline "%Y-%02m-%02d"))))
+    (or
+     (and deadline (org-format-timestamp deadline "%Y-%02m-%02d"))
+     (and (memq 'end org-taskjuggler-valid-task-attributes)
+	  (org-element-property :END item)))))
 
 
 
@@ -520,7 +557,7 @@ headline or finally add more underscore characters (\"_\")."
   (let ((id (org-string-nw-p (org-element-property :TASK_ID item))))
     ;; If an id is specified, use it, as long as it's unique.
     (if (and id (not (member id unique-ids))) id
-      (let* ((parts (org-split-string (org-element-property :raw-value item)))
+      (let* ((parts (split-string (org-element-property :raw-value item)))
 	     (id (org-taskjuggler--clean-id (downcase (pop parts)))))
 	;; Try to add more parts of the headline to make it unique.
 	(while (and (car parts) (member id unique-ids))
@@ -554,8 +591,8 @@ channel."
          (let ((deps (concat (org-element-property :BLOCKER task)
                              (org-element-property :DEPENDS task))))
            (and deps
-                (org-split-string (replace-regexp-in-string "{.*?}" "" deps)
-                                  "[ ,]* +"))))
+                (split-string (replace-regexp-in-string "{.*?}" "" deps)
+			      "[ ,]* +"))))
         depends)
     (when deps-ids
       ;; Find tasks with :task_id: property matching id in DEPS-IDS.
@@ -603,13 +640,13 @@ doesn't include leading \"depends\"."
 		   (let ((id (org-element-property :TASK_ID dep)))
 		     (and id
 			  (string-match (concat id " +\\({.*?}\\)") dep-str)
-			  (org-match-string-no-properties 1 dep-str))))
+			  (match-string-no-properties 1 dep-str))))
 		  path)
 	      ;; Compute number of exclamation marks by looking for the
 	      ;; common ancestor between TASK and DEP.
 	      (while (not (org-element-map parent 'headline
-			    (lambda (hl) (eq hl dep))))
-		(incf exclamations)
+			  (lambda (hl) (eq hl dep))))
+		(cl-incf exclamations)
 		(setq parent (org-export-get-parent parent)))
 	      ;; Build path from DEP to PARENT.
 	      (while (not (eq parent dep))
@@ -640,90 +677,115 @@ Return complete project plan as a string in TaskJuggler syntax."
      (org-taskjuggler--build-project project info)
      ;; 3. Insert global properties.
      (org-element-normalize-string org-taskjuggler-default-global-properties)
-     ;; 4. Insert resources.  Provide a default one if none is
+     ;; 3.5. Insert accounts.  Provide a default one if none is
      ;;    specified.
-     (let ((main-resources
+     (let ((main-accounts
             ;; Collect contents from various trees marked with
-            ;; `org-taskjuggler-resource-tag'.  Only gather top level
-            ;; resources.
+            ;; `org-taskjuggler-account-tag'.  Only gather top level
+            ;; accounts.
             (apply 'append
                    (org-element-map tree 'headline
                      (lambda (hl)
-                       (and (member org-taskjuggler-resource-tag
+                       (and (member org-taskjuggler-account-tag
                                     (org-export-get-tags hl info))
                             (org-element-map (org-element-contents hl) 'headline
                               'identity info nil 'headline)))
                      info nil 'headline))))
-       ;; Assign a unique ID to each resource.  Store it under
+       ;; Assign a unique ID to each account.  Store it under
        ;; `:taskjuggler-unique-ids' property in INFO.
        (setq info
              (plist-put info :taskjuggler-unique-ids
-                        (org-taskjuggler-assign-resource-ids
-                         main-resources info)))
+                        (org-taskjuggler-assign-account-ids
+                         main-accounts info)))
        (concat
-        (if main-resources
+        (if main-accounts
             (mapconcat
-             (lambda (resource) (org-taskjuggler--build-resource resource info))
-             main-resources "")
-          (format "resource %s \"%s\" {\n}\n" (user-login-name) user-full-name))
-        ;; 5. Insert tasks.
-        (let ((main-tasks
-               ;; If `org-taskjuggler-keep-project-as-task' is
-               ;; non-nil, there is only one task.  Otherwise, every
-               ;; direct children of PROJECT is a top level task.
-               (if org-taskjuggler-keep-project-as-task (list project)
-                 (or (org-element-map (org-element-contents project) 'headline
-                       'identity info nil 'headline)
-                     (error "No task specified")))))
-          ;; Assign a unique ID to each task.  Add it to
-          ;; `:taskjuggler-unique-ids' property in INFO.
-          (setq info
-                (plist-put info :taskjuggler-unique-ids
-                           (append
-                            (org-taskjuggler-assign-task-ids main-tasks info)
-                            (plist-get info :taskjuggler-unique-ids))))
-          ;; If no resource is allocated among tasks, allocate one to
-          ;; the first task.
-          (unless (org-element-map main-tasks 'headline
-                    (lambda (task) (org-element-property :ALLOCATE task))
-                    info t)
-            (org-element-put-property
-             (car main-tasks) :ALLOCATE
-             (or (org-taskjuggler-get-id (car main-resources) info)
-                 (user-login-name))))
-          (mapconcat
-           (lambda (task) (org-taskjuggler--build-task task info))
-           main-tasks ""))
-        ;; 6. Insert reports.  If no report is defined, insert default
-        ;;    reports.
-        (let ((main-reports
+             (lambda (account) (org-taskjuggler--build-account account info))
+             main-accounts "")
+          (format "account %s \"%s\" {\n}\n" (user-login-name) user-full-name))
+        ;; 4. Insert resources.  Provide a default one if none is
+        ;;    specified.
+        (let ((main-resources
                ;; Collect contents from various trees marked with
-               ;; `org-taskjuggler-report-tag'.  Only gather top level
-               ;; reports.
+               ;; `org-taskjuggler-resource-tag'.  Only gather top level
+               ;; resources.
                (apply 'append
                       (org-element-map tree 'headline
                         (lambda (hl)
-                          (and (member org-taskjuggler-report-tag
+                          (and (member org-taskjuggler-resource-tag
                                        (org-export-get-tags hl info))
-                               (org-element-map (org-element-contents hl)
-                                   'headline 'identity info nil 'headline)))
+                               (org-element-map (org-element-contents hl) 'headline
+                                 'identity info nil 'headline)))
                         info nil 'headline))))
-          (if main-reports
-              (mapconcat
-               (lambda (report) (org-taskjuggler--build-report report info))
-               main-reports "")
-	    ;; insert title in default reports
-	    (let* ((title (org-export-data (plist-get info :title) info))
-		   (report-title (if (string= title "")
-				     (org-taskjuggler-get-name project)
-				   title)))
-	      (mapconcat
-	       'org-element-normalize-string
-	       (mapcar
-		(function
-		 (lambda (report)
-		   (replace-regexp-in-string "%title" report-title  report t t)))
-		org-taskjuggler-default-reports) "")))))))))
+          ;; Assign a unique ID to each resource.  Store it under
+          ;; `:taskjuggler-unique-ids' property in INFO.
+          (setq info
+                (plist-put info :taskjuggler-unique-ids
+                           (org-taskjuggler-assign-resource-ids
+                            main-resources info)))
+          (concat
+           (if main-resources
+               (mapconcat
+                (lambda (resource) (org-taskjuggler--build-resource resource info))
+                main-resources "")
+             (format "resource %s \"%s\" {\n}\n" (user-login-name) user-full-name))
+           ;; 5. Insert tasks.
+           (let ((main-tasks
+                  ;; If `org-taskjuggler-keep-project-as-task' is
+                  ;; non-nil, there is only one task.  Otherwise, every
+                  ;; direct children of PROJECT is a top level task.
+                  (if org-taskjuggler-keep-project-as-task (list project)
+                    (or (org-element-map (org-element-contents project) 'headline
+                          'identity info nil 'headline)
+                        (error "No task specified")))))
+             ;; Assign a unique ID to each task.  Add it to
+             ;; `:taskjuggler-unique-ids' property in INFO.
+             (setq info
+                   (plist-put info :taskjuggler-unique-ids
+                              (append
+                               (org-taskjuggler-assign-task-ids main-tasks info)
+                               (plist-get info :taskjuggler-unique-ids))))
+             ;; If no resource is allocated among tasks, allocate one to
+             ;; the first task.
+             (unless (org-element-map main-tasks 'headline
+                       (lambda (task) (org-element-property :ALLOCATE task))
+                       info t)
+               (org-element-put-property
+                (car main-tasks) :ALLOCATE
+                (or (org-taskjuggler-get-id (car main-resources) info)
+                    (user-login-name))))
+             (mapconcat
+              (lambda (task) (org-taskjuggler--build-task task info))
+              main-tasks ""))
+           ;; 6. Insert reports.  If no report is defined, insert default
+           ;;    reports.
+           (let ((main-reports
+                  ;; Collect contents from various trees marked with
+                  ;; `org-taskjuggler-report-tag'.  Only gather top level
+                  ;; reports.
+                  (apply 'append
+                         (org-element-map tree 'headline
+                           (lambda (hl)
+                             (and (member org-taskjuggler-report-tag
+                                          (org-export-get-tags hl info))
+                                  (org-element-map (org-element-contents hl)
+                                      'headline 'identity info nil 'headline)))
+                           info nil 'headline))))
+             (if main-reports
+                 (mapconcat
+                  (lambda (report) (org-taskjuggler--build-report report info))
+                  main-reports "")
+	       ;; insert title in default reports
+	       (let* ((title (org-export-data (plist-get info :title) info))
+		      (report-title (if (string= title "")
+				        (org-taskjuggler-get-name project)
+				      title)))
+	         (mapconcat
+	          'org-element-normalize-string
+	          (mapcar
+		   (lambda (report)
+		     (replace-regexp-in-string "%title" report-title  report t t))
+		   org-taskjuggler-default-reports) "")))))))))))
 
 (defun org-taskjuggler--build-project (project info)
   "Return a project declaration.
@@ -786,20 +848,60 @@ neither is defined a unique id will be associated to it."
    ;; Closing resource.
    "}\n"))
 
+(defun org-taskjuggler--build-account (account info)
+  "Return a account declaration.
+
+ACCOUNT is a headline.  INFO is a plist used as a communication
+channel.
+
+All valid attributes from ACCOUNT are inserted.  If ACCOUNT
+defines a property \"account_id\" it will be used as the id for
+this account.  Otherwise it will use the ID property.  If
+neither is defined a unique id will be associated to it."
+  (concat
+   ;; Opening account.
+   (format "account %s \"%s\" {\n"
+           (org-taskjuggler--clean-id
+            (or (org-element-property :ACCOUNT_ID account)
+                (org-element-property :ID account)
+                (org-taskjuggler-get-id account info)))
+           (org-taskjuggler-get-name account))
+   ;; Add attributes.
+   (org-taskjuggler--indent-string
+    (org-taskjuggler--build-attributes
+     account org-taskjuggler-valid-account-attributes))
+   ;; Add inner accounts.
+   (org-taskjuggler--indent-string
+    (mapconcat
+     'identity
+     (org-element-map (org-element-contents account) 'headline
+       (lambda (hl) (org-taskjuggler--build-account hl info))
+       info nil 'headline)
+     ""))
+   ;; Closing account.
+   "}\n"))
+
 (defun org-taskjuggler--build-report (report info)
   "Return a report declaration.
 REPORT is a headline.  INFO is a plist used as a communication
 channel."
   (concat
    ;; Opening report.
-   (format "%s \"%s\" {\n"
+   (format "%s %s \"%s\" {\n"
            (or (org-element-property :REPORT_KIND report) "taskreport")
+           (or (org-element-property :REPORT_ID report)
+                (org-element-property :ID report)
+                (org-taskjuggler-get-id report info))
            (org-taskjuggler-get-name report))
    ;; Add attributes.
    (org-taskjuggler--indent-string
     (org-taskjuggler--build-attributes
      report org-taskjuggler-valid-report-attributes))
-   ;; Add inner reports.
+   ;; Add core of report, ie the first paragraph after the headline
+   ;; and before the next sub-headline
+   (format "%s" (if (eq (org-element-type (car (org-element-contents report))) 'section)
+                    (org-element-interpret-data (car (org-element-contents report)))
+                  ""))
    (org-taskjuggler--indent-string
     (mapconcat
      'identity
@@ -841,8 +943,8 @@ a unique id will be associated to it."
          (priority
           (let ((pri (org-element-property :priority task)))
             (and pri
-                 (max 1 (/ (* 1000 (- org-lowest-priority pri))
-                           (- org-lowest-priority org-highest-priority)))))))
+                 (max 1 (/ (* 1000 (- org-priority-lowest pri))
+                           (- org-priority-lowest org-priority-highest)))))))
     (concat
      ;; Opening task.
      (format "task %s \"%s\" {\n"
@@ -859,11 +961,7 @@ a unique id will be associated to it."
                     "allocations")
                   allocate))
      (and complete (format "  complete %s\n" complete))
-     (and effort
-          (format "  effort %s\n"
-                  (let* ((minutes (org-duration-string-to-minutes effort))
-                         (hours (/ minutes 60.0)))
-                    (format "%.1fh" hours))))
+     (and effort (format "  effort %s\n" effort))
      (and priority (format "  priority %s\n" priority))
      (and milestone "  milestone\n")
      ;; Add other valid attributes.
