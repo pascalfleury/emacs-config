@@ -3658,7 +3658,7 @@ This will force-recompile everything in =~/.emacs.d/elpa/...= Just run =M-:= and
 (byte-recompile-directory package-user-dir nil 'force)
 (byte-recompile-directory paf-lisp-directory 0 'force)
 #+end_src
-or simply =C-x C-e= at the end of that line.e
+or simply =C-x C-e= at the end of that line.
 
 * The End
 #+begin_src emacs-lisp
