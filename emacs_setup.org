@@ -766,6 +766,39 @@ See [[https://github.com/karthink/popper][github:popper]] for more information.
 
 #+end_src
 
+** Highlight focused frame/window
+This package dims all windows that do not have the focus, bar a few exceptions.
+
+https://github.com/gonewest818/dimmer.el dims all others in a nice way:
+#+begin_src emacs-lisp :tangle no
+  (use-package dimmer
+    :ensure t
+    :config
+    ;;(setq dimmer-fraction 0.5)
+    ;;(dimmer-configure-which-key)
+    (dimmer-mode t))
+#+end_src
+
+https://github.com/mina86/auto-dim-other-buffers.el/blob/master/README.md is another approach
+#+begin_src emacs-lisp :tangle no
+  (use-package auto-dim-other-buffers
+    :ensure t
+    :config
+    (auto-dim-other-buffers-mode t))
+#+end_src
+
+https://github.com/captainflasmr/selected-window-accent-mode deal with fringes and backgrounds:
+#+begin_src emacs-lisp
+  (use-package selected-window-accent-mode
+    :ensure t
+    :config
+    (selected-window-accent-mode 1)
+    :custom
+    (selected-window-accent-fringe-thickness 9)
+    (selected-window-accent-custom-color "seagreen")
+    (selected-window-accent-mode-style 'subtle))
+#+end_src
+
 * Colors and Look
 ** Match theme color during startup as well.
 #+begin_src emacs-lisp :tangle "~/.emacs.d/early-init.el"
