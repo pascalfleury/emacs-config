@@ -1543,6 +1543,7 @@ Add the powerful Magit
 #+begin_src emacs-lisp
   (use-package treesit-auto
     :config
+    (treesit-auto-add-to-auto-mode-alist 'all)
     (global-treesit-auto-mode))
 #+end_src
 ** Projectile
