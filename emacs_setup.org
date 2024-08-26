@@ -794,9 +794,9 @@ https://github.com/captainflasmr/selected-window-accent-mode deal with fringes a
     :config
     (selected-window-accent-mode 1)
     :custom
-    (selected-window-accent-fringe-thickness 9)
+    (selected-window-accent-fringe-thickness 0)
     (selected-window-accent-custom-color "seagreen")
-    (selected-window-accent-mode-style 'subtle))
+    (selected-window-accent-mode-style 'default))
 #+end_src
 
 * Colors and Look
