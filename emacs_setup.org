@@ -858,8 +858,10 @@ The cursor is displayed in different colors, depending on overwrite or insert mo
 (add-hook 'post-command-hook 'hcz-set-cursor-color-according-to-mode)
 #+end_src
 
-** theme / faces
+** theme / faces / colors
 I really like the high-contract Zenburn theme.
+Some colors are not very visible, in particular =eat= uses ANSI blue which is not very readable in Zenburn.
+
 #+begin_src emacs-lisp
   (use-package hc-zenburn-theme)
 
@@ -869,6 +871,8 @@ I really like the high-contract Zenburn theme.
    '(highlight ((t (:background "forest green"))))
    '(region ((t (:background "forest green"))))
    ;;'(default ((t (:family "JetBrains Mono" :foundry "JB" :slant normal :weight extra-light :height 98 :width normal))))
+   ;;
+   '(ansi-color-blue ((t (:background "deep sky blue" :foreground "deep sky blue"))))
    )
 #+end_src
 
@@ -1085,13 +1089,6 @@ The web-page examples *cannot be cut/pasted* as they are not escaped properly.
   (use-package dired-rainbow
     :config
     (dired-rainbow-define archive "#555555" ("org_archive" "archive")))
-#+end_src
-
-** Modify some shade of blue
-In particular =eat= uses this blue which is not very readable in my chosen theme.
-#+begin_src emacs-lisp
-  (custom-set-faces
-   '(ansi-color-blue ((t (:background "deep sky blue" :foreground "deep sky blue")))))
 #+end_src
 
 * Key Mappings
