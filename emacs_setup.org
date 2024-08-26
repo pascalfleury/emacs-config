@@ -1087,6 +1087,13 @@ The web-page examples *cannot be cut/pasted* as they are not escaped properly.
     (dired-rainbow-define archive "#555555" ("org_archive" "archive")))
 #+end_src
 
+** Modify some shade of blue
+In particular =eat= uses this blue which is not very readable in my chosen theme.
+#+begin_src emacs-lisp
+  (custom-set-faces
+   '(ansi-color-blue ((t (:background "deep sky blue" :foreground "deep sky blue")))))
+#+end_src
+
 * Key Mappings
 ** which-key
 This will show the list of the possible completion keys during a longer key sequence.
