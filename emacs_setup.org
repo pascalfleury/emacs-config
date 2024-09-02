@@ -1599,14 +1599,14 @@ Search the entire project with =C-c p s s= for a regexp. This let's you turn the
 I went with the suggestion found on this [[https://www.juniordeveloperdiaries.com/emacs-intro/][Emacs intro]] guide.
 
 Both =eglot= and =lsp-mode= would need the =company= mode.
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
   (use-package company
     :bind (("C-." . company-complete))
     :custom
-    (company-idle-delay 0) ;; I always want completion, give it to me asap
+    (company-idle-delay 1) ;; I always want completion, give it to me asap
     (company-dabbrev-downcase nil "Don't downcase returned candidates.")
     (company-show-numbers t "Numbers are helpful.")
-    (company-tooltip-limit 10 "The more the merrier.")
+    (company-tooltip-limit 20 "The more the merrier.")
     :config
     (global-company-mode) ;; We want completion everywhere
 
