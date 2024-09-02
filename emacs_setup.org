@@ -1208,6 +1208,12 @@ Configure the shortcuts for multiple cursors
 Let's one jump around text.
 The overwritten function (from [[https://emacs.stackexchange.com/questions/76379/how-to-get-ace-window-to-do-row-major-numbering-of-windows][stackexchange]]) makes the numbering row-major instead of the native col-major.
 #+begin_src emacs-lisp
+  (use-package ace-jump-mode
+    :bind (("C-c C-SPC" . 'ace-jump-mode)
+           ("C-c C-DEL" . 'ace-jump-mode-pop-mark)))
+#+end_src
+
+#+begin_src emacs-lisp
   (defun paf/aw-row-major (wnd1 wnd2)
     "Return true if WND1 is less than WND2.
   This is determined by their respective window coordinates.
@@ -1236,16 +1242,11 @@ The overwritten function (from [[https://emacs.stackexchange.com/questions/76379
             ((< (car e1) (car e2))
              t))))
 
-  (use-package ace-jump-mode
-    :bind (("C-c C-SPC" . 'ace-jump-mode)
-           ("C-c C-DEL" . 'ace-jump-mode-pop-mark))
+  (use-package ace-window
+    :bind (("C-x w w" . 'ace-window))
     :config
     (defun aw-window< (wnd1 wnd2) (paf/aw-row-major wnd1 wnd2)))
-#+end_src
 
-#+begin_src emacs-lisp
-  (use-package ace-window
-    :bind (("C-x w w" . 'ace-window)))
 #+end_src
 
 ** Hydra
