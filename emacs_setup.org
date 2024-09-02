@@ -1205,11 +1205,42 @@ Configure the shortcuts for multiple cursors
 #+end_src
 
 ** ace-jump-mode
-Let's one jump around text
+Let's one jump around text.
+The overwritten function (from [[https://emacs.stackexchange.com/questions/76379/how-to-get-ace-window-to-do-row-major-numbering-of-windows][stackexchange]]) makes the numbering row-major instead of the native col-major.
 #+begin_src emacs-lisp
-(use-package ace-jump-mode
-  :bind (("C-c C-SPC" . 'ace-jump-mode)
-         ("C-c C-DEL" . 'ace-jump-mode-pop-mark)))
+  (defun paf/aw-row-major (wnd1 wnd2)
+    "Return true if WND1 is less than WND2.
+  This is determined by their respective window coordinates.
+
+  This modification of what's in ace-window.el numbers the
+  windows in a row-major way: left to right, top down."
+    (let* ((f1 (window-frame wnd1))
+           (f2 (window-frame wnd2))
+           (e1 (window-edges wnd1))
+           (e2 (window-edges wnd2))
+           (p1 (frame-position f1))
+           (p2 (frame-position f2))
+           (nl (or (null (car p1)) (null (car p2)))))
+      (cond ((and (not nl) (< (car p1) (car p2)))
+             (not aw-reverse-frame-list))
+            ((and (not nl) (> (car p1) (car p2)))
+             aw-reverse-frame-list)
+            ;; You can read "car" below as "the upper left x-coordinate"
+            ;; and "cadr" as "the upper left y-coordinate". The usage here
+            ;; is swapped from ace-window.el to change column-major
+            ;; ordering to row-major.
+            ((< (cadr e1) (cadr e2))
+             t)
+            ((> (cadr e1) (cadr e2))
+             nil)
+            ((< (car e1) (car e2))
+             t))))
+
+  (use-package ace-jump-mode
+    :bind (("C-c C-SPC" . 'ace-jump-mode)
+           ("C-c C-DEL" . 'ace-jump-mode-pop-mark))
+    :config
+    (defun aw-window< (wnd1 wnd2) (paf/aw-row-major wnd1 wnd2)))
 #+end_src
 
 #+begin_src emacs-lisp
