@@ -1645,27 +1645,27 @@ Both =eglot= and =lsp-mode= would need the =company= mode.
 
   (customize-set-variable 'eglot-ignored-server-capabilities
                           '(
-                          :hoverProvider
+                          ;;:hoverProvider
                           ;; :completionProvider
-                          ;;  :signatureHelpProvider
+                          ;; :signatureHelpProvider
                           ;; :definitionProvider
                           ;; :typeDefinitionProvider
                           ;; :implementationProvider
                           ;; :referencesProvider
                           ;; :documentHighlightProvider
                           ;; :documentSymbolProvider
-                          ;;:workspaceSymbolProvider
+                          ;; :workspaceSymbolProvider
                           ;; :codeActionProvider
-                          ;;:codeLensProvider
-                          ;;:documentFormattingProvider
-                          ;;:documentRangeFormattingProvider
-                          ;;:documentOnTypeFormattingProvider
-                          ;;:renameProvider
-                          ;;:documentLinkProvider
-                          ;;:colorProvider
-                          ;;:foldingRangeProvider
-                          ;;:executeCommandProvider
-                          ;;:inlayHintProvider
+                          ;; :codeLensProvider
+                          ;; :documentFormattingProvider
+                          ;; :documentRangeFormattingProvider
+                          ;; :documentOnTypeFormattingProvider
+                          ;; :renameProvider
+                          ;; :documentLinkProvider
+                          ;; :colorProvider
+                          ;; :foldingRangeProvider
+                          ;; :executeCommandProvider
+                          ;; :inlayHintProvider
                             ))
 #+end_src
 
