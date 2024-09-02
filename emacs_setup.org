@@ -872,7 +872,7 @@ Some colors are not very visible, in particular =eat= uses ANSI blue which is no
    '(region ((t (:background "forest green"))))
    ;;'(default ((t (:family "JetBrains Mono" :foundry "JB" :slant normal :weight extra-light :height 98 :width normal))))
    ;;
-   '(ansi-color-blue ((t (:background "deep sky blue" :foreground "deep sky blue"))))
+   '(ansi-color-blue ((t (:background "royal blue" :foreground "royal blue"))))
    )
 #+end_src
 
