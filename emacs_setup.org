@@ -284,9 +284,10 @@ Use instead of add-hook to run it a single time.
 ** System
 Set some info about the system.
 #+begin_src emacs-lisp
-  (setq system-type (if (string-match "android" system-configuration)
-                        'android
-                      'linux))
+  (setq system-type
+        (cond ((string-match "android" system-configuration) 'android)
+              ((string-match "darwin" system-configuration) 'macos)
+              (t 'linux)))
 #+end_src
 
 
