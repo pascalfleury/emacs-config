@@ -281,6 +281,15 @@ Use instead of add-hook to run it a single time.
 #+end_src
 
 * Environment
+** System
+Set some info about the system.
+#+begin_src emacs-lisp
+  (setq system-type (if (string-match "android" system-configuration)
+                        'android
+                      'linux))
+#+end_src
+
+
 ** Browser default
 #+begin_src emacs-lisp :tangle no
 (setq browse-url-generic-program (executable-find "google-chrome")
