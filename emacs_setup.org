@@ -2944,6 +2944,17 @@ These are mostly org-config specific to me, myself and I.
               (local-set-key (kbd "C-c C-l") 'org-insert-link)))
 #+end_src
 
+*** Links
+**** Link by ID
+#+begin_src emacs-lisp
+  (setq org-id-link-to-org-use-id 'create-if-interactive)
+#+end_src
+
+**** Shortcut to show them
+#+begin_src emacs-lisp
+  (define-key org-mode-map (kbd "C-c z") #'org-toggle-link-display)
+#+end_src
+
 *** Colors and faces
 This colors the code blocks a bit more visibly.
 #+begin_src emacs-lisp
@@ -2966,15 +2977,25 @@ This makes the all-day events stand-out and be displayed before the calendar.
   ;;(setq org-sort-agenda-notime-is-late nil)
 #+end_src
 
-*** Links
-**** Link by ID
+This renders the calendar date (at top of agenda) differently for past or future days
+(org-today)
 #+begin_src emacs-lisp
-  (setq org-id-link-to-org-use-id 'create-if-interactive)
-#+end_src
+  (defface org-agenda-date-past
+    '((t (:inherit org-agenda-date :weight bold :background "dim gray")))
+    "Face used in agenda for past dates."
+    :group 'org-faces)
 
-**** Shortcut to show them
-#+begin_src emacs-lisp
-  (define-key org-mode-map (kbd "C-c z") #'org-toggle-link-display)
+  (defun my-org-agenda-get-day-face-fn (date)
+    "Return the face DATE should be displayed with., using special handling of past dates."
+    (let* ((date-absolute (calendar-absolute-from-gregorian date))
+           (is-in-the-past (< date-absolute (org-today))))
+      (message "date: %d  today: %d" date-absolute (org-today))
+      (cond
+       (is-in-the-past 'org-agenda-date-past)
+       (t nil) ;; return nil calls the stock function.
+       )))
+
+  (setq org-agenda-day-face-function 'my-org-agenda-get-day-face-fn)
 #+end_src
 
 *** Display settings
