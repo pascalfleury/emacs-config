@@ -10,3 +10,6 @@
 [submodule "Modules/indent-bars"]
 	path = Modules/indent-bars
 	url = https://github.com/jdtsmith/indent-bars.git
+[submodule "Modules/ts-fold"]
+	path = Modules/ts-fold
+	url = https://github.com/emacs-tree-sitter/ts-fold
