@@ -284,10 +284,10 @@ Use instead of add-hook to run it a single time.
 ** System
 Set some info about the system.
 #+begin_src emacs-lisp
-  (setq system-type
+  (setq platform-type
         (cond ((string-match "android" system-configuration) 'android)
               ((string-match "darwin" system-configuration) 'macos)
-              (t 'linux)))
+              (t system-type)))
 #+end_src
 
 
@@ -2653,7 +2653,7 @@ All keys prefixed with =C-c n=
            ("C-c n j" . org-roam-dailies-capture-today)
            ("C-c n i" . org-roam-node-insert))
     :config
-    (unless (eq system-type 'android) (org-roam-db-autosync-mode))
+    (unless (eq platform-type 'android) (org-roam-db-autosync-mode))
     (require 'org-roam-protocol))
 #+end_src
 
@@ -3567,7 +3567,8 @@ content filtering is done by adding a filter function to =org-export-filter-body
     :ensure nil
     :defer)
   (use-package ox-impress-js
-    :defer)
+    :load-path (lambda () (expand-file-name "ox-impress-js" paf-modules-directory))
+    :ensure nil)
 #+end_src
 
 Also make the exported references nicer, using the title as a handle.
