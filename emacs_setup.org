@@ -3770,6 +3770,7 @@ This will force-recompile everything in =~/.emacs.d/elpa/...= Just run =M-:= and
 #+begin_src emacs-lisp :tangle no
 (byte-recompile-directory package-user-dir nil 'force)
 (byte-recompile-directory paf-lisp-directory 0 'force)
+(byte-recompile-directory paf-modules-directory 0 'force)
 #+end_src
 or simply =C-x C-e= at the end of that line.
 
