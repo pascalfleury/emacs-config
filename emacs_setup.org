@@ -1591,11 +1591,24 @@ Add the powerful Magit
 ** Tree-sitter
 
 #+begin_src emacs-lisp
+  (use-package tree-sitter)
+
   (use-package treesit-auto
     :config
     (treesit-auto-add-to-auto-mode-alist 'all)
     (global-treesit-auto-mode))
 #+end_src
+
+*** Tree-sitter folding
+#+begin_src emacs-lisp
+  (use-package treesit-fold
+    :load-path (lambda () (expand-file-name "treesit-fold" paf-modules-directory))
+    :config
+    (global-treesit-fold-mode 1)
+    ;;(global-treesit-fold-indicators-mode 1)
+    )
+#+end_src
+
 ** Projectile
 Start using projectile. It has the documentation [[https://docs.projectile.mx/en/latest/][here]].
 #+begin_src emacs-lisp

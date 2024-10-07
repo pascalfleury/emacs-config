@@ -13,3 +13,6 @@
 [submodule "Modules/ts-fold"]
 	path = Modules/ts-fold
 	url = https://github.com/emacs-tree-sitter/ts-fold
+[submodule "Modules/treesit-fold"]
+	path = Modules/treesit-fold
+	url = https://github.com/emacs-tree-sitter/treesit-fold
