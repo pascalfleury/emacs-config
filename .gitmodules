@@ -16,3 +16,6 @@
 [submodule "Modules/treesit-fold"]
 	path = Modules/treesit-fold
 	url = https://github.com/emacs-tree-sitter/treesit-fold
+[submodule "Modules/ox-impress-js"]
+	path = Modules/ox-impress-js
+	url = https://github.com/emacsattic/ox-impress-js
