@@ -1302,7 +1302,7 @@ Also, it seems to interfere with colorful modes like =magit= or =org-agenda-mode
   (add-hook 'c-mode 'annotate-mode)
   (add-hook 'c++-mode 'annotate-mode)
   (add-hook 'sh-mode 'annotate-mode)
-  (add-hook 'ledger-mode 'annotate-mode)
+  ;;(add-hook 'ledger-mode 'annotate-mode)
 ;;;  (define-globalized-minor-mode global-annotate-mode annotate-mode
 ;;;    (lambda () (annotate-mode 1)))
 ;;;  (global-annotate-mode 1)
@@ -1481,7 +1481,7 @@ To help editing YAML files, e.g. when configuring Home Assistant.
 #+end_src
 
 *** Setup
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   ;; To get ob-ledger
   (use-package org-contrib)
 
@@ -3538,7 +3538,7 @@ What kind of code block languages do I need
    (emacs-lisp . t)
    (gnuplot . t)
    (python . t)
-   (ledger . t)
+   ;;(ledger . t)
    ;;(sh . t)
    (latex . t)
    (shell . t)
