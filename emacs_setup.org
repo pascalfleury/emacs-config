@@ -2094,7 +2094,7 @@ Setup info found here: https://emacs-lsp.github.io/dap-mode/page/configuration/
     (delete [C-right] eat-semi-char-non-bound-keys)
     (eat-update-semi-char-mode-map)
     (setq eat-line-input-ring-size 1000)
-    (setq eat-term-scrollback-size 10000)  ;; nil == unlimited
+    (setq eat-term-scrollback-size 300000)  ;; in chars! nil == unlimited
     (eat-reload)
     )
 #+end_src
