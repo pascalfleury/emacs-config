@@ -361,6 +361,7 @@ Use =auto-revert=, which reloads a file if it's updated on disk
 and not modified in the buffer. Also make it reload dired when new files are added.
 #+begin_src emacs-lisp
   (setq global-auto-revert-non-file-buffers t)
+  (setq global-auto-revert-ignore-modes '(eat))
   (global-auto-revert-mode 1)
 #+end_src
 
