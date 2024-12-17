@@ -704,26 +704,22 @@ See [[https://github.com/karthink/popper][github:popper]] for more information.
   (defun paf/display-buffer-at-bottom (&optional slot_index)
     "Move current buffer to bottom of the frame. Also removes it from the side window."
     (interactive)
-    (let ((buffer (current-buffer))
-          (slot_number (if slot_index slot_index 0)))
+    (let ((buffer (current-buffer)))
       (with-current-buffer buffer
         (delete-window)
         (display-buffer-in-side-window
          buffer `((side . bottom)
-                  (slot . slot_number)
-                  (window-parameters . ((mode-line-format. (" " "%b")))))))))
+                  (window-parameters . ((mode-line-format . (" " "%b")))))))))
 
   (defun paf/display-buffer-at-right (&optional slot_index)
     "Move current buffer to right side window."
     (interactive)
-    (let ((buffer (current-buffer))
-          (slot_number (if slot_index slot_index 0)))
+    (let ((buffer (current-buffer)))
       (with-current-buffer buffer
         (delete-window)
         (display-buffer-in-side-window
          buffer `((side . right)
-                  (slot . slot_number)
-                  (window-parameters . ((mode-line-format. (" " "%b")))))))))
+                  (window-parameters . ((mode-line-format . (" " "%b")))))))))
 
   (defun paf/display-buffer-reset ()
     "Re-display the buffer according to buffer-alist."
@@ -754,7 +750,7 @@ See [[https://github.com/karthink/popper][github:popper]] for more information.
                  '("\\*eat\\*\\'"
                    (display-buffer-in-side-window)
                    (side . bottom)
-                   (slot . -1)
+                   (slot . -1)  ;; main terminal is in slot -1
                    (window-height . (body-lines . 15))
                    (window-parameters . ((no-delete-other-windows . t)))))
     (add-to-list 'display-buffer-alist
@@ -775,9 +771,7 @@ See [[https://github.com/karthink/popper][github:popper]] for more information.
     ;                                     (mode-line-format . (""))))))
      :bind (("C-x w s" . window-toggle-side-windows)
             ("C-x w b" . paf/display-buffer-at-bottom)
-            ("C-x w n" . (lambda () (interactive) (paf/display-buffer-at-bottom 1)))
             ("C-x w r" . paf/display-buffer-at-right)
-            ("C-x w f" . (lambda () (interactive) (paf/display-buffer-at-right 1)))
             ("C-x w R" . paf/display-buffer-reset)))
 
     (defun paf/toggle-calendar-buffer ()
