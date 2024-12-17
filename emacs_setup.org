@@ -701,24 +701,28 @@ See [[https://github.com/karthink/popper][github:popper]] for more information.
 ** display some buffer in a particular location
 
 #+begin_src emacs-lisp
-  (defun paf/display-buffer-at-bottom ()
+  (defun paf/display-buffer-at-bottom (&optional slot_index)
     "Move current buffer to bottom of the frame. Also removes it from the side window."
     (interactive)
-    (let ((buffer (current-buffer)))
+    (let ((buffer (current-buffer))
+          (slot_number (if slot_index slot_index 0)))
       (with-current-buffer buffer
         (delete-window)
         (display-buffer-in-side-window
          buffer `((side . bottom)
+                  (slot . slot_number)
                   (window-parameters . ((mode-line-format. (" " "%b")))))))))
 
-  (defun paf/display-buffer-at-right ()
+  (defun paf/display-buffer-at-right (&optional slot_index)
     "Move current buffer to right side window."
     (interactive)
-    (let ((buffer (current-buffer)))
+    (let ((buffer (current-buffer))
+          (slot_number (if slot_index slot_index 0)))
       (with-current-buffer buffer
         (delete-window)
         (display-buffer-in-side-window
          buffer `((side . right)
+                  (slot . slot_number)
                   (window-parameters . ((mode-line-format. (" " "%b")))))))))
 
   (defun paf/display-buffer-reset ()
@@ -771,7 +775,9 @@ See [[https://github.com/karthink/popper][github:popper]] for more information.
     ;                                     (mode-line-format . (""))))))
      :bind (("C-x w s" . window-toggle-side-windows)
             ("C-x w b" . paf/display-buffer-at-bottom)
+            ("C-x w n" . (lambda () (interactive) (paf/display-buffer-at-bottom 1)))
             ("C-x w r" . paf/display-buffer-at-right)
+            ("C-x w f" . (lambda () (interactive) (paf/display-buffer-at-right 1)))
             ("C-x w R" . paf/display-buffer-reset)))
 
     (defun paf/toggle-calendar-buffer ()
