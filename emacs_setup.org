@@ -1609,12 +1609,20 @@ Add the powerful Magit
 ** Tree-sitter
 
 #+begin_src emacs-lisp
-  (use-package tree-sitter)
+  (use-package tree-sitter
+    :config
+    (add-to-list 'major-mode-remap-alist '(c-mode . c-ts-mode))
+    (add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
+    (add-to-list 'major-mode-remap-alist '(c-or-c++-mode . c-or-c++-ts-mode))
+    (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
+    )
 
   (use-package treesit-auto
     :config
     (treesit-auto-add-to-auto-mode-alist 'all)
-    (global-treesit-auto-mode))
+    (treesit-auto-install-all)
+    ;; (global-treesit-auto-mode)
+    )
 #+end_src
 
 *** Tree-sitter folding
@@ -1823,6 +1831,8 @@ Some of the keys are listed here. The prefix is =C-c &=
 | yas-new-snippet        | C-n             |
 | yas-insert-snippet     | C-s             |
 | yas-visit-snippet-file | C-v             |
+
+*Note*: should the expansion not work in some programming modes, it could be due to Yasnippet using the non-treesitter mode, hence not finding the snippets. The solution is simple by using the =.yas-parent= in the snippets directory (see [[https://joaotavora.github.io/yasnippet/snippet-organization.html#org7468fa9][documentation]]):
 
 #+begin_src emacs-lisp
   (use-package yasnippet
