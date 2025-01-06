@@ -1606,6 +1606,7 @@ Add the powerful Magit
   ;(use-package magit-todos
   ;  :defer)
 #+end_src
+
 ** Tree-sitter
 
 #+begin_src emacs-lisp
@@ -1618,10 +1619,15 @@ Add the powerful Magit
     )
 
   (use-package treesit-auto
+    :custom
+    (treesit-auto-install 'prompt)
     :config
     (treesit-auto-add-to-auto-mode-alist 'all)
-    (treesit-auto-install-all)
     ;; (global-treesit-auto-mode)
+    ;; Map the existing hooks to the ts hooks
+    ;; (setq c++-ts-mode-hook c++-mode-hook)
+    ;; (setq c-ts-mode-hook c-mode-hook)
+    ;; (setq python-ts-mode-hook python-mode-hook)
     )
 #+end_src
 
