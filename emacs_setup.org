@@ -205,16 +205,31 @@ Remove =C-p= that I want to use for *me* personally as a prefix.
 #+end_src
 
 ** Splash screen
+From this post: https://emacs.stackexchange.com/questions/75378/how-do-i-hide-the-welcome-screen-if-and-only-if-one-or-more-files-are-opened-by one can make the splashscreen appear only if no file was given on the command line.
+
+Only the option that assumes arguments without dashes seems to work properly. Probably because the ordr in which functions are called.
+
+#+begin_src emacs-lisp
+  (defun file-name-specified-p ()
+    (seq-some (lambda (arg)
+                (not (string= (substring arg 0 1) "-")))
+              (cdr command-line-args)))
+#+end_src
+
+Here we select the "right" splash screen, depending on if it was started in a console (text mode) or in graphical mode (with image). If a file was specified, we suppress the splash screen entirely.
 #+begin_src emacs-lisp
   (defun get-resource (name)
     (let* ((resource-dir (expand-file-name "Resources" emacs-config-directory)))
       (expand-file-name name resource-dir)))
-  (if (display-graphic-p)
-      (progn
-        (setq initial-buffer-choice (get-resource "welcome.org"))
-        (setq fancy-splash-image (get-resource "paf_emacs.png"))
-        (setq org-startup-with-inline-images t))
-    (setq initial-buffer-choice (get-resource "welcome_nox.org")))
+
+  (if (file-name-specified-p)
+      (setq inhibit-startup-screen t)
+    (if (display-graphic-p)
+        (progn
+          (setq initial-buffer-choice (get-resource "welcome.org"))
+          (setq fancy-splash-image (get-resource "paf_emacs.png"))
+          (setq org-startup-with-inline-images t))
+      (setq initial-buffer-choice (get-resource "welcome_nox.org"))))
 #+end_src
 
 ** Initial screen position
