@@ -1,5 +1,5 @@
 #!/bin/bash
-source $(dirname $0)/install.sh
+source "$(dirname $0)"/install.sh
 
 APPDIR=${HOME}/Apps
 [[ -d "${APPDIR}" ]] || mkdir -p "${APPDIR}"

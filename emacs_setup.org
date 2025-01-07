@@ -67,7 +67,7 @@ https://stackoverflow.com/questions/26630640/tramp-ignores-tramp-remote-path#266
 See Karl Voit's setup.
 
 * Initialize Emacs
-This section sets up Emacs so it can tangle the config, find =use-package=, and find the ELPA repositories where to get the new packes from.
+This section sets up Emacs so it can tangle the config, find =use-package=, and find the ELPA repositories where to get the new packages from.
 ** Info header and startup
 Just to add a little information in the tangled file.
 #+begin_src emacs-lisp
@@ -76,7 +76,7 @@ Just to add a little information in the tangled file.
 #+end_src
 
 #+begin_src bash :tangle bash/install_deps.sh :shebang "#!/bin/bash"
-  source $(dirname $0)/install.sh
+  source "$(dirname $0)"/install.sh
 #+end_src
 
 ** Temporarily disable GC
@@ -99,7 +99,6 @@ Note that 'melpa' is needed for these:
  - popup-kill-ring
  - tj3-mode
  - google-c-style
- - git-gutter-fringe+
  - bazel
  - org-clock-convenience
  - ox-reveal
@@ -108,10 +107,10 @@ Note that 'melpa' is needed for these:
 #+begin_src emacs-lisp
   (setq package-archives '(
                            ("melpa-stable" . "https://stable.melpa.org/packages/")
-                           ("melpa" . "https://melpa.org/packages/")
-                           ("nongnu" . "https://elpa.nongnu.org/nongnu/")
-                           ("gnu" . "https://elpa.gnu.org/packages/")
-                           ("elpa-devel" . "https://elpa.gnu.org/devel/")
+                           ("melpa"        . "https://melpa.org/packages/")
+                           ("nongnu"       . "https://elpa.nongnu.org/nongnu/")
+                           ("gnu"          . "https://elpa.gnu.org/packages/")
+                           ("elpa-devel"   . "https://elpa.gnu.org/devel/")
                            ))
   (setq package-archive-priorities
         '(("melpa-stable" . 20)
@@ -121,7 +120,7 @@ Note that 'melpa' is needed for these:
           ("melpa" . -5)
           ("elpa-devel" . -6)
           ))
-  ;; most of them I want to get them from the repo.
+  ;; For most of the packages, I want them installed from the repo.
   (require 'use-package-ensure)
   (setq use-package-always-ensure t)
 #+end_src
@@ -828,13 +827,7 @@ https://github.com/captainflasmr/selected-window-accent-mode deal with fringes a
 #+end_src
 
 * Colors and Look
-** Match theme color during startup as well.
-#+begin_src emacs-lisp :tangle "~/.emacs.d/early-init.el"
-  (set-background-color "#3f3f3f")
-  (set-foreground-color "#f0dfaf")
-#+end_src
-
-** In X11 mode: support mouse
+** In graphical mode: support mouse
 #+begin_src emacs-lisp
     (when (display-graphic-p)
       (mouse-wheel-mode)  ;; enable wheelmouse support by default
@@ -902,6 +895,12 @@ Some colors are not very visible, in particular =eat= uses ANSI blue which is no
    ;;
    '(ansi-color-blue ((t (:background "royal blue" :foreground "royal blue"))))
    )
+#+end_src
+
+Match theme color during startup as well:
+#+begin_src emacs-lisp :tangle "~/.emacs.d/early-init.el"
+  (set-background-color "#3f3f3f")
+  (set-foreground-color "#f0dfaf")
 #+end_src
 
 ** Icons
