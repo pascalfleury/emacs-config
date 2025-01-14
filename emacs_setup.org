@@ -3835,9 +3835,10 @@ currently it does not a good job of figuring out the diff between OSX, Linux, Te
 ** Recompile all packages
 This will force-recompile everything in =~/.emacs.d/elpa/...= Just run =M-:= and then enter this:
 #+begin_src emacs-lisp :tangle no
-(byte-recompile-directory package-user-dir nil 'force)
-(byte-recompile-directory paf-lisp-directory 0 'force)
-(byte-recompile-directory paf-modules-directory 0 'force)
+  (progn
+    (byte-recompile-directory package-user-dir 0 'force)
+    (byte-recompile-directory paf-lisp-directory 0 'force)
+    (byte-recompile-directory paf-modules-directory 0 'force))
 #+end_src
 or simply =C-x C-e= at the end of that line.
 
