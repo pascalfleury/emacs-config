@@ -103,7 +103,7 @@ Note that 'melpa' is needed for these:
  - org-clock-convenience
  - ox-reveal
 
-#+NAME melpa-setup
+#+name: export-melpa-setup
 #+begin_src emacs-lisp
   (setq package-archives '(
                            ("melpa-stable" . "https://stable.melpa.org/packages/")
@@ -132,9 +132,10 @@ From this [[https://github.com/melpa/melpa/issues/7238][bug report]], seems to w
 #+end_src
 
 ** Diverse paths
-A variable so we can refer to this all over the place.
+A set of variables so we can refer to them all over the place.
 
-Maybe there is a way to auto-detect this and generate it with literate programming or such.
+Maybe there is a way to auto-detect =emacs-config-directory= (dir of this config file) and generate it with literate programming or such.
+#+name: export-location-variables
 #+begin_src emacs-lisp
   (setq emacs-config-directory "~/Emacs")
   (setq emacs-config-file      "emacs_setup.org")
@@ -3612,6 +3613,7 @@ Add a few formats to the export functionality of org-mode.
 
 content filtering is done by adding a filter function to =org-export-filter-body-functions= (in my =~/.emacs_*.el=)
 
+#+name: export-ox-packages
 #+begin_src emacs-lisp
   (use-package ox-odt
     :ensure nil
@@ -3626,6 +3628,7 @@ content filtering is done by adding a filter function to =org-export-filter-body
 
 Also make the exported references nicer, using the title as a handle.
 
+#+name: export-nice-ids
 #+begin_src emacs-lisp
   (load-file (expand-file-name "org-export-nice-ids.el" paf-lisp-directory))
   (use-package ox
@@ -3635,7 +3638,8 @@ Also make the exported references nicer, using the title as a handle.
 #+end_src
 
 *** org-publish
-
+This configures where the published files are ending up
+#+name: export-publish-config
 #+begin_src emacs-lisp
   (require 'ox-publish)
 
@@ -3663,6 +3667,19 @@ Also make the exported references nicer, using the title as a handle.
           ("my-status"
            :components ("project-status" "bigblow-theme"))
           ))
+#+end_src
+
+And create an export-only config to start Emacs with it
+#+begin_src emacs-lisp :noweb yes :tangle ~/.emacs.d/export-init.el
+  ;; ========== ELPA setup
+  <<export-melpa-setup>>
+  ;; ========== My own variables
+  <<export-location-variables>>
+  ;; ========== needed packagse and additional functions
+  <<export-ox-packages>>
+  <<export-nice-ids>>
+  ;; ========== publish configuration
+  <<export-publish-config>>
 #+end_src
 
 *** plant-uml
