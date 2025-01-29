@@ -1625,12 +1625,21 @@ Add the powerful Magit
 ** Tree-sitter
 
 #+begin_src emacs-lisp
+  (defun c-ts-mode-call-hook () (run-hooks 'c-mode-hook))
+  (defun c++-ts-mode-call-hook () (run-hooks 'c++-mode-hook))
+  (defun c-or-c++-ts-mode-call-hook () (run-hooks 'c-or-c++-mode-hook))
+  (defun python-ts-mode-call-hook () (run-hooks 'python-mode-hook))
+
   (use-package tree-sitter
     :config
     (add-to-list 'major-mode-remap-alist '(c-mode . c-ts-mode))
     (add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
     (add-to-list 'major-mode-remap-alist '(c-or-c++-mode . c-or-c++-ts-mode))
     (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
+    (add-hook 'c-ts-mode-hook #'c-ts-mode-call-hook)
+    (add-hook 'c++-ts-mode-hook #'c++-ts-mode-call-hook)
+    (add-hook 'c-or-c++-ts-mode-hook #'c-or-c++-ts-mode-call-hook)
+    (add-hook 'python-ts-mode-hook #'python-ts-mode-call-hook)
     )
 
   (use-package treesit-auto
@@ -1644,7 +1653,7 @@ Add the powerful Magit
     ;; (setq c-ts-mode-hook c-mode-hook)
     ;; (setq python-ts-mode-hook python-mode-hook)
     )
-#+end_src
+    #+end_src
 
 *** Tree-sitter folding
 #+begin_src emacs-lisp
