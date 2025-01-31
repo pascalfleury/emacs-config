@@ -16,12 +16,6 @@ fi
 
 install_pkg gnuplot
 
-if [[ "$(uname)" == "Darwin" ]]; then
-  install_pkg -x ag the_silver_searcher
-else
-  install_pkg -x ag silversearcher-ag
-fi
-
 install_pkg -x rg ripgrep
 
 # Install PanDoc

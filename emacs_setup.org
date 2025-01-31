@@ -15,6 +15,7 @@ They usually live temporarily in my =~/.emacs= until I am happy, in which case I
   - [[https://github.com/gsingh93/ob-bitfield][ob-bitfield]]
   - [[https://github.com/Ice-Cube69/org-project-manager][org-project-manager]]
   - [[https://github.com/arthurcgusmao/unmodified-buffer][unmodified-buffer]]
+  - https://github.com/mickeynp/combobulate
 
 ** Currently under review
   - [[https://github.com/yjwen/org-reveal][ox-reveal]] (see [[https://github.com/yjwen/org-reveal#set-the-location-of-revealjs][installation]])
@@ -187,7 +188,7 @@ I set this up to tangle the init org-mode file into the actual Emacs init file a
 #+end_src
 
 * Some bandaid
-compat needs to be up-to-date, at verion 30.0+
+compat needs to be up-to-date, at version 30.0+
 #+begin_src emacs-lisp
   (use-package compat
     :pin gnu)
@@ -239,7 +240,7 @@ Search for "Window Frame Parameters" in the Elisp  Info manual.
 
 :tangle "~/.emacs.d/early-init.el"
 #+begin_src emacs-lisp :tangle no
-  ;; Setup the initil frame to be right-aligned and full height.
+  ;; Setup the initial frame to be right-aligned and full height.
   (setq default-frame-alist
          '((fullscreen . fullheight)
            (left . (- 1))
@@ -253,59 +254,11 @@ Otherwise resizing will round it at char width/height and not make it play well 
   (setq frame-resize-pixelwise 't)
 #+end_src
 
-* Helper Functions
-** add-hook-run-once
-Use instead of add-hook to run it a single time.
-[[https://emacs.stackexchange.com/questions/3323/is-there-any-way-to-run-a-hook-function-only-once][found here]]
+** Helper Functions
 #+begin_src emacs-lisp
-(defmacro add-hook-run-once (hook function &optional append local)
-  "Like add-hook, but remove the hook after it is called"
-  (let ((sym (make-symbol "#once")))
-    `(progn
-       (defun ,sym ()
-         (remove-hook ,hook ',sym ,local)
-         (funcall ,function))
-       (add-hook ,hook ',sym ,append ,local))))
-#+end_src
-
-** truncate a string
-#+begin_src emacs-lisp
-  (defun paf/truncate-string (text &optional len ellipsis)
-    "Truncate the text to a given length.
-
-  When LEN is a number, resulting string is truncated at that length.
-  If the length is bigger, then '...' is added at the end.
-
-  Usage example:
-
-    (setq org-agenda-prefix-format
-          '((agenda . \" %(paf/truncate-string (roam-extras/extract-agenda-category) 12) %?-12t %12s\")))
-
-  Refer to `org-agenda-prefix-format' for more information."
-    (interactive)
-    (if (and (numberp len) (> (length text) len))
-        (let* ((used-ellipsis (if (eq ellipsis nil) "…" ellipsis))
-               (ellipsis-length (length used-ellipsis))
-               (short-text (substring text 0 (- len ellipsis-length))))
-          (format "%s%s" short-text used-ellipsis))
-      text))
-
-  ;; (setq paf-tests/truncate (paf/truncate-string "Here is some long text" 10))
-#+end_src
-
-** Kill an Emacs process
-#+begin_src emacs-lisp
-  (defun paf/delete-process-at-point ()
-    (interactive)
-    (let ((process (get-text-property (point) 'tabulated-list-id)))
-      (cond ((and process
-                  (processp process))
-             (delete-process process)
-             (revert-buffer))
-            (t
-             (error "no process at point!")))))
-
-  (define-key process-menu-mode-map (kbd "C-k") 'paf/delete-process-at-point)
+  (use-package paf-functions
+    :load-path (lambda () (expand-file-name paf-lisp-directory)))
+    :ensure nil)
 #+end_src
 
 * Environment
@@ -317,7 +270,6 @@ Set some info about the system.
               ((string-match "darwin" system-configuration) 'macos)
               (t system-type)))
 #+end_src
-
 
 ** Browser default
 #+begin_src emacs-lisp :tangle no
@@ -1301,6 +1253,29 @@ The overwritten function (from [[https://emacs.stackexchange.com/questions/76379
   (use-package hydra)
 #+end_src
 
+** Process View
+Helps removing processes in the process menu view.
+
+#+begin_src emacs-lisp
+  (defun paf/delete-process-at-point ()
+    (interactive)
+    (let ((process (get-text-property (point) 'tabulated-list-id)))
+      (cond ((and process
+                  (processp process))
+             (delete-process process)
+             (revert-buffer))
+            (t
+             (error "no process at point!")))))
+
+  (define-key process-menu-mode-map (kbd "C-k") 'paf/delete-process-at-point)
+#+end_src
+
+** Compute formatted sum of region
+This actually computes the entire arithmetic expression that is selected, and replaces it with the numerical result.
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-p S") 'paf/sum-amount-of-region)
+#+end_src
+
 * Editing Style
 ** No tabs, ever. No trailing spaces either.
 #+begin_src emacs-lisp
@@ -1409,9 +1384,7 @@ The following only respects the project's =.gitignore= file.
 ** ini-mode
 #+begin_src emacs-lisp
   (use-package ini-mode
-    :config
-    (add-to-list 'auto-mode-alist '("\\.ini\\'" . ini-mode))
-    (add-to-list 'auto-mode-alist '("rc\\'" . ini-mode)))
+    :mode ( "\\.ini\\'" "rc\\'" ))
 #+end_src
 
 ** typescript-mode
@@ -1441,10 +1414,8 @@ Mode for Google protocol buffer mode
 Helps with editing schema.org files.
 #+begin_src emacs-lisp
   (use-package ttl-mode
-    :config
-    (add-to-list 'auto-mode-alist '("\\.n3" . ttl-mode))
-    (add-to-list 'auto-mode-alist '("\\.ttl" . ttl-mode))
-    (add-hook 'ttl-mode-hook 'turn-on-font-lock))
+    :mode ( "\\.n3\\'" "\\.ttl\\'" )
+    :hook (ttl-mode . turn-on-font-lock))
 #+end_src
 
 ** rainbow-mode
@@ -1510,44 +1481,6 @@ Colorize color names and hexadecimal codes in the correct color.
   (single-lines-only)
   (ledger-mode-clean-buffer)
   (ledger-sort-buffer))
-#+end_src
-
-*** Compute formatted sum of region
-It actually computes the entire arithmetic expression that is selected, and replaces it with the numerical result.
-#+begin_src emacs-lisp
-  (defun apply-function-to-region (fn)
-    (interactive "XFunction to apply to region: ")
-    (save-excursion
-      (let* ((beg (region-beginning))
-             (end (region-end))
-             (had-region (use-region-p))
-             (resulting-text
-              (funcall
-               fn
-               (buffer-substring-no-properties beg end)))
-             (new-end (+ beg (length resulting-text))))
-        (kill-region beg end)
-        (insert resulting-text)
-        ;; set the active region again if it was set originally.
-        (if had-region
-            (progn
-              (goto-char beg)
-              (push-mark new-end)
-              (setq mark-active t))))))
-
-  (defun paf/sum-amount (expression)
-    "Computes the sum from the arith expression given as argument."
-    (format "%.2f" (string-to-number (calc-eval expression))))
-
-  (defun paf/sum-amount-of-region ()
-    "Takes the region as an arithmetic expr, and replaces it with its sum."
-    (interactive)
-    (if (use-region-p)
-        (progn
-          (apply-function-to-region 'paf/sum-amount)
-          (goto-char (region-end)))))
-
-  (global-set-key (kbd "C-p S") 'paf/sum-amount-of-region)
 #+end_src
 
 *** Setup
@@ -1696,7 +1629,7 @@ Start using projectile. It has the documentation [[https://docs.projectile.mx/en
 #+end_src
 
 Also make sure we do have the faster [[https://github.com/ggreer/the_silver_searcher#the-silver-searcher][silver searcher]] version.  This may need you to install the corresponding tool for this, with the following snippet:
-#+begin_src bash :tangle bash/install_deps.sh
+#+begin_src bash :tangle no bash/install_deps.sh
 if [[ "$(uname)" == "Darwin" ]]; then
   install_pkg -x ag the_silver_searcher
 else
@@ -1706,7 +1639,7 @@ fi
 
 Search the entire project with =C-c p s s= for a regexp. This let's you turn the matching results into an editable buffer using =C-c C-e=. Other keys are listed [[https://github.com/syohex/emacs-helm-ag#keymap][here]].
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (use-package ag)
 #+end_src
 
@@ -1818,24 +1751,6 @@ install_pkg -x rg ripgrep
 #+end_src
 
 ** Deduplicate and sort
-Help cleanup the includes and using lists.
-[[http://www.emacswiki.org/emacs/DuplicateLines][found here]]
-#+begin_src emacs-lisp
-(defun uniquify-region-lines (beg end)
-  "Remove duplicate adjacent lines in region."
-  (interactive "*r")
-  (save-excursion
-    (goto-char beg)
-    (while (re-search-forward "^\\(.*\n\\)\\1+" end t)
-      (replace-match "\\1"))))
-
-(defun paf/sort-and-uniquify-region ()
-  "Remove duplicates and sort lines in region."
-  (interactive)
-  (sort-lines nil (region-beginning) (region-end))
-  (uniquify-region-lines (region-beginning) (region-end)))
-#+end_src
-
 Simplify cleanup of =#include= / =typedef= / =using= blocks.
 #+begin_src emacs-lisp
 (global-set-key (kbd "C-p s") 'paf/sort-and-uniquify-region)
@@ -1917,10 +1832,16 @@ Will fold all text indented more than the position of the cursor at the time the
 #+end_src
 
 *** git informations
-#+begin_src emacs-lisp :tangle no
-(use-package git-gutter-fringe+
-  :if (display-graphic-p)
-  :bind ("C-p g" . 'git-gutter+-mode))
+
+#+begin_src emacs-lisp
+  (use-package git-gutter-fringe
+    :if (display-graphic-p)
+    :bind ("C-p g" . 'git-gutter-mode)
+    :config
+    ;; If you want to show git diff information at right fringe
+    ;; (setq git-gutter-fr:side 'right-fringe)
+    ;;(global-git-gutter-mode t)
+    )
 #+end_src
 
 ** Speedup VCS
