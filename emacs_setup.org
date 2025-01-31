@@ -258,7 +258,6 @@ Otherwise resizing will round it at char width/height and not make it play well 
 #+begin_src emacs-lisp
   (use-package paf-functions
     :load-path (lambda () (expand-file-name paf-lisp-directory)))
-    :ensure nil)
 #+end_src
 
 * Environment
@@ -1629,7 +1628,8 @@ Start using projectile. It has the documentation [[https://docs.projectile.mx/en
 #+end_src
 
 Also make sure we do have the faster [[https://github.com/ggreer/the_silver_searcher#the-silver-searcher][silver searcher]] version.  This may need you to install the corresponding tool for this, with the following snippet:
-#+begin_src bash :tangle no bash/install_deps.sh
+bash/install_deps.sh
+#+begin_src bash :tangle no
 if [[ "$(uname)" == "Darwin" ]]; then
   install_pkg -x ag the_silver_searcher
 else
@@ -2061,7 +2061,7 @@ Setup info found here: https://emacs-lsp.github.io/dap-mode/page/configuration/
     (eat-update-semi-char-mode-map)
     (setq eat-line-input-ring-size 1000)
     (setq eat-term-scrollback-size 300000)  ;; in chars! nil == unlimited
-    (eat-reload)
+    ;;(eat-reload)
     )
 #+end_src
 
@@ -2636,8 +2636,11 @@ All keys prefixed with =C-c n=
            ("C-c n g" . org-roam-graph)
            ("C-c n j" . org-roam-dailies-capture-today)
            ("C-c n i" . org-roam-node-insert))
+    ;; :custom
+    ;; (org-roam-database-connector 'sqlite-builtin) ;; should work...
     :config
     (unless (eq platform-type 'android) (org-roam-db-autosync-mode))
+    (require 'emacsql-sqlite-builtin)
     (require 'org-roam-protocol))
 #+end_src
 

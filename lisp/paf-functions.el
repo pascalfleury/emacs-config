@@ -1,3 +1,9 @@
+;;; paf-functions --- collection of random functions
+
+;;; Commentary:
+
+;;; Code:
+
 ;; Function to run a hook only once
 ;; Found here: https://emacs.stackexchange.com/questions/3323/is-there-any-way-to-run-a-hook-function-only-once
 (defmacro add-hook-run-once (hook function &optional append local)
@@ -79,3 +85,6 @@
   (interactive)
   (sort-lines nil (region-beginning) (region-end))
   (paf/uniquify-region-lines (region-beginning) (region-end)))
+
+(provide 'paf-functions)
+;;; paf-functions ends here
