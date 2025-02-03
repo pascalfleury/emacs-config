@@ -157,19 +157,6 @@ Maybe there is a way to auto-detect =emacs-config-directory= (dir of this config
   [[ -d "${APPDIR}" ]] || mkdir -p "${APPDIR}"
 #+end_src
 
-** Byte-code cache
-#+begin_src emacs-lisp
-  (setq elc-cache-directory (expand-file-name "elc-cache" user-emacs-directory))
-
-  (defun my-bytecomp-dest-file (source)
-    (expand-file-name (file-name-nondirectory source) elc-cache-directory))
-
-  (unless (file-exists-p elc-cache-directory)
-    (make-directory elc-cache-directory))
-  (setq byte-compile-dest-file-function 'my-bytecomp-dest-file)
-  (add-to-list 'load-path elc-cache-directory)
-#+end_src
-
 ** tangle-this-config
 I set this up to tangle the init org-mode file into the actual Emacs init file as soon as I save it.
 #+begin_src emacs-lisp
