@@ -2043,9 +2043,12 @@ Setup info found here: https://emacs-lsp.github.io/dap-mode/page/configuration/
 #+begin_src emacs-lisp
   (use-package eat
     :config
+    ;; Make the shell grok the ctrl-moves
     (delete [C-left] eat-semi-char-non-bound-keys)
     (delete [C-right] eat-semi-char-non-bound-keys)
+    ;; Setup eat in the right mode
     (eat-update-semi-char-mode-map)
+    ;; Keep the scroll-back buffer in check
     (setq eat-line-input-ring-size 1000)
     (setq eat-term-scrollback-size 300000)  ;; in chars! nil == unlimited
     (eat-reload)
