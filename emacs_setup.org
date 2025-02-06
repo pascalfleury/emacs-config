@@ -2048,7 +2048,7 @@ Setup info found here: https://emacs-lsp.github.io/dap-mode/page/configuration/
     (eat-update-semi-char-mode-map)
     (setq eat-line-input-ring-size 1000)
     (setq eat-term-scrollback-size 300000)  ;; in chars! nil == unlimited
-    ;;(eat-reload)
+    (eat-reload)
     )
 #+end_src
 
