@@ -16,6 +16,10 @@ fi
 
 install_pkg gnuplot
 
+install_pkg cargo
+install_pkg gcc
+install_pkg g++
+
 install_pkg -x rg ripgrep
 
 # Install PanDoc

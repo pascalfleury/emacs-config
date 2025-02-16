@@ -1554,6 +1554,13 @@ Add the powerful Magit
 
 ** Tree-sitter
 
+Some native stuff needs the =cargo= tool to build.
+#+begin_src bash :tangle bash/install_deps.sh
+install_pkg cargo
+install_pkg gcc
+install_pkg g++
+#+end_src
+
 #+begin_src emacs-lisp
   (defun c-ts-mode-call-hook () (run-hooks 'c-mode-hook))
   (defun c++-ts-mode-call-hook () (run-hooks 'c++-mode-hook))
