@@ -3189,9 +3189,9 @@ This enables a more fine-grained filtering of the agenda items.
             (alltodo nil ((org-agenda-overriding-header "")
                           (org-super-agenda-groups
                            '(  ;; Each group has an implicit boolean OR operator between its selectors
+                             (:habit t)
                              (:name "Deadlines"
-                                    :habit t
-                                    :deadline t)
+                                    :deadline future)
                              (:name "Waiting"
                                     :todo "WAITING")
                              (:name "Working tasks"
@@ -3219,14 +3219,6 @@ This enables a more fine-grained filtering of the agenda items.
                                     :todo "STARTED"
                                     :todo "NEXT")
                              (:discard (:anything))))))))
-          ("R" "Recurring" ((tags "REGULAR"
-                                  ((org-agenda-overriding-header "\nRecurring\n")))
-                            (tags-todo "/WAITING"
-                                       ((org-agenda-overriding-header "\nWaiting\n")))
-                            (tags-todo "TODO=\"STARTED\""
-                                       ((org-agenda-overriding-header "\Ongoing\n")))
-                            (tags-todo "/NEXT"
-                                       ((org-agenda-overriding-header "\nUpcoming\n")))))
           ))
 
   (setq org-agenda-skip-deadline-prewarning-if-scheduled 2)
