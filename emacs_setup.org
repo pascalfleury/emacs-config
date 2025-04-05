@@ -2988,7 +2988,15 @@ This renders the calendar date (at top of agenda) differently for past or future
 
   (setq org-agenda-day-face-function 'my-org-agenda-get-day-face-fn)
 #+end_src
+*** org-modern
+#+begin_src emacs-lisp
+  (use-package org-modern
+    :after org
+    :config
+    (global-org-modern-mode))
 
+  ;; (with-eval-after-load 'org (global-org-modern-mode))
+#+end_src
 *** Display settings
 my config for display.
 #+begin_src emacs-lisp
