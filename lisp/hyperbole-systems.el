@@ -1,8 +1,15 @@
 ;; These utilities help detecting things for internal systems.
+;;
 ;; Examples:
 ;;     go/somewhere-else
 ;;     b/123456789
-
+;;
+;; Integrate it this way into your Emacs:
+;;
+;;    (use-package hyperbole
+;;     :init
+;;     (load-file (expanf-file-name "hyperbole-systems.el" my-lisp-directory)))
+;;
 (require 'thingatpt)
 (require 'hyperbole)
 
