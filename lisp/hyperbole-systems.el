@@ -122,6 +122,17 @@
 (put 'cl-status 'bounds-of-thing-at-point
      'cl-status-of-thing-at-point)
 
+;; cds|C|6467954|BE|fr|9c34ff36699d6d37:fr_BE
+(defun gl-path-of-thing-at-point ()
+  "Find constructs that are CDS IDs."
+  (save-excursion
+    (skip-chars-backward "[:alnum:]|:_")
+    (if (looking-at "\\(cds|[[:alnum:]|:_]+\\)")
+        (cons (match-beginning 1) (match-end 1))
+      nil)))
+
+(put 'gl 'bounds-of-thing-at-point
+     'gl-path-of-thing-at-point)
 
 (defib systems-stuff ()
   "Hyperbole implicit button for systems style things."
@@ -135,6 +146,7 @@
           (srcfs (thing-at-point 'srcfs))
           (cns (thing-at-point 'cns))
           (mpm (thing-at-point 'mpm))
+          (gl (thing-at-point 'gl))
           (cl-status (thing-at-point 'cl-status))
           topic)
       (cond
@@ -159,4 +171,6 @@
                     (hact 'www-url (concat "http://who/" ldap))))
        (mid (progn (ibut:label-set mid)
                    (hact 'www-url (concat "http://hume" mid))))
+       (gl (progn (ibut:label-set gl)
+                   (hact 'www-url (concat "http://go/gl-cdsid/" gl))))
        ))))
