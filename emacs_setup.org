@@ -2880,9 +2880,10 @@ This is following the excellent video from [[https://systemcrafters.net/emacs-ti
 
 *** valign
 This enables aligining tables in a pixel-perfect way.
+Note: adding the hook on org-mode does make it very very slow.
 #+begin_src emacs-lisp
   (use-package valign
-    :hook (org-mode-hook . valign-mode)
+    ;; :hook (org-mode . valign-mode)
     :config
     (setq valign-fancy-bar t))
 #+end_src
