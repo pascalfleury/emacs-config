@@ -1410,6 +1410,17 @@ Colorize color names and hexadecimal codes in the correct color.
 (use-package rainbow-mode)
 #+end_src
 
+** yaml-mode
+To help editing YAML files, e.g. when configuring Home Assistant.
+#+begin_src emacs-lisp
+  (use-package yaml-mode
+    :config
+    ;; to have Return key automatically indent cursor on new line
+    (add-hook 'yaml-mode-hook
+            (lambda ()
+              (define-key yaml-mode-map "\C-m" 'newline-and-indent))))
+#+end_src
+
 ** taskjuggler-mode (tj3-mode)
 #+begin_src emacs-lisp
   (use-package ox-taskjuggler
