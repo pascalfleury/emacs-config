@@ -1569,6 +1569,22 @@ install_pkg g++
 #+end_src
 
 #+begin_src emacs-lisp
+  (use-package tree-sitter
+    :config
+    (global-tree-sitter-mode)
+    ;; (tree-sitter-install-language 'python)
+    ;; (tree-sitter-install-language 'java)
+    ;; (tree-sitter-install-language 'go)
+    ;; (tree-sitter-install-language 'javascript)
+    ;; (tree-sitter-install-language 'typescript)
+    ;; (tree-sitter-install-language 'bash)
+    ;; (tree-sitter-install-language 'kotlin)
+    ;; (tree-sitter-install-language 'markdown)
+    ;; (tree-sitter-install-language 'cpp)
+    )
+#+end_src
+
+#+begin_src emacs-lisp :tangle no
   (defun c-ts-mode-call-hook () (run-hooks 'c-mode-hook))
   (defun c++-ts-mode-call-hook () (run-hooks 'c++-mode-hook))
   (defun c-or-c++-ts-mode-call-hook () (run-hooks 'c-or-c++-mode-hook))
