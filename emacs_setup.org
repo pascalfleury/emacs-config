@@ -2680,12 +2680,13 @@ All keys prefixed with =C-c n=
            ("C-c n g" . org-roam-graph)
            ("C-c n j" . org-roam-dailies-capture-today)
            ("C-c n i" . org-roam-node-insert))
-    ;; :custom
-    ;; (org-roam-database-connector 'sqlite-builtin) ;; should work...
+    :requires
+    (emacsql emacsql-sqlite-builtin org-roam-protocol)
+    :custom
+    (org-roam-database-connector 'sqlite-builtin) ;; should work...
     :config
-    (unless (eq platform-type 'android) (org-roam-db-autosync-mode))
-    (require 'emacsql-sqlite-builtin)
-    (require 'org-roam-protocol))
+    (unless (eq platform-type 'android) (org-roam-db-autosync-mode)))
+
 #+end_src
 
 These are some extensions to make org-agenda find info in roma files in a reasonable time.
