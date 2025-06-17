@@ -711,6 +711,13 @@ See [[https://github.com/karthink/popper][github:popper]] for more information.
                    (window-height . (body-lines . 15))
                    (window-parameters . ((no-delete-other-windows . t)))))
     (add-to-list 'display-buffer-alist
+                 '("\\*eldoc\\*\\'"
+                   (display-buffer-in-side-window)
+                   (side . bottom)
+                   (slot . 2)  ;; eldoc shows in slot 2 (right)
+                   (window-height . (body-lines . 15))
+                   (window-parameters . ((no-delete-other-windows . t)))))
+    (add-to-list 'display-buffer-alist
                  '("\\*Org Agenda\\*"
                    (display-buffer-in-side-window)
                    (side . right)
@@ -1688,13 +1695,26 @@ Both =eglot= and =lsp-mode= would need the =company= mode.
 
 *** eglot
 #+begin_src emacs-lisp
+  (defun paf/make-eldoc-reuse-window ()
+    "Makes the documentation show through eglot in eldoc to reuse the opened window."
+    (add-hook 'eldoc-documentation-window-setup-hook
+              (lambda ()
+                (when (window-live-p (get-buffer-window "*eldoc*"))
+                  (set-window-dedicated-p (get-buffer-window "*eldoc*") nil)
+                  (set-window-buffer (get-buffer-window "*eldoc*") (get-buffer "*eldoc*"))
+                  (select-window (get-buffer-window "*eldoc*"))
+                  ))))
+
   (use-package eglot
     :bind (:map eglot-mode-map
                 ("C-c <tab>" . company-complete) ; initiate the completion manually
                 ("C-c e f n" . flymake-goto-next-error)
                 ("C-c e f p" . flymake-goto-prev-error)
                 ("C-c e r"   . eglot-rename)
-                ("C-p a"     . eglot-inlay-hints-mode)))
+                ("C-p a"     . eglot-inlay-hints-mode))
+    :config
+    (paf/make-eldoc-reuse-window))
+
 
   (customize-set-variable 'eglot-ignored-server-capabilities
                           '(
