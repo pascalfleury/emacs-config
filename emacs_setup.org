@@ -1734,7 +1734,7 @@ Both =eglot= and =lsp-mode= would need the =company= mode.
 
   (customize-set-variable 'eglot-ignored-server-capabilities
                           '(
-                          ;;:hoverProvider
+                          :hoverProvider  ;; the documentation shwo on hovering
                           ;; :completionProvider
                           ;; :signatureHelpProvider
                           ;; :definitionProvider
