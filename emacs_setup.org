@@ -3048,6 +3048,7 @@ This renders the calendar date (at top of agenda) differently for past or future
   (use-package org-modern
     :after org
     :config
+    (setq org-modern-table nil)  ;; I find them ugly.
     (global-org-modern-mode))
 
   ;; (with-eval-after-load 'org (global-org-modern-mode))
@@ -3152,45 +3153,88 @@ Track task dependencies, and dim them in the agenda.
 
 *** org-todo keywords
 #+begin_src emacs-lisp
-    (setq org-todo-keywords '(
-       (sequence "TODO(t!)" "NEXT(n!)" "STARTED(s!)" "WAITING(w!)" "AI(a!)" "LIVE(l!)" "|" "DONE(d!)" "CANCELLED(C@)" "DEFERRED(D@)" "SOMEDAY(S!)" "FAILED(F!)" "REFILED(R!)")
-       ;; For publications
-       (sequence "APPLIED(A!)" "WAITING(w!)" "ACCEPTED" "|" "REJECTED" "PUBLISHED")
-       ;; For tracking other's tasks
-       (sequence "TASK(m!)" "ACTIVE" "|" "DONE(d!)" "CANCELLED(C@)" )
-    ))
+  (setq org-todo-keywords '(
+     (sequence "TODO(t!)" "NEXT(n!)" "STARTED(s!)" "WAITING(w!)" "AI(a!)" "LIVE(l!)" "|" "DONE(d!)" "CANCELLED(C@)" "DEFERRED(D@)" "SOMEDAY(S!)" "FAILED(F!)" "REFILED(R!)")
+     ;; For publications
+     (sequence "APPLIED(A!)" "WAITING(w!)" "ACCEPTED" "|" "REJECTED" "PUBLISHED")
+     ;; For tracking other's tasks
+     (sequence "TASK(m!)" "ACTIVE" "|" "DONE(d!)" "CANCELLED(C@)" )
+  ))
 
-    (setq org-tags-exclude-from-inheritance '("PRJ" "REGULAR")
-          org-use-property-inheritance '("PRIORITY")
-          org-stuck-projects '("+PRJ/-DONE-CANCELLED"
-                               ;; it is considered stuck if there is no next action
-                               ("NEXT" "STARTED" "TASK") ()))
+  (setq org-tags-exclude-from-inheritance '("PRJ" "REGULAR")
+        org-use-property-inheritance '("PRIORITY")
+        org-stuck-projects '("+PRJ/-DONE-CANCELLED"
+                             ;; it is considered stuck if there is no next action
+                             ("NEXT" "STARTED" "TASK") ()))
 
-    (setq org-todo-keyword-faces
-          '(
-            ("TODO" . (:foreground "purple" :weight bold))
-            ("TASK" . (:foreground "steelblue" :weight bold))
-            ("NEXT" . (:foreground "red" :weight bold))
-            ("STARTED" . (:foreground "green" :weight bold))
-            ("WAITING" . (:foreground "orange" :weight bold))
-            ("SOMEDAY" . (:foreground "steelblue" :weight bold))
-            ("REFILED" . (:foreground "gray"))
-            ("MAYBE" . (:foreground "steelblue" :weight bold))
-            ("AI" . (:foreground "red" :weight bold))
-            ("LIVE" . (:foreground "green" :weight bold))
-            ("NEW" . (:foreground "orange" :weight bold))
-            ("RUNNING" . (:foreground "orange" :weight bold))
-            ("WORKED" . (:foreground "green" :weight bold))
-            ("FAILED" . (:foreground "red" :weight bold))
-            ;; For publications
-            ("APPLIED" . (:foreground "orange" :weight bold))
-            ("ACCEPTED" . (:foreground "orange" :weight bold))
-            ("REJECTED" . (:foreground "red" :weight bold))
-            ("PUBLISHED" . (:foreground "green" :weight bold))
-            ;; Other stuff
-            ("ACTIVE" . (:foreground "darkgreen" :weight bold))
-            ("FLAG_GATED" . (:foreground "orange" :weight bold))
-            ))
+  (setq org-todo-keyword-faces
+        '(
+          ("TODO" . (:foreground "purple" :weight bold))
+          ("TASK" . (:foreground "steelblue" :weight bold))
+          ("NEXT" . (:foreground "red" :weight bold))
+          ("STARTED" . (:foreground "green" :weight bold))
+          ("WAITING" . (:foreground "orange" :weight bold))
+          ("SOMEDAY" . (:foreground "steelblue" :weight bold))
+          ("REFILED" . (:foreground "gray"))
+          ("MAYBE" . (:foreground "steelblue" :weight bold))
+          ("AI" . (:foreground "red" :weight bold))
+          ("LIVE" . (:foreground "green" :weight bold))
+          ("NEW" . (:foreground "orange" :weight bold))
+          ("RUNNING" . (:foreground "orange" :weight bold))
+          ("WORKED" . (:foreground "green" :weight bold))
+          ("FAILED" . (:foreground "red" :weight bold))
+          ;; For publications
+          ("APPLIED" . (:foreground "orange" :weight bold))
+          ("ACCEPTED" . (:foreground "orange" :weight bold))
+          ("REJECTED" . (:foreground "red" :weight bold))
+          ("PUBLISHED" . (:foreground "green" :weight bold))
+          ;; Other stuff
+          ("ACTIVE" . (:foreground "darkgreen" :weight bold))
+          ("FLAG_GATED" . (:foreground "orange" :weight bold))
+          ))
+
+  (setq org-modern-todo-faces
+        '(
+          ("TODO" . (:background "purple"))
+          ("TASK" . (:background "steelblue"))
+          ("NEXT" . (:background "red"))
+          ("STARTED" . (:background "green" :foreground "black"))
+          ("WAITING" . (:background "orange" :foreground "black"))
+          ("SOMEDAY" . (:background "steelblue"))
+          ("REFILED" . (:background "gray" :foreground "blue"))
+          ("MAYBE" . (:background "steelblue"))
+          ("AI" . (:background "red"))
+          ("LIVE" . (:background "green" :foreground "black"))
+          ("NEW" . (:background "orange" :foreground "black"))
+          ("RUNNING" . (:background "orange" :foreground "black"))
+          ("WORKED" . (:background "green" :foreground "black"))
+          ("FAILED" . (:background "red"))
+          ;; For publications
+          ("APPLIED" . (:background "orange" :foreground "black"))
+          ("ACCEPTED" . (:background "orange" :foreground "black"))
+          ("REJECTED" . (:background "red"))
+          ("PUBLISHED" . (:background "green" :foreground "black"))
+          ;; Other stuff
+          ("ACTIVE" . (:background "darkgreen"))
+          ("FLAG_GATED" . (:background "orange" :foreground "black"))
+          ;; End states
+          ("DONE" . (:background "gray" :foreground "black"))
+          ("CANCELLED" . (:background "gray" :foreground "black"))
+          ("DEFERRED" . (:background "gray" :foreground "black"))
+          ))
+
+  (setq org-modern-priority-faces
+        '(
+          (?A . (:foreground "black" :background "orange"))
+          (?B . (:foreground "black" :background "yellow"))
+          (?C . (:foreground "black" :background "green"))
+          ))
+
+  (setq org-modern-tag-faces
+        '(
+          ("LIVE" . (:background "green" :foreground "black"))
+          ("PRJ" . (:background "steelblue"))
+          ))
 #+end_src
 
 *** org-super-agenda
