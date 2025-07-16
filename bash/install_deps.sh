@@ -46,14 +46,20 @@ fi
 # Get a version of the PlantUML jar file.
 install_pkg -x dot graphviz  # for some diagrams
 install_pkg -x wget wget
-URL='http://sourceforge.net/projects/plantuml/files/plantuml.jar/download'
 
 JARFILE="${APPDIR}/plantuml.jar"
-declare -i last_modified=$(stat -c %Y "${JARFILE}" >/dev/null 2>&1 || echo "0")
+INSTALLED_JAR=$(readlink -f "${JARFILE}")
+declare -i last_modified=$(stat -c %Y "${INSTALLED_JAR}" 2>/dev/null || echo "0")
 age_in_days=$(( ( $(date +%s) - last_modified ) / 86400 ))
+
 if [[ ! -e "${JARFILE}" ]] || (( age_in_days > 90 )); then
-    (cd "$(dirname "${JARFILE}")" && wget -O $(basename "${JARFILE}") "${URL}")
-    ls -l "${JARFILE}"
+  LATEST_JAR="$(wget -O - 'https://plantuml.com/en/download' | grep GPL | grep jar | sed -e 's,.* href=",,' -e 's,".*,,' | head -n 1)"
+  (cd "$(dirname "${JARFILE}")" && wget -O $(basename "${LATEST_JAR}") "${LATEST_JAR}")
+  echo "New installed version is $(basename "${LATEST_JAR}") [age was ${age_in_days} days]"
+  ( cd "$(dirname "${JARFILE}")" && ln -s -f $(basename "${LATEST_JAR}") $(basename "${JARFILE}"))
+  ls -l "${JARFILE}"
+else
+  echo "Latest version is ${INSTALLED_JAR} [age is ${age_in_days} days]"
 fi
 
 set -e
