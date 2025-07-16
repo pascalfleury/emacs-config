@@ -3719,9 +3719,13 @@ You could install the PlantUML JAR file with this snippet:
   install_pkg -x dot graphviz  # for some diagrams
   install_pkg -x wget wget
   URL='http://sourceforge.net/projects/plantuml/files/plantuml.jar/download'
-  if [[ ! -e "${APPDIR}/plantuml.jar" ]]; then
-      (cd "${APPDIR}" && wget -O plantuml.jar "${URL}")
-      ls -l "${APPDIR}/plantuml.jar"
+
+  JARFILE="${APPDIR}/plantuml.jar"
+  declare -i last_modified=$(stat -c %Y "${JARFILE}" >/dev/null 2>&1 || echo "0")
+  age_in_days=$(( ( $(date +%s) - last_modified ) / 86400 ))
+  if [[ ! -e "${JARFILE}" ]] || (( age_in_days > 90 )); then
+      (cd "$(dirname "${JARFILE}")" && wget -O $(basename "${JARFILE}") "${URL}")
+      ls -l "${JARFILE}"
   fi
 #+end_src
 
