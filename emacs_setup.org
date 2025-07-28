@@ -2214,11 +2214,10 @@ If variable =org-directory= is not set yet, map it to my home's files. You may s
 
   (use-package org
     :config
+    ;;(add-hook 'org-mode-hook 'variable-pitch-mode)
     (add-hook 'org-mode-hook #'(lambda ()
                                  (visual-line-mode)
-                                 (org-indent-mode)))
-    ;;(add-hook 'org-mode-hook 'variable-pitch-mode)
-    )
+                                 (org-indent-mode))))
 #+end_src
 
 ** Packages / Helper Functions / Tools found on the web / worg
