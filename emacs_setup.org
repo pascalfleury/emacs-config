@@ -787,6 +787,88 @@ https://github.com/captainflasmr/selected-window-accent-mode deal with fringes a
     (selected-window-accent-mode-style 'default))
 #+end_src
 
+** Move the point in the shell buffer
+
+These functions help moving the point in the shell without losing the current location.
+
+#+begin_src emacs-lisp
+  (defun paf/move-pointer-in-remote-buffer (buffer-name move-fn &optional align operation-name)
+    "Generic engine to run a move-function in a target buffer.
+  ALIGN can be 'top or 'bottom (default)."
+    ;; Set a default value for the optional argument.
+    (let ((align (or align 'noalign))
+          (operation (or operation-name "to a new position")))
+      (if (equal (buffer-name) buffer-name)
+          (progn
+            (funcall move-fn (window-body-height (selected-window)))
+            (cond ((eq align 'top) (recenter-top-bottom 0))
+                  ((eq align 'bottom) (recenter-top-bottom -1)))
+            (message "Moved '%s' to %s" buffer-name operation))
+
+        (let* ((target-buffer (get-buffer buffer-name))
+               (target-win (and target-buffer (get-buffer-window target-buffer))))
+          (when target-win
+            (let* ((win-height (window-body-height target-win))
+                   (target-pos (with-current-buffer target-buffer
+                                 (funcall move-fn win-height)
+                                 (point)))
+                   ;; Calculate start-pos based on alignment.
+                   (start-pos
+                    (with-current-buffer target-buffer
+                      (goto-char target-pos)
+                      (cond
+                       ((eq align 'top) (line-beginning-position))
+                       ((eq align 'bottom)
+                        (forward-line (- (max 1 (- win-height 1))))
+                        (line-beginning-position))))))
+              (set-window-start target-win start-pos)
+              (set-window-point target-win target-pos)
+              (message "Switch-moved '%s' to %s" buffer-name operation)))))))
+
+
+  (defun paf/move-eat-to-end ()
+    "If the *eat* buffer exists, save current position, switch to it,
+  move to the end, and then restore the original state. Otherwise, do nothing."
+    (interactive)
+    (paf/move-pointer-in-remote-buffer "*eat*"
+                                       (lambda (_) (goto-char (point-max)))
+                                       'bottom
+                                       "the end"))
+
+  (defun paf/start-of-last-build (&optional _)
+    (goto-char (point-max))
+    (if (search-backward ">>>>>>>>>>>" nil t)
+        (progn
+          (beginning-of-line))))
+
+  (defun paf/move-eat-to-begin-of-last-command (&optional _)
+    "If the *eat* buffer exists, switch to it, find the last build
+  using the 'paf/start-of-last-build' command, and then restore
+  the original window and point."
+    (interactive)
+    (paf/move-pointer-in-remote-buffer "*eat*"
+                                       #'paf/start-of-last-build
+                                       'top
+                                       "the end"))
+
+  (defun paf/scroll-down-eat-buffer ()
+    (interactive)
+    (paf/move-pointer-in-remote-buffer "*eat*"
+                                       (lambda (h) (forward-line (max 1 (- h 1))))))
+
+  (defun paf/scroll-up-eat-buffer ()
+    (interactive)
+    (paf/move-pointer-in-remote-buffer "*eat*"
+                                       (lambda (h) (forward-line (- (max 1 (- h 1)))))))
+
+
+
+  (global-set-key (kbd "C-p e") 'paf/move-eat-to-end)
+  (global-set-key (kbd "C-p b") 'paf/move-eat-to-begin-of-last-command)
+  (global-set-key (kbd "C-p <next>") 'paf/scroll-down-eat-buffer)
+  (global-set-key (kbd "C-p <prior>") 'paf/scroll-up-eat-buffer)
+
+#+end_src
 * Colors and Look
 ** In graphical mode: support mouse
 #+begin_src emacs-lisp
