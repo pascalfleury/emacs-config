@@ -2729,6 +2729,16 @@ If you need to debug oauth2, then this will make the request/response be printed
 **** org-rifle
 [[https://github.com/alphapapa/org-rifle][org-rifle]] is the swiss-army knife for searching in an org-file.
 
+*** org-clock-convenience
+#+begin_src emacs-lisp
+  (use-package org-clock-convenience
+    :bind (:map org-agenda-mode-map
+             ("<S-right>" . org-clock-convenience-timestamp-up)
+             ("<S-left>" . org-clock-convenience-timestamp-down)
+             ("[" . org-clock-convenience-fill-gap)
+             ("]" . org-clock-convenience-fill-gap-both)))
+#+end_src
+
 *** org-roam (v2)
 My cheat sheet for =org-roam=
 
@@ -2807,16 +2817,6 @@ EmacSQL will need to get its C-binary compiled, and needs supporting tools. Note
   # Make sure there is a C compiler for emacsql-sqlite
   [[ -n "$(which cc)" ]] || install_pkg -x cc clang
 #+end_src
-*** org-clock-convenience
-#+begin_src emacs-lisp
-  (use-package org-clock-convenience
-    :bind (:map org-agenda-mode-map
-             ("<S-right>" . org-clock-convenience-timestamp-up)
-             ("<S-left>" . org-clock-convenience-timestamp-down)
-             ("[" . org-clock-convenience-fill-gap)
-             ("]" . org-clock-convenience-fill-gap-both)))
-#+end_src
-
 *** org-kanban
 #+begin_src emacs-lisp :tangle no
   (use-package org-kanban)
