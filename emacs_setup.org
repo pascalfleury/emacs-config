@@ -2762,10 +2762,10 @@ All keys prefixed with =C-c n=
 #+begin_src emacs-lisp
   (use-package org-roam
     :ensure t
-    :pin melpa
-    :init
-    (setq org-roam-directory (file-truename paf-roam-directory))
-    (setq org-roam-db-location (expand-file-name "org-roam.db" paf-roam-directory))
+    :custom
+    (org-roam-directory (file-truename paf-roam-directory))
+    (org-roam-db-location (expand-file-name "org-roam.db" paf-roam-directory))
+    (org-roam-database-connector 'sqlite-builtin) ;; should work...
     :bind (("C-c n l" . org-roam-buffer-toggle)
            ("C-c n b" . org-roam-switch-to-buffer)
            ("C-c n f" . org-roam-node-find)
@@ -2775,11 +2775,8 @@ All keys prefixed with =C-c n=
            ("C-c n i" . org-roam-node-insert))
     :requires
     (emacsql emacsql-sqlite-builtin org-roam-protocol)
-    :custom
-    (org-roam-database-connector 'sqlite-builtin) ;; should work...
     :config
     (unless (eq platform-type 'android) (org-roam-db-autosync-mode)))
-
 #+end_src
 
 These are some extensions to make org-agenda find info in roma files in a reasonable time.
