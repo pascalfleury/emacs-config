@@ -629,7 +629,6 @@ See [[https://github.com/karthink/popper][github:popper]] for more information.
     :init
     (setq popper-reference-buffers
           '("\\*Messages\\*"
-            "*vterm*"
             "\\*Bufler\\*"
             "Output\\*$"
             help-mode
@@ -696,7 +695,7 @@ See [[https://github.com/karthink/popper][github:popper]] for more information.
     :ensure nil
     :config
     (add-to-list 'display-buffer-alist
-                 '("\\*eat\\*<[:digit:]+>"
+                 '("\\*(eat|vterm)\\*<[:digit:]+>"
                    (display-buffer-in-side-window)
                    (side . bottom)
                    (slot . 1)  ;; secondary terminals are in slot 1
@@ -704,7 +703,7 @@ See [[https://github.com/karthink/popper][github:popper]] for more information.
                    ;(window-width . (body-columns . 75))
                    (window-parameters . ((no-delete-other-windows . t)))))
     (add-to-list 'display-buffer-alist
-                 '("\\*eat\\*\\'"
+                 '("\\*(eat|vterm)\\*\\'"
                    (display-buffer-in-side-window)
                    (side . bottom)
                    (slot . -1)  ;; main terminal is in slot -1
@@ -830,7 +829,7 @@ These functions help moving the point in the shell without losing the current lo
     "If the *eat* buffer exists, save current position, switch to it,
   move to the end, and then restore the original state. Otherwise, do nothing."
     (interactive)
-    (paf/move-pointer-in-remote-buffer "*eat*"
+    (paf/move-pointer-in-remote-buffer paf/terminal-window-name
                                        (lambda (_) (goto-char (point-max)))
                                        'bottom
                                        "the end"))
@@ -846,19 +845,19 @@ These functions help moving the point in the shell without losing the current lo
   using the 'paf/start-of-last-build' command, and then restore
   the original window and point."
     (interactive)
-    (paf/move-pointer-in-remote-buffer "*eat*"
+    (paf/move-pointer-in-remote-buffer paf/terminal-window-name
                                        #'paf/start-of-last-build
                                        'top
                                        "the end"))
 
   (defun paf/scroll-down-eat-buffer ()
     (interactive)
-    (paf/move-pointer-in-remote-buffer "*eat*"
+    (paf/move-pointer-in-remote-buffer paf/terminal-window-name
                                        (lambda (h) (forward-line (max 1 (- h 1))))))
 
   (defun paf/scroll-up-eat-buffer ()
     (interactive)
-    (paf/move-pointer-in-remote-buffer "*eat*"
+    (paf/move-pointer-in-remote-buffer paf/terminal-window-name
                                        (lambda (h) (forward-line (- (max 1 (- h 1)))))))
 
 
@@ -2187,8 +2186,16 @@ Setup info found here: https://emacs-lsp.github.io/dap-mode/page/configuration/
     ;; Keep the scroll-back buffer in check
     (setq eat-line-input-ring-size 1000)
     (setq eat-term-scrollback-size 300000)  ;; in chars! nil == unlimited
+    (setq paf/terminal-window-name "*eat*")
     (eat-reload)
     )
+#+end_src
+*** vterm
+#+begin_src emacs-lisp :tangle no
+  (use-package vterm
+    :config
+    (setq paf/terminal-window-name "*vterm*")
+  )
 #+end_src
 
 ** bazel
