@@ -695,7 +695,7 @@ See [[https://github.com/karthink/popper][github:popper]] for more information.
     :ensure nil
     :config
     (add-to-list 'display-buffer-alist
-                 '("\\*(eat|vterm)\\*<[:digit:]+>"
+                 '("\\*\\(eat\\|vterm\\)\\*<[:digit:]+>"
                    (display-buffer-in-side-window)
                    (side . bottom)
                    (slot . 1)  ;; secondary terminals are in slot 1
@@ -703,7 +703,7 @@ See [[https://github.com/karthink/popper][github:popper]] for more information.
                    ;(window-width . (body-columns . 75))
                    (window-parameters . ((no-delete-other-windows . t)))))
     (add-to-list 'display-buffer-alist
-                 '("\\*(eat|vterm)\\*\\'"
+                 '("\\*\\(eat\\|vterm\\)\\*\\'"
                    (display-buffer-in-side-window)
                    (side . bottom)
                    (slot . -1)  ;; main terminal is in slot -1
