@@ -1610,6 +1610,15 @@ NOTE* assigns =hui-search-web= to =C-c C-/= to not clobber the later used =C-c /
   (use-package graphviz-dot-mode)
 #+end_src
 
+** Terrastruct's D2
+
+#+begin_src emacs-lisp
+  (use-package ob-d2
+    :after org
+    :config
+    (add-to-list 'org-babel-load-languages '(d2 . t)))
+#+end_src
+
 ** Google This!
 This package enables to get Google search results within Emacs itself. The default map is bound to =C-c /= so search for thing at point is =C-c / g=.
 
