@@ -1613,6 +1613,8 @@ NOTE* assigns =hui-search-web= to =C-c C-/= to not clobber the later used =C-c /
 ** Terrastruct's D2
 
 #+begin_src emacs-lisp
+  (use-package d2-mode)
+
   (use-package ob-d2
     :after org
     :config
