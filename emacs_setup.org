@@ -278,7 +278,7 @@ NOTE: This is a mess. It does not seem to work out of the box, and with this it 
 
  Make Emacs request UTF-8 first when pasting stuff, and in general simply use UTF-8. The rest is legacy anyway, see this chart: [[https://en.wikipedia.org/wiki/UTF-8#/media/File:Unicode_Web_growth.svg][UTF-8 Usage]].
  This setting found in [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Recognize-Coding.html][this page]], albeit after quite some searching.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   ;;(use-package unicode-escape
   ;;  :init
   ;;  (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
