@@ -13,11 +13,22 @@
 (require 'thingatpt)
 (require 'hyperbole)
 
+(defun skip-backward-regexp-no-space (regexp)
+  "Search backward for REGEXP, but not beyond the previous space.
+The search limit is the first ' ' character found or the
+beginning of the buffer."
+  (let ((limit (point)))
+    (save-excursion
+      (skip-chars-backward "[^[:space:]]")
+      (setq limit (point)))
+    (search-backward-regexp regexp limit t)))
+
+
 (defun systems-url-bounds-of-thing-at-point ()
   "Find constructs that are identifiers for regular URLs"
   ;; http://www.pafsoft.ch https://pafsoft.ch http://cl/12345
   (save-excursion
-    (skip-chars-backward "[:alnum:]_/%:.?-")
+    (skip-backward-regexp-no-space "https?://")
     (if (looking-at "https?://[[:alnum:]_/%=:\\.\\?-]+")
         (cons (point) (match-end 0))
       nil)))
