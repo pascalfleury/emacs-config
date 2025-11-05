@@ -17,8 +17,8 @@
   "Find constructs that are identifiers for regular URLs"
   ;; http://www.pafsoft.ch https://pafsoft.ch http://cl/12345
   (save-excursion
-    (skip-chars-backward "[:alnum:]_/.:")
-    (if (looking-at "https?://[[:alnum:]_\\.-]+")
+    (skip-chars-backward "[:alnum:]_/%:.?-")
+    (if (looking-at "https?://[[:alnum:]_/%=:\\.\\?-]+")
         (cons (point) (match-end 0))
       nil)))
 
