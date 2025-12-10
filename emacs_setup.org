@@ -2202,11 +2202,28 @@ Setup info found here: https://emacs-lsp.github.io/dap-mode/page/configuration/
     )
 #+end_src
 *** vterm
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
+  (defun paf/vterm-enter-copy-mode ()
+    "Enter vterm-copy-mode if not already active."
+    (interactive)
+    (unless vterm-copy-mode
+      (vterm-copy-mode 1)))
+
+  (defun paf/vterm-exit-copy-mode ()
+    "Exit vterm-copy-mode if active."
+    (interactive)
+    (when vterm-copy-mode
+      (vterm-copy-mode -1)))
+
   (use-package vterm
+    ;; Emulate the 'eat' keybindings.
+    :bind (
+           (:map vterm-mode-map
+                 ("C-c C-e" . paf/vterm-enter-copy-mode))
+           (:map vterm-copy-mode-map
+                 ("C-c C-j" . paf/vterm-exit-copy-mode)))
     :config
-    (setq paf/terminal-window-name "*vterm*")
-  )
+    (setq paf/terminal-window-name "*vterm*"))
 #+end_src
 
 ** bazel
