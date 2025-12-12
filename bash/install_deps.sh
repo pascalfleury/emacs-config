@@ -22,6 +22,9 @@ install_pkg g++
 
 install_pkg -x rg ripgrep
 
+# Install the vterm native library
+install_pkg libvterm-dev
+
 # Install PanDoc
 if [[ "$(uname -m)" == "x86_64" ]]; then
   install_pkg pandoc

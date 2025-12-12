@@ -2202,6 +2202,12 @@ Setup info found here: https://emacs-lsp.github.io/dap-mode/page/configuration/
     )
 #+end_src
 *** vterm
+
+#+begin_src bash :tangle bash/install_deps.sh
+  # Install the vterm native library
+  install_pkg libvterm-dev
+#+end_src
+
 #+begin_src emacs-lisp
   (defun paf/vterm-enter-copy-mode ()
     "Enter vterm-copy-mode if not already active."
