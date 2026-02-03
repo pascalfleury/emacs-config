@@ -16,6 +16,8 @@ They usually live temporarily in my =~/.emacs= until I am happy, in which case I
   - [[https://github.com/Ice-Cube69/org-project-manager][org-project-manager]]
   - [[https://github.com/arthurcgusmao/unmodified-buffer][unmodified-buffer]]
   - https://github.com/mickeynp/combobulate
+  - git-sync-mode
+
 
 ** Currently under review
   - [[https://github.com/yjwen/org-reveal][ox-reveal]] (see [[https://github.com/yjwen/org-reveal#set-the-location-of-revealjs][installation]])
@@ -866,7 +868,6 @@ These functions help moving the point in the shell without losing the current lo
   (global-set-key (kbd "C-p b") 'paf/move-eat-to-begin-of-last-command)
   (global-set-key (kbd "C-p <next>") 'paf/scroll-down-eat-buffer)
   (global-set-key (kbd "C-p <prior>") 'paf/scroll-up-eat-buffer)
-
 #+end_src
 * Colors and Look
 ** In graphical mode: support mouse
