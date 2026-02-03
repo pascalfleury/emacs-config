@@ -2228,8 +2228,9 @@ Setup info found here: https://emacs-lsp.github.io/dap-mode/page/configuration/
                  ("C-c C-e" . paf/vterm-enter-copy-mode))
            (:map vterm-copy-mode-map
                  ("C-c C-j" . paf/vterm-exit-copy-mode)))
-    :config
-    (setq paf/terminal-window-name "*vterm*"))
+    ;;:config
+    ;;(setq paf/terminal-window-name "*vterm*")
+    )
 #+end_src
 
 ** bazel
