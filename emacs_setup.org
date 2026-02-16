@@ -3097,6 +3097,48 @@ Keeps the header visible even when it gets off the visible part of the buffer.
 #+begin_src emacs-lisp
   (use-package org-sticky-header)
 #+end_src
+
+*** Colorful bash output
+
+#+begin_src emacs-lisp
+(defun paf/colored-bash-output (raw)
+  (require 'ansi-color)
+  (mapcar
+   (lambda (line)
+     ;; Split line into cells, assuming Tab separation
+     (mapcar
+      (lambda (cell)
+        (if (string-empty-p cell)
+            cell
+          (with-temp-buffer
+            (insert cell)
+            ;; Apply ANSI color codes as text properties
+            (ansi-color-apply-on-region (point-min) (point-max))
+            (buffer-string))))
+      (split-string line "\t")))
+   ;; Split raw output into lines, removing empty lines
+   (split-string raw "\n" t)))
+#+end_src
+
+#+RESULTS:
+: paf/colored-bash-output
+
+After this you should be able to color the output like this:
+
+#+begin_example
+#+BEGIN_ SRC bash :results value table :post paf/colored-bash-output(data)
+  # Example script emitting ANSI colors and tab-separated columns
+  GREEN='\e[32m'
+  RED='\e[31m'
+  NC='\e[0m' # No Color
+
+  echo -e "Status\tDetails"
+  echo -e "${GREEN}OK${NC}\tAll systems nominal."
+  echo -e "${RED}ERROR${NC}\tSomething went wrong."
+  echo -e "INFO\tJust some ${GREEN}green${NC} text here."
+#+END
+#+end_example
+
 ** My Setup
 These are mostly org-config specific to me, myself and I.
 *** Key mappings
