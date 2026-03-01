@@ -2768,7 +2768,7 @@ There are two functions that supposedly do the same.
     :after calfw)
 #+end_src
 
-*** org-gtasks
+*** COMMENT org-gtasks
 Should follow this git repo: [[https://github.com/JulienMasson/org-gtasks][org-gtasks]]
 I have it as a submodule, as it's not yet available on MELPA.
 
@@ -2779,7 +2779,10 @@ To help debug, use this before running things:
   (use-package request)
   (use-package deferred)
   (use-package request-deferred)
-  (load-file (expand-file-name "org-gtasks/org-gtasks.el" paf-modules-directory))
+
+  (use-package org-gtasks
+    :load-path (lambda () (expand-file-name paf-lisp-directory)))
+  ;;(load-file (expand-file-name "org-gtasks/org-gtasks.el" ;;paf-modules-directory))
 
   ;; Helper to sync all task lists for an account
   (defun paf/org-gtasks-sync (account_name)
