@@ -20,6 +20,8 @@ install_pkg cargo
 install_pkg gcc
 install_pkg g++
 
+install_pkg -x direnv direnv
+
 install_pkg -x rg ripgrep
 
 # Install the vterm native library

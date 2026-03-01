@@ -1774,7 +1774,7 @@ This helps to setup the venv when entering a directory.
 #+end_src
 
 This all depends on the =direnv= program to be around:
-#+begin_src bash
+#+begin_src bash :tangle bash/install_deps.sh
   install_pkg -x direnv direnv
 #+end_src
 
