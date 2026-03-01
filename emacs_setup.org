@@ -2338,32 +2338,25 @@ Displays vertical bars to show indentation visually.
 
 #+end_src
 
-** GPTel / Aider
+** GPTel / Aidermacs
 
 #+begin_src emacs-lisp
-  (if private-use-only
-      (use-package gptel
-        :config
-        (setq gptel-model 'gemini-3.1-pro-preview)
-        (setq gptel-backend (gptel-make-gemini "Gemini"
-                              :key gemini-api-key
-                              :stream t)))
+  (use-package aidermacs
+    :if private-use-only
+    :bind ("C-p A" . aidermacs-transient-menu)
+    :config
+    (setq aidermacs-default-model "openrouter/anthropic/claude-opus-4.6")
+    (setq aidermacs-extra-args '("--no-auto-accept-architect"))
+    (setq aidermacs-backend 'eat)
+    (put 'aidermacs-program 'safe-local-variable #'stringp))
 
-    (use-package aider
-      :after (envrc inheritenv)
-      :config
-      ;; Advice: Before running aider, point it to the local venv if it exists
-      (advice-add 'aider-run-aider :before
-                  (lambda (&rest _)
-                    (let ((local-aider (expand-file-name ".venv/bin/aider" (projectile-project-root))))
-                      (when (file-exists-p local-aider)
-                        (setq-local aider-program local-aider)))))
-
-      ;; Ensure the environment (PATH, API Keys) is inherited by the aider process
-      (inheritenv-add-advice 'aider-run-aider)
-
-      (global-set-key (key-description "C-p A") 'aider-transient-menu))
-    )
+  (use-package gptel
+    :if private-use-only
+    :config
+    (setq gptel-model 'gemini-3.1-pro-preview)
+    (setq gptel-backend (gptel-make-gemini "Gemini"
+                          :key gemini-api-key
+                          :stream t)))
 #+end_src
 
 * OrgMode
