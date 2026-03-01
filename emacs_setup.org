@@ -1764,6 +1764,13 @@ Search the entire project with =C-c p s s= for a regexp. This let's you turn the
   (use-package ag)
 #+end_src
 
+** envrc
+#+begin_src emacs-lisp
+  (use-package envrc
+    :hook (after-init . envrc-global-mode))
+  (use-package inheritenv)
+#+end_src
+
 ** Code completion
 I went with the suggestion found on this [[https://www.juniordeveloperdiaries.com/emacs-intro/][Emacs intro]] guide.
 
@@ -2322,6 +2329,34 @@ Displays vertical bars to show indentation visually.
     :bind (("C-c C-C" . 'string-inflection-all-cycle)))
 
 #+end_src
+
+** GPTel / Aider
+#+begin_src emacs-lisp
+  (if private-use-only
+      (use-package gptel
+        :config
+        (setq gptel-model 'gemini-3.1-pro-preview)
+        (setq gptel-backend (gptel-make-gemini "Gemini"
+                              :key gemini-api-key
+                              :stream t)))
+
+    (use-package aider
+      :after (envrc inheritenv)
+      :config
+      ;; Advice: Before running aider, point it to the local venv if it exists
+      (advice-add 'aider-run-aider :before
+                  (lambda (&rest _)
+                    (let ((local-aider (expand-file-name ".venv/bin/aider" (projectile-project-root))))
+                      (when (file-exists-p local-aider)
+                        (setq-local aider-program local-aider)))))
+
+      ;; Ensure the environment (PATH, API Keys) is inherited by the aider process
+      (inheritenv-add-advice 'aider-run-aider)
+
+      (global-set-key (key-description "C-p A") 'aider-transient-menu))
+    )
+#+end_src
+
 * OrgMode
 Load all my org stuff, but first org-mode itself.
 ** Init
