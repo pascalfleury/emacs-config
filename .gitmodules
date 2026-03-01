@@ -4,9 +4,6 @@
 [submodule "Modules/el-easydraw"]
 	path = Modules/el-easydraw
 	url = https://github.com/misohena/el-easydraw.git
-[submodule "Modules/org-gtasks"]
-	path = Modules/org-gtasks
-	url = https://github.com/JulienMasson/org-gtasks.git
 [submodule "Modules/indent-bars"]
 	path = Modules/indent-bars
 	url = https://github.com/jdtsmith/indent-bars.git
@@ -16,3 +13,6 @@
 [submodule "Modules/ox-impress-js"]
 	path = Modules/ox-impress-js
 	url = https://github.com/emacsattic/ox-impress-js
+[submodule "org-gtasks"]
+	path = org-gtasks
+	url = https://git.sr.ht/~jmasson/org-gtasks
