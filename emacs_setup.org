@@ -1765,10 +1765,17 @@ Search the entire project with =C-c p s s= for a regexp. This let's you turn the
 #+end_src
 
 ** envrc
+This helps to setup the venv when entering a directory.
+
 #+begin_src emacs-lisp
   (use-package envrc
     :hook (after-init . envrc-global-mode))
   (use-package inheritenv)
+#+end_src
+
+This all depends on the =direnv= program to be around:
+#+begin_src bash
+  install_pkg -x direnv direnv
 #+end_src
 
 ** Code completion
