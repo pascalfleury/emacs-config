@@ -13,6 +13,6 @@
 [submodule "Modules/ox-impress-js"]
 	path = Modules/ox-impress-js
 	url = https://github.com/emacsattic/ox-impress-js
-[submodule "org-gtasks"]
-	path = org-gtasks
+[submodule "Modules/org-gtasks"]
+	path = Modules/org-gtasks
 	url = https://git.sr.ht/~jmasson/org-gtasks
