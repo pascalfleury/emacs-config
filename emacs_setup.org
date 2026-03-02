@@ -147,6 +147,10 @@ Maybe there is a way to auto-detect =emacs-config-directory= (dir of this config
   (setq paf-emacs-init        (expand-file-name "init.el"   user-emacs-directory))
   (setq custom-file           (expand-file-name "custom.el" user-emacs-directory))
   (setq paf-roam-directory    (expand-file-name "OrgRoam"   org-directory))
+
+  (if (and (boundp 'private-use-only) private-use-only)
+      (message "Using/installing tools that I use only privately")
+    (setq private-use-only nil))
 #+end_src
 
 *** Make an external apps directory
