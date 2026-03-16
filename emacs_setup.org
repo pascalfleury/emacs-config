@@ -2345,22 +2345,23 @@ Displays vertical bars to show indentation visually.
 ** GPTel / Aidermacs
 
 #+begin_src emacs-lisp
-  (use-package aidermacs
-    :if private-use-only
-    :bind ("C-p A" . aidermacs-transient-menu)
-    :config
-    (setq aidermacs-default-model "openrouter/anthropic/claude-opus-4.6")
-    (setq aidermacs-extra-args '("--no-auto-accept-architect"))
-    (setq aidermacs-backend 'eat)
-    (put 'aidermacs-program 'safe-local-variable #'stringp))
+  (when private-use-only
+    (use-package aidermacs
+      :bind ("C-p A" . aidermacs-transient-menu)
+      :config
+      (setq aidermacs-default-model "openrouter/anthropic/claude-opus-4.6")
+      (setq aidermacs-extra-args '("--no-auto-accept-architect"))
+      (setq aidermacs-backend 'eat)
+      (put 'aidermacs-program 'safe-local-variable #'stringp)))
 
-  (use-package gptel
-    :if private-use-only
-    :config
-    (setq gptel-model 'gemini-3.1-pro-preview)
-    (setq gptel-backend (gptel-make-gemini "Gemini"
-                          :key gemini-api-key
-                          :stream t)))
+  (when private-use-only
+    (use-package gptel
+      :if private-use-only
+      :config
+      (setq gptel-model 'gemini-3.1-pro-preview)
+      (setq gptel-backend (gptel-make-gemini "Gemini"
+                            :key gemini-api-key
+                            :stream t))))
 #+end_src
 
 * OrgMode
@@ -3182,6 +3183,22 @@ After this you should be able to color the output like this:
   echo -e "INFO\tJust some ${GREEN}green${NC} text here."
 #+END
 #+end_example
+
+*** Markdown
+This sets up the MArkdown packages for tree-sitter, as well as exporting from orgmode.
+At the top of an orgmode file, one can add
+#+begin_src example
+  # -*- mode: org; eval: (auto-org-md-mode 1) -*-
+#+end_src
+to have it auto-exported to Markdown.
+
+#+begin_src emacs-lisp
+  (use-package org-auto-md)
+  (use-package ox-qmd)
+
+  (use-package markdown-mode)
+  (use-package markdown-ts-mode)
+#+end_src
 
 ** My Setup
 These are mostly org-config specific to me, myself and I.
