@@ -3185,17 +3185,18 @@ After this you should be able to color the output like this:
 #+end_example
 
 *** Markdown
-This sets up the MArkdown packages for tree-sitter, as well as exporting from orgmode.
+This sets up the Markdown packages for tree-sitter, as well as exporting from orgmode.
 At the top of an orgmode file, one can add
-#+begin_src example
+#+begin_src example :tangle no
   # -*- mode: org; eval: (auto-org-md-mode 1) -*-
 #+end_src
 to have it auto-exported to Markdown.
 
 #+begin_src emacs-lisp
-  (use-package org-auto-md)
-  (use-package ox-qmd)
+  (use-package auto-org-md)  ;; automatically exports org to Markdown
+  (use-package ox-qmd)       ;; the Markdown export infra
 
+  ;; Markdown modes
   (use-package markdown-mode)
   (use-package markdown-ts-mode)
 #+end_src
