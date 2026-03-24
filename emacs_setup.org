@@ -17,6 +17,7 @@ They usually live temporarily in my =~/.emacs= until I am happy, in which case I
   - [[https://github.com/arthurcgusmao/unmodified-buffer][unmodified-buffer]]
   - https://github.com/mickeynp/combobulate
   - git-sync-mode
+  - [[https://github.com/magit/with-editor][with-editor]]
 
 
 ** Currently under review
