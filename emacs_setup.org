@@ -3195,7 +3195,7 @@ to have it auto-exported to Markdown.
 
 #+begin_src emacs-lisp
   (use-package auto-org-md)  ;; automatically exports org to Markdown
-  (use-package ox-qmd)       ;; the Markdown export infra
+  ;; (use-package ox-qmd)       ;; the Markdown export infra
 
   ;; Markdown modes
   (use-package markdown-mode)
