@@ -39,10 +39,10 @@ beginning of the buffer."
 (defun systems-link-bounds-of-thing-at-point ()
   "Find constructs that are identifiers for internal systems,
    e.g. b/12345 cr/12345678 guts/12345"
-  ;; b/12345 cr/12345678 guts/12345 mdb/fleury
+  ;; b/12345 cr/12345678 guts/12345 mdb/fleury sponge2/14d537f4-7281-4054-b208-e230c473d0cf
   (save-excursion
     (skip-chars-backward "[:alnum:]_/.-")
-    (if (looking-at "[[:alpha:]_]+/[[:alnum:]_\\.-]+")
+    (if (looking-at "[[:alpha:]_2]+/[[:alnum:]_\\.-]+")
         (cons (point) (match-end 0))
       nil)))
 
