@@ -271,13 +271,32 @@ Set some info about the system.
 #+end_src
 
 ** Setup server
-Start the background server, so we can use emacsclient.
-Check by running =(server-running-p)=.
+Start the background server, so we can use emacsclient. This sets it up for this instance, and 'eat' as well as 'vterm' will use it to connect through =emacsclient= for example.
+
 #+begin_src emacs-lisp
   (require 'server)
-  (if (and (fboundp 'server-running-p)
-           (not (server-running-p)))
-      (server-start))
+  (setq server-name (format "emacs-%d" (emacs-pid))) ;; unique server name
+
+  (unless (server-running-p)
+    (server-start))
+
+  (defun my-configure-emacsclient-env ()
+    "Set environment variables for subshells to connect back to this Emacs server."
+    (when (server-running-p)
+      (let* ((current-server-name server-name)
+             (socket-file (expand-file-name current-server-name server-socket-dir))
+             (editor-command (format "emacsclient -s %s" current-server-name)))
+        (setenv "EMACS_SERVER_FILE" socket-file)
+        (setenv "EMACS_SOCKET_NAME" current-server-name)
+        (message "Set EMACS_SERVER_FILE to %s for server %s" socket-file current-server-name)
+        (setenv "EDITOR" editor-command)
+        (message "Set EDITOR to %s for server %s" editor-command current-server-name))))
+
+  ;; Hook it to the terminals
+  (with-eval-after-load 'vterm
+    (add-hook 'vterm-mode-hook 'my-configure-emacsclient-env))
+  (with-eval-after-load 'eat
+    (add-hook 'eat-mode-hook 'my-configure-emacsclient-env))
 #+end_src
 
 ** UTF-8
