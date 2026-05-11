@@ -3063,6 +3063,49 @@ A long sought after package to help plan scenarios.
                                              (substring formatted-date 1 (- (length formatted-date) 1)))))
       ))
 #+end_src
+*** Set CUSTOM_ID from a slug of the title
+
+This function will populate the missing ones:
+
+#+begin_src emacs-lisp
+  (defun paf/sanitize-reference (reference)
+    "Sanitize a REFERENCE string to be suitable for a slug.
+  Converts to lowercase, replaces non-alphanumeric characters with hyphens,
+  and removes trailing hyphens."
+    (let ((slug (replace-regexp-in-string
+                 "[^a-zA-Z0-9]+" "-" (downcase reference))))
+      ;; Remove leading an dtrailing hyphens
+      (replace-regexp-in-string "\\(^-+\\)\\|\\(-+$\\)" "" slug)))
+
+  (defun paf/org-add-slug-id-to-headlines ()
+    "Generate a slug-based CUSTOM_ID for headings that are missing one."
+    (interactive)
+    (org-map-entries
+     (lambda ()
+       (unless (org-entry-get (point) "CUSTOM_ID")
+         (let* ((title (nth 4 (org-heading-components)))
+                (slug (paf/sanitize-reference title)))
+           (org-entry-put (point) "CUSTOM_ID" slug))))
+     nil 'file))
+
+  (defun paf/deterministic-radio-target-reference (element info)
+    "Generate a deterministic reference for Markdown radio targets."
+    (let* ((value (org-element-property :value element)))
+      (format "glossary-%s" (paf/sanitize-reference value))))
+
+  (defun paf/org-export-get-reference-around (orig-fun element info)
+    "Advise org-export-get-reference for deterministic radio target IDs."
+    (if (eq (org-element-type element) 'radio-target)
+        ;; For radio targets, generate ID only from its value.
+        (paf/deterministic-radio-target-reference element info)
+        ;; Otherwise, call the original function.
+      (funcall orig-fun element info)))
+
+  ;; Add the advice
+    (advice-add 'org-export-get-reference :around #'paf/org-export-get-reference-around)
+  ;; To remove the advice later:
+  ;; (advice-remove 'org-export-get-reference #'paf/org-export-get-reference-around)
+#+end_src
 
 *** org-present
 This is following the excellent video from [[https://systemcrafters.net/emacs-tips/presentations-with-org-present/][System Crafters]].
