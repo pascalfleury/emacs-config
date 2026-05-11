@@ -3185,9 +3185,6 @@ Keeps the header visible even when it gets off the visible part of the buffer.
    (split-string raw "\n" t)))
 #+end_src
 
-#+RESULTS:
-: paf/colored-bash-output
-
 After this you should be able to color the output like this:
 
 #+begin_example
