@@ -1804,6 +1804,18 @@ This all depends on the =direnv= program to be around:
   install_pkg -x direnv direnv
 #+end_src
 
+*** Setting up a directory
+If you need to create one in a dir, do it like so:
+
+#+begin_example :file .envrc
+layout python python3
+#+end_example
+
+Then creates the virtual env for Python like so:
+#+begin_src bash :tangle no
+  python -m venv $PWD/.venv
+#+end_src
+
 ** Code completion
 I went with the suggestion found on this [[https://www.juniordeveloperdiaries.com/emacs-intro/][Emacs intro]] guide.
 
@@ -2365,6 +2377,13 @@ Displays vertical bars to show indentation visually.
 
 ** GPTel / Aidermacs
 
+To setup Aider in a directory, follow the venv setup (with direnv) then install Aider like so:
+
+#+begin_src bash :tangle no
+  pip install aider-install
+  aider-install
+#+end_src
+
 #+begin_src emacs-lisp
   (when private-use-only
     (use-package aidermacs
@@ -2383,6 +2402,31 @@ Displays vertical bars to show indentation visually.
       (setq gptel-backend (gptel-make-gemini "Gemini"
                             :key gemini-api-key
                             :stream t))))
+#+end_src
+
+** Dart
+
+This is the Dart setup used in Flutter.
+
+#+begin_src emacs-lisp
+  (use-package dart-mode)
+
+  (use-package lsp-mode
+    :hook (dart-mode . lsp-deferred))
+
+  (use-package lsp-dart
+    :hook (dart-mode . lsp-dart-dap-setup)
+    :custom
+    (lsp-dart-flutter-sdk-dir (getenv "FLUTTER_DIR")))
+#+end_src
+
+** Flutter
+
+#+begin_src emacs-lisp
+  (use-package flutter
+    :after dart-mode
+    :bind (:map dart-mode-map
+                ("C-M-x" . flutter-run-or-hot-reload)))
 #+end_src
 
 * OrgMode
