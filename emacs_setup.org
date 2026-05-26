@@ -555,14 +555,10 @@ This package brings some commands based on build-in search. See [[https://github
 
     ;; Optionally configure a function which returns the project root directory.
     ;; There are multiple reasonable alternatives to chose from.
-    ;;;; 1. project.el (project-roots)
-    ;;(setq consult-project-root-function
-    ;;      (lambda ()
-    ;;        (when-let (project (project-current))
-    ;;          (car (project-roots project)))))
-    ;; 2. projectile.el (projectile-project-root)
-    (autoload 'projectile-project-root "projectile")
-    (setq consult-project-root-function #'projectile-project-root)
+    (setq consult-project-root-function
+          (lambda ()
+            (when-let ((project (project-current)))
+              (project-root project))))
     ;;;; 3. vc.el (vc-root-dir)
     ;; (setq consult-project-root-function #'vc-root-dir)
     ;;;; 4. locate-dominating-file
@@ -648,7 +644,6 @@ A minor-mode to deal with lots of popup windows and bring some order in them.
 See [[https://github.com/karthink/popper][github:popper]] for more information.
 #+begin_src emacs-lisp
   (use-package popper
-    :after projectile
     :bind (("<C-tab>"   . popper-toggle-latest)
            ("<C-S-tab>" . popper-cycle)
            ("<C-M-tab>" . popper-toggle-type))
@@ -659,7 +654,7 @@ See [[https://github.com/karthink/popper][github:popper]] for more information.
             "Output\\*$"
             help-mode
             compilation-mode))
-    (setq popper-group-function #'popper-group-by-projectile)
+    (setq popper-group-function #'popper-group-by-project)
     (popper-mode +1))
 #+end_src
 
@@ -1708,34 +1703,21 @@ install_pkg g++
     )
 #+end_src
 
-** Projectile
-Start using projectile. It has the documentation [[https://docs.projectile.mx/en/latest/][here]].
+** Project.el (Replacing Projectile)
 #+begin_src emacs-lisp
-  (defun paf/projectile-relative-buf-name ()
-    (ignore-errors
-      (rename-buffer
-       (file-relative-name buffer-file-name (projectile-project-root)))))
-
-  (use-package projectile
+  (use-package project
+    :ensure nil
+    :bind (("C-S-p" . project-prefix-map))
     :config
-    (projectile-mode 1)
-    (setq projectile-sort-order 'modification-time)
-    (define-key projectile-mode-map (kbd "C-S-p") 'projectile-command-map)
-    (add-hook 'find-file-hook 'paf/projectile-relative-buf-name)
-    ;; overwrite this function, see https://github.com/bbatsov/projectile/issues/1816
-    (defun projectile-expand-file-name-wildcard (name-pattern dir)
-      "overridden."
-      (let ((expanded (expand-file-name name-pattern dir)))
-        (or (if (string-match-p "[[*?]" name-pattern)
-                (car
-                 (ignore-errors
-                   (file-expand-wildcards expanded))))
-            expanded)))
-    )
-
-  (use-package persp-projectile
-    :after (perspective projectile)
-    :requires persp-projectile)
+    (defun paf/project-relative-buf-name ()
+      "Rename buffer to be relative to project root."
+      (interactive)
+      (ignore-errors
+        (when-let ((project (project-current)))
+          (rename-buffer
+           (file-relative-name buffer-file-name (project-root project))))))
+    
+    (add-hook 'find-file-hook #'paf/project-relative-buf-name))
 #+end_src
 
 Also make sure we do have the faster [[https://github.com/ggreer/the_silver_searcher#the-silver-searcher][silver searcher]] version.  This may need you to install the corresponding tool for this, with the following snippet:
