@@ -1488,11 +1488,9 @@ The following only respects the project's =.gitignore= file.
 
 ** typescript-mode
 #+begin_src emacs-lisp
-  (use-package typescript-mode
-    :mode "\\.ts\\'"
-    ;; :config
-    ;; (setq typescript-indent-level 2)
-    )
+  (use-package typescript-ts-mode
+    :ensure nil
+    :mode "\\.ts\\'")
 #+end_src
 
 ** csv-mode
@@ -1526,12 +1524,13 @@ Colorize color names and hexadecimal codes in the correct color.
 ** yaml-mode
 To help editing YAML files, e.g. when configuring Home Assistant.
 #+begin_src emacs-lisp
-  (use-package yaml-mode
+  (use-package yaml-ts-mode
+    :ensure nil
     :config
     ;; to have Return key automatically indent cursor on new line
-    (add-hook 'yaml-mode-hook
-            (lambda ()
-              (define-key yaml-mode-map "\C-m" 'newline-and-indent))))
+    (add-hook 'yaml-ts-mode-hook
+              (lambda ()
+                (define-key yaml-ts-mode-map "\C-m" 'newline-and-indent))))
 #+end_src
 
 ** taskjuggler-mode (tj3-mode)
@@ -1686,51 +1685,18 @@ install_pkg g++
 #+end_src
 
 #+begin_src emacs-lisp
-  (use-package tree-sitter
+  (use-package treesit
+    :ensure nil
     :config
-    (global-tree-sitter-mode)
-    ;; (tree-sitter-install-language 'python)
-    ;; (tree-sitter-install-language 'java)
-    ;; (tree-sitter-install-language 'go)
-    ;; (tree-sitter-install-language 'javascript)
-    ;; (tree-sitter-install-language 'typescript)
-    ;; (tree-sitter-install-language 'bash)
-    ;; (tree-sitter-install-language 'kotlin)
-    ;; (tree-sitter-install-language 'markdown)
-    ;; (tree-sitter-install-language 'cpp)
-    )
-#+end_src
-
-#+begin_src emacs-lisp :tangle no
-  (defun c-ts-mode-call-hook () (run-hooks 'c-mode-hook))
-  (defun c++-ts-mode-call-hook () (run-hooks 'c++-mode-hook))
-  (defun c-or-c++-ts-mode-call-hook () (run-hooks 'c-or-c++-mode-hook))
-  (defun python-ts-mode-call-hook () (run-hooks 'python-mode-hook))
-
-  (use-package tree-sitter
-    :config
-    (add-to-list 'major-mode-remap-alist '(c-mode . c-ts-mode))
-    (add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
-    (add-to-list 'major-mode-remap-alist '(c-or-c++-mode . c-or-c++-ts-mode))
-    (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
-    (add-hook 'c-ts-mode-hook #'c-ts-mode-call-hook)
-    (add-hook 'c++-ts-mode-hook #'c++-ts-mode-call-hook)
-    (add-hook 'c-or-c++-ts-mode-hook #'c-or-c++-ts-mode-call-hook)
-    (add-hook 'python-ts-mode-hook #'python-ts-mode-call-hook)
-    )
+    (setq treesit-font-lock-level 4))
 
   (use-package treesit-auto
     :custom
     (treesit-auto-install 'prompt)
     :config
     (treesit-auto-add-to-auto-mode-alist 'all)
-    ;; (global-treesit-auto-mode)
-    ;; Map the existing hooks to the ts hooks
-    ;; (setq c++-ts-mode-hook c++-mode-hook)
-    ;; (setq c-ts-mode-hook c-mode-hook)
-    ;; (setq python-ts-mode-hook python-mode-hook)
-    )
-    #+end_src
+    (global-treesit-auto-mode))
+#+end_src
 
 *** Tree-sitter folding
 #+begin_src emacs-lisp
