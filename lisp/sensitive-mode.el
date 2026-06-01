@@ -1,4 +1,4 @@
-;; sensitive-mode.el --- minor mode for sensitive info containing files.
+;; sensitive-mode.el --- minor mode for sensitive info containing files.  -*- lexical-binding: t; -*-
 
 ;; Copyright by the original author, code found here:
 ;; https://anirudhsasikumar.net/blog/2005.01.21.html

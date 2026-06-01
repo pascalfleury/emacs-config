@@ -1,4 +1,4 @@
-;;; paf-functions --- collection of random functions
+;;; paf-functions.el --- collection of random functions -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 
@@ -38,7 +38,8 @@
   ;; (setq paf-tests/truncate (paf/truncate-string "Here is some long text" 10))
 
 
-;; It actually computes the entire arithmetic expression that is selected, and replaces it with the numerical result.
+;; It actually computes the entire arithmetic expression that is selected, and
+;; replaces it with the numerical result.
 (defun apply-function-to-region (fn)
   (interactive "XFunction to apply to region: ")
   (save-excursion

@@ -1,4 +1,4 @@
-;;; org-secretary.el --- Team management with org-mode
+;;; org-secretary.el --- Team management with org-mode   -*- lexical-binding: t; -*-
 ;; Copyright (C) 2010-2014 Juan Reyero
 ;;
 ;; Author: Juan Reyero <juan _at_ juanreyero _dot_ com>

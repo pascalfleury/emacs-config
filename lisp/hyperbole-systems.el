@@ -1,3 +1,10 @@
+;;; hyperbole-systems.el --- Set of functions to have actions on certain targets. -*- lexical-binding: t; -*-
+
+;; Author: Pascal Fleury <fleury@users.sourceforge.net>
+;; Maintainer: Pascal Fleury <fleury@users.sourceforge.net>
+;; Version: 1.0.0
+;; Package-Requires: ((emacs "29.1") (hyperbole "9.0.0"))
+;; Keywords: project, tools
 ;; These utilities help detecting things for internal systems.
 ;;
 ;; Examples:
@@ -10,6 +17,9 @@
 ;;     :init
 ;;     (load-file (expanf-file-name "hyperbole-systems.el" my-lisp-directory)))
 ;;
+
+;;; Code:
+
 (require 'thingatpt)
 (require 'hyperbole)
 
@@ -185,3 +195,6 @@ beginning of the buffer."
        (gl (progn (ibut:label-set gl)
                    (hact 'www-url (concat "http://go/gl-cdsid/" gl))))
        ))))
+
+(provide 'hyperbole-systems)
+;;; hyperbole-systems.el ends here

@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;; Some functions to use GTD withint org-roam files without
 ;; taxing the org-agenda too much.
 

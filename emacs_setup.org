@@ -149,6 +149,8 @@ Maybe there is a way to auto-detect =emacs-config-directory= (dir of this config
   (setq custom-file           (expand-file-name "custom.el" user-emacs-directory))
   (setq paf-roam-directory    (expand-file-name "OrgRoam"   org-directory))
 
+  (add-to-list 'load-path paf-lisp-directory)
+
   (if (and (boundp 'private-use-only) private-use-only)
       (message "Using/installing tools that I use only privately")
     (setq private-use-only nil))
@@ -250,8 +252,8 @@ Otherwise resizing will round it at char width/height and not make it play well 
 
 ** Helper Functions
 #+begin_src emacs-lisp
-  (use-package paf-functions
-    :load-path (lambda () (expand-file-name paf-lisp-directory)))
+    (use-package paf-functions
+      :ensure nil)
 #+end_src
 
 * Environment
@@ -1531,8 +1533,7 @@ To help editing YAML files, e.g. when configuring Home Assistant.
 ** taskjuggler-mode (tj3-mode)
 #+begin_src emacs-lisp
   (use-package ox-taskjuggler
-    :ensure nil
-    :load-path (lambda () (expand-file-name paf-lisp-directory)))
+    :ensure nil)
 
   (use-package tj3-mode
     :after ox-taskjuggler
@@ -1620,8 +1621,11 @@ NOTE* assigns =hui-search-web= to =C-c C-/= to not clobber the later used =C-c /
     :init
     (setq hbmap:dir-user org-directory)
     (setq hbmap:filename "personal-buttons.hypb")
-    (load-file (expand-file-name "hyperbole-systems.el" paf-lisp-directory))
     (hyperbole-mode 1))
+
+  (use-package hyperbole-systems
+    :ensure nil)
+
 #+end_src
 
 ** graphviz mode
@@ -2303,7 +2307,6 @@ Displays vertical bars to show indentation visually.
 
 #+begin_src emacs-lisp
   (use-package indent-bars
-    ;; :load-path (lambda () (expand-file-name "indent-bars" paf-modules-directory))
     :hook ((python-base-mode yaml-mode prog-mode) . indent-bars-mode)
     :config
     (require 'indent-bars-ts)
@@ -2794,7 +2797,6 @@ To help debug, use this before running things:
 
   (use-package org-gtasks
     :load-path (lambda () (expand-file-name "org-gtasks" paf-modules-directory)))
-  ;;(load-file (expand-file-name "org-gtasks/org-gtasks.el" paf-modules-directory))
 
   ;; Helper to sync all task lists for an account
   (defun paf/org-gtasks-sync (account_name)
@@ -2890,7 +2892,7 @@ CLOSED: [2021-09-27 Mon 20:42]
 
 #+begin_src emacs-lisp
   (use-package org-roam-extras
-    :load-path (lambda () (expand-file-name paf-lisp-directory))
+    :ensure nil
     :after org-roam
     :config
     (setq roam-extras-todo-tag-name "project")
@@ -2954,8 +2956,7 @@ fi
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
-  (use-package sensitive-mode
-    :load-path (lambda () (expand-file-name paf-lisp-directory)))
+  (use-package sensitive-mode)
 
   (setq auto-mode-alist
         (append '(("\\.gpg$" . sensitive-mode)
@@ -3401,7 +3402,6 @@ This is my version of the org-secretary.
 I don't use it anymore.
 #+begin_src emacs-lisp :tangle no
   (use-package paf-secretary
-    :load-path paf-lisp-directory
     :bind (("\C-cw" . paf-sec-set-with)
            ("\C-cW" . paf-sec-set-where)
            ("\C-cj" . paf-sec-tag-entry))
