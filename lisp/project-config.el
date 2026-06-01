@@ -5,7 +5,7 @@
 ;; Author: Pascal Fleury <fleury@users.sourceforge.net>
 ;; Maintainer: Pascal Fleury <fleury@users.sourceforge.net>
 ;; Version: 1.0.0
-;; Package-Requires: ((emacs "29.1") (cl-lib "0.5"))
+;; Package-Requires: ((emacs "29.1"))
 ;; Keywords: project, tools
 ;; URL: https://github.com
 
@@ -18,84 +18,112 @@
 ;;
 ;; This provides a few functions to be drop-in replacements for projectile
 ;; ones. So the configuration is easier.
+;; Functions implemented:
+;;  - projectile-register-project-type  (defun)
+;;  - project-search-paths              (defcustom)
+;;
+;; Note you really need to use (set-custom-variable 'project-search-path ( "~/Projects" ))
+;; for ti to work.
 
 ;;; Code:
 
 
-;; Function to implement a drop-in replacement if projectile's
-;; projectile-register-project-type and projectile-project-search-path
 ;;;###autoload
 (defcustom project-search-paths '()
-  "Directories to automatically scan for project roots."
+  "Directories to automatically scan for project roots.
+Updates both Projectile and project.el settings dynamically based on what is loaded."
   :type '(repeat directory)
   :group 'project
   :set (lambda (symbol value)
-         ;; Set the standard value first
+         ;; 1. Update this variable's local value first
          (set-default symbol value)
-         ;; Run the indexing side-effect loop immediately
-         (with-eval-after-load 'project
-           (dolist (dir value)
-             (when (file-directory-p dir)
-               (project-remember-projects-under dir t))))))
+
+         ;; 2. Conditional side-effect logic
+         (if (featurep 'projectile)
+             ;; If Projectile is running, sync its path variable directly
+             (setq projectile-project-search-path value)
+
+           ;; Fallback: If using pure project.el, index the cache immediately
+           (with-eval-after-load 'project
+             (dolist (dir value)
+               (when (file-directory-p dir)
+                 ;; The 't' flag tells it to search recursively down one level
+                 (project-remember-projects-under dir t)))))))
 
 
 ;; Drop-in replacement pf projectile-register-project-type
 ;;;###autoload
-(defmacro project-register-project-type (name markers &rest args)
-  "Drop-in Projectile API replacement that configures project.el.
-NAME is the project type symbol.
-MARKERS is a list of file/directory names indicating the project root.
-ARGS handles keyword arguments like :compile, :run, and :test."
-  (let* ((compile-cmd (plist-get args :compile))
-         (run-cmd     (plist-get args :run))
-         (test-cmd    (plist-get args :test))
-         ;; Derive function and command names dynamically based on NAME symbol
-         (try-func    (intern (format "project--try-%s" name)))
-         (setup-func  (intern (format "project--setup-%s-settings" name)))
-         (run-func    (intern (format "project--%s-run" name)))
-         (test-func   (intern (format "project--%s-test" name))))
-    `(progn
-       ;; 1. Root detection hook & method
-       (defun ,try-func (dir)
-         (when-let ((root (cl-some (lambda (m) (locate-dominating-file dir m)) ',markers)))
-           (cons ',name root)))
-       (add-hook 'project-find-functions #',try-func)
+(defmacro projectile-register-project-type (name markers &rest args)
+  "Register a project type natively.
+If Projectile is loaded, it forwards to `projectile-register-project-type`.
+Otherwise, it implements the behavior natively for `project.el`."
+  (if (featurep 'projectile)
+      ;; Branch A: Projectile is active. Forward the call directly.
+      `(projectile-register-project-type ,name ,markers ,@args)
 
-       (cl-defmethod project-root ((project (head ,name)))
-         (cdr project))
+    ;; Branch B: Projectile is absent. Configure project.el instead.
+    (let* ((compile-cmd     (plist-get args :compile))
+           (run-cmd         (plist-get args :run))
+           (test-cmd        (plist-get args :test))
+           (compilation-dir (plist-get args :compilation-dir))
+           (test-dir        (plist-get args :test-dir))
+           (src-dir         (plist-get args :src-dir))
+           ;; Derive configuration names based on the NAME symbol
+           (try-func        (intern (format "project-try-%s" name)))
+           (setup-func      (intern (format "project-setup-%s-settings" name)))
+           (run-func        (intern (format "project-%s-run" name)))
+           (test-func       (intern (format "project-%s-test" name))))
+      `(progn
+         ;; 1. Root detection hook & object properties mapping
+         (defun ,try-func (dir)
+           (when-let ((root (cl-some (lambda (m) (locate-dominating-file dir m)) ',markers)))
+             (list ',name root ',args)))
+         (add-hook 'project-find-functions #',try-func)
 
-       ;; 2. Buffer-local standard compile command setup
-       ,@(when compile-cmd
-           `((defun ,setup-func ()
-               (when-let ((proj (project-current)))
-                 (when (eq (car proj) ',name)
-                   (setq-local compile-command ,compile-cmd))))
-             (add-hook 'find-file-hook #',setup-func)))
+         (cl-defmethod project-root ((project (head ,name)))
+           (cadr project))
 
-       ;; 3. Dynamic custom interactive commands for Run
-       ,@(when run-cmd
-           `((defun ,run-func ()
-               (interactive)
-               (let ((proj (project-current t)))
-                 (if (eq (car proj) ',name)
-                     (let ((default-directory (project-root proj)))
-                       (compile ,run-cmd))
-                   (message "This is not a %s project!" ',name))))))
+         (cl-defmethod project-src-dir ((project (head ,name)))
+           (let ((plist (caddr project)))
+             (expand-file-name (or (plist-get plist :src-dir) "") (project-root project))))
 
-       ;; 4. Dynamic custom interactive commands for Test
-       ,@(when test-cmd
-           `((defun ,test-func ()
-               (interactive)
-               (let ((proj (project-current t)))
-                 (if (eq (car proj) ',name)
-                     (let ((default-directory (project-root proj)))
-                       (compile ,test-cmd))
-                   (message "This is not a %s project!" ',name))))))
+         ;; 2. Set buffer-local compile configurations & compilation-dir overrides
+         ,@(when compile-cmd
+             `((defun ,setup-func ()
+                 (when-let ((proj (project-current)))
+                   (when (eq (car proj) ',name)
+                     (let* ((root (project-root proj))
+                            (c-dir (expand-file-name (or ,compilation-dir "") root)))
+                       (setq-local compile-command ,compile-cmd)
+                       (setq-local default-directory c-dir)))))
+               (add-hook 'find-file-hook #',setup-func)))
 
-       ;; 5. Keybindings injection inside project-prefix-map
-       (with-eval-after-load 'project
-         ,@(when run-cmd  `((define-key project-prefix-map "R" #',run-func)))
-         ,@(when test-cmd `((define-key project-prefix-map "T" #',test-func)))))))
+         ;; 3. Interactive command for Run
+         ,@(when run-cmd
+             `((defun ,run-func ()
+                 (interactive)
+                 (let ((proj (project-current t)))
+                   (if (eq (car proj) ',name)
+                       (let ((default-directory (project-root proj)))
+                         (compile ,run-cmd))
+                     (message "This is not a %s project!" ',name))))))
+
+         ;; 4. Interactive command for Test (Respects test-dir)
+         ,@(when test-cmd
+             `((defun ,test-func ()
+                 (interactive)
+                 (let ((proj (project-current t)))
+                   (if (eq (car proj) ',name)
+                       (let* ((root (project-root proj))
+                              (t-dir (expand-file-name (or ,test-dir "") root))
+                              (default-directory t-dir))
+                         (compile ,test-cmd))
+                     (message "This is not a %s project!" ',name))))))
+
+         ;; 5. Keybindings binding into standard project-prefix-map
+         (with-eval-after-load 'project
+           ,@(when run-cmd  `((define-key project-prefix-map "R" #',run-func)))
+           ,@(when test-cmd `((define-key project-prefix-map "T" #',test-func))))))))
 
 
 (provide 'project-config)

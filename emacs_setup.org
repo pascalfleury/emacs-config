@@ -646,6 +646,7 @@ A minor-mode to deal with lots of popup windows and bring some order in them.
 See [[https://github.com/karthink/popper][github:popper]] for more information.
 #+begin_src emacs-lisp
   (use-package popper
+    :after project
     :bind (("<C-tab>"   . popper-toggle-latest)
            ("<C-S-tab>" . popper-cycle)
            ("<C-M-tab>" . popper-toggle-type))
@@ -1693,7 +1694,7 @@ install_pkg g++
     :custom
     (treesit-auto-install 'prompt)
     :config
-    (treesit-auto-add-to-auto-mode-alist 'all)
+    ;;(treesit-auto-add-to-auto-mode-alist 'all)
     (global-treesit-auto-mode))
 #+end_src
 
@@ -1709,19 +1710,23 @@ install_pkg g++
 
 ** Project.el (Replacing Projectile)
 #+begin_src emacs-lisp
-  (use-package project
-    :ensure nil
-    :bind (("C-S-p" . project-prefix-map))
-    :config
-    (defun paf/project-relative-buf-name ()
-      "Rename buffer to be relative to project root."
-      (interactive)
-      (ignore-errors
-        (when-let ((project (project-current)))
-          (rename-buffer
-           (file-relative-name buffer-file-name (project-root project))))))
-    
-    (add-hook 'find-file-hook #'paf/project-relative-buf-name))
+    (use-package project
+      :ensure nil
+      :bind (("C-S-p" . project-prefix-map))
+      :config
+      (defun paf/project-relative-buf-name ()
+        "Rename buffer to be relative to project root."
+        (interactive)
+        (ignore-errors
+          (when-let ((project (project-current)))
+            (rename-buffer
+             (file-relative-name buffer-file-name (project-root project))))))
+
+      (add-hook 'find-file-hook #'paf/project-relative-buf-name))
+
+    (use-package project-config
+      :after project
+      :ensure nil)
 #+end_src
 
 Also make sure we do have the faster [[https://github.com/ggreer/the_silver_searcher#the-silver-searcher][silver searcher]] version.  This may need you to install the corresponding tool for this, with the following snippet:
