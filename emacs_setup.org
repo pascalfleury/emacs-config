@@ -403,7 +403,7 @@ This will set the frame name to something identifiable when running over exporte
 Added the completion framework [[https://github.com/minad/vertico][vertico]] as from the docs, I liked
  1. the writing quaqlity
  2. the fact that they re-use/integrate completely with the built-in completion
- 3. the package seems quite orthogonal to other packages, i.e. no need to have a =<project>-vertico= package to be installed (like helm seems to need).
+ 3. the package seems quite orthogonal to other packages, i.e. no need to have a =<project-vertico= package to be installed (like helm seems to need).
 
 #+begin_src emacs-lisp
   ;; Enable vertico
@@ -1712,7 +1712,7 @@ install_pkg g++
 #+begin_src emacs-lisp
     (use-package project
       :ensure nil
-      :bind (("C-S-p" . project-prefix-map))
+      :bind-keymap ("C-S-p" . project-prefix-map)
       :config
       (defun paf/project-relative-buf-name ()
         "Rename buffer to be relative to project root."
@@ -1867,6 +1867,10 @@ Switch from header to implementation file quickly.
               (progn
                 (local-set-key  (kbd "C-c o") 'ff-find-other-file)
                 (local-set-key  (kbd "C-c f") 'find-file-at-point))))
+
+  (use-package show-related-files
+    :ensure nil
+    :bind ("C-p r" . paf/show-cc-related-files))
 #+end_src
 
 ** no indentation of namespaces in C++
