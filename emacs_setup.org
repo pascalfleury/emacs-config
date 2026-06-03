@@ -701,6 +701,18 @@ See [[https://github.com/karthink/popper][github:popper]] for more information.
                   (slot . ,slot_number)
                   (window-parameters . ((mode-line-format . (" " "%b")))))))))
 
+  (defun paf/display-buffer-at-left (&optional slot_index)
+    "Move current buffer to left side window."
+    (interactive)
+    (let ((buffer (current-buffer))
+          (slot_number (if slot_index slot_index 0)))
+      (with-current-buffer buffer
+        (delete-window)
+        (display-buffer-in-side-window
+         buffer `((side . left)
+                  (slot . ,slot_number)
+                  (window-parameters . ((mode-line-format . (" " "%b")))))))))
+
   (defun paf/display-buffer-reset ()
     "Re-display the buffer according to buffer-alist."
     (interactive)
@@ -748,14 +760,14 @@ See [[https://github.com/karthink/popper][github:popper]] for more information.
                    (window-width . (body-columns . 70))
                    (window-parameters . ((no-delete-other-windows . t)
                                          (mode-line-format . (""))))))
-    ;(add-to-list 'display-buffer-alist
-    ;             '(".*\\.org"
-    ;               (display-buffer-in-side-window)
-    ;               (side . right)
-    ;               (slot . 1)
-    ;               (window-width . (body-columns . 70))
-    ;               (window-parameters . ((no-delete-other-windows . t)
-    ;                                     (mode-line-format . (""))))))
+    (add-to-list 'display-buffer-alist
+                 '("fig:.*"
+                   (display-buffer-in-side-window)
+                   (side . left)
+                   (slot . 1)
+                   (window-width . (body-columns . 70))
+                   (window-parameters . ((no-delete-other-windows . t)
+                                         (mode-line-format . (""))))))
      :bind (("C-x w s" . window-toggle-side-windows)
             ("C-x w b" . paf/display-buffer-at-bottom)
             ("C-x w r" . paf/display-buffer-at-right)
