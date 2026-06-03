@@ -2334,35 +2334,6 @@ Displays vertical bars to show indentation visually.
 
 #+end_src
 
-** GPTel / Aidermacs
-
-To setup Aider in a directory, follow the venv setup (with direnv) then install Aider like so:
-
-#+begin_src bash :tangle no
-  pip install aider-install
-  aider-install
-#+end_src
-
-#+begin_src emacs-lisp
-  (when private-use-only
-    (use-package aidermacs
-      :bind ("C-p A" . aidermacs-transient-menu)
-      :config
-      (setq aidermacs-default-model "openrouter/anthropic/claude-opus-4.6")
-      (setq aidermacs-extra-args '("--no-auto-accept-architect"))
-      (setq aidermacs-backend 'eat)
-      (put 'aidermacs-program 'safe-local-variable #'stringp)))
-
-  (when private-use-only
-    (use-package gptel
-      :if private-use-only
-      :config
-      (setq gptel-model 'gemini-3.1-pro-preview)
-      (setq gptel-backend (gptel-make-gemini "Gemini"
-                            :key gemini-api-key
-                            :stream t))))
-#+end_src
-
 ** Dart
 
 This is the Dart setup used in Flutter.
@@ -4046,6 +4017,46 @@ Check out the [[https://kungsgeten.github.io/yankpad.html][blog post]] (and the 
     (setq yankpad-file (org-relative "Templates/yankpad.org"))
     :bind (("C-p y m"  . yankpad-map)
            ("C-p y e" . yankpad-expand)))
+#+end_src
+
+* Stuff for AI
+** GPTel / Aidermacs
+
+To setup Aider in a directory, follow the venv setup (with direnv) then install Aider like so:
+
+#+begin_src bash :tangle no
+  pip install aider-install
+  aider-install
+#+end_src
+
+#+begin_src emacs-lisp
+  (when private-use-only
+    (use-package aidermacs
+      :bind ("C-p A" . aidermacs-transient-menu)
+      :config
+      (setq aidermacs-default-model "openrouter/anthropic/claude-opus-4.6")
+      (setq aidermacs-extra-args '("--no-auto-accept-architect"))
+      (setq aidermacs-backend 'eat)
+      (put 'aidermacs-program 'safe-local-variable #'stringp)))
+
+  (when private-use-only
+    (use-package gptel
+      :if private-use-only
+      :config
+      (setq gptel-model 'gemini-3.1-pro-preview)
+      (setq gptel-backend (gptel-make-gemini "Gemini"
+                            :key gemini-api-key
+                            :stream t))))
+#+end_src
+** Managing skills (ox-skills)
+
+This package (https://github.com/gicrisf/ox-skills) helps to avoid having to write YAML.
+
+#+begin_src emacs-lisp
+  (use-package ox-skills
+    :vc (:url "https://github.com/gicrisf/ox-skills"
+              :rev :newest
+              :branch "main"))
 #+end_src
 
 * One-time Initial Setup
