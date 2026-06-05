@@ -770,6 +770,7 @@ See [[https://github.com/karthink/popper][github:popper]] for more information.
                                          (mode-line-format . (""))))))
      :bind (("C-x w s" . window-toggle-side-windows)
             ("C-x w b" . paf/display-buffer-at-bottom)
+            ("C-x w l" . paf/display-buffer-at-left)
             ("C-x w r" . paf/display-buffer-at-right)
             ("C-x w R" . paf/display-buffer-reset)))
 
@@ -3086,7 +3087,7 @@ This function will populate the missing ones:
       (funcall orig-fun element info)))
 
   ;; Add the advice
-    (advice-add 'org-export-get-reference :around #'paf/org-export-get-reference-around)
+  (advice-add 'org-export-get-reference :around #'paf/org-export-get-reference-around)
   ;; To remove the advice later:
   ;; (advice-remove 'org-export-get-reference #'paf/org-export-get-reference-around)
 #+end_src
