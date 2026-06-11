@@ -2347,6 +2347,64 @@ Displays vertical bars to show indentation visually.
 
 #+end_src
 
+** GPTel / Aidermacs
+
+To setup Aider in a directory, follow the venv setup (with direnv) then install Aider like so:
+
+#+begin_src bash :tangle no
+  pip install aider-install
+  aider-install
+#+end_src
+
+#+begin_src emacs-lisp
+  (when private-use-only
+    (use-package aidermacs
+      :bind ("C-p A" . aidermacs-transient-menu)
+      :custom
+      (aidermacs-extra-args '("--cache-prompts"))
+      :config
+      (setq aidermacs-default-chat-mode 'architect)
+      (setenv "CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS" "true")
+      ;; OpenRouter works with these
+      (setq aidermacs-architect-model "openrouter/anthropic/claude-opus-4.7")
+      (setq aidermacs-default-model "openrouter/anthropic/claude-sonnet-4.6")
+
+      ;; Gemini works with these
+      ;(setq aidermacs-architect-model "gemini/gemini-2.5-pro")
+      ;(setq aidermacs-default-model "gemini/gemini-2.5-flash")
+
+      (setq aidermacs-backend 'eat)
+      (put 'aidermacs-program 'safe-local-variable #'stringp)))
+
+  (when private-use-only
+    (use-package gptel
+      :if private-use-only
+      :config
+      (setq gptel-model 'gemini-3.1-pro-preview)
+      (setq gptel-backend (gptel-make-gemini "Gemini"
+                            :key (getenv "GEMINI_API_KEY")
+                            :stream t))))
+#+end_src
+
+** Claude Code IDE
+
+This is the code from https://github.com/manzaltu/claude-code-ide.el
+
+First you need to install the Claude command line (see the [[https://code.claude.com/docs][docs]]).
+Essentially, you need to:
+#+begin_src bash :tangle no
+  curl -fsSL https://claude.ai/install.sh | bash
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package claude-code-ide
+    :vc (:url "https://github.com/manzaltu/claude-code-ide.el"
+              :rev :newest)
+    :bind ("C-p C" . claude-code-ide-menu)
+    :config
+    (claude-code-ide-emacs-tools-setup)) ; Optionally enable Emacs MCP tools
+#+end_src
+
 ** Dart
 
 This is the Dart setup used in Flutter.
