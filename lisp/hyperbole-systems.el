@@ -63,8 +63,8 @@ beginning of the buffer."
   "Find constructs that are identifiers for short links,
    g/to-a.group or go/a-link or goto/a-link"
   (save-excursion
-    (skip-chars-backward "0-9a-zA-Z_/?#$=,;.&-")
-    (if (looking-at "go?t?o?/[a-zA-Z0-9_\\.-]+\\([?/#][^ \t\n]*\\)?")
+    (skip-chars-backward "0-9a-zA-Z_/?#$=,;.&-@")
+    (if (looking-at "go?t?o?/[a-zA-Z0-9_\\.@-]+\\([?/#][^ \t\n]*\\)?")
         (cons (point) (match-end 0))
       nil)))
 
