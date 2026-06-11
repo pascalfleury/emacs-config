@@ -4129,6 +4129,7 @@ To setup Aider in a directory, follow the venv setup (with direnv) then install 
                             :key (getenv "GEMINI_API_KEY")
                             :stream t))))
 #+end_src
+
 ** Managing skills (ox-skills)
 
 This package (https://github.com/gicrisf/ox-skills) helps to avoid having to write YAML.
@@ -4136,7 +4137,7 @@ This package (https://github.com/gicrisf/ox-skills) helps to avoid having to wri
 #+begin_src emacs-lisp
   (use-package ox-skills
     :vc (:url "https://github.com/gicrisf/ox-skills"
-              ;; :rev :newest
+              :rev :newest
               :branch "main"))
 #+end_src
 
