@@ -4078,7 +4078,7 @@ This package (https://github.com/gicrisf/ox-skills) helps to avoid having to wri
 #+begin_src emacs-lisp
   (use-package ox-skills
     :vc (:url "https://github.com/gicrisf/ox-skills"
-              :rev :newest
+              ;; :rev :newest
               :branch "main"))
 #+end_src
 
