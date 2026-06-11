@@ -3245,6 +3245,16 @@ to have it auto-exported to Markdown.
   ;; Markdown modes
   (use-package markdown-mode)
   (use-package markdown-ts-mode)
+
+  (defun paf/markdown-hiding-and-visual-lines ()
+    "Toggle markdown markup hiding and visual line mode together."
+    (interactive)
+    (markdown-toggle-markup-hiding)
+    (visual-line-mode))
+
+  (with-eval-after-load 'markdown-mode
+    (define-key markdown-mode-map (kbd "C-p m") #'paf/markdown-hiding-and-visual-lines))
+
 #+end_src
 
 ** My Setup
