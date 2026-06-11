@@ -4068,7 +4068,7 @@ To setup Aider in a directory, follow the venv setup (with direnv) then install 
       :config
       (setq gptel-model 'gemini-3.1-pro-preview)
       (setq gptel-backend (gptel-make-gemini "Gemini"
-                            :key gemini-api-key
+                            :key (getenv "GEMINI_API_KEY")
                             :stream t))))
 #+end_src
 ** Managing skills (ox-skills)
