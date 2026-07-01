@@ -48,11 +48,12 @@ else
   (cd ${APPDIR} && git clone https://github.com/hakimel/reveal.js.git)
 fi
 
-# Get a version of the PlantUML jar file.
+# Dependencies for PlantUML
 install_pkg -x dot graphviz  # for some diagrams
 install_pkg -x wget wget
 
-JARFILE="${APPDIR}/plantuml.jar"
+# Get a recent version of the PlantUML jar file.
+JARFILE="${APPDIR:-$HOME/Apps}/plantuml.jar"
 INSTALLED_JAR=$(readlink -f "${JARFILE}")
 declare -i last_modified=$(stat -c %Y "${INSTALLED_JAR}" 2>/dev/null || echo "0")
 age_in_days=$(( ( $(date +%s) - last_modified ) / 86400 ))

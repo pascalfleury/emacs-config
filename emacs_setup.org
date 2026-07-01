@@ -4051,13 +4051,15 @@ And create an export-only config to start Emacs with it
 *** plant-uml
 Tell where PlantUML is to be found. This needs to be downloaded and installed separately, see the [[http://plantuml.com/][PlantUML website]].
 
-You could install the PlantUML JAR file with this snippet:
+You could install the PlantUML JAR file with these snippets:
 #+begin_src bash :tangle bash/install_deps.sh
-  # Get a version of the PlantUML jar file.
+  # Dependencies for PlantUML
   install_pkg -x dot graphviz  # for some diagrams
   install_pkg -x wget wget
-
-  JARFILE="${APPDIR}/plantuml.jar"
+#+end_src
+#+begin_src bash :tangle bash/install_deps.sh
+  # Get a recent version of the PlantUML jar file.
+  JARFILE="${APPDIR:-$HOME/Apps}/plantuml.jar"
   INSTALLED_JAR=$(readlink -f "${JARFILE}")
   declare -i last_modified=$(stat -c %Y "${INSTALLED_JAR}" 2>/dev/null || echo "0")
   age_in_days=$(( ( $(date +%s) - last_modified ) / 86400 ))
@@ -4072,8 +4074,6 @@ You could install the PlantUML JAR file with this snippet:
     echo "Latest version is ${INSTALLED_JAR} [age is ${age_in_days} days]"
   fi
 #+end_src
-
-#+RESULTS:
 
 #+begin_src emacs-lisp
   (use-package plantuml-mode
