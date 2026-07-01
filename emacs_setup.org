@@ -4129,12 +4129,14 @@ To setup Aider in a directory, follow the venv setup (with direnv) then install 
                             :key (getenv "GEMINI_API_KEY")
                             :stream t))))
 #+end_src
+
 ** Tools to help integrate with agents
 #+begin_src emacs-lisp
   (use-package agent-utils
     :ensure nil
     :bind ("C-P R" . paf/file-reference-copy))
 #+end_src
+
 ** Managing skills (ox-skills)
 
 This package (https://github.com/gicrisf/ox-skills) helps to avoid having to write YAML.
