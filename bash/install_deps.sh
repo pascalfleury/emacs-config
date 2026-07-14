@@ -50,6 +50,7 @@ fi
 
 # Dependencies for PlantUML
 install_pkg -x dot graphviz  # for some diagrams
+install_pkg -x ditaa ditaa
 install_pkg -x wget wget
 
 # Get a recent version of the PlantUML jar file.

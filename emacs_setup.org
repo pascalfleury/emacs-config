@@ -4055,6 +4055,7 @@ You could install the PlantUML JAR file with these snippets:
 #+begin_src bash :tangle bash/install_deps.sh
   # Dependencies for PlantUML
   install_pkg -x dot graphviz  # for some diagrams
+  install_pkg -x ditaa ditaa
   install_pkg -x wget wget
 #+end_src
 #+begin_src bash :tangle bash/install_deps.sh
