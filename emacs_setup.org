@@ -3998,9 +3998,6 @@ content filtering is done by adding a filter function to =org-export-filter-body
   (use-package ox-taskjuggler
     :ensure nil
     :defer)
-  (use-package ox-impress-js
-    :load-path (lambda () (expand-file-name "ox-impress-js" paf-modules-directory))
-    :ensure nil)
 #+end_src
 
 Also make the exported references nicer, using the title as a handle.
