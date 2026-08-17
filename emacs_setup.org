@@ -1688,6 +1688,17 @@ Add the powerful Magit
   ;  :defer)
 #+end_src
 
+*** jujutsu
+Ading a TUI for jujutsu
+#+begin_src emacs-lisp
+  ;; Magit-style integration
+  (use-package majutsu
+    :vc (:url "https://github.com/0WD0/majutsu"))
+
+  ;; Integration into the built-in VCS infra.
+  (use-package vc-jj)
+#+end_src
+
 ** Tree-sitter
 
 Some native stuff needs the =cargo= tool to build.
