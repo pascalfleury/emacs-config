@@ -1725,7 +1725,6 @@ install_pkg g++
 *** Tree-sitter folding
 #+begin_src emacs-lisp
   (use-package treesit-fold
-    :load-path (lambda () (expand-file-name "treesit-fold" paf-modules-directory))
     :config
     (global-treesit-fold-mode 1)
     ;;(global-treesit-fold-indicators-mode 1)
