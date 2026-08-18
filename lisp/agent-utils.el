@@ -13,28 +13,33 @@
 
 
 (defun paf/file-reference-get-region-info ()
-  "Extract file path, start and end line numbers of the current region.
+  "Extract file path, start and end line numbers of the current region or line.
 
 Returns a list: (FILENAME START-LINE END-LINE).
-Signals a `user-error` if not visiting a file or no region is active."
-  (unless (and (buffer-file-name) (use-region-p))
-    (user-error "Buffer is not visiting a file or no region is active"))
+Signals a `user-error` if not visiting a file."
+  (unless (buffer-file-name)
+    (user-error "Buffer is not visiting a file"))
 
   (let* ((filename (buffer-file-name))
-         (start-line (line-number-at-pos (region-beginning)))
-         (end-line (line-number-at-pos (region-end))))
+         (start-line (if (use-region-p)
+                         (line-number-at-pos (region-beginning))
+                       (line-number-at-pos)))
+         (end-line (if (use-region-p)
+                       (line-number-at-pos (region-end))
+                     start-line))) ; End line is the same as start line
     (list filename start-line end-line)))
-
 
 (defun paf/file-reference-format-reference (filename start-line end-line)
   "Format the file info into an agent reference string and add to kill ring.
 
 FILENAME is the path to the file.
 START-LINE and END-LINE define the range."
-  (let ((reference (format "@%s:%d-%d" filename start-line end-line)))
+  (let* ((line-spec (if (= start-line end-line)
+                        (format "%d" start-line)
+                      (format "%d-%d" start-line end-line)))
+         (reference (format "@%s:%s" filename line-spec)))
     (kill-new reference)
     (message "Copied to kill ring: %s" reference)))
-
 
 ;;;###autoload
 (defun paf/file-reference-copy ()
