@@ -7,3 +7,4 @@
 [submodule "Modules/org-gtasks"]
 	path = Modules/org-gtasks
 	url = https://git.sr.ht/~jmasson/org-gtasks
+	ignore = untracked
