@@ -482,7 +482,6 @@ This package brings some commands based on build-in search. See [[https://github
            ("C-M-#" . consult-register)
            ;; Other custom bindings
            ("M-y" . consult-yank-pop)                ;; orig. yank-pop
-           ("<help> a" . consult-apropos)            ;; orig. apropos-command
            ;; M-g bindings (goto-map)
            ("M-g e" . consult-compile-error)
            ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
@@ -501,14 +500,13 @@ This package brings some commands based on build-in search. See [[https://github
            ("M-s r" . consult-ripgrep)
            ("M-s l" . consult-line)
            ("M-s L" . consult-line-multi)
-           ("M-s m" . consult-multi-occur)
            ("M-s k" . consult-keep-lines)
            ("M-s u" . consult-focus-lines)
            ;; Isearch integration
-           ("M-s e" . consult-isearch)
+           ("M-s e" . consult-isearch-history)
            :map isearch-mode-map
-           ("M-e" . consult-isearch)                 ;; orig. isearch-edit-string
-           ("M-s e" . consult-isearch)               ;; orig. isearch-edit-string
+           ("M-e" . consult-isearch-history)         ;; orig. isearch-edit-string
+           ("M-s e" . consult-isearch-history)       ;; orig. isearch-edit-string
            ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
            ("M-s L" . consult-line-multi))           ;; needed by consult-line to detect isearch
 
@@ -543,9 +541,9 @@ This package brings some commands based on build-in search. See [[https://github
      :preview-key '(:debounce 0.2 any)
      consult-ripgrep consult-git-grep consult-grep
      consult-bookmark consult-recent-file consult-xref
-     consult--source-bookmark consult--source-recent-file
-     consult--source-project-recent-file
-     :preview-key (kbd "M-."))
+     consult-source-bookmark consult-source-recent-file
+     consult-source-project-recent-file
+     :preview-key "M-.")
 
     ;; Optionally configure the narrowing key.
     ;; Both < and C-+ work reasonably well.
@@ -555,16 +553,7 @@ This package brings some commands based on build-in search. See [[https://github
     ;; You may want to use `embark-prefix-help-command' or which-key instead.
     ;; (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help)
 
-    ;; Optionally configure a function which returns the project root directory.
-    ;; There are multiple reasonable alternatives to chose from.
-    (setq consult-project-root-function
-          (lambda ()
-            (when-let ((project (project-current)))
-              (project-root project))))
-    ;;;; 3. vc.el (vc-root-dir)
-    ;; (setq consult-project-root-function #'vc-root-dir)
-    ;;;; 4. locate-dominating-file
-    ;; (setq consult-project-root-function (lambda () (locate-dominating-file "." ".git")))
+    ;; Project root: the default `consult-project-function' already uses project.el.
   )
 #+end_src
 
@@ -626,7 +615,7 @@ Temporarily maximize a buffer.
              (delete-other-windows))))
   ;;Map it to a key.
   (global-set-key (kbd "M-<f8>") 'paf/toggle-maximize-buffer)
-  (global-set-key (kbd "C-F") 'paf/toggle-maximize-buffer)
+  (global-set-key (kbd "C-S-f") 'paf/toggle-maximize-buffer)  ;; "C-F" is just C-f
 #+end_src
 
 ** Balance window size
@@ -731,7 +720,7 @@ See [[https://github.com/karthink/popper][github:popper]] for more information.
     :ensure nil
     :config
     (add-to-list 'display-buffer-alist
-                 '("\\*\\(eat\\|vterm\\)\\*<[:digit:]+>"
+                 '("\\*\\(eat\\|vterm\\)\\*<[[:digit:]]+>"
                    (display-buffer-in-side-window)
                    (side . bottom)
                    (slot . 1)  ;; secondary terminals are in slot 1
@@ -1284,7 +1273,9 @@ This is heavily inspired from this [[https://stackoverflow.com/questions/2470598
 
 ** Multiple regions
 #+begin_src emacs-lisp
-(global-set-key (kbd "C-M-i") 'iedit-mode)
+  ;; Not on C-M-i: that is completion-at-point, which corfu needs.
+  (use-package iedit
+    :bind ("C-;" . iedit-mode))
 #+end_src
 
 ** Moving around buffers
@@ -1307,10 +1298,10 @@ This is heavily inspired from this [[https://stackoverflow.com/questions/2470598
 Configure the shortcuts for multiple cursors
 #+begin_src emacs-lisp
 (use-package multiple-cursors
-  :bind (("C-S-c C-S-c" . 'mc/edit-lines)
-         ("C->" . 'mc/mark-next-like-this)
-         ("C-<" . 'mc/mark-previous-like-this)
-         ("C-c C->" . 'mc/mark-all-like-this)))
+  :bind (("C-S-c C-S-c" . mc/edit-lines)
+         ("C->" . mc/mark-next-like-this)
+         ("C-<" . mc/mark-previous-like-this)
+         ("C-c C->" . mc/mark-all-like-this)))
 #+end_src
 
 ** ace-jump-mode
@@ -1318,8 +1309,8 @@ Let's one jump around text.
 The overwritten function (from [[https://emacs.stackexchange.com/questions/76379/how-to-get-ace-window-to-do-row-major-numbering-of-windows][stackexchange]]) makes the numbering row-major instead of the native col-major.
 #+begin_src emacs-lisp
   (use-package ace-jump-mode
-    :bind (("C-c C-SPC" . 'ace-jump-mode)
-           ("C-c C-DEL" . 'ace-jump-mode-pop-mark)))
+    :bind (("C-c C-SPC" . ace-jump-mode)
+           ("C-c C-DEL" . ace-jump-mode-pop-mark)))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1352,7 +1343,7 @@ The overwritten function (from [[https://emacs.stackexchange.com/questions/76379
              t))))
 
   (use-package ace-window
-    :bind (("C-x w w" . 'ace-window))
+    :bind (("C-x w w" . ace-window))
     :config
     (defun aw-window< (wnd1 wnd2) (paf/aw-row-major wnd1 wnd2)))
 
@@ -1400,7 +1391,7 @@ This actually computes the entire arithmetic expression that is selected, and re
   (use-package column-enforce-mode
     :config
     (setq column-enforce-column 80)
-    :bind ("C-c m" . 'column-enforce-mode))
+    :bind ("C-c m" . column-enforce-mode))
   ;; column-enforce-face
 #+end_src
 
@@ -1419,7 +1410,7 @@ Also, it seems to interfere with colorful modes like =magit= or =org-agenda-mode
 
 #+begin_src emacs-lisp
 (use-package annotate
-  :bind ("C-c C-A" . 'annotate-annotate)  ;; for ledger-mode, as 'C-c C-a' is taken there.
+  :bind ("C-c C-A" . annotate-annotate)  ;; for ledger-mode, as 'C-c C-a' is taken there.
   :config
   ;;(add-hook 'org-mode 'annotate-mode)
   (add-hook 'csv-mode 'annotate-mode)
@@ -1494,7 +1485,10 @@ The following only respects the project's =.gitignore= file.
 ** ini-mode
 #+begin_src emacs-lisp
   (use-package ini-mode
-    :mode ( "\\.ini\\'" "rc\\'" ))
+    :mode "\\.ini\\'"
+    :init
+    ;; Appended, so specific entries (.bashrc -> sh-mode) win over this catch-all.
+    (add-to-list 'auto-mode-alist '("rc\\'" . ini-mode) t))
 #+end_src
 
 ** typescript-mode
@@ -1632,12 +1626,15 @@ NOTE* assigns =hui-search-web= to =C-c C-/= to not clobber the later used =C-c /
     :custom-face
     (hbut       ((t (:foreground "green yellow"))))
     (hbut-flash ((t (:foreground "dark gray" :background "green yellow"))))
+    :defer 1  ;; costs ~2s, so load it once Emacs is idle
     :init
     (setq hbmap:dir-user org-directory)
     (setq hbmap:filename "personal-buttons.hypb")
+    :config
     (hyperbole-mode 1))
 
   (use-package hyperbole-systems
+    :after hyperbole
     :ensure nil)
 
 #+end_src
@@ -1683,7 +1680,7 @@ install_pkg gnuplot
 Add the powerful Magit
 #+begin_src emacs-lisp
   (use-package magit
-    :bind ("C-x g" . 'magit-status))
+    :bind ("C-x g" . magit-status))
   ;(use-package magit-todos
   ;  :defer)
 #+end_src
@@ -1693,6 +1690,7 @@ Ading a TUI for jujutsu
 #+begin_src emacs-lisp
   ;; Magit-style integration
   (use-package majutsu
+    :defer t  ;; commands are autoloaded; avoids loading magit at startup
     :vc (:url "https://github.com/0WD0/majutsu"))
 
   ;; Integration into the built-in VCS infra.
@@ -1835,25 +1833,13 @@ Both =eglot= and =lsp-mode= would need the =company= mode.
 
 *** eglot
 #+begin_src emacs-lisp
-  (defun paf/make-eldoc-reuse-window ()
-    "Makes the documentation show through eglot in eldoc to reuse the opened window."
-    (add-hook 'eldoc-documentation-window-setup-hook
-              (lambda ()
-                (when (window-live-p (get-buffer-window "*eldoc*"))
-                  (set-window-dedicated-p (get-buffer-window "*eldoc*") nil)
-                  (set-window-buffer (get-buffer-window "*eldoc*") (get-buffer "*eldoc*"))
-                  (select-window (get-buffer-window "*eldoc*"))
-                  ))))
-
   (use-package eglot
     :bind (:map eglot-mode-map
                 ("C-c <tab>" . company-complete) ; initiate the completion manually
                 ("C-c e f n" . flymake-goto-next-error)
                 ("C-c e f p" . flymake-goto-prev-error)
                 ("C-c e r"   . eglot-rename)
-                ("C-p a"     . eglot-inlay-hints-mode))
-    :config
-    (paf/make-eldoc-reuse-window))
+                ("C-p a"     . eglot-inlay-hints-mode)))
 
 
   (customize-set-variable 'eglot-ignored-server-capabilities
@@ -1885,9 +1871,10 @@ Both =eglot= and =lsp-mode= would need the =company= mode.
 ** header/implementation toggle
 Switch from header to implementation file quickly.
 #+begin_src emacs-lisp
-  (add-hook 'c-mode-common-hook
-            (lambda ()
-              (progn
+  ;; c-ts-base-mode-hook: treesit-auto opens C/C++ in the -ts- modes.
+  (dolist (hook '(c-mode-common-hook c-ts-base-mode-hook))
+    (add-hook hook
+              (lambda ()
                 (local-set-key  (kbd "C-c o") 'ff-find-other-file)
                 (local-set-key  (kbd "C-c f") 'find-file-at-point))))
 
@@ -2005,19 +1992,12 @@ Will fold all text indented more than the position of the cursor at the time the
 #+begin_src emacs-lisp
   (use-package git-gutter-fringe
     :if (display-graphic-p)
-    :bind ("C-p g" . 'git-gutter-mode)
+    :bind ("C-p g" . git-gutter-mode)
     :config
     ;; If you want to show git diff information at right fringe
     ;; (setq git-gutter-fr:side 'right-fringe)
     ;;(global-git-gutter-mode t)
     )
-#+end_src
-
-** Speedup VCS
-Regexp matching directory names that are not under VC's control. The default regexp prevents fruitless and time-consuming attempts to determine the VC status in directories in which filenames are interpreted as hostnames.
-#+begin_src emacs-lisp
-(defvar locate-dominating-stop-dir-regexp
-  "\\`\\(?:[\\/][\\/][^\\/]+\\|/\\(?:net\\|afs\\|\\.\\.\\.\\)/\\)\\'")
 #+end_src
 
 ** Dealing with numbers
@@ -2278,7 +2258,9 @@ Adding support for Bazel
 ** Refactoring
 Using =srefactor= for C/C++. Let's see...
 Taken straight from the doc of =srefactor= at https://github.com/emacsmirror/srefactor
-#+begin_src emacs-lisp
+
+Disabled: =semantic-mode= costs 1.2s at startup, and the bindings live in =c-mode-map= which the tree-sitter modes do not use.
+#+begin_src emacs-lisp :tangle no
   (use-package srefactor
     :bind (:map c-mode-map
            ("C-p S-r" . 'srefactor-refactor-at-point)
@@ -2339,7 +2321,7 @@ Displays vertical bars to show indentation visually.
 
 #+begin_src emacs-lisp
   (use-package indent-bars
-    :hook ((python-base-mode yaml-mode prog-mode) . indent-bars-mode)
+    :hook ((python-base-mode yaml-ts-mode prog-mode) . indent-bars-mode)
     :config
     (require 'indent-bars-ts)
     :custom
@@ -2353,7 +2335,7 @@ Displays vertical bars to show indentation visually.
 ** String inflections
 #+begin_src emacs-lisp
   (use-package string-inflection
-    :bind (("C-c C-C" . 'string-inflection-all-cycle)))
+    :bind (("C-c C-C" . string-inflection-all-cycle)))
 
 #+end_src
 
@@ -2830,14 +2812,14 @@ There are two functions that supposedly do the same.
      ["Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec"]
      calendar-day-name-array ["Sun" "Mon" "Tue" "Wed" "Thu" "Fri" "Sat"]
      calendar-week-start-day 1 ; 0:Sunday, 1:Monday
-     cfw:fchar-junction ?┼
-     cfw:fchar-vertical-line ?│
-     cfw:fchar-horizontal-line ?─
-     cfw:fchar-left-junction ?├
-     cfw:fchar-right-junction ?┤
-     cfw:fchar-top-junction ?┬
-     cfw:fchar-top-left-corner ?┌
-     cfw:fchar-top-right-corner ?┐
+     calfw-fchar-junction ?┼
+     calfw-fchar-vertical-line ?│
+     calfw-fchar-horizontal-line ?─
+     calfw-fchar-left-junction ?├
+     calfw-fchar-right-junction ?┤
+     calfw-fchar-top-junction ?┬
+     calfw-fchar-top-left-corner ?┌
+     calfw-fchar-top-right-corner ?┐
      ))
 
   (use-package calfw-org
@@ -2930,7 +2912,6 @@ All keys prefixed with =C-c n=
     (org-roam-db-location (expand-file-name "org-roam.db" paf-roam-directory))
     ; (org-roam-database-connector 'sqlite-builtin) ;; should work...
     :bind (("C-c n l" . org-roam-buffer-toggle)
-           ("C-c n b" . org-roam-switch-to-buffer)
            ("C-c n f" . org-roam-node-find)
            ("C-c n c" . org-roam-capture)
            ("C-c n g" . org-roam-graph)
@@ -3056,7 +3037,7 @@ Collect properties of Org structure items into tables. See documentation in the 
 *** orgtbl-aggregate
 Do some transformations of an org-table into another one.
 See the project's [[https://github.com/tbanel/orgaggregate][homepage]]
-#+begin_src bash
+#+begin_src emacs-lisp
   (use-package orgtbl-aggregate)
 #+end_src
 
@@ -3154,8 +3135,10 @@ This function will populate the missing ones:
         ;; Otherwise, call the original function.
       (funcall orig-fun element info)))
 
-  ;; Add the advice
-  (advice-add 'org-export-get-reference :around #'paf/org-export-get-reference-around)
+  ;; Add the advice. Depth -100 keeps it outside the :override advice
+  ;; added later for the nice ids, which would otherwise shadow it.
+  (advice-add 'org-export-get-reference :around #'paf/org-export-get-reference-around
+              '((depth . -100)))
   ;; To remove the advice later:
   ;; (advice-remove 'org-export-get-reference #'paf/org-export-get-reference-around)
 #+end_src
@@ -3332,7 +3315,7 @@ These are mostly org-config specific to me, myself and I.
   (global-set-key (kbd "C-c l") 'org-store-link)
   (global-set-key (kbd "C-c c") 'org-capture)
   (global-set-key (kbd "C-c a") 'org-agenda)
-  (global-set-key (kbd "C-c b") 'org-iswitchb)
+  (global-set-key (kbd "C-c b") 'org-switchb)
   ;; added because on Chromoting/i3, Alt-<up> and Alt-<down> are changin window focus.
   (add-hook 'org-mode-hook
             (lambda ()
@@ -3387,7 +3370,6 @@ This renders the calendar date (at top of agenda) differently for past or future
     "Return the face DATE should be displayed with., using special handling of past dates."
     (let* ((date-absolute (calendar-absolute-from-gregorian date))
            (is-in-the-past (< date-absolute (org-today))))
-      (message "date: %d  today: %d" date-absolute (org-today))
       (cond
        (is-in-the-past 'org-agenda-date-past)
        (t nil) ;; return nil calls the stock function.
@@ -3512,7 +3494,7 @@ Track task dependencies, and dim them in the agenda.
      (sequence "TASK(m!)" "ACTIVE" "|" "DONE(d!)" "CANCELLED(C@)" )
   ))
 
-  (setq org-tags-exclude-from-inheritance '("PRJ" "REGULAR")
+  (setq org-tags-exclude-from-inheritance '("PRJ" "REGULAR" "crypt")  ;; crypt: for org-crypt
         org-use-property-inheritance '("PRIORITY")
         org-stuck-projects '("+PRJ/-DONE-CANCELLED"
                              ;; it is considered stuck if there is no next action
@@ -3603,15 +3585,6 @@ This enables a more fine-grained filtering of the agenda items.
 
 *** org-agenda
 **** Views
-#+begin_src emacs-lisp
-  (defun end-of-this-week ()
-    (let* ((now (decode-time nil nil t))
-           (dow (decoded-time-weekday now))
-           (delta-days (make-decoded-time :day (- 6 dow)))
-           ((sec min hours day month year dow dst utcoff) (decoded-time-add now delta-days)))
-      (format "%04d-%02d-%02d" year month day)))
-#+end_src
-
 #+begin_src emacs-lisp
   ;(setq org-agenda-block-separator #x2500)
   (setq org-agenda-block-separator " ")
@@ -3794,8 +3767,8 @@ A more visible current-time marker in the agenda
 **** auto-save org files when idle
 This will save them regularly when the idle for more than 10 minutes. It will also not run if when the lambda gets called the idle time is then less than 10 minutes.
 #+begin_src emacs-lisp
-  (add-hook 'org-mode-hook
-            (lambda () (run-with-idle-timer 600 t 'org-save-all-org-buffers)))
+  ;; One global timer; from org-mode-hook it leaked a new timer per org buffer.
+  (run-with-idle-timer 600 t 'org-save-all-org-buffers)
 #+end_src
 
 **** export
@@ -4031,7 +4004,7 @@ This configures where the published files are ending up
            :headline-levels 6)
 
           ("bigblow-theme"
-           :base-directory "~/Apps/org-html-themes/src/bigblow_theme/"
+           :base-directory "~/Emacs/Modules/org-html-themes/src/bigblow_theme/"
            :base-extension "css\\|js\\|swf\\|png"
            :recursive t
            :publishing-directory "~/www/org-status/"
@@ -4229,7 +4202,7 @@ In your =~/.emacs= file, all you need to add is
 
 This script is then used to install the needed packages on the system.
 
-#+begin_src bash :noweb yes :tangle bash/install_deps.sh :shebang "#!/bin/bash"
+#+begin_src bash :noweb yes :tangle bash/install.sh :shebang "#!/bin/bash"
   set -e
 
   # Trick to make it work on Termux
