@@ -5,6 +5,11 @@ GIT_ROOT=$(dirname $0)
 # Ensure modules are loaded.
 (cd ${GIT_ROOT} && git submodule init && git submodule update)
 
+# Ignore byte-compiled files inside the submodules, so they do not show
+# up as modified (Magit ignores the 'ignore' setting of .gitmodules).
+(cd ${GIT_ROOT} && git submodule --quiet foreach \
+    'f=$(git rev-parse --git-path info/exclude); grep -qxF "*.elc" "$f" 2>/dev/null || echo "*.elc" >> "$f"')
+
 source ${GIT_ROOT}/bash/install.sh
 
 if [[ -z "$(which git)" ]]; then
